@@ -1,0 +1,18 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 31503ed76cb56044485993c7d9095149, type: 3}
+  m_Name: New UI Manager Config
+  m_EditorClassIdentifier: 
+  <UiGameObjects>k__BackingField:
+  - {fileID: 7544177754285660862, guid: e523cea7727fcac4a937742be6ecab8e, type: 3}
+  - {fileID: 2929143307436800951, guid: 9d816b1d1423cf0418298c870d37c2c3, type: 3}
+  - {fileID: 2929143307436800951, guid: 9d816b1d1423cf0418298c870d37c2c3, type: 3}
