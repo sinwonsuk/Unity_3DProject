@@ -17,10 +17,10 @@ public class GameController : MonoBehaviour
         ConnectBaseScriptableObject();
 
         Register<UIManager, UIManagerConfig>(Config => new UIManager(Config));
+		Register<ItemManager, ItemManagerConfig>(config => new ItemManager(config));
 
 
-
-        InitAll();
+		InitAll();
     }
 
     void ConnectBaseScriptableObject()
