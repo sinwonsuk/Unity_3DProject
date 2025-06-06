@@ -2,61 +2,125 @@ using Unity.Cinemachine;
 using UnityEngine;
 using UnityEngine.AI;
 
+
 public class MoveState : BaseState<PlayerStateMachine.PlayerState>
 {
+    PlayerStateMachine PlayerStateMachine;
 
-    public MoveState(PlayerStateMachine.PlayerState key , Animator animator,Transform transform,CinemachineCamera cinemachine) : base(key,animator)
+    public MoveState(PlayerStateMachine.PlayerState key ,Animator animator ,PlayerStateMachine playerStateMachine) : base(key,animator)
     {
+        this.PlayerStateMachine = playerStateMachine;
+
+
         cameraController = Camera.main.GetComponent<CameraController>();
-
-        this.camera = cinemachine;
-
-        this.transform = transform;
     }
 
     public override void EnterState()
     {
-        animator.SetBool("Moving",true);
+        animator.SetBool("Walk",true);
     }
     public override void ExitState()
     {
-
+        animator.SetBool("Walk", false);
+        animator.SetBool("Run", false);
+        animator.SetBool("RightMove", false);
+        animator.SetBool("LeftMove", false);
+        moveSpeed = 2.0f;
     }
     public override void UpdateState()
     {
-        // 수평, 수직 입력값 받기
+        if (Input.GetKey(KeyCode.Space))
+        {
+            if (Input.GetKey(KeyCode.W))
+            {
+                animator.SetInteger("RollCount", (int)ERollState.Forward);
+                PlayerStateMachine.ChangeState(PlayerStateMachine.PlayerState.Roll);
+                return;
+            }
+            else if (Input.GetKey(KeyCode.S))
+            {
+                animator.SetInteger("RollCount", (int)ERollState.Backward);
+                PlayerStateMachine.ChangeState(PlayerStateMachine.PlayerState.Roll);
+                return;
+            }
+            else if (Input.GetKey(KeyCode.A))
+            {
+                animator.SetInteger("RollCount", (int)ERollState.Left);
+                PlayerStateMachine.ChangeState(PlayerStateMachine.PlayerState.Roll);
+                return;
+            }
+            else if (Input.GetKey(KeyCode.D))
+            {
+                animator.SetInteger("RollCount", (int)ERollState.Right);
+                PlayerStateMachine.ChangeState(PlayerStateMachine.PlayerState.Roll);
+                return;
+            }
+        }
+    }
+
+    public override void FixedUpdateState()
+    {
+        if (Input.GetKey(KeyCode.LeftShift))
+        {
+            animator.SetBool("Run", true);
+            moveSpeed = 4.0f;
+        }
+        else
+        {
+            animator.SetBool("Run", false);
+            moveSpeed = 2.0f;
+        }
+
+        if (Input.GetKey(KeyCode.D))
+        {
+            animator.SetBool("RightMove", true);
+        }
+        else
+        {
+            animator.SetBool("RightMove", false);
+        }
+
+        if (Input.GetKey(KeyCode.A))
+        {
+            animator.SetBool("LeftMove", true);
+        }
+        else
+        {
+            animator.SetBool("LeftMove", false);
+        }
+
         float h = Input.GetAxis("Horizontal");
         float v = Input.GetAxis("Vertical");
 
-        // 전체 이동량 계산
-        moveAmountZ = Mathf.Clamp01(Mathf.Abs(h));
-        moveAmountY = Mathf.Clamp01(Mathf.Abs(v));
+        float moveAmount = Mathf.Clamp01(Mathf.Abs(h) + Mathf.Abs(v));
 
-        // 입력 방향 정규화
-        var moveInput = (new Vector3(h, 0, v)).normalized;
+        Vector3 moveInput = new Vector3(h, 0, v).normalized;
 
-        // 카메라 방향을 기준으로 이동 방향 계산
-        var moveDir = cameraController.PlanarRotation * moveInput;
+        // 카메라의 현재 수평(Y) 회전만 가져와서 적용
+        float yaw = Camera.main.transform.eulerAngles.y;
+        Quaternion planarRotation = Quaternion.Euler(0, yaw, 0);
 
-        animator.SetFloat("Velocity Z", v);
-        animator.SetFloat("Velocity Y", h);
+        Vector3 moveDir = planarRotation * moveInput;
 
+        var velocity = moveDir * moveSpeed;
+
+      
         targetRotation = Quaternion.LookRotation(moveDir);
+        PlayerStateMachine.transform.rotation = Quaternion.RotateTowards(PlayerStateMachine.transform.rotation, planarRotation, rotationSpeed * Time.deltaTime);
 
-        Debug.Log($"Camera Y: {targetRotation}, Player Y: {transform.rotation}");
-
-        transform.rotation = Quaternion.RotateTowards(transform.rotation, targetRotation, rotationSpeed * Time.deltaTime);
-
+        PlayerStateMachine.GetComponent<CharacterController>().Move(velocity * Time.deltaTime);
+       
     }
+
+
 
     public override PlayerStateMachine.PlayerState GetNextState()
     {
       if(Input.GetAxisRaw("Horizontal") == 0 && Input.GetAxisRaw("Vertical") == 0)
-      {
-            animator.SetFloat("Velocity Z", 0);
-            animator.SetBool("Moving", false);
             return PlayerStateMachine.PlayerState.Idle;
-      }
+        if (Input.GetMouseButtonDown(0))
+            return PlayerStateMachine.PlayerState.Attack;
+
 
         return PlayerStateMachine.PlayerState.Move;
     }
@@ -65,12 +129,12 @@ public class MoveState : BaseState<PlayerStateMachine.PlayerState>
     public override void OnTriggerExit(Collider collider) { }
     public override void OnTriggerStay(Collider collider) { }
 
-    float moveAmountZ;
-    float moveAmountY;
+    float moveSpeed = 2.0f;
+
+
     CameraController cameraController;
     CinemachineCamera camera;
 
     [SerializeField] float rotationSpeed = 500f;
     Quaternion targetRotation;
-    Transform transform;
 }

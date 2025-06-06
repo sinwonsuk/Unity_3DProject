@@ -6,7 +6,7 @@ namespace RPGCharacterAnims
     public class IKHands:MonoBehaviour
     {
         private Animator animator;
-        private RPGCharacterWeaponController rpgCharacterWeaponController;
+        private Weapons weapons;
         public Transform leftHandObj;
         public Transform attachLeft;
         [Range(0, 1)] public float leftHandPositionWeight;
@@ -16,7 +16,7 @@ namespace RPGCharacterAnims
         private void Awake()
         {
             animator = GetComponent<Animator>();
-            rpgCharacterWeaponController = GetComponent<RPGCharacterWeaponController>();
+            weapons = GetComponent<Weapons>();
         }
 
         private void OnAnimatorIK(int layerIndex)
@@ -68,23 +68,23 @@ namespace RPGCharacterAnims
         {
             if(weapon == 1)
             {
-                blendToTransform = rpgCharacterWeaponController.twoHandSword.transform.GetChild(0).transform;
+                blendToTransform = weapons.twoHandSword.transform.GetChild(0).transform;
             }
             else if(weapon == 2)
             {
-                blendToTransform = rpgCharacterWeaponController.twoHandSpear.transform.GetChild(0).transform;
+                blendToTransform = weapons.twoHandSpear.transform.GetChild(0).transform;
             }
             else if(weapon == 3)
             {
-                blendToTransform = rpgCharacterWeaponController.twoHandAxe.transform.GetChild(0).transform;
+                blendToTransform = weapons.twoHandAxe.transform.GetChild(0).transform;
             }
             else if(weapon == 5)
             {
-                blendToTransform = rpgCharacterWeaponController.twoHandCrossbow.transform.GetChild(0).transform;
+                blendToTransform = weapons.twoHandCrossbow.transform.GetChild(0).transform;
             }
             else if(weapon == 18)
             {
-                blendToTransform = rpgCharacterWeaponController.rifle.transform.GetChild(0).transform;
+                blendToTransform = weapons.rifle.transform.GetChild(0).transform;
             }
         }
     }

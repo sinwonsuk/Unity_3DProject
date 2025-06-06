@@ -23,15 +23,24 @@ public abstract class StageManager<EStage> : MonoBehaviour where EStage : Enum
         if (nextStateKey.Equals(currentState.StateKey))
         {
             currentState.UpdateState();
+        }      
+    }
+    private void FixedUpdate()
+    {
+        EStage nextStateKey = currentState.GetNextState();
+        if (nextStateKey.Equals(currentState.StateKey))
+        {
+            currentState.FixedUpdateState();
         }
         else
         {
-            TransitionToState(nextStateKey);
+            ChangeState(nextStateKey);
         }
-       
     }
 
-    public void TransitionToState(EStage nextStateKey)
+
+
+    public void ChangeState(EStage nextStateKey)
     {
         IsTransition= true;
         currentState.ExitState();
