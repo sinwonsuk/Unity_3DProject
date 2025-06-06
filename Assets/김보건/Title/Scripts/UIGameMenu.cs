@@ -63,7 +63,7 @@ public class UIGameMenu : MonoBehaviour
 
         var result = await _runner.StartGame(new StartGameArgs()
         {
-            GameMode = GameMode.Host,
+            GameMode = GameMode.AutoHostOrClient,
             SessionName = "DefaultRoom",
             Scene = SceneRef.FromIndex(1),
             SceneManager = _runner.GetComponent<NetworkSceneManagerDefault>()
