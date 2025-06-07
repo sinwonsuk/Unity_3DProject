@@ -23,7 +23,7 @@ public abstract class StageManager<EStage> : MonoBehaviour where EStage : Enum
         if (nextStateKey.Equals(currentState.StateKey))
         {
             currentState.UpdateState();
-        }      
+        }
     }
     private void FixedUpdate()
     {
@@ -32,12 +32,20 @@ public abstract class StageManager<EStage> : MonoBehaviour where EStage : Enum
         {
             currentState.FixedUpdateState();
         }
+
+    }
+    private void LateUpdate()
+    {
+        EStage nextStateKey = currentState.GetNextState();
+        if (nextStateKey.Equals(currentState.StateKey))
+        {
+            currentState.LateUpdateState();
+        }
         else
         {
             ChangeState(nextStateKey);
         }
     }
-
 
 
     public void ChangeState(EStage nextStateKey)

@@ -1,126 +1,54 @@
 using Unity.Cinemachine;
 using UnityEngine;
 using UnityEngine.AI;
-
+using static UnityEngine.Rendering.DebugUI;
 
 public class MoveState : BaseState<PlayerStateMachine.PlayerState>
 {
     PlayerStateMachine PlayerStateMachine;
 
-    public MoveState(PlayerStateMachine.PlayerState key ,Animator animator ,PlayerStateMachine playerStateMachine) : base(key,animator)
+    [SerializeField] float rotationSpeed = 500f;
+    float moveSpeed = 2.0f;
+
+    public MoveState(PlayerStateMachine.PlayerState key, Animator animator, PlayerStateMachine playerStateMachine)
+        : base(key, animator)
     {
         this.PlayerStateMachine = playerStateMachine;
-
-
-        cameraController = Camera.main.GetComponent<CameraController>();
     }
 
     public override void EnterState()
     {
-        animator.SetBool("Walk",true);
+        animator.SetBool("Walk", true);
     }
+
     public override void ExitState()
     {
-        animator.SetBool("Walk", false);
-        animator.SetBool("Run", false);
-        animator.SetBool("RightMove", false);
-        animator.SetBool("LeftMove", false);
+        animator.SetFloat("MoveLeftRight", 0.0f);
+        animator.SetFloat("MoveForWard", 0.0f);
         moveSpeed = 2.0f;
     }
+
     public override void UpdateState()
     {
-        if (Input.GetKey(KeyCode.Space))
-        {
-            if (Input.GetKey(KeyCode.W))
-            {
-                animator.SetInteger("RollCount", (int)ERollState.Forward);
-                PlayerStateMachine.ChangeState(PlayerStateMachine.PlayerState.Roll);
-                return;
-            }
-            else if (Input.GetKey(KeyCode.S))
-            {
-                animator.SetInteger("RollCount", (int)ERollState.Backward);
-                PlayerStateMachine.ChangeState(PlayerStateMachine.PlayerState.Roll);
-                return;
-            }
-            else if (Input.GetKey(KeyCode.A))
-            {
-                animator.SetInteger("RollCount", (int)ERollState.Left);
-                PlayerStateMachine.ChangeState(PlayerStateMachine.PlayerState.Roll);
-                return;
-            }
-            else if (Input.GetKey(KeyCode.D))
-            {
-                animator.SetInteger("RollCount", (int)ERollState.Right);
-                PlayerStateMachine.ChangeState(PlayerStateMachine.PlayerState.Roll);
-                return;
-            }
-        }
+
+        if (TryHandleRollInput()) return;
+        if (TryHandleAttackInput()) return;
+        if (TryHandleJumpInput()) return;
+
+        UpdateMovementAnimation();
     }
 
     public override void FixedUpdateState()
     {
-        if (Input.GetKey(KeyCode.LeftShift))
-        {
-            animator.SetBool("Run", true);
-            moveSpeed = 4.0f;
-        }
-        else
-        {
-            animator.SetBool("Run", false);
-            moveSpeed = 2.0f;
-        }
-
-        if (Input.GetKey(KeyCode.D))
-        {
-            animator.SetBool("RightMove", true);
-        }
-        else
-        {
-            animator.SetBool("RightMove", false);
-        }
-
-        if (Input.GetKey(KeyCode.A))
-        {
-            animator.SetBool("LeftMove", true);
-        }
-        else
-        {
-            animator.SetBool("LeftMove", false);
-        }
-
-        float h = Input.GetAxis("Horizontal");
-        float v = Input.GetAxis("Vertical");
-
-        float moveAmount = Mathf.Clamp01(Mathf.Abs(h) + Mathf.Abs(v));
-
-        Vector3 moveInput = new Vector3(h, 0, v).normalized;
-
-        // 카메라의 현재 수평(Y) 회전만 가져와서 적용
-        float yaw = Camera.main.transform.eulerAngles.y;
-        Quaternion planarRotation = Quaternion.Euler(0, yaw, 0);
-
-        Vector3 moveDir = planarRotation * moveInput;
-
-        var velocity = moveDir * moveSpeed;
-
-      
-        targetRotation = Quaternion.LookRotation(moveDir);
-        PlayerStateMachine.transform.rotation = Quaternion.RotateTowards(PlayerStateMachine.transform.rotation, planarRotation, rotationSpeed * Time.deltaTime);
-
-        PlayerStateMachine.GetComponent<CharacterController>().Move(velocity * Time.deltaTime);
-       
     }
-
-
-
+    public override void LateUpdateState()
+    {
+        HandleMovement();
+    }
     public override PlayerStateMachine.PlayerState GetNextState()
     {
-      if(Input.GetAxisRaw("Horizontal") == 0 && Input.GetAxisRaw("Vertical") == 0)
+        if (Input.GetAxis("Horizontal") == 0 && Input.GetAxis("Vertical") == 0)
             return PlayerStateMachine.PlayerState.Idle;
-        if (Input.GetMouseButtonDown(0))
-            return PlayerStateMachine.PlayerState.Attack;
-
 
         return PlayerStateMachine.PlayerState.Move;
     }
@@ -129,12 +57,112 @@ public class MoveState : BaseState<PlayerStateMachine.PlayerState>
     public override void OnTriggerExit(Collider collider) { }
     public override void OnTriggerStay(Collider collider) { }
 
-    float moveSpeed = 2.0f;
+    private bool TryHandleRollInput()
+    {
+        if(PlayerStateMachine.isWeapon ==false)
+            return false;     
+        if (!Input.GetKey(KeyCode.Space)) 
+            return false;
+        if (Input.GetKey(KeyCode.W)) 
+        { 
+            Roll(ERollState.Forward);
+            return true; 
+        }
+        if (Input.GetKey(KeyCode.S)) 
+        { 
+            Roll(ERollState.Backward); 
+            return true; 
+        }
+        if (Input.GetKey(KeyCode.A))
+        { 
+            Roll(ERollState.Left);
+            return true;
+        }
+        if (Input.GetKey(KeyCode.D))
+        {
+            Roll(ERollState.Right); 
+            return true; 
+        }
+
+        return false;
+    }
+    private bool TryHandleJumpInput()
+    {
+        if (Input.GetKey(KeyCode.LeftControl))
+        {
+            animator.SetBool("Jump", true);
+            PlayerStateMachine.ChangeState(PlayerStateMachine.PlayerState.Jump);
+            return true;
+        }
+        
+        return false;
+    }
 
 
-    CameraController cameraController;
-    CinemachineCamera camera;
+    private void Roll(ERollState dir)
+    {
+        animator.SetInteger("RollCount", (int)dir);
+        PlayerStateMachine.ChangeState(PlayerStateMachine.PlayerState.Roll);
+    }
 
-    [SerializeField] float rotationSpeed = 500f;
-    Quaternion targetRotation;
+    private bool TryHandleAttackInput()
+    {
+        if(PlayerStateMachine.isWeapon ==false)
+            return false;
+        if (Input.GetMouseButtonDown(0) && Input.GetKey(KeyCode.LeftShift))
+        {
+            animator.SetBool("RunAttack",true);
+            PlayerStateMachine.ChangeState(PlayerStateMachine.PlayerState.Attack);
+            return true;
+        }
+        else if (Input.GetMouseButtonDown(0))
+        {
+            animator.SetBool("RunAttack", false);
+            PlayerStateMachine.ChangeState(PlayerStateMachine.PlayerState.Attack);
+            return true;
+        }
+        return false;
+    }
+
+    private void UpdateMovementAnimation()
+    {
+        float h = Input.GetAxis("Horizontal");
+        float v = Input.GetAxis("Vertical");
+
+        //v = Mathf.Clamp01(v);
+
+
+        if (Input.GetKey(KeyCode.LeftShift) && v > 0f)
+        {
+            v = Mathf.Lerp(0f, 2f, v); // 결과: 0 ~ 2
+            moveSpeed = 4.0f;
+        }
+        else
+        {
+            moveSpeed = 2.0f;
+        }
+
+        // 애니메이션 파라미터 설정
+        animator.SetFloat("MoveLeftRight", h);
+        animator.SetFloat("MoveForWard", v);
+
+    }
+
+    private void HandleMovement()
+    {
+        float h = Input.GetAxis("Horizontal");
+        float v = Input.GetAxis("Vertical");
+        Vector3 moveInput = new Vector3(h, 0, v).normalized;
+
+        float yaw = Camera.main.transform.eulerAngles.y;
+        Quaternion planarRotation = Quaternion.Euler(0, yaw, 0);
+        Vector3 moveDir = planarRotation * moveInput;
+        Vector3 velocity = moveDir * moveSpeed;
+
+        PlayerStateMachine.transform.rotation = Quaternion.RotateTowards(PlayerStateMachine.transform.rotation, planarRotation, rotationSpeed * Time.deltaTime);
+
+        PlayerStateMachine.GetComponent<CharacterController>().Move(velocity * Time.deltaTime);
+    }
+
+
 }

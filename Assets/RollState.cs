@@ -24,22 +24,22 @@ public class RollState : BaseState<PlayerStateMachine.PlayerState>
 
     public override void EnterState()
     {
-        animator.SetBool("Roll",true);
+        animator.SetTrigger("RollTrigger");      
     }
     public override void ExitState()
     {
        
     }
     public override void UpdateState()
-    {
-        AnimatorStateInfo stateInfo = animator.GetCurrentAnimatorStateInfo(0);
+    {     
+        //AnimatorStateInfo stateInfo = animator.GetCurrentAnimatorStateInfo(0);
 
-        if (stateInfo.normalizedTime >= 0.7f )
-        {
-            animator.SetBool("Roll", false);
-            PlayerStateMachine.ChangeState(PlayerStateMachine.PlayerState.Idle);
-            return;
-        }
+        //if (stateInfo.normalizedTime >= 0.5f )
+        //{
+        //    //animator.SetInteger("RollCount", 0);
+        //    PlayerStateMachine.ChangeState(PlayerStateMachine.PlayerState.Idle);
+        //    return;
+        //}
     }
 
     public override void FixedUpdateState()
@@ -57,6 +57,8 @@ public class RollState : BaseState<PlayerStateMachine.PlayerState>
     public override void OnTriggerEnter(Collider collider) { }
     public override void OnTriggerExit(Collider collider) { }
     public override void OnTriggerStay(Collider collider) { }
+
+    public override void LateUpdateState(){ }
 
     float moveSpeed = 2.0f;
 
