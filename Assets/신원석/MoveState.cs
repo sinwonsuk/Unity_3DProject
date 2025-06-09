@@ -32,7 +32,7 @@ public class MoveState : BaseState<PlayerStateMachine.PlayerState>
     {
         Debug.Log("Move");
 
-        if (TryHandleRollInput()) return;
+        
         if (TryHandleAttackInput()) return;
         if (TryHandleJumpInput()) return;
 
@@ -41,6 +41,8 @@ public class MoveState : BaseState<PlayerStateMachine.PlayerState>
 
     public override void FixedUpdateState()
     {
+        if (TryHandleRollInput()) return;
+
         PlayerStateMachine.MoveInput();
     }
     public override void LateUpdateState()
@@ -61,32 +63,7 @@ public class MoveState : BaseState<PlayerStateMachine.PlayerState>
 
     private bool TryHandleRollInput()
     {
-        if(PlayerStateMachine.isWeapon ==false)
-            return false;     
-        if (!Input.GetKey(KeyCode.Space)) 
-            return false;
-        if (Input.GetKey(KeyCode.W)) 
-        { 
-            Roll(ERollState.Forward);
-            return true; 
-        }
-        if (Input.GetKey(KeyCode.S)) 
-        { 
-            Roll(ERollState.Backward); 
-            return true; 
-        }
-        if (Input.GetKey(KeyCode.A))
-        { 
-            Roll(ERollState.Left);
-            return true;
-        }
-        if (Input.GetKey(KeyCode.D))
-        {
-            Roll(ERollState.Right); 
-            return true; 
-        }
-
-        return false;
+        return PlayerStateMachine.RollInput();
     }
     private bool TryHandleJumpInput()
     {

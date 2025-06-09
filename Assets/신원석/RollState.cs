@@ -1,3 +1,4 @@
+using Fusion;
 using UnityEngine;
 using UnityEngine.AI;
 
@@ -12,13 +13,13 @@ public enum ERollState
 public class RollState : BaseState<PlayerStateMachine.PlayerState>
 {
     PlayerStateMachine PlayerStateMachine;
+    Transform transform;
 
     public RollState(PlayerStateMachine.PlayerState key, Animator animator, PlayerStateMachine playerStateMachine) : base(key, animator)
     {
         this.PlayerStateMachine = playerStateMachine;
 
-
-        cameraController = Camera.main.GetComponent<CameraController>();
+        transform = PlayerStateMachine.transform;
     }
 
     public override void EnterState()
@@ -30,20 +31,30 @@ public class RollState : BaseState<PlayerStateMachine.PlayerState>
        
     }
     public override void UpdateState()
-    {     
-        //AnimatorStateInfo stateInfo = animator.GetCurrentAnimatorStateInfo(0);
-
-        //if (stateInfo.normalizedTime >= 0.5f )
-        //{
-        //    //animator.SetInteger("RollCount", 0);
-        //    PlayerStateMachine.ChangeState(PlayerStateMachine.PlayerState.Idle);
-        //    return;
-        //}
+    {
+        
     }
 
     public override void FixedUpdateState()
     {
-              
+        float deltaTime = PlayerStateMachine.Runner.DeltaTime;
+
+        if ((ERollState)RollCount == ERollState.Left)
+        {
+            PlayerStateMachine.playerController.Move(-transform.right * rollSpeed * deltaTime);
+        }
+        else if ((ERollState)RollCount == ERollState.Right)
+        {
+            PlayerStateMachine.playerController.Move(transform.right * rollSpeed * deltaTime);
+        }
+        else if ((ERollState)RollCount == ERollState.Forward)
+        {
+            PlayerStateMachine.playerController.Move(transform.forward * rollSpeed * deltaTime);
+        }
+        else if ((ERollState)RollCount == ERollState.Backward)
+        {
+            PlayerStateMachine.playerController.Move(-transform.forward * rollSpeed * deltaTime);
+        }
     }
 
 
@@ -62,8 +73,14 @@ public class RollState : BaseState<PlayerStateMachine.PlayerState>
     float moveSpeed = 2.0f;
 
 
-    CameraController cameraController;
-    
-    [SerializeField] float rotationSpeed = 500f;
+    int hashRollCount = Animator.StringToHash("RollCount");
+
+
+    public int RollCount
+    {
+        get => animator.GetInteger(hashRollCount);
+    }
+
+    [SerializeField] float rollSpeed = 10f;
     Quaternion targetRotation;
 }
