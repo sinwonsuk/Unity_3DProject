@@ -8,6 +8,8 @@ public class UIGameMenu : MonoBehaviour
     [Header("UI Panels")]
     public GameObject StartGamePanel;     // STARTGAME 버튼
     public GameObject NicknamePanel;      // 닉네임 입력 
+    public GameObject OptionsPanel;       // 옵션 패널
+    public GameObject ExitPanel;          // 종료 확인 패널
 
     [Header("Nickname UI")]
     public TMP_InputField NicknameText;
@@ -38,6 +40,33 @@ public class UIGameMenu : MonoBehaviour
     {
         StartGamePanel.SetActive(false);
         NicknamePanel.SetActive(true);
+        OptionsPanel.SetActive(false);
+        ExitPanel.SetActive(false);
+    }
+
+    public void ShowOptionsPanel()
+    {
+        StartGamePanel.SetActive(false);
+        OptionsPanel.SetActive(true);
+        NicknamePanel.SetActive(false);
+        ExitPanel.SetActive(false);
+    }
+
+    public void ShowExitPanel()
+    {
+        StartGamePanel.SetActive(false);
+        ExitPanel.SetActive(true);
+        NicknamePanel.SetActive(false);
+        OptionsPanel.SetActive(false);
+    }
+
+    public void ConfirmExit()
+    {
+#if UNITY_EDITOR
+        UnityEditor.EditorApplication.isPlaying = false;
+#else
+        Application.Quit();
+#endif
     }
 
     public async void ConfirmNicknameAndConnect()
@@ -64,7 +93,7 @@ public class UIGameMenu : MonoBehaviour
 
         var result = await _runner.StartGame(new StartGameArgs()
         {
-            GameMode = GameMode.AutoHostOrClient,
+            GameMode = GameMode.Shared,
             SessionName = "DefaultRoom",
             Scene = SceneRef.FromIndex(1),
             SceneManager = _runner.GetComponent<NetworkSceneManagerDefault>()

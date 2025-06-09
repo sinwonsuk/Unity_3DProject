@@ -4,6 +4,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using System.Threading.Tasks;
 using System.Linq;
+using UnityEngine.SceneManagement;
 
 public class AutoMatchManager : MonoBehaviour, INetworkRunnerCallbacks
 {
@@ -84,7 +85,7 @@ public class AutoMatchManager : MonoBehaviour, INetworkRunnerCallbacks
         {
             GameMode = GameMode.AutoHostOrClient,
             SessionName = sessionName,
-            Scene = SceneRef.FromIndex(inGameSceneIndex),
+            Scene = SceneRef.FromIndex(2),
             SceneManager = runner.GetComponent<NetworkSceneManagerDefault>()
         });
 
@@ -98,14 +99,26 @@ public class AutoMatchManager : MonoBehaviour, INetworkRunnerCallbacks
         }
     }
 
-    // 필수 콜백 구현들 (비워도 문제 없음)
-    public void OnPlayerJoined(NetworkRunner runner, PlayerRef player)
+    public async void OnPlayerJoined(NetworkRunner runner, PlayerRef player)
     {
         var currentSessionName = runner.SessionInfo?.Name ?? "이름 없음";
         int currentPlayerCount = runner.ActivePlayers.Count();
 
         Debug.Log($"플레이어 {player.PlayerId} 이(가) 방 '{currentSessionName}'에 입장.");
         Debug.Log($"현재 '{currentSessionName}' 방 인원 수: {currentPlayerCount}");
+
+        if (currentPlayerCount >= maxPlayers && runner.IsServer)
+        {
+            Debug.Log("플레이어 2명 확인됨. Host가 인게임 씬 로드 시도!");
+            Debug.Log("씬 로드 시도");
+
+            await runner.SceneManager.LoadScene(
+                SceneRef.FromIndex(2),
+                new NetworkLoadSceneParameters() // 기본값: LoadSceneMode.Single
+            );
+
+            Debug.Log("씬 로드 완료됨?");
+        }
     }
 
     public void OnPlayerLeft(NetworkRunner runner, PlayerRef player) { }

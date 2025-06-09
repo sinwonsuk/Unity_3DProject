@@ -407,6 +407,8 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   StartGamePanel: {fileID: 714279148750042950}
   NicknamePanel: {fileID: 7999326788112874984}
+  OptionsPanel: {fileID: 8388224864164583468}
+  ExitPanel: {fileID: 1065237317849757175}
   NicknameText: {fileID: 7847065303082660820}
   RunnerPrefab: {fileID: 2382109156329011261, guid: 7189b7c33d080ae4e8cf346d625c78f9, type: 3}
 --- !u!1 &1709878179
@@ -3873,9 +3875,9 @@ MonoBehaviour:
   m_OnClick:
     m_PersistentCalls:
       m_Calls:
-      - m_Target: {fileID: 0}
-        m_TargetAssemblyTypeName: MenuUI, Assembly-CSharp
-        m_MethodName: OnClickExit
+      - m_Target: {fileID: 1304993971}
+        m_TargetAssemblyTypeName: UIGameMenu, Assembly-CSharp
+        m_MethodName: ShowExitPanel
         m_Mode: 1
         m_Arguments:
           m_ObjectArgument: {fileID: 0}
@@ -5928,9 +5930,9 @@ MonoBehaviour:
   m_OnClick:
     m_PersistentCalls:
       m_Calls:
-      - m_Target: {fileID: 0}
-        m_TargetAssemblyTypeName: MenuUI, Assembly-CSharp
-        m_MethodName: OnClickOption
+      - m_Target: {fileID: 1304993971}
+        m_TargetAssemblyTypeName: UIGameMenu, Assembly-CSharp
+        m_MethodName: ShowOptionsPanel
         m_Mode: 1
         m_Arguments:
           m_ObjectArgument: {fileID: 0}
