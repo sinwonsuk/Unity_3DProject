@@ -23,10 +23,6 @@ public class ItemManager : baseManager, IGameManager
 			{
 				itemDict.Add(item.itemId, item);
 			}
-			else
-			{
-				Debug.Log($"{item.itemId} 이 이미 존재함");
-			}
 
 			Debug.Log($"ItemManager 초기화 완료: {itemDict.Count}개 아이템 로드됨");
 
