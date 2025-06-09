@@ -4,7 +4,7 @@ using System.Collections.Generic;
 using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
-public class CharacterSelectionManager : MonoBehaviour
+public class CharacterSelectionManager : NetworkBehaviour
 {
     [SerializeField] private Image profileImage;
     [SerializeField] private Sprite[] characterSprites;
@@ -15,8 +15,8 @@ public class CharacterSelectionManager : MonoBehaviour
     //[SerializeField] private Sprite readyOffSprite;
     //[SerializeField] private Sprite readyOnSprite;
 
-    [Networked] public int SelectedIndex { get; private set; }
-    [Networked] public bool IsReady { get; private set; }
+    public int SelectedIndex { get; private set; }
+    public bool IsReady { get; private set; }
 
     private string[] characterTypes = { "Warrior", "Mage", "Archer" }; 
 

@@ -56,7 +56,8 @@ public class UIGameMenu : MonoBehaviour
         Debug.Log("닉네임 저장: " + nickname);
 
         // Runner 생성 및 설정
-        _runner = Instantiate(RunnerPrefab);
+        _runner = RunnerSingleton.Instance;
+        _runner.ProvideInput = true;
         _runner.name = "NetworkRunner";
         DontDestroyOnLoad(_runner);
         _runner.ProvideInput = true;
