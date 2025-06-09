@@ -7,9 +7,9 @@ public class FollowTarget : MonoBehaviour
     [SerializeField]
     private float rotationSpeed = 10.0f;
     [SerializeField]
-    private float bottomClamp = -40.0f;
-    [SerializeField]
     private float topClamp = 70.0f;
+    [SerializeField]
+    private float bottomClamp = -40.0f;
 
     float cinemachineTargetYaw;
     float cinemachineTargetPitch;
@@ -45,7 +45,7 @@ public class FollowTarget : MonoBehaviour
 
     private float GetMouseInput(string axis)
     {
-        return Input.GetAxis(axis) * rotationSpeed * Time.deltaTime;
+        return Input.GetAxis(axis) * -rotationSpeed * Time.deltaTime;
     }
 
     // Start is called once before the first execution of Update after the MonoBehaviour is created

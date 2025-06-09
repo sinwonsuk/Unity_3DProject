@@ -16,16 +16,19 @@ public class IdleState : BaseState<PlayerStateMachine.PlayerState>
     public override void ExitState() => Debug.Log("Exit Idle");
     public override void UpdateState()
     {
+        Debug.Log("adad Idle");
 
 
-
-
+       
     }
 
 
 
 
-    public override void FixedUpdateState() { }
+    public override void FixedUpdateState()
+    {
+        PlayerStateMachine.test();
+    }
 
     public override PlayerStateMachine.PlayerState GetNextState()
     {

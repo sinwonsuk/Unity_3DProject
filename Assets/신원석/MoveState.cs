@@ -1,8 +1,8 @@
-using Unity.Cinemachine;
 using UnityEngine;
 using UnityEngine.AI;
+using static Unity.Collections.Unicode;
 using static UnityEngine.Rendering.DebugUI;
-
+using Fusion;
 public class MoveState : BaseState<PlayerStateMachine.PlayerState>
 {
     PlayerStateMachine PlayerStateMachine;
@@ -30,6 +30,7 @@ public class MoveState : BaseState<PlayerStateMachine.PlayerState>
 
     public override void UpdateState()
     {
+        Debug.Log("Move");
 
         if (TryHandleRollInput()) return;
         if (TryHandleAttackInput()) return;
@@ -40,10 +41,11 @@ public class MoveState : BaseState<PlayerStateMachine.PlayerState>
 
     public override void FixedUpdateState()
     {
+        PlayerStateMachine.MoveInput();
     }
     public override void LateUpdateState()
     {
-        HandleMovement();
+        
     }
     public override PlayerStateMachine.PlayerState GetNextState()
     {
@@ -147,22 +149,4 @@ public class MoveState : BaseState<PlayerStateMachine.PlayerState>
         animator.SetFloat("MoveForWard", v);
 
     }
-
-    private void HandleMovement()
-    {
-        float h = Input.GetAxis("Horizontal");
-        float v = Input.GetAxis("Vertical");
-        Vector3 moveInput = new Vector3(h, 0, v).normalized;
-
-        float yaw = Camera.main.transform.eulerAngles.y;
-        Quaternion planarRotation = Quaternion.Euler(0, yaw, 0);
-        Vector3 moveDir = planarRotation * moveInput;
-        Vector3 velocity = moveDir * moveSpeed;
-
-        PlayerStateMachine.transform.rotation = Quaternion.RotateTowards(PlayerStateMachine.transform.rotation, planarRotation, rotationSpeed * Time.deltaTime);
-
-        PlayerStateMachine.GetComponent<CharacterController>().Move(velocity * Time.deltaTime);
-    }
-
-
 }

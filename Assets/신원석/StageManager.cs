@@ -1,12 +1,14 @@
+using Fusion;
 using System;
 using System.Collections.Generic;
+using Unity.VisualScripting;
 using UnityEngine;
 
 
 
-public abstract class StageManager<EStage> : MonoBehaviour where EStage : Enum
+public abstract class StageManager<EStage> : NetworkBehaviour where EStage : Enum
 {
-    protected Dictionary<EStage,BaseState<EStage>> states = new();
+    protected Dictionary<EStage, BaseState<EStage>> states = new();
 
     protected BaseState<EStage> currentState;
 
@@ -24,13 +26,21 @@ public abstract class StageManager<EStage> : MonoBehaviour where EStage : Enum
         {
             currentState.UpdateState();
         }
+        else
+        {
+            ChangeState(nextStateKey);
+        }
     }
-    private void FixedUpdate()
+    public override void FixedUpdateNetwork()
     {
         EStage nextStateKey = currentState.GetNextState();
         if (nextStateKey.Equals(currentState.StateKey))
         {
             currentState.FixedUpdateState();
+        }
+        else
+        {
+            ChangeState(nextStateKey);
         }
 
     }
@@ -50,7 +60,7 @@ public abstract class StageManager<EStage> : MonoBehaviour where EStage : Enum
 
     public void ChangeState(EStage nextStateKey)
     {
-        IsTransition= true;
+        IsTransition = true;
         currentState.ExitState();
         currentState = states[nextStateKey];
         currentState.EnterState();

@@ -1,4 +1,3 @@
-using Unity.Cinemachine;
 using UnityEngine;
 using UnityEngine.AI;
 
@@ -64,8 +63,7 @@ public class RollState : BaseState<PlayerStateMachine.PlayerState>
 
 
     CameraController cameraController;
-    CinemachineCamera camera;
-
+    
     [SerializeField] float rotationSpeed = 500f;
     Quaternion targetRotation;
 }

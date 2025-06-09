@@ -5,6 +5,7 @@ TagManager:
   serializedVersion: 3
   tags:
   - Collide
+  - VirtualCam
   layers:
   - Default
   - TransparentFX
@@ -12,7 +13,7 @@ TagManager:
   - 
   - Water
   - UI
-  - 11111
+  - Player
   - TempCast
   - Walkable
   - Ground
