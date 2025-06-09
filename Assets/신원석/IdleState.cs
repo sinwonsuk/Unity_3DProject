@@ -27,7 +27,7 @@ public class IdleState : BaseState<PlayerStateMachine.PlayerState>
 
     public override void FixedUpdateState()
     {
-        PlayerStateMachine.test();
+
     }
 
     public override PlayerStateMachine.PlayerState GetNextState()

@@ -19,32 +19,6 @@ public class PlayerStateMachine : StageManager<PlayerStateMachine.PlayerState>
         Roll,
     }
 
-    // 카메라 회전 속도
-
-    // 카메라와 타겟 사이의 거리
-    [SerializeField] float distance = 5;
-
-    // 수직 회전 제한 각도
-    [SerializeField] float minVerticalAngle = -45;
-    [SerializeField] float maxVerticalAngle = 45;
-
-    // 카메라 위치 미세 조정을 위한 오프셋
-    [SerializeField] Vector2 framingOffset;
-
-    // 마우스 X축 반전 여부
-    [SerializeField] bool invertX;
-    // 마우스 Y축 반전 여부
-    [SerializeField] bool invertY;
-
-    // 현재 X축 회전값 (상하 회전)
-    float rotationX;
-    // 현재 Y축 회전값 (좌우 회전)
-    float rotationY;
-
-    // X축 반전 계수
-    float invertXVal;
-    // Y축 반전 계수
-    float invertYVal;
 
     Animator animator;
 
@@ -52,6 +26,10 @@ public class PlayerStateMachine : StageManager<PlayerStateMachine.PlayerState>
     float moveSpeed = 5.0f;
     [SerializeField]
     float rotationSpeed = 2.0f;
+    [SerializeField]
+    Transform cameraFollow;
+
+
 
     private CinemachineVirtualCamera cam;
 
@@ -72,6 +50,10 @@ public class PlayerStateMachine : StageManager<PlayerStateMachine.PlayerState>
         animator = GetComponent<Animator>();
         playerController = GetComponent<NetworkCharacterController>();
 
+        // 마우스 커서 
+        Cursor.lockState = CursorLockMode.Locked;
+        Cursor.visible = false;
+
 
         // 인풋시스템 따로 관리 
         inputHandler = new InputHandler(this);
@@ -79,8 +61,14 @@ public class PlayerStateMachine : StageManager<PlayerStateMachine.PlayerState>
         //시네마신 카메라 연결 
         GameObject camObj = GameObject.FindGameObjectWithTag("VirtualCam");
         cam = camObj.GetComponent<CinemachineVirtualCamera>();
-        cam.Follow = transform;
+        cam.Follow = cameraFollow;
         cam.LookAt = transform;
+
+        GameObject camObj2 = GameObject.FindGameObjectWithTag("VirtualCam2");
+        CinemachineVirtualCamera cam2 = camObj2.GetComponent<CinemachineVirtualCamera>();
+        cam2.Follow = cameraFollow;
+        cam2.LookAt = transform;
+
 
         // 각 상태 객체 생성 및 등록
         states[PlayerState.Idle] = new IdleState(PlayerState.Idle,animator, this);
@@ -100,42 +88,17 @@ public class PlayerStateMachine : StageManager<PlayerStateMachine.PlayerState>
     }
     private void OnDisable()
     {
-
+       
     }
-    public void test()
-    {
-        // 마우스 반전 설정에 따른 계수 설정
-        invertXVal = (invertX) ? -1 : 1;
-        invertYVal = (invertY) ? -1 : 1;
-
-        // 마우스 Y축 입력으로 상하 회전 처리
-        rotationX += Input.GetAxis("Mouse Y") * invertYVal * rotationSpeed;
-        rotationX = Mathf.Clamp(rotationX, minVerticalAngle, maxVerticalAngle);
-
-        // 마우스 X축 입력으로 좌우 회전 처리
-        rotationY += Input.GetAxis("Mouse X") * invertXVal * rotationSpeed;
-
-        transform.rotation = Quaternion.Euler(0, rotationY * Runner.DeltaTime, 0);
-
-
-        //// 최종 회전값 계산
-        //var targetRotation = Quaternion.Euler(rotationX, rotationY, 0);
-
-        //// 카메라 위치 및 회전 적용
-        //var focusPosition = new Vector3(framingOffset.x, framingOffset.y, 0);
-        //transform.position = focusPosition - targetRotation * new Vector3(0, 0, distance);
-        //transform.rotation = targetRotation;
-    }
+   
 
     public void MoveInput()
     {
-        test();
+        inputHandler.TryGetMoveDirection(out Vector3 moveDir,out Quaternion planarRotation);
 
-        //if (inputHandler.TryGetMoveDirection(out Vector3 dir, out Quaternion planarRotation))
-        //{
-        //    transform.rotation = Quaternion.RotateTowards(transform.rotation, planarRotation, rotationSpeed * Runner.DeltaTime);
-        //    playerController.Move(dir * Runner.DeltaTime);
-        //}
+        transform.rotation = Quaternion.RotateTowards(transform.rotation, planarRotation, Time.fixedDeltaTime * rotationSpeed);
+        playerController.Move(moveDir * Time.fixedDeltaTime * moveSpeed);
+
     }
     public void CameraInput()
     {

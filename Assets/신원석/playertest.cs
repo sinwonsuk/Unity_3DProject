@@ -17,12 +17,6 @@ public class playertest : MonoBehaviour
     {
         int a = 0;
     }
-
-    void asdsssadasd(Eventplatertest adada)
-    {
-
-    }
-
     // Start is called once before the first execution of Update after the MonoBehaviour is created
     void Start()
     {

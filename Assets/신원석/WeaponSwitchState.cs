@@ -17,7 +17,7 @@ public class WeaponSwitchState : BaseState<PlayerStateMachine.PlayerState>
         animator.SetTrigger("KatanaEquip");
         playerStateMachine.isWeapon = true;
 
-        EventBus<EquipWeaponEvent>.Raise(new EquipWeaponEvent(1));
+        //EventBus<EquipWeaponEvent>.Raise(new EquipWeaponEvent(1));
     }
     public override void ExitState()
     {
