@@ -15,9 +15,8 @@ public class playertest : MonoBehaviour
     }
     void asdadasd(Eventplatertest adada)
     {
-        adada.playertest.adad = 5;
+        int a = 0;
     }
-
     // Start is called once before the first execution of Update after the MonoBehaviour is created
     void Start()
     {
@@ -27,6 +26,6 @@ public class playertest : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        EventBus<Eventplatertest>.Raise(new Eventplatertest());
+        EventBus<Eventplatertest>.Raise(new Eventplatertest(40));
     }
 }
