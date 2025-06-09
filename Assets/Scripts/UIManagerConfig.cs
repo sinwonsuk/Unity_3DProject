@@ -15,7 +15,7 @@ public class UIManagerConfig : BaseScriptableObject
         return UiGameObjects;
     }
 
-    [field: SerializeField]
+    [field:SerializeField]
     List<GameObject> UiGameObjects { get; set; }
 }
 
