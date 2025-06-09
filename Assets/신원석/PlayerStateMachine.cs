@@ -19,11 +19,11 @@ public class PlayerStateMachine : StageManager<PlayerStateMachine.PlayerState>
     {
         animator = GetComponent<Animator>();
 
-        // °¢ »óÅÂ °´Ã¼ »ý¼º ¹× µî·Ï
+        // ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½Ã¼ ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ ï¿½ï¿½ï¿½
         states[PlayerState.Idle] = new IdleState(PlayerState.Idle,animator);
-        states[PlayerState.Move] = new MoveState(PlayerState.Move, animator,transform, cinemachine);
+       // states[PlayerState.Move] = new MoveState(PlayerState.Move, animator,transform);
         states[PlayerState.Switch] = new WeaponSwitchState(PlayerState.Switch, animator, transform);
-        // ÃÊ±â »óÅÂ ¼³Á¤
+        // ï¿½Ê±ï¿½ ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½
         currentState = states[PlayerState.Idle];
     }
 
