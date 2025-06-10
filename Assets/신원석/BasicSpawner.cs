@@ -58,7 +58,7 @@ public class BasicSpawner : MonoBehaviour, INetworkRunnerCallbacks
         {
             if (player == runner.LocalPlayer)
             {
-                Vector3 spawnPosition = new Vector3((player.RawEncoded % 4) * 3, 1, 0);
+                Vector3 spawnPosition = new Vector3(5, 1, 0);
                 NetworkObject networkPlayerObject = runner.Spawn(_playerPrefab, spawnPosition, Quaternion.identity, player);
                 _spawnedCharacters.Add(player, networkPlayerObject);
             }
@@ -66,7 +66,7 @@ public class BasicSpawner : MonoBehaviour, INetworkRunnerCallbacks
         // Host/Server 모드일 경우 서버에서 모두 생성
         else if (runner.IsServer)
         {
-            Vector3 spawnPosition = new Vector3((player.RawEncoded % 4) * 3, 1, 0);
+            Vector3 spawnPosition = new Vector3(5, 1, 0);
             NetworkObject networkPlayerObject = runner.Spawn(_playerPrefab, spawnPosition, Quaternion.identity, player);
             _spawnedCharacters.Add(player, networkPlayerObject);
         }

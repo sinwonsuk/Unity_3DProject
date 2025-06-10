@@ -1,11 +1,13 @@
 using Fusion;
 using UnityEngine;
+using static Unity.Collections.Unicode;
 
 public class InputHandler
 {
     private NetworkRunner runner;
     private NetworkBehaviour behaviour;
 
+    [Networked] private TickTimer delay { get; set; }
     public InputHandler(NetworkBehaviour behaviour)
     {
         this.behaviour = behaviour;
@@ -39,6 +41,8 @@ public class InputHandler
     }
 
 
+
+
     // 방향 계산 및 처리
     public bool TryGetMoveDirection(out Vector3 moveDir, out Quaternion planarRotation)
     {
@@ -63,11 +67,24 @@ public class InputHandler
     {
         if (behaviour.GetInput(out NetworkInputData data))
         {
+         
             return data.buttons.IsSet(NetworkInputData.MOUSEBUTTON0);
         }
 
         return false;
     }
+    // 대시 공격 입력 처리 
+    public bool IsDashAttackPressed()
+    {
+        if (behaviour.GetInput(out NetworkInputData data))
+        {
+            return data.buttons.IsSet(NetworkInputData.MOUSEBUTTON0) && data.buttons.IsSet(NetworkInputData.KEY_SPACE);
+        }
+
+        return false;
+    }
+
+
     // 카메라 전환 
     public bool ChangeCamera()
     {

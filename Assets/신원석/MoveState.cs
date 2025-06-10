@@ -31,9 +31,9 @@ public class MoveState : BaseState<PlayerStateMachine.PlayerState>
     public override void UpdateState()
     {
         Debug.Log("Move");
-
         
-        if (TryHandleAttackInput()) return;
+
+
         if (TryHandleJumpInput()) return;
 
         UpdateMovementAnimation();
@@ -41,9 +41,13 @@ public class MoveState : BaseState<PlayerStateMachine.PlayerState>
 
     public override void FixedUpdateState()
     {
-        if (TryHandleRollInput()) return;
-
         PlayerStateMachine.MoveInput();
+
+
+        if (TryHandleRollInput()) return;
+        TryHandleAttackInput();
+
+       
     }
     public override void LateUpdateState()
     {
@@ -84,23 +88,10 @@ public class MoveState : BaseState<PlayerStateMachine.PlayerState>
         PlayerStateMachine.ChangeState(PlayerStateMachine.PlayerState.Roll);
     }
 
-    private bool TryHandleAttackInput()
+    private void TryHandleAttackInput()
     {
-        if(PlayerStateMachine.isWeapon ==false)
-            return false;
-        if (Input.GetMouseButtonDown(0) && Input.GetKey(KeyCode.LeftShift))
-        {
-            animator.SetBool("RunAttack",true);
-            PlayerStateMachine.ChangeState(PlayerStateMachine.PlayerState.Attack);
-            return true;
-        }
-        else if (Input.GetMouseButtonDown(0))
-        {
-            animator.SetBool("RunAttack", false);
-            PlayerStateMachine.ChangeState(PlayerStateMachine.PlayerState.Attack);
-            return true;
-        }
-        return false;
+        PlayerStateMachine.ComboAttackInput();
+        PlayerStateMachine.DashAttackInput();
     }
 
     private void UpdateMovementAnimation()
@@ -124,6 +115,11 @@ public class MoveState : BaseState<PlayerStateMachine.PlayerState>
         // 애니메이션 파라미터 설정
         animator.SetFloat("MoveLeftRight", h);
         animator.SetFloat("MoveForWard", v);
+
+    }
+
+    public override void OnAttackAnimationEnd()
+    {
 
     }
 }

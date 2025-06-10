@@ -14,7 +14,7 @@ public class WeaponSwitchState : BaseState<PlayerStateMachine.PlayerState>
 
     public override void EnterState()
     {
-        animator.SetTrigger("KatanaEquip");
+        animator.SetTrigger("HalberdEquip");
         playerStateMachine.isWeapon = true;
 
         //EventBus<EquipWeaponEvent>.Raise(new EquipWeaponEvent(1));
@@ -41,6 +41,11 @@ public class WeaponSwitchState : BaseState<PlayerStateMachine.PlayerState>
     public override void FixedUpdateState(){ }
 
     public override void LateUpdateState(){ }
+
+    public override void OnAttackAnimationEnd()
+    {
+
+    }
 
     float moveAmount;
     CameraController cameraController;

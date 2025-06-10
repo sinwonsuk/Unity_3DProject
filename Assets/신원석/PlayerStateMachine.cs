@@ -1,5 +1,7 @@
 using Cinemachine;
 using Fusion;
+using System.Collections;
+using Unity.Android.Gradle.Manifest;
 using UnityEngine;
 using static Unity.Collections.Unicode;
 
@@ -19,6 +21,8 @@ public class PlayerStateMachine : StageManager<PlayerStateMachine.PlayerState>
 
 
     Animator animator;
+    public PlayerCombat Combat { get; private set; }
+    public AnimationHandler AnimHandler { get; private set; }
 
     [SerializeField]
     float moveSpeed = 5.0f;
@@ -28,6 +32,8 @@ public class PlayerStateMachine : StageManager<PlayerStateMachine.PlayerState>
     Transform cameraFollow;
     [SerializeField]
     float rollSpeed = 15.0f;
+    [SerializeField]
+    float attackSpeed = 2.0f;
 
 
     private CinemachineVirtualCamera cam;
@@ -41,7 +47,21 @@ public class PlayerStateMachine : StageManager<PlayerStateMachine.PlayerState>
     public NetworkCharacterController playerController {  get; private set; }
     private InputHandler inputHandler;
 
-    
+    public Vector3 rootMotionDelta { get; set; }
+    public Quaternion rootMotionRotation { get; set; }
+
+    public bool isRoll { get; set; } = false;
+    bool isAttack = true;
+
+    int hashAttackCount = Animator.StringToHash("AttackCount");
+
+    public bool nextAttackQueued { get; set; } = false;
+    public int AttackCount
+    {
+        get => animator.GetInteger(hashAttackCount);
+        set => animator.SetInteger(hashAttackCount, value);
+    }
+
 
     private void Awake()
     {
@@ -53,8 +73,10 @@ public class PlayerStateMachine : StageManager<PlayerStateMachine.PlayerState>
         Cursor.lockState = CursorLockMode.Locked;
         Cursor.visible = false;
 
+        // 너무 비대해져서 역활 나눔 
         inputHandler = new InputHandler(this);
-
+        Combat = new PlayerCombat(this);
+        AnimHandler = new AnimationHandler(animator);
 
         GameObject camObj = GameObject.FindGameObjectWithTag("VirtualCam");
         cam = camObj.GetComponent<CinemachineVirtualCamera>();
@@ -65,7 +87,6 @@ public class PlayerStateMachine : StageManager<PlayerStateMachine.PlayerState>
         CinemachineVirtualCamera cam2 = camObj2.GetComponent<CinemachineVirtualCamera>();
         cam2.Follow = cameraFollow;
         cam2.LookAt = transform;
-
 
         states[PlayerState.Idle] = new IdleState(PlayerState.Idle,animator, this);
         states[PlayerState.Move] = new MoveState(PlayerState.Move, animator, this);
@@ -86,32 +107,13 @@ public class PlayerStateMachine : StageManager<PlayerStateMachine.PlayerState>
        
     }
 
-    private bool TryHandleRollInput()
+    public void OnAnimationEnd()
     {
-        if (!isWeapon)
-            return false;
-
-        if (!GetInput(out NetworkInputData data))
-            return false;
-
-        if (!data.buttons.IsSet(NetworkInputData.KEY_SPACE))
-            return false;
-
-        if (data.direction == Vector3.forward)
-            Roll(ERollState.Forward);
-        else if (data.direction == Vector3.back)
-            Roll(ERollState.Backward);
-        else if (data.direction == Vector3.left)
-            Roll(ERollState.Left);
-        else if (data.direction == Vector3.right)
-            Roll(ERollState.Right);
-        else
-            return false;
-
-        return true;
+        if (currentState is BaseState<PlayerState> attackState)
+        {
+            attackState.OnAttackAnimationEnd();
+        }
     }
-
-
 
     public bool RollInput()
     {
@@ -126,8 +128,6 @@ public class PlayerStateMachine : StageManager<PlayerStateMachine.PlayerState>
 
         return false;
     }
-
-
     private void Roll(ERollState dir)
     {
         animator.SetInteger("RollCount", (int)dir);
@@ -136,76 +136,100 @@ public class PlayerStateMachine : StageManager<PlayerStateMachine.PlayerState>
 
     public void MoveInput()
     {
-        inputHandler.TryGetMoveDirection(out Vector3 moveDir,out Quaternion planarRotation);
+        // 2. 입력 처리 (XZ)
+        inputHandler.TryGetMoveDirection(out Vector3 moveDir, out Quaternion planarRotation);
 
-        transform.rotation = Quaternion.RotateTowards(transform.rotation, planarRotation, Time.fixedDeltaTime * rotationSpeed);
-        playerController.Move(moveDir * Time.fixedDeltaTime * moveSpeed);
-
-    }
-    public void CameraInput()
-    {
-        if (inputHandler.ChangeCamera())
+        // 3. 회전 처리
+        if (Object.HasInputAuthority)
         {
-            is3rdPersonCamera = !is3rdPersonCamera;
+            transform.rotation = Quaternion.RotateTowards(
+                transform.rotation,
+                planarRotation,
+                Time.fixedDeltaTime * rotationSpeed
+            );
+
+            // 4. Y축 이동값 직접 추가
+            Vector3 moveWithGravity = moveDir * moveSpeed;
+
+            playerController.Move(moveWithGravity * Runner.DeltaTime);
         }
     }
 
-    public void RollInput(int count)
+    public bool ComboAttackInput()
     {
+        if (isWeapon == false)
+            return false;
+
+        if (inputHandler.IsAttackPressed() == true)
+        {
+            animator.SetBool("Attack", true);
+            ChangeState(PlayerState.Attack);
+            return true;
+        }
+
+        return false;
+    }
+
+    public bool DashAttackInput()
+    {
+        if (isWeapon == false)
+            return false;
+
+        if (inputHandler.IsDashAttackPressed())
+        {
+            animator.SetBool("RunAttack", true);
+            ChangeState(PlayerState.Attack);
+            return true;
+        }
+
+        return false;
+    }
+
+    public void AttackMove()
+    {
+        if (isAttack == false)
+            return;
+
+        playerController.Move(transform.forward * Runner.DeltaTime * attackSpeed);
+    }
+
+    public void MoveRoll(int count)
+    {
+        if (isRoll == true)
+            return;
+
         if (ERollState.Backward == (ERollState)count)
         {
-            playerController.Move(Vector3.back * Runner.DeltaTime * rollSpeed);
+            playerController.Move(-transform.forward * Runner.DeltaTime * rollSpeed);
         }
         else if(ERollState.Forward == (ERollState)count)
         {
-            playerController.Move(Vector3.forward * rollSpeed * Runner.DeltaTime);
+            playerController.Move(transform.forward * rollSpeed * Runner.DeltaTime);
         }
         else if(ERollState.Left == (ERollState)count)
         {
-            playerController.Move(Vector3.left * rollSpeed * Runner.DeltaTime);
+            playerController.Move(-transform.right * rollSpeed * Runner.DeltaTime);
         }
         else
         {
-            playerController.Move(Vector3.right * rollSpeed * Runner.DeltaTime);
+            playerController.Move(transform.right * rollSpeed * Runner.DeltaTime);
         }
     }
 
-
-
-
-
-       
-
-
-
-
-    //public override void FixedUpdateNetwork()
-    //{
-    //    if (GetInput(out NetworkInputData data))
-    //    {
-    //        data.direction.Normalize();
-    //        playerController.Move(5 * data.direction * Runner.DeltaTime);
-
-
-    //        if (data.direction.sqrMagnitude > 0)
-    //            _forward = data.direction;
-
-    //        if (HasStateAuthority && delay.ExpiredOrNotRunning(Runner))
-    //        {
-    //            if (data.buttons.IsSet(NetworkInputData.MOUSEBUTTON0))
-    //            {
-    //                delay = TickTimer.CreateFromSeconds(Runner, 0.5f);
-    //            }
-    //        }
-    //    }
-    //}
-
-
-
-
-
-
-
-
-
+    public void StopRoll()
+    {
+        isRoll = true;
+    }
+    public void startRoll()
+    {
+        isRoll = false;
+    }
+    public void SetIsAttackTrue()
+    {
+        isAttack = true;
+    }
+    public void SetIsAttackFalse()
+    {
+        isAttack = false;
+    }  
 }

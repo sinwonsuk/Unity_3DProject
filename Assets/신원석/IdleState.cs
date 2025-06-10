@@ -52,4 +52,9 @@ public class IdleState : BaseState<PlayerStateMachine.PlayerState>
     public override void OnTriggerStay(Collider collider) { }
 
     public override void LateUpdateState(){ }
+
+    public override void OnAttackAnimationEnd()
+    {
+
+    }
 }
