@@ -10,9 +10,11 @@ public class InventorySlot
 
     public void Clear()
     {
+        if (item != null)
+            item.isStackable = false; // 이 줄은 사실상 불필요할 수도 있음
+
         item = null;
         quantity = 0;
-        item.isStackable = false;
     }
 }
 

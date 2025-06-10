@@ -7,6 +7,7 @@ public class InventoryUI : MonoBehaviour
     public GameObject slotPrefab;
     public Transform slotParent;
     public ItemData basicSword;
+    public GameObject bigInventoryPanel;
 
     public int rowSize = 5;
     public int maxRow = 3;
@@ -24,6 +25,8 @@ public class InventoryUI : MonoBehaviour
         UpdateUI();
     }
 
+
+
     void InitSlots()
     {
         for (int i = 0; i < rowSize; i++)
@@ -34,7 +37,7 @@ public class InventoryUI : MonoBehaviour
         }
     }
 
-    public void UpdateUI() //인벤토리 업뎃
+    public void UpdateUI() //선택된 아이템 업뎃
     {
         int startIndex = currentPage * rowSize;
         for (int i = 0; i < slotUIs.Count; i++)
@@ -49,6 +52,12 @@ public class InventoryUI : MonoBehaviour
 
     void Update()
     {
+        if (Input.GetKeyDown(KeyCode.I))
+        {
+            bigInventoryPanel.gameObject.SetActive(true);
+            gameObject.SetActive(false);
+        }
+
         if (Input.GetKeyDown(KeyCode.Tab))
         {
             currentPage = (currentPage + 1) % maxRow;
@@ -66,7 +75,7 @@ public class InventoryUI : MonoBehaviour
         UpdateUI();
     }
 
-    public ItemData GetSelectedItem() //스크롤 = 선택
+    public ItemData GetSelectedItem() //선택된 아이템 가져오기
     {
         int index = currentPage * rowSize + selectedIndex;
         if (index < inventory.slots.Length)

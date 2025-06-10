@@ -4,12 +4,14 @@ using TMPro;
 
 public class Inventory : MonoBehaviour
 {
+
     public int slotCount = 15;
     public InventorySlot[] slots;
     public InventoryUI inventoryUI;
     private int gold;
     public int basicGold;
     public GoldUI goldUI;
+    public BigInventoryUI bigInvenUI;
 
     private void Awake()
     {
@@ -46,6 +48,7 @@ public class Inventory : MonoBehaviour
                 {
                     slot.quantity++;
                     inventoryUI.UpdateUI();
+                    bigInvenUI.UpdateUI();
                     return true;
                 }
             }
@@ -68,7 +71,7 @@ public class Inventory : MonoBehaviour
 
     public void BuyItem(ItemData item)
     {
-        if(gold>item.price)
+        if(gold>=item.price)
         {
             goldUI.SubtractGold(item.price);
             AddItem(item);
@@ -84,8 +87,12 @@ public class Inventory : MonoBehaviour
             if (!slot.IsEmpty && slot.item == item)
             {
                 slot.quantity--;
+
                 if (slot.quantity <= 0)
+                {
                     slot.Clear();
+                    bigInvenUI.UpdateUI();
+                }
 
                 goldUI.AddGold(item.price / 10);
                 inventoryUI.UpdateUI();

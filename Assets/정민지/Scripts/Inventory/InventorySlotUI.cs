@@ -1,15 +1,18 @@
-using TMPro;
-using Unity.VisualScripting;
 using UnityEngine;
 using UnityEngine.UI;
+using TMPro;
+using UnityEngine.EventSystems;
 
-public class InventorySlotUI : MonoBehaviour
+public class InventorySlotUI : MonoBehaviour, IPointerClickHandler
 {
     public Image iconImage;
     public TMP_Text quantityText;
     public Image highlightImage;
 
-    public void SetSlot(InventorySlot slot, bool isSelected = false)
+    private int index; // 슬롯 인덱스 저장
+    private BigInventoryUI owner; // 부모 UI 참조
+
+    public void SetSlot(InventorySlot slot, bool isSelected = false) //아이템 세팅
     {
         if (slot.IsEmpty)
         {
@@ -24,5 +27,16 @@ public class InventorySlotUI : MonoBehaviour
         }
 
         highlightImage.enabled = isSelected;
+    }
+
+    public void Initialize(BigInventoryUI ownerUI, int slotIndex)
+    {
+        owner = ownerUI;
+        index = slotIndex;
+    }
+
+    public void OnPointerClick(PointerEventData eventData)
+    {
+        owner.OnSlotClicked(index);
     }
 }
