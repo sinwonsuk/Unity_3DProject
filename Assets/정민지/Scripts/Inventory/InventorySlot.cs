@@ -12,6 +12,7 @@ public class InventorySlot
     {
         item = null;
         quantity = 0;
+        item.isStackable = false;
     }
 }
 

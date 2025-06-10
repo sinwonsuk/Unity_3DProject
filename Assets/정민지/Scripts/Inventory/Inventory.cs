@@ -6,16 +6,18 @@ public class Inventory : MonoBehaviour
 {
     public int slotCount = 15;
     public InventorySlot[] slots;
-    public int gold = 100;
-    public TMP_Text showGold;
     public InventoryUI inventoryUI;
+    private int gold;
+    public int basicGold;
+    public GoldUI goldUI;
 
     private void Awake()
     {
         slots = new InventorySlot[slotCount];
         for (int i = 0; i < slotCount; i++)
             slots[i] = new InventorySlot();
-        showGold.text = ($"{gold}");
+        gold = basicGold;
+        EventBus<Gold>.Raise(new Gold(basicGold));
 
     }
 
@@ -32,7 +34,6 @@ public class Inventory : MonoBehaviour
     private void UpdateGold(Gold _gold)
     {
         gold = _gold.currentGold;
-        showGold.text = ($"{gold}");
     }
 
     public bool AddItem(ItemData item)
@@ -69,9 +70,9 @@ public class Inventory : MonoBehaviour
     {
         if(gold>item.price)
         {
-            gold -= item.price;
-            EventBus<Gold>.Raise(new Gold(gold));
+            goldUI.SubtractGold(item.price);
             AddItem(item);
+            Debug.Log("아이템 구매 완료");
         }
     }
 
@@ -86,8 +87,7 @@ public class Inventory : MonoBehaviour
                 if (slot.quantity <= 0)
                     slot.Clear();
 
-                gold += item.price;
-                EventBus<Gold>.Raise(new Gold(gold));
+                goldUI.AddGold(item.price / 10);
                 inventoryUI.UpdateUI();
                 break;
             }

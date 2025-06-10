@@ -119,6 +119,17 @@ NavMeshSettings:
     debug:
       m_Flags: 0
   m_NavMeshData: {fileID: 0}
+--- !u!114 &42939421 stripped
+MonoBehaviour:
+  m_CorrespondingSourceObject: {fileID: 664531233433621385, guid: 893bf5b833239e24db224d1dcdc0f1a5, type: 3}
+  m_PrefabInstance: {fileID: 1847681676881425048}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 0d80c5f8455bf3e48bd99ebffc7b83d1, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1 &150317312
 GameObject:
   m_ObjectHideFlags: 0
@@ -730,17 +741,6 @@ Transform:
   m_Children: []
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: -110.319, z: 0}
---- !u!114 &1289044132 stripped
-MonoBehaviour:
-  m_CorrespondingSourceObject: {fileID: 2770008680043116901, guid: 893bf5b833239e24db224d1dcdc0f1a5, type: 3}
-  m_PrefabInstance: {fileID: 1847681676881425048}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 0}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: f4688fdb7df04437aeb418b961361dc5, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
 --- !u!1 &1686757557
 GameObject:
   m_ObjectHideFlags: 0
@@ -836,10 +836,14 @@ PrefabInstance:
     serializedVersion: 3
     m_TransformParent: {fileID: 0}
     m_Modifications:
-    - target: {fileID: 3115187701088361058, guid: 893bf5b833239e24db224d1dcdc0f1a5, type: 3}
-      propertyPath: basicSword
-      value: 
-      objectReference: {fileID: 11400000, guid: dc06d416fb3c75f428464033d09d2b57, type: 2}
+    - target: {fileID: 2770008680043116901, guid: 893bf5b833239e24db224d1dcdc0f1a5, type: 3}
+      propertyPath: m_text
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 2770008680043116901, guid: 893bf5b833239e24db224d1dcdc0f1a5, type: 3}
+      propertyPath: m_HorizontalAlignment
+      value: 4
+      objectReference: {fileID: 0}
     - target: {fileID: 4130999450503676816, guid: 893bf5b833239e24db224d1dcdc0f1a5, type: 3}
       propertyPath: m_Pivot.x
       value: 0
@@ -920,18 +924,46 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 4724199754340876283, guid: 893bf5b833239e24db224d1dcdc0f1a5, type: 3}
+      propertyPath: m_AnchorMax.x
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 4724199754340876283, guid: 893bf5b833239e24db224d1dcdc0f1a5, type: 3}
+      propertyPath: m_AnchorMax.y
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 4724199754340876283, guid: 893bf5b833239e24db224d1dcdc0f1a5, type: 3}
+      propertyPath: m_AnchorMin.x
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 4724199754340876283, guid: 893bf5b833239e24db224d1dcdc0f1a5, type: 3}
+      propertyPath: m_AnchorMin.y
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 4724199754340876283, guid: 893bf5b833239e24db224d1dcdc0f1a5, type: 3}
+      propertyPath: m_SizeDelta.x
+      value: 800
+      objectReference: {fileID: 0}
+    - target: {fileID: 4724199754340876283, guid: 893bf5b833239e24db224d1dcdc0f1a5, type: 3}
+      propertyPath: m_AnchoredPosition.x
+      value: 996
+      objectReference: {fileID: 0}
+    - target: {fileID: 4724199754340876283, guid: 893bf5b833239e24db224d1dcdc0f1a5, type: 3}
+      propertyPath: m_AnchoredPosition.y
+      value: 413
+      objectReference: {fileID: 0}
     - target: {fileID: 6801154750796494864, guid: 893bf5b833239e24db224d1dcdc0f1a5, type: 3}
       propertyPath: m_Name
       value: InGameUI
       objectReference: {fileID: 0}
     - target: {fileID: 7484911796765999644, guid: 893bf5b833239e24db224d1dcdc0f1a5, type: 3}
-      propertyPath: gold
-      value: 200000
-      objectReference: {fileID: 0}
-    - target: {fileID: 7484911796765999644, guid: 893bf5b833239e24db224d1dcdc0f1a5, type: 3}
-      propertyPath: showGold
+      propertyPath: goldUI
       value: 
-      objectReference: {fileID: 1289044132}
+      objectReference: {fileID: 42939421}
+    - target: {fileID: 7484911796765999644, guid: 893bf5b833239e24db224d1dcdc0f1a5, type: 3}
+      propertyPath: basicGold
+      value: 20000000
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []

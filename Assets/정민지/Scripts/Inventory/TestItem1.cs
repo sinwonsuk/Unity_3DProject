@@ -10,6 +10,7 @@ public class TestItem1 : MonoBehaviour
     public void OnClickButtonOne()
     {
         inventory.BuyItem(sword1);
+        Debug.Log("기본검 구매");
     }
 
     public void OnClickButtonTwo()
