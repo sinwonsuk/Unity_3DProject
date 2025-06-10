@@ -46,19 +46,19 @@ public class CameraController : MonoBehaviour
         invertYVal = (invertY) ? -1 : 1;
 
         // 마우스 Y축 입력으로 상하 회전 처리
-        rotationX += Input.GetAxis("Mouse Y") * invertYVal * rotationSpeed;
-        rotationX = Mathf.Clamp(rotationX, minVerticalAngle, maxVerticalAngle);
+        //rotationX += Input.GetAxis("Mouse Y") * invertYVal * rotationSpeed;
+        //rotationX = Mathf.Clamp(rotationX, minVerticalAngle, maxVerticalAngle);
 
-        // 마우스 X축 입력으로 좌우 회전 처리
-        rotationY += Input.GetAxis("Mouse X") * invertXVal * rotationSpeed;
+        //// 마우스 X축 입력으로 좌우 회전 처리
+        //rotationY += Input.GetAxis("Mouse X") * invertXVal * rotationSpeed;
 
         // 최종 회전값 계산
-        var targetRotation = Quaternion.Euler(rotationX, rotationY, 0);
+        //var targetRotation = Quaternion.Euler(transform.rotation.x, transform.rotation.y, 0);
 
         // 카메라 위치 및 회전 적용
         //var focusPosition = followTarget.position + new Vector3(framingOffset.x, framingOffset.y, 0);
         //transform.position = focusPosition - targetRotation * new Vector3(0, 0, distance);
-        transform.rotation = targetRotation;
+       // transform.rotation = targetRotation;
     }
 
     // 플레이어 이동 방향 계산을 위한 Y축 회전값만 반환

@@ -1,62 +1,58 @@
-using Unity.Cinemachine;
 using UnityEngine;
 using UnityEngine.AI;
-
+using static Unity.Collections.Unicode;
+using static UnityEngine.Rendering.DebugUI;
+using Fusion;
 public class MoveState : BaseState<PlayerStateMachine.PlayerState>
 {
+    PlayerStateMachine PlayerStateMachine;
 
-    public MoveState(PlayerStateMachine.PlayerState key , Animator animator,Transform transform,CinemachineCamera cinemachine) : base(key,animator)
+    [SerializeField] float rotationSpeed = 500f;
+    float moveSpeed = 2.0f;
+
+    public MoveState(PlayerStateMachine.PlayerState key, Animator animator, PlayerStateMachine playerStateMachine)
+        : base(key, animator)
     {
-        cameraController = Camera.main.GetComponent<CameraController>();
-
-        this.camera = cinemachine;
-
-        this.transform = transform;
+        this.PlayerStateMachine = playerStateMachine;
     }
 
     public override void EnterState()
     {
-        animator.SetBool("Moving",true);
+        animator.SetBool("Walk", true);
     }
+
     public override void ExitState()
     {
-
+        animator.SetFloat("MoveLeftRight", 0.0f);
+        animator.SetFloat("MoveForWard", 0.0f);
+        moveSpeed = 2.0f;
     }
+
     public override void UpdateState()
     {
-        // 수평, 수직 입력값 받기
-        float h = Input.GetAxis("Horizontal");
-        float v = Input.GetAxis("Vertical");
+        Debug.Log("Move");
 
-        // 전체 이동량 계산
-        moveAmountZ = Mathf.Clamp01(Mathf.Abs(h));
-        moveAmountY = Mathf.Clamp01(Mathf.Abs(v));
+        
+        if (TryHandleAttackInput()) return;
+        if (TryHandleJumpInput()) return;
 
-        // 입력 방향 정규화
-        var moveInput = (new Vector3(h, 0, v)).normalized;
-
-        // 카메라 방향을 기준으로 이동 방향 계산
-        var moveDir = cameraController.PlanarRotation * moveInput;
-
-        animator.SetFloat("Velocity Z", v);
-        animator.SetFloat("Velocity Y", h);
-
-        targetRotation = Quaternion.LookRotation(moveDir);
-
-        Debug.Log($"Camera Y: {targetRotation}, Player Y: {transform.rotation}");
-
-        transform.rotation = Quaternion.RotateTowards(transform.rotation, targetRotation, rotationSpeed * Time.deltaTime);
-
+        UpdateMovementAnimation();
     }
 
+    public override void FixedUpdateState()
+    {
+        if (TryHandleRollInput()) return;
+
+        PlayerStateMachine.MoveInput();
+    }
+    public override void LateUpdateState()
+    {
+        
+    }
     public override PlayerStateMachine.PlayerState GetNextState()
     {
-      if(Input.GetAxisRaw("Horizontal") == 0 && Input.GetAxisRaw("Vertical") == 0)
-      {
-            animator.SetFloat("Velocity Z", 0);
-            animator.SetBool("Moving", false);
+        if (Input.GetAxis("Horizontal") == 0 && Input.GetAxis("Vertical") == 0)
             return PlayerStateMachine.PlayerState.Idle;
-      }
 
         return PlayerStateMachine.PlayerState.Move;
     }
@@ -65,12 +61,69 @@ public class MoveState : BaseState<PlayerStateMachine.PlayerState>
     public override void OnTriggerExit(Collider collider) { }
     public override void OnTriggerStay(Collider collider) { }
 
-    float moveAmountZ;
-    float moveAmountY;
-    CameraController cameraController;
-    CinemachineCamera camera;
+    private bool TryHandleRollInput()
+    {
+        return PlayerStateMachine.RollInput();
+    }
+    private bool TryHandleJumpInput()
+    {
+        if (Input.GetKey(KeyCode.LeftControl))
+        {
+            animator.SetBool("Jump", true);
+            PlayerStateMachine.ChangeState(PlayerStateMachine.PlayerState.Jump);
+            return true;
+        }
+        
+        return false;
+    }
 
-    [SerializeField] float rotationSpeed = 500f;
-    Quaternion targetRotation;
-    Transform transform;
+
+    private void Roll(ERollState dir)
+    {
+        animator.SetInteger("RollCount", (int)dir);
+        PlayerStateMachine.ChangeState(PlayerStateMachine.PlayerState.Roll);
+    }
+
+    private bool TryHandleAttackInput()
+    {
+        if(PlayerStateMachine.isWeapon ==false)
+            return false;
+        if (Input.GetMouseButtonDown(0) && Input.GetKey(KeyCode.LeftShift))
+        {
+            animator.SetBool("RunAttack",true);
+            PlayerStateMachine.ChangeState(PlayerStateMachine.PlayerState.Attack);
+            return true;
+        }
+        else if (Input.GetMouseButtonDown(0))
+        {
+            animator.SetBool("RunAttack", false);
+            PlayerStateMachine.ChangeState(PlayerStateMachine.PlayerState.Attack);
+            return true;
+        }
+        return false;
+    }
+
+    private void UpdateMovementAnimation()
+    {
+        float h = Input.GetAxis("Horizontal");
+        float v = Input.GetAxis("Vertical");
+
+        //v = Mathf.Clamp01(v);
+
+
+        if (Input.GetKey(KeyCode.LeftShift) && v > 0f)
+        {
+            v = Mathf.Lerp(0f, 2f, v); // 결과: 0 ~ 2
+            moveSpeed = 4.0f;
+        }
+        else
+        {
+            moveSpeed = 2.0f;
+        }
+
+        // 애니메이션 파라미터 설정
+        animator.SetFloat("MoveLeftRight", h);
+        animator.SetFloat("MoveForWard", v);
+
+    }
 }

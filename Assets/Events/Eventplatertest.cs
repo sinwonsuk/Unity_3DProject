@@ -1,4 +1,3 @@
-using UnityEngine;
 
 public struct Eventplatertest : IEvent
 {
@@ -11,5 +10,9 @@ public struct Eventplatertest : IEvent
 
         playertest = null;
     }
-
+    //public Eventplatertest()
+    //{
+    //    playertest = null;
+    //    ads = 0;
+    //}
 }
