@@ -1,6 +1,7 @@
 using Cinemachine;
 using Fusion;
 using UnityEngine;
+using static Unity.Collections.Unicode;
 
 
 public class PlayerStateMachine : StageManager<PlayerStateMachine.PlayerState>
@@ -25,7 +26,8 @@ public class PlayerStateMachine : StageManager<PlayerStateMachine.PlayerState>
     float rotationSpeed = 2.0f;
     [SerializeField]
     Transform cameraFollow;
-
+    [SerializeField]
+    float rollSpeed = 15.0f;
 
 
     private CinemachineVirtualCamera cam;
@@ -43,19 +45,17 @@ public class PlayerStateMachine : StageManager<PlayerStateMachine.PlayerState>
 
     private void Awake()
     {
-        // ������Ʈ ���� 
+
         animator = GetComponent<Animator>();
         playerController = GetComponent<NetworkCharacterController>();
 
-        // ���콺 Ŀ�� 
+
         Cursor.lockState = CursorLockMode.Locked;
         Cursor.visible = false;
 
-
-        // ��ǲ�ý��� ���� ���� 
         inputHandler = new InputHandler(this);
 
-        //�ó׸��� ī�޶� ���� 
+
         GameObject camObj = GameObject.FindGameObjectWithTag("VirtualCam");
         cam = camObj.GetComponent<CinemachineVirtualCamera>();
         cam.Follow = cameraFollow;
@@ -85,7 +85,54 @@ public class PlayerStateMachine : StageManager<PlayerStateMachine.PlayerState>
     {
        
     }
-   
+
+    private bool TryHandleRollInput()
+    {
+        if (!isWeapon)
+            return false;
+
+        if (!GetInput(out NetworkInputData data))
+            return false;
+
+        if (!data.buttons.IsSet(NetworkInputData.KEY_SPACE))
+            return false;
+
+        if (data.direction == Vector3.forward)
+            Roll(ERollState.Forward);
+        else if (data.direction == Vector3.back)
+            Roll(ERollState.Backward);
+        else if (data.direction == Vector3.left)
+            Roll(ERollState.Left);
+        else if (data.direction == Vector3.right)
+            Roll(ERollState.Right);
+        else
+            return false;
+
+        return true;
+    }
+
+
+
+    public bool RollInput()
+    {
+        if (!isWeapon)
+            return false;
+
+        if (inputHandler.RollInput(out ERollState dir))
+        {
+            Roll(dir);
+            return true;
+        }
+
+        return false;
+    }
+
+
+    private void Roll(ERollState dir)
+    {
+        animator.SetInteger("RollCount", (int)dir);
+        ChangeState(PlayerState.Roll);
+    }
 
     public void MoveInput()
     {
@@ -102,6 +149,34 @@ public class PlayerStateMachine : StageManager<PlayerStateMachine.PlayerState>
             is3rdPersonCamera = !is3rdPersonCamera;
         }
     }
+
+    public void RollInput(int count)
+    {
+        if (ERollState.Backward == (ERollState)count)
+        {
+            playerController.Move(Vector3.back * Runner.DeltaTime * rollSpeed);
+        }
+        else if(ERollState.Forward == (ERollState)count)
+        {
+            playerController.Move(Vector3.forward * rollSpeed * Runner.DeltaTime);
+        }
+        else if(ERollState.Left == (ERollState)count)
+        {
+            playerController.Move(Vector3.left * rollSpeed * Runner.DeltaTime);
+        }
+        else
+        {
+            playerController.Move(Vector3.right * rollSpeed * Runner.DeltaTime);
+        }
+    }
+
+
+
+
+
+       
+
+
 
 
     //public override void FixedUpdateNetwork()

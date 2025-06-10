@@ -12,6 +12,33 @@ public class InputHandler
         this.runner = behaviour.Runner;
     }
 
+
+
+    public bool RollInput(out ERollState rollDirection)
+    {
+        rollDirection = default;
+
+        if (!behaviour.GetInput(out NetworkInputData data))
+            return false;
+
+        if (!data.buttons.IsSet(NetworkInputData.KEY_SPACE))
+            return false;
+
+        if (data.direction == Vector3.forward)
+            rollDirection = ERollState.Forward;
+        else if (data.direction == Vector3.back)
+            rollDirection = ERollState.Backward;
+        else if (data.direction == Vector3.left)
+            rollDirection = ERollState.Left;
+        else if (data.direction == Vector3.right)
+            rollDirection = ERollState.Right;
+        else
+            return false;
+
+        return true;
+    }
+
+
     // 방향 계산 및 처리
     public bool TryGetMoveDirection(out Vector3 moveDir, out Quaternion planarRotation)
     {
