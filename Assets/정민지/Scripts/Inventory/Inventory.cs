@@ -7,7 +7,7 @@ public class Inventory : MonoBehaviour
     public int slotCount = 15;
     public InventorySlot[] slots;
     public int gold = 100;
-    public TMP_Text goldText;
+    public TMP_Text showGold;
     public InventoryUI inventoryUI;
 
     private void Awake()
@@ -15,6 +15,24 @@ public class Inventory : MonoBehaviour
         slots = new InventorySlot[slotCount];
         for (int i = 0; i < slotCount; i++)
             slots[i] = new InventorySlot();
+        showGold.text = ($"{gold}");
+
+    }
+
+    private void OnEnable()
+    {
+        EventBus<Gold>.OnEvent += UpdateGold;
+    }
+
+    private void OnDisable()
+    {
+        EventBus<Gold>.OnEvent -= UpdateGold;
+    }
+
+    private void UpdateGold(Gold _gold)
+    {
+        gold = _gold.currentGold;
+        showGold.text = ($"{gold}");
     }
 
     public bool AddItem(ItemData item)
@@ -47,6 +65,16 @@ public class Inventory : MonoBehaviour
         return false;
     }
 
+    public void BuyItem(ItemData item)
+    {
+        if(gold>item.price)
+        {
+            gold -= item.price;
+            EventBus<Gold>.Raise(new Gold(gold));
+            AddItem(item);
+        }
+    }
+
     public void SellItem(ItemData item)
     {
         for (int i = 0; i < slots.Length; i++)
@@ -59,7 +87,7 @@ public class Inventory : MonoBehaviour
                     slot.Clear();
 
                 gold += item.price;
-                goldText.text = gold.ToString();
+                EventBus<Gold>.Raise(new Gold(gold));
                 inventoryUI.UpdateUI();
                 break;
             }

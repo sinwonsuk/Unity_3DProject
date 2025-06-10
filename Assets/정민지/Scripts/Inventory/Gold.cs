@@ -1,23 +1,12 @@
 using TMPro;
 using UnityEngine;
 
-public class Gold : MonoBehaviour
+public class Gold : IEvent
 {
-    [SerializeField] private TMP_Text showGold;
-    private int gold;
+    public int currentGold;
 
-    void Update()
+    public Gold(int _gold)
     {
-       showGold.text = ($"{gold}");
-    }
-
-    public void getGold(int _money)
-    {
-        gold+= _money;
-    }
-
-    public void useGold(int _money)
-    {
-        gold -= _money;
+        currentGold = _gold;
     }
 }

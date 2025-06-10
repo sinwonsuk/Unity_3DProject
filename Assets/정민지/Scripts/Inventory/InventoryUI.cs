@@ -57,6 +57,7 @@ public class InventoryUI : MonoBehaviour
         }
 
         float scroll = Input.GetAxis("Mouse ScrollWheel");
+
         if (scroll > 0f)
             selectedIndex = (selectedIndex - 1 + rowSize) % rowSize;
         else if (scroll < 0f)

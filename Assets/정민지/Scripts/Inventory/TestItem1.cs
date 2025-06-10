@@ -9,17 +9,17 @@ public class TestItem1 : MonoBehaviour
 
     public void OnClickButtonOne()
     {
-        inventory.AddItem(sword1);
+        inventory.BuyItem(sword1);
     }
 
     public void OnClickButtonTwo()
     {
-        inventory.AddItem(sword2);
+        inventory.BuyItem(sword2);
     }
 
     public void OnClickButtonThree()
     {
-        inventory.AddItem(sword3);
+        inventory.BuyItem(sword3);
     }
 
 }
