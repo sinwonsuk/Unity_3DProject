@@ -10,5 +10,6 @@ public class ShopManagerConfig : BaseScriptableObject
 	}
 
 	[field: SerializeField]
+	public List<NpcShopEntry> npcShops { get; private set; }
 	public List<ShopItem> shopItems { get; private set; }
 }
