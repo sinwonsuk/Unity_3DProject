@@ -6,14 +6,7 @@ using UnityEngine;
 using UnityEngine.UI;
 public class CharacterSelectionManager : NetworkBehaviour
 {
-    [SerializeField] private Image profileImage;
-    [SerializeField] private Sprite[] characterSprites;
-    [SerializeField] private Button leftButton;
-    [SerializeField] private Button rightButton;
     [SerializeField] private Button readyButton;
-    //[SerializeField] private Image readyButtonImage;
-    //[SerializeField] private Sprite readyOffSprite;
-    //[SerializeField] private Sprite readyOnSprite;
 
     public int SelectedIndex { get; private set; }
     public bool IsReady { get; private set; }
@@ -22,32 +15,9 @@ public class CharacterSelectionManager : NetworkBehaviour
 
     private void Start()
     {
-        leftButton.onClick.AddListener(() => ChangeCharacter(-1));
-        rightButton.onClick.AddListener(() => ChangeCharacter(1));
         readyButton.onClick.AddListener(ConfirmSelection);
-
-        UpdateCharacterVisual();
     }
 
-    private void ChangeCharacter(int direction)
-    {
-        if (IsReady) return;
-
-        SelectedIndex += direction;
-
-        if (SelectedIndex < 0) SelectedIndex = characterSprites.Length - 1;
-        if (SelectedIndex >= characterSprites.Length) SelectedIndex = 0;
-
-        UpdateCharacterVisual();
-    }
-
-    private void UpdateCharacterVisual()
-    {
-        if (SelectedIndex >= 0 && SelectedIndex < characterSprites.Length)
-        {
-            profileImage.sprite = characterSprites[SelectedIndex];
-        }
-    }
 
     private void ConfirmSelection()
     {
@@ -57,12 +27,21 @@ public class CharacterSelectionManager : NetworkBehaviour
 
         Debug.Log($"캐릭터 선택 완료: {characterTypes[SelectedIndex]} (index: {SelectedIndex})");
 
-        leftButton.interactable = false;
-        rightButton.interactable = false;
         readyButton.interactable = false;
 
-       // if (readyButtonImage != null && readyOnSprite != null)
-        //    readyButtonImage.sprite = readyOnSprite;
+    }
 
+    public void CancelSelection()
+    {
+        if (!IsReady && !LobbyCameraManager.Instance.IsZoomedIn) return;
+
+        IsReady = false;
+        Debug.Log("캐릭터 선택 취소됨");
+
+        readyButton.interactable = true;
+        SelectedIndex = 0;
+
+        LobbyCameraManager.Instance.ReturnToOriginalPosition();
+        LobbyUIManager.Instance.HideZoomUI();
     }
 }

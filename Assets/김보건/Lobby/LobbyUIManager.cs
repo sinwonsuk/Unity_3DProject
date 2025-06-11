@@ -1,19 +1,31 @@
+using TMPro;
 using UnityEngine;
 
 public class LobbyUIManager : MonoBehaviour
 {
-    public GameObject matchingUI;         
-    public GameObject characterSelectUI; 
+    public static LobbyUIManager Instance;
 
-    private void Start()
+    public GameObject zoomUI;
+
+    [Header("UI 텍스트 오브젝트들")]
+    public TMP_Text nameText;       // Name 오브젝트
+    public TMP_Text introduceText;  // introduce 오브젝트
+
+    private void Awake()
     {
-        matchingUI.SetActive(true);
-        characterSelectUI.SetActive(false);
+        Instance = this;
     }
 
-    public void OnClick_MatchingButton()
+    public void ShowCharacterInfo(string name, string desc)
     {
-        matchingUI.SetActive(false);   
-        characterSelectUI.SetActive(true);     
+        zoomUI.SetActive(true);
+
+        nameText.text = name;
+        introduceText.text = desc;
+    }
+
+    public void HideZoomUI()
+    {
+        zoomUI.SetActive(false);
     }
 }
