@@ -2,25 +2,28 @@ using UnityEngine;
 
 public class TestItem1 : MonoBehaviour
 {
-    public ItemData sword1;
-    public ItemData sword2;
-    public ItemData sword3;
     [SerializeField] private Inventory inventory;
+    [SerializeField] private BigInventoryUI bigInventoryUI;
 
-    public void OnClickButtonOne()
-    {
-        inventory.BuyItem(sword1);
-        Debug.Log("기본검 구매");
-    }
+    //public void OnClickButtonOne()
+    //{
+    //    inventory.BuyItemById(101);
+    //    Debug.Log("기본검 구매");
+    //}
 
-    public void OnClickButtonTwo()
-    {
-        inventory.BuyItem(sword2);
-    }
+    //public void OnClickButtonTwo()
+    //{
+    //    inventory.BuyItemById(102);
+    //}
 
-    public void OnClickButtonThree()
-    {
-        inventory.BuyItem(sword3);
-    }
+    //public void OnClickButtonThree()
+    //{
+    //    inventory.BuyItemById(103);
+    //}
+
+    //public void OnClickAndSellItem()
+    //{
+    //    inventory.SellItem(bigInventoryUI.GetBigSelectedItem());
+    //}
 
 }

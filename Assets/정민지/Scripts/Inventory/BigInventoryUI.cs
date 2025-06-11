@@ -1,4 +1,5 @@
 using System.Collections.Generic;
+using Unity.VisualScripting;
 using UnityEngine;
 
 public class BigInventoryUI : MonoBehaviour
@@ -18,15 +19,6 @@ public class BigInventoryUI : MonoBehaviour
         UpdateUI();
     }
 
-    void Update()
-    {
-        if (Input.GetKeyDown(KeyCode.I))
-        {
-            inventoryOnoff.gameObject.SetActive(true);
-            gameObject.SetActive(false);
-        }
-    }
-
     void InitSlots()
     {
         for (int i = 0; i < inventory.slots.Length; i++)
@@ -42,6 +34,14 @@ public class BigInventoryUI : MonoBehaviour
     {
         selectedIndex = index;
         UpdateUI();
+        // 작은 인벤토리에도 선택 인덱스 전달
+        inventoryOnoff.SetSelectedIndex(index);
+    }
+
+    public void SetSelectedIndexInBigUI(int index)
+    {
+        selectedIndex = index;
+        UpdateUI();
     }
 
     public void UpdateUI()
@@ -53,7 +53,8 @@ public class BigInventoryUI : MonoBehaviour
         }
     }
 
-    public ItemData GetSelectedItem()
+
+    public ItemData GetBigSelectedItem()
     {
         if (selectedIndex >= 0 && selectedIndex < inventory.slots.Length)
         {
@@ -62,14 +63,4 @@ public class BigInventoryUI : MonoBehaviour
         return null;
     }
 
-    public void OnClickAndSellItem()
-    {
-        inventory.SellItem(GetSelectedItem());
-        UpdateUI();
-    }
-
-    //private void OnEnable()
-    //{
-    //    UpdateUI();
-    //}
 }
