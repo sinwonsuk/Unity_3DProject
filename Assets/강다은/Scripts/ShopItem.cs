@@ -1,6 +1,6 @@
 [System.Serializable]
 public class ShopItem
 {
-	public int itemId;
+	public ItemData itemData; // 아이템 데이터
 	public int price;
 }

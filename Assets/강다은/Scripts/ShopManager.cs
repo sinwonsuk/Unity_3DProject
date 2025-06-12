@@ -26,11 +26,19 @@ public class ShopManager : baseManager, IGameManager
 				npcShopTable[item.npcId] = item.shopItems;
 		}
 
-		Debug.Log($"ShopManager 초기화 완료: {npcShopTable.Count}개 상품 등록됨");
+		EventBus<RequestShopItems>.OnEvent += HandleShopItemRequest;
+
+		Debug.Log($"[ShopManager] 초기화 완료: {npcShopTable.Count}개 NPC 상점 로드됨");
 	}
 
-	public List<ShopItem> GetShopItems(string npcId)
+	private void HandleShopItemRequest(RequestShopItems evt)
 	{
-		return npcShopTable.TryGetValue(npcId, out var items) ? items : new List<ShopItem>();
+		var list = GetShopItemsForNpc(evt.npcId);
+		evt.OnResponse?.Invoke(list);
+	}
+
+	public List<ShopItem> GetShopItemsForNpc(string npcId)
+	{
+		return npcShopTable.TryGetValue(npcId, out var list) ? list : new List<ShopItem>();
 	}
 }
