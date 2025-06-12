@@ -5,7 +5,7 @@ using UnityEngine;
 public class GoldUI : MonoBehaviour
 {
     [SerializeField] private TMP_Text goldText;
-    private int showGold;
+    public int showGold { get; private set; }
 
     private void OnEnable()
     {
