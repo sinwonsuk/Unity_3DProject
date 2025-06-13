@@ -11,6 +11,8 @@ public class LobbyUIManager : MonoBehaviour
     public TMP_Text nameText;       // Name 오브젝트
     public TMP_Text introduceText;  // introduce 오브젝트
 
+    public MatchTimerUI matchTimerUI;
+
     private void Awake()
     {
         Instance = this;
@@ -28,4 +30,5 @@ public class LobbyUIManager : MonoBehaviour
     {
         zoomUI.SetActive(false);
     }
+
 }

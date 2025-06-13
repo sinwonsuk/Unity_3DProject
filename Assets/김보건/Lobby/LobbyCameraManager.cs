@@ -9,8 +9,7 @@ public class LobbyCameraManager : MonoBehaviour
     public CinemachineVirtualCamera virtualCamera;
     public float zoomSpeed = 2f;
 
-    [SerializeField] private Vector3 defaultCamPosition = new Vector3(12.33f, 2.47f, 1.47f);
-    [SerializeField] private Vector3 defaultCamRotationEuler = new Vector3(0f, -110.948f, 0f);
+    [SerializeField] private Transform fallbackFocus;
 
     private Vector3 originalCamPos;
     private Quaternion originalCamRot;
@@ -21,13 +20,18 @@ public class LobbyCameraManager : MonoBehaviour
     private void Awake()
     {
         Instance = this;
-        
-        originalCamPos = defaultCamPosition;
-        originalCamRot = Quaternion.Euler(defaultCamRotationEuler);
+
     }
 
     private void Start()
     {
+        // Cinemachine의 Follow / LookAt 초기화
+        virtualCamera.Follow = fallbackFocus;
+        virtualCamera.LookAt = fallbackFocus;
+
+        // 카메라 되돌릴 위치 저장용
+        originalCamPos = fallbackFocus.position;
+        originalCamRot = fallbackFocus.rotation;
     }
 
     public void ZoomToCharacter(Transform target)

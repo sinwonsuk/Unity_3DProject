@@ -69,7 +69,7 @@ public class UIGameMenu : MonoBehaviour
 #endif
     }
 
-    public async void ConfirmNicknameAndConnect()
+    public void ConfirmNicknameAndConnect()
     {
         string nickname = NicknameText.text;
         if (string.IsNullOrWhiteSpace(nickname))
@@ -86,26 +86,16 @@ public class UIGameMenu : MonoBehaviour
 
         // Runner 생성 및 설정
         _runner = RunnerSingleton.Instance;
-        _runner.ProvideInput = true;
-        _runner.name = "NetworkRunner";
+        if (_runner == null)
+        {
+            Debug.LogError("RunnerSingleton에서 Runner를 찾을 수 없음");
+            return;
+        }
+
         DontDestroyOnLoad(_runner);
         _runner.ProvideInput = true;
 
-        var result = await _runner.StartGame(new StartGameArgs()
-        {
-            GameMode = GameMode.Shared,
-            SessionName = "DefaultRoom",
-            Scene = SceneRef.FromIndex(1),
-            SceneManager = _runner.GetComponent<NetworkSceneManagerDefault>()
-        });
-
-        if (result.Ok)
-        {
-            Debug.Log("서버 연결 성공 및 씬 전환 완");
-        }
-        else
-        {
-            Debug.LogError($"서버 연결 실패: {result.ShutdownReason}");
-        }
+        //씬 전환만 수행. StartGame은 AutoMatchManager에서 수행
+        SceneManager.LoadScene("LobbyScene");
     }
 }

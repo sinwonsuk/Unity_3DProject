@@ -1,124 +1,123 @@
-using Fusion;
+ï»¿using Fusion;
 using Fusion.Sockets;
 using System.Collections.Generic;
 using UnityEngine;
 using System.Threading.Tasks;
 using System.Linq;
 using UnityEngine.SceneManagement;
+using System.Collections;
+using static Unity.Collections.Unicode;
 
 public class AutoMatchManager : MonoBehaviour, INetworkRunnerCallbacks
 {
-    [SerializeField] private int inGameSceneIndex = 2;
     private NetworkRunner runner;
-    private int maxPlayers = 2;
-    private bool isMatching = false;
+    public MatchTimerUI matchTimerUI;
 
-    private async void Start()
+    public static AutoMatchManager Instance { get; private set; }
+
+    private void Awake()
+    {
+        Instance = this;
+        //DontDestroyOnLoad(gameObject);
+    }
+
+    public void OnMatchButtonClick()
+    {
+        matchTimerUI?.StartTimer();
+
+        if (!MatchQueueManager.Instance.RoomStarted)
+        {
+            // ë§¤ì¹­ 1ë“±, ë°© ìƒì„±
+            string roomName = $"Room_7777"; 
+            MatchQueueManager.Instance.CurrentRoomName = roomName;
+
+            Debug.Log($"íŒë‹¨ ë°© ìƒì„± ë° ì ‘ì†: {roomName}");
+            StartGameWithRoomName(roomName);
+        }
+        else
+        {
+            // ë§¤ì¹­2ë“± ë™ì¼í•œ ë°© ì…ì¥
+            string roomName = MatchQueueManager.Instance.CurrentRoomName;
+
+            Debug.Log($"ì°¸ê°€ì ê¸°ì¡´ ë°© ì…ì¥: {roomName}");
+            StartGameWithRoomName(roomName);
+        }
+    }
+
+    public async void StartGameWithRoomName(string roomName)
     {
         runner = RunnerSingleton.Instance;
-
-        if (runner == null)
-        {
-            Debug.LogError(" NetworkRunner ÀÎ½ºÅÏ½º°¡ Á¸Àçx");
-            return;
-        }
-
-        if (runner.IsRunning)
-        {
-            Debug.Log(" runner°¡ ÀÌ¹Ì ½ÇÇà Áß. Shutdown ½Ãµµ");
-            await runner.Shutdown();
-
-            // Shutdown ÈÄ Àç»ı¼º
-            Debug.Log(" runner Àç»ı¼º Áß");
-            RunnerSingleton.ClearRunner(); 
-            runner = RunnerSingleton.CreateRunner(); // »õ runner »ı¼º
-        }
-
         runner.ProvideInput = true;
         runner.AddCallbacks(this);
-    }
-    public void StartAutoMatching()
-    {
-        if (isMatching) return;
 
-        Debug.Log(" ¸ÅÄª ½ÃÀÛ ");
-        _ = TryJoinOrCreateRoom();  
-    }
+        var sceneManager = runner.GetComponent<NetworkSceneManagerDefault>();
 
-    private async Task TryJoinOrCreateRoom()
-    {
-        if (isMatching) return;
-        isMatching = true;
-
-        runner = RunnerSingleton.Instance;
-
-        var result = await runner.JoinSessionLobby(SessionLobby.ClientServer);
-        if (!result.Ok)
+        if (sceneManager == null)
         {
-            Debug.LogError($"·Îºñ ÁøÀÔ ½ÇÆĞ: {result.ShutdownReason}");
-            return;
+            Debug.LogError("runnerPrefabì— NetworkSceneManagerDefaultê°€ ì•ˆ ë¶™ì–´ìˆìŒ!");
+        }
+        else
+        {
+            Debug.Log($"ì”¬ ë§¤ë‹ˆì € íƒ€ì…: {sceneManager.GetType().Name}");
         }
 
-        Debug.Log("·Îºñ ÁøÀÔ ¼º°ø");
-    }
+        // í˜„ì¬ ë¡œë¹„ ì”¬ ì¸ë±ìŠ¤
+        int lobbySceneIndex = UnityEngine.SceneManagement.SceneManager
+                              .GetActiveScene().buildIndex;
 
-    public void OnSessionListUpdated(NetworkRunner runner, List<SessionInfo> sessionList)
-    {
-        foreach (var session in sessionList)
-        {
-            if (session.PlayerCount < maxPlayers)
-            {
-                Debug.Log($"ºó ¹æ ¹ß°ß: {session.Name}, Á¢¼Ó ½Ãµµ");
-                StartGame(session.Name);
-                return;
-            }
-        }
+        // í˜¸ìŠ¤íŠ¸ìš©: ë¡œë¹„ ì”¬ / í´ë¼ì´ì–¸íŠ¸ìš©: None
+        SceneRef startScene = SceneRef.FromIndex(lobbySceneIndex);
 
-        string newRoom = "Room_" + Random.Range(1000, 9999);
-        Debug.Log($"ºó ¹æ ¾øÀ½, »õ ¹æ »ı¼º: {newRoom}");
-        StartGame(newRoom);
-    }
-
-    private async void StartGame(string sessionName)
-    {
         var result = await runner.StartGame(new StartGameArgs
         {
             GameMode = GameMode.AutoHostOrClient,
-            SessionName = sessionName,
-            Scene = SceneRef.FromIndex(2),
-            SceneManager = runner.GetComponent<NetworkSceneManagerDefault>()
+            SessionName = roomName,
+            Scene = startScene,
+            SceneManager = sceneManager
         });
 
         if (result.Ok)
         {
-            Debug.Log($"'{sessionName}' ¸ÅÄª ¼º°ø");
+            Debug.Log("í´ë¼ì´ì–¸íŠ¸ StartGame ì„±ê³µ ");
         }
         else
         {
-            Debug.LogError($"'{sessionName}' ¸ÅÄª ½ÇÆĞ: {result.ShutdownReason}");
+            Debug.LogError($"í´ë¼ì´ì–¸íŠ¸ StartGame ì‹¤íŒ¨ : {result.ShutdownReason}");
         }
     }
 
     public async void OnPlayerJoined(NetworkRunner runner, PlayerRef player)
     {
-        var currentSessionName = runner.SessionInfo?.Name ?? "ÀÌ¸§ ¾øÀ½";
-        int currentPlayerCount = runner.ActivePlayers.Count();
+        Debug.Log($"í”Œë ˆì´ì–´ ì…ì¥: {player}. í˜„ì¬ ì¸ì›: {runner.ActivePlayers.Count()}");
 
-        Debug.Log($"ÇÃ·¹ÀÌ¾î {player.PlayerId} ÀÌ(°¡) ¹æ '{currentSessionName}'¿¡ ÀÔÀå.");
-        Debug.Log($"ÇöÀç '{currentSessionName}' ¹æ ÀÎ¿ø ¼ö: {currentPlayerCount}");
-
-        if (currentPlayerCount >= maxPlayers && runner.IsServer)
+        if (runner.IsServer && runner.ActivePlayers.Count() == 2)
         {
-            Debug.Log("ÇÃ·¹ÀÌ¾î 2¸í È®ÀÎµÊ. Host°¡ ÀÎ°ÔÀÓ ¾À ·Îµå ½Ãµµ!");
-            Debug.Log("¾À ·Îµå ½Ãµµ");
+            Debug.Log("ì¸ê²Œì„ ì”¬ìœ¼ë¡œ ì´ë™ ì‹œì‘");
+
+            // ë§¤ì¹­ ì™„ë£Œ, í˜„ì¬ ë°© ì´ë¦„ ì´ˆê¸°í™”
+            MatchQueueManager.Instance.CurrentRoomName = "";
 
             await runner.SceneManager.LoadScene(
-                SceneRef.FromIndex(2),
-                new NetworkLoadSceneParameters() // ±âº»°ª: LoadSceneMode.Single
-            );
-
-            Debug.Log("¾À ·Îµå ¿Ï·áµÊ?");
+                SceneRef.FromIndex(2),                 // 2 = BoTest
+                new NetworkLoadSceneParameters()
+                );
         }
+    }
+    public void OnSessionListUpdated(NetworkRunner runner, List<SessionInfo> sessionList)
+    {
+        //foreach (var session in sessionList)
+        //{
+        //    if (session.PlayerCount < maxPlayers)
+        //    {
+        //        Debug.Log($"ë¹ˆ ë°© ë°œê²¬: {session.Name}, ì ‘ì† ì‹œë„");
+        //        StartGameInRoom(session.Name);
+        //        return;
+        //    }
+        //}
+
+        //string newRoom = "Room_" + Random.Range(1000, 9999);
+        //Debug.Log($"ë¹ˆ ë°© ì—†ìŒ, ìƒˆ ë°© ìƒì„±: {newRoom}");
+        //StartGameInRoom(newRoom);
     }
 
     public void OnPlayerLeft(NetworkRunner runner, PlayerRef player) { }
@@ -132,7 +131,37 @@ public class AutoMatchManager : MonoBehaviour, INetworkRunnerCallbacks
     public void OnCustomAuthenticationResponse(NetworkRunner runner, Dictionary<string, object> data) { }
     public void OnHostMigration(NetworkRunner runner, HostMigrationToken hostMigrationToken) { }
     public void OnReliableDataReceived(NetworkRunner runner, PlayerRef player, ReliableKey key, System.IO.Stream stream) { }
-    public void OnSceneLoadDone(NetworkRunner runner) { }
+    public void OnSceneLoadDone(NetworkRunner runner)
+    {
+        Debug.Log("ì”¬ ë¡œë”© ì™„ë£Œ");
+
+        var boTest = SceneManager.GetSceneByName("BoTest");
+        if (boTest.IsValid() && boTest.isLoaded)
+        {
+            // BoTestë¥¼ ActiveSceneìœ¼ë¡œ
+            SceneManager.SetActiveScene(boTest);
+
+            // í˜¸ìŠ¤íŠ¸ë¼ë©´ ë¡œë¹„ ì”¬ ì–¸ë¡œë“œ
+            if (runner.IsServer)
+            {
+                var lobby = SceneManager.GetSceneByName("LobbyScene");
+                if (lobby.isLoaded)
+                {
+                    _ = runner.SceneManager.UnloadScene(SceneRef.FromIndex(1)); // ë¡œë¹„ ì¸ë±ìŠ¤
+                }
+            }
+
+            // ë¡œë¹„ UI ë„ê¸°
+            LobbyUIManager.Instance?.gameObject.SetActive(false);
+
+            Debug.Log("OnSceneLoadDone ì¸ê²Œì„ ì”¬ ì²˜ë¦¬ ì™„ë£Œ");
+        }
+        else
+        {
+            // ë¡œë¹„ ì”¬ ì¬ë¡œë“œ(ì²« ë²ˆì§¸ í˜¸ì¶œ) â€“ ì•„ë¬´ê²ƒë„ í•˜ì§€ ì•ŠìŒ
+            Debug.Log("OnSceneLoadDone ë¡œë¹„ ì”¬ ë¡œë“œ ì™„ë£Œ /íŒ¨ìŠ¤");
+        }
+    }
     public void OnSceneLoadStart(NetworkRunner runner) { }
     public void OnObjectExitAOI(NetworkRunner runner, NetworkObject obj, PlayerRef player) { }
     public void OnObjectEnterAOI(NetworkRunner runner, NetworkObject obj, PlayerRef player) { }
