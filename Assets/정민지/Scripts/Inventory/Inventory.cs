@@ -92,7 +92,7 @@ public class Inventory : MonoBehaviour
         for (int i = 0; i < slots.Length; i++)
         {
             var slot = slots[i];
-            if (!slot.IsEmpty && slot.item == item)
+            if (!slot.IsEmpty && slot.item == item&&i==bigInventoryUI.selectedIndex)
             {
                 slot.quantity--;
 
@@ -107,18 +107,5 @@ public class Inventory : MonoBehaviour
         }
     }
 
-    //public bool HasItem(ItemData item, int count = 1)
-    //{
-    //    int total = 0;
-    //    foreach (var slot in slots)
-    //    {
-    //        if (!slot.IsEmpty && slot.item == item)
-    //        {
-    //            total += slot.quantity;
-    //            if (total >= count)
-    //                return true;
-    //        }
-    //    }
-    //    return false;
-    //}
+    
 }
