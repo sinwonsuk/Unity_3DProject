@@ -32,10 +32,10 @@ public class LobbyCameraManager : MonoBehaviour
 
 
         StopAllCoroutines(); // 기존 코루틴이 돌고 있다면 정지
-        StartCoroutine(ZoomCoroutine(target));
+        StartCoroutine(ZoomInCamera(target));
     }
 
-    private IEnumerator ZoomCoroutine(Transform target)
+    private IEnumerator ZoomInCamera(Transform target)
     {
         Transform camTransform = virtualCamera.transform;
         Vector3 startPos = camTransform.position;
@@ -58,11 +58,11 @@ public class LobbyCameraManager : MonoBehaviour
     public void ReturnToOriginalPosition()
     {
         StopAllCoroutines();
-        StartCoroutine(ZoomBackCoroutine()); 
+        StartCoroutine(ZoomBackCamera()); 
 
     }
 
-    private IEnumerator ZoomBackCoroutine()
+    private IEnumerator ZoomBackCamera()
     {
         Transform camTransform = virtualCamera.transform;
         Vector3 startPos = camTransform.position;
