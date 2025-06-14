@@ -18,7 +18,6 @@ public class AutoMatchManager : MonoBehaviour, INetworkRunnerCallbacks
     private void Awake()
     {
         Instance = this;
-        //DontDestroyOnLoad(gameObject);
     }
 
     public void OnMatchButtonClick()
@@ -65,7 +64,7 @@ public class AutoMatchManager : MonoBehaviour, INetworkRunnerCallbacks
         int lobbySceneIndex = UnityEngine.SceneManagement.SceneManager
                               .GetActiveScene().buildIndex;
 
-        // 호스트용: 로비 씬 / 클라이언트용: None
+        // 네트워크 씬 매니저에 로비 씬 등록
         SceneRef startScene = SceneRef.FromIndex(lobbySceneIndex);
 
         var result = await runner.StartGame(new StartGameArgs
@@ -94,30 +93,14 @@ public class AutoMatchManager : MonoBehaviour, INetworkRunnerCallbacks
         {
             Debug.Log("인게임 씬으로 이동 시작");
 
-            // 매칭 완료, 현재 방 이름 초기화
+            // 매칭 완료되면 현재 방 이름 초기화
             MatchQueueManager.Instance.CurrentRoomName = "";
 
-            await runner.SceneManager.LoadScene(
-                SceneRef.FromIndex(2),                 // 2 = BoTest
-                new NetworkLoadSceneParameters()
-                );
+            await runner.LoadScene(SceneRef.FromIndex(2), LoadSceneMode.Single);
         }
     }
     public void OnSessionListUpdated(NetworkRunner runner, List<SessionInfo> sessionList)
     {
-        //foreach (var session in sessionList)
-        //{
-        //    if (session.PlayerCount < maxPlayers)
-        //    {
-        //        Debug.Log($"빈 방 발견: {session.Name}, 접속 시도");
-        //        StartGameInRoom(session.Name);
-        //        return;
-        //    }
-        //}
-
-        //string newRoom = "Room_" + Random.Range(1000, 9999);
-        //Debug.Log($"빈 방 없음, 새 방 생성: {newRoom}");
-        //StartGameInRoom(newRoom);
     }
 
     public void OnPlayerLeft(NetworkRunner runner, PlayerRef player) { }
@@ -141,7 +124,7 @@ public class AutoMatchManager : MonoBehaviour, INetworkRunnerCallbacks
             // BoTest를 ActiveScene으로
             SceneManager.SetActiveScene(boTest);
 
-            // 호스트라면 로비 씬 언로드
+            // 호스트라면 로비 씬 끄기
             if (runner.IsServer)
             {
                 var lobby = SceneManager.GetSceneByName("LobbyScene");
@@ -152,13 +135,13 @@ public class AutoMatchManager : MonoBehaviour, INetworkRunnerCallbacks
             }
 
             // 로비 UI 끄기
-            LobbyUIManager.Instance?.gameObject.SetActive(false);
+            //LobbyUIManager.Instance?.gameObject.SetActive(false);
 
             Debug.Log("OnSceneLoadDone 인게임 씬 처리 완료");
         }
         else
         {
-            // 로비 씬 재로드(첫 번째 호출) – 아무것도 하지 않음
+            // 첫 네트워크 연결 때 로비 씬 재로드
             Debug.Log("OnSceneLoadDone 로비 씬 로드 완료 /패스");
         }
     }

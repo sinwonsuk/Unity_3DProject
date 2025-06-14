@@ -25,7 +25,7 @@ public class LobbyCameraManager : MonoBehaviour
 
     private void Start()
     {
-        // Cinemachine의 Follow / LookAt 초기화
+        // 시네머신의 Follow / LookAt 초기화
         virtualCamera.Follow = fallbackFocus;
         virtualCamera.LookAt = fallbackFocus;
 

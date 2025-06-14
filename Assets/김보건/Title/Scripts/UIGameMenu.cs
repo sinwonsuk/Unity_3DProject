@@ -95,7 +95,7 @@ public class UIGameMenu : MonoBehaviour
         DontDestroyOnLoad(_runner);
         _runner.ProvideInput = true;
 
-        //씬 전환만 수행. StartGame은 AutoMatchManager에서 수행
+        //씬 전환만 수행
         SceneManager.LoadScene("LobbyScene");
     }
 }
