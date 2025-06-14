@@ -6,12 +6,6 @@ using UnityEngine;
 using UnityEngine.UI;
 public class CharacterSelectionManager : NetworkBehaviour
 {
-    [SerializeField] private Button readyButton;
-
-    public int SelectedIndex { get; private set; }
-    public bool IsReady { get; private set; }
-
-    private string[] characterTypes = { "Warrior", "Mage", "Archer" }; 
 
     private void Start()
     {
@@ -44,4 +38,11 @@ public class CharacterSelectionManager : NetworkBehaviour
         LobbyCameraManager.Instance.ReturnToOriginalPosition();
         LobbyUIManager.Instance.HideZoomUI();
     }
+
+    [SerializeField] private Button readyButton;
+
+    public int SelectedIndex { get; private set; }
+    public bool IsReady { get; private set; }
+
+    private string[] characterTypes = { "Warrior", "Mage", "Archer" };
 }

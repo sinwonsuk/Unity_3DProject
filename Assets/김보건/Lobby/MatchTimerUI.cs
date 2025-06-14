@@ -5,12 +5,6 @@ using UnityEngine.UI;
 
 public class MatchTimerUI : MonoBehaviour
 {
-    [Header("UI 연결")]
-    [SerializeField] private TMP_Text timerText;
-    [SerializeField] private Button startButton;
-
-    private Coroutine timerCoroutine;
-    private float elapsedTime;
 
     public void StartTimer()
     {
@@ -52,4 +46,11 @@ public class MatchTimerUI : MonoBehaviour
         if (startButton != null)
             startButton.interactable = true;
     }
+
+    [Header("UI 연결")]
+    [SerializeField] private TMP_Text timerText;
+    [SerializeField] private Button startButton;
+
+    private Coroutine timerCoroutine;
+    private float elapsedTime;
 }

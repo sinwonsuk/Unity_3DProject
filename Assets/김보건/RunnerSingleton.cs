@@ -3,9 +3,6 @@ using UnityEngine;
 
 public class RunnerSingleton : MonoBehaviour
 {
-    public static NetworkRunner Instance { get; private set; }
-
-    [SerializeField] private NetworkRunner runnerPrefab;
 
     private void Awake()
     {
@@ -44,11 +41,15 @@ public class RunnerSingleton : MonoBehaviour
         var singletonObj = Object.FindFirstObjectByType<RunnerSingleton>();
         if (singletonObj == null)
         {
-            Debug.LogError("RunnerSingleton 오브젝트가 씬에 없음 (CreateRunner 실패)");
+            Debug.LogError("RunnerSingleton 오브젝트가 씬에 없음");
             return null;
         }
 
         singletonObj.CreateAndAssignRunner();
         return Instance;
     }
+
+    public static NetworkRunner Instance { get; private set; }
+
+    [SerializeField] private NetworkRunner runnerPrefab;
 }

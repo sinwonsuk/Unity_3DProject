@@ -3,16 +3,6 @@ using UnityEngine;
 
 public class LobbyUIManager : MonoBehaviour
 {
-    public static LobbyUIManager Instance;
-
-    public GameObject zoomUI;
-
-    [Header("UI 텍스트 오브젝트들")]
-    public TMP_Text nameText;       // Name 오브젝트
-    public TMP_Text introduceText;  // introduce 오브젝트
-
-    public MatchTimerUI matchTimerUI;
-
     private void Awake()
     {
         Instance = this;
@@ -30,5 +20,15 @@ public class LobbyUIManager : MonoBehaviour
     {
         zoomUI.SetActive(false);
     }
+
+    public static LobbyUIManager Instance;
+
+    public GameObject zoomUI;
+
+    [Header("UI 텍스트 오브젝트들")]
+    public TMP_Text nameText;       // Name 오브젝트
+    public TMP_Text introduceText;  // introduce 오브젝트
+
+    public MatchTimerUI matchTimerUI;
 
 }

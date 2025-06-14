@@ -2,9 +2,6 @@ using UnityEngine;
 
 public class CharacterSelector : MonoBehaviour
 {
-    public Transform zoomTarget; // 카메라가 이동할 위치
-    public string characterName;
-    public string characterDesc;
 
     public void OnMouseDown()
     {
@@ -15,4 +12,8 @@ public class CharacterSelector : MonoBehaviour
         //UI 갱신
         LobbyUIManager.Instance.ShowCharacterInfo(characterName, characterDesc);
     }
+
+    public Transform zoomTarget; // 카메라가 이동할 위치
+    public string characterName;
+    public string characterDesc;
 }

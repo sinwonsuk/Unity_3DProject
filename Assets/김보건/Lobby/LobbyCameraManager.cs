@@ -4,18 +4,6 @@ using Cinemachine;
 
 public class LobbyCameraManager : MonoBehaviour
 {
-    public static LobbyCameraManager Instance { get; private set; }
-
-    public CinemachineVirtualCamera virtualCamera;
-    public float zoomSpeed = 2f;
-
-    [SerializeField] private Transform fallbackFocus;
-
-    private Vector3 originalCamPos;
-    private Quaternion originalCamRot;
-
-    private bool isZoomedIn = false;
-    public bool IsZoomedIn => isZoomedIn; // 외부 접근
 
     private void Awake()
     {
@@ -26,18 +14,22 @@ public class LobbyCameraManager : MonoBehaviour
     private void Start()
     {
         // 시네머신의 Follow / LookAt 초기화
-        virtualCamera.Follow = fallbackFocus;
-        virtualCamera.LookAt = fallbackFocus;
-
-        // 카메라 되돌릴 위치 저장용
-        originalCamPos = fallbackFocus.position;
-        originalCamRot = fallbackFocus.rotation;
+        virtualCamera.Follow = CameraFocus;
+        virtualCamera.LookAt = CameraFocus;
     }
 
     public void ZoomToCharacter(Transform target)
     {
         if (isZoomedIn) return;
         isZoomedIn = true;
+
+        virtualCamera.Follow = null;
+        virtualCamera.LookAt = null;
+
+        //원래 카메라 위치 저장
+        originalCamPos = virtualCamera.transform.position;
+        originalCamRot = virtualCamera.transform.rotation;
+
 
         StopAllCoroutines(); // 기존 코루틴이 돌고 있다면 정지
         StartCoroutine(ZoomCoroutine(target));
@@ -66,7 +58,8 @@ public class LobbyCameraManager : MonoBehaviour
     public void ReturnToOriginalPosition()
     {
         StopAllCoroutines();
-        StartCoroutine(ZoomBackCoroutine());
+        StartCoroutine(ZoomBackCoroutine()); 
+
     }
 
     private IEnumerator ZoomBackCoroutine()
@@ -85,5 +78,21 @@ public class LobbyCameraManager : MonoBehaviour
         }
 
         isZoomedIn = false;
+        virtualCamera.Follow = CameraFocus;
+        virtualCamera.LookAt = CameraFocus;
+
     }
+
+    public static LobbyCameraManager Instance { get; private set; }
+
+    public CinemachineVirtualCamera virtualCamera;
+    public float zoomSpeed = 2f;
+
+    [SerializeField] private Transform CameraFocus;
+
+    private Vector3 originalCamPos;
+    private Quaternion originalCamRot;
+
+    private bool isZoomedIn = false;
+    public bool IsZoomedIn => isZoomedIn; // 외부 접근
 }

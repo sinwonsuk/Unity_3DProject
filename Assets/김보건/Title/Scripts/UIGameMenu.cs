@@ -5,21 +5,6 @@ using UnityEngine.SceneManagement;
 
 public class UIGameMenu : MonoBehaviour
 {
-    [Header("UI Panels")]
-    public GameObject StartGamePanel;     // STARTGAME 버튼
-    public GameObject NicknamePanel;      // 닉네임 입력 
-    public GameObject OptionsPanel;       // 옵션 패널
-    public GameObject ExitPanel;          // 종료 확인 패널
-
-    [Header("Nickname UI")]
-    public TMP_InputField NicknameText;
-
-    [Header("Network")]
-    public NetworkRunner RunnerPrefab;    // NetworkRunner 프리팹
-
-    private NetworkRunner _runner;
-
-
     private void Start()
     {
         StartGamePanel.SetActive(true);
@@ -98,4 +83,18 @@ public class UIGameMenu : MonoBehaviour
         //씬 전환만 수행
         SceneManager.LoadScene("LobbyScene");
     }
+
+    [Header("UI Panels")]
+    public GameObject StartGamePanel;     // STARTGAME 버튼
+    public GameObject NicknamePanel;      // 닉네임 입력 
+    public GameObject OptionsPanel;       // 옵션 패널
+    public GameObject ExitPanel;          // 종료 확인 패널
+
+    [Header("Nickname UI")]
+    public TMP_InputField NicknameText;
+
+    [Header("Network")]
+    public NetworkRunner RunnerPrefab;    // NetworkRunner 프리팹
+
+    private NetworkRunner _runner;
 }

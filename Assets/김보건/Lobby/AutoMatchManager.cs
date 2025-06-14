@@ -10,10 +10,6 @@ using static Unity.Collections.Unicode;
 
 public class AutoMatchManager : MonoBehaviour, INetworkRunnerCallbacks
 {
-    private NetworkRunner runner;
-    public MatchTimerUI matchTimerUI;
-
-    public static AutoMatchManager Instance { get; private set; }
 
     private void Awake()
     {
@@ -30,7 +26,7 @@ public class AutoMatchManager : MonoBehaviour, INetworkRunnerCallbacks
             string roomName = $"Room_7777"; 
             MatchQueueManager.Instance.CurrentRoomName = roomName;
 
-            Debug.Log($"판단 방 생성 및 접속: {roomName}");
+            Debug.Log($"방 생성 및 접속: {roomName}");
             StartGameWithRoomName(roomName);
         }
         else
@@ -53,7 +49,7 @@ public class AutoMatchManager : MonoBehaviour, INetworkRunnerCallbacks
 
         if (sceneManager == null)
         {
-            Debug.LogError("runnerPrefab에 NetworkSceneManagerDefault가 안 붙어있음!");
+            Debug.LogError("러너프리팹에 NetworkSceneManagerDefault가 없음");
         }
         else
         {
@@ -152,4 +148,9 @@ public class AutoMatchManager : MonoBehaviour, INetworkRunnerCallbacks
     public void OnConnectRequest(NetworkRunner runner, NetworkRunnerCallbackArgs.ConnectRequest request, byte[] token) { }
     public void OnReliableDataReceived(NetworkRunner runner, PlayerRef player, ReliableKey key, System.ArraySegment<byte> data) { }
     public void OnReliableDataProgress(NetworkRunner runner, PlayerRef player, ReliableKey key, float progress) { }
+
+    private NetworkRunner runner;
+    public MatchTimerUI matchTimerUI;
+
+    public static AutoMatchManager Instance { get; private set; }
 }

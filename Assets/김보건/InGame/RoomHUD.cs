@@ -5,7 +5,6 @@ using System.Linq;
 
 public class RoomHUD : MonoBehaviour
 {
-    NetworkRunner runner;
     void Start() => runner = UnityEngine.Object.FindFirstObjectByType<NetworkRunner>();
 
     void OnGUI()
@@ -20,4 +19,6 @@ public class RoomHUD : MonoBehaviour
             GUILayout.Label($" PlayerRef {p.PlayerId}");
         GUILayout.EndArea();
     }
+
+    NetworkRunner runner;
 }
