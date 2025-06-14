@@ -23,7 +23,6 @@ public class InventorySlotUI : MonoBehaviour, IPointerClickHandler
         {
             iconImage.enabled = true;
             iconImage.sprite = slot.item.itemIcon;
-           // quantityText.text = slot.item.isStackable ? slot.quantity.ToString() : "";
         }
 
         highlightImage.enabled = isSelected;
