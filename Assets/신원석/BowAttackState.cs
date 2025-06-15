@@ -11,6 +11,8 @@ public class BowState : BaseState<PlayerStateMachine.PlayerState>
     public float ySmoothT = 0.1f;
 
     Quaternion targetRotation;
+
+    GameObject arrow;
     public BowState(PlayerStateMachine.PlayerState key, Animator animator, PlayerStateMachine stateMachine) : base(key, animator)
     {
         this.playerStateMachine = stateMachine;
@@ -21,13 +23,14 @@ public class BowState : BaseState<PlayerStateMachine.PlayerState>
     {
         playerStateMachine.AnimHandler.SetAttackBool(true);
         rope = playerStateMachine.WeaponManager.GetCurrentWeapon().GetComponent<Bow>().Rope.transform;
+
+        arrow = playerStateMachine.WeaponManager.CreateArrow();
     }
     public override void ExitState()
     {
         playerStateMachine.AnimHandler.SetAttackBool(false);
-
         shoot = false;
-        //playerStateMachine.Cam.Priority = 9;
+        arrow = null;
     }
 
     public override void UpdateState()
@@ -45,29 +48,26 @@ public class BowState : BaseState<PlayerStateMachine.PlayerState>
             Quaternion quaternion = Quaternion.Euler(0, data.CameraRotateY, 0);
 
             playerStateMachine.playerController.Rotate(quaternion);
-
         }
 
 
 
         if (playerStateMachine.inputHandler.IsRightAttackPressed() && Input.GetMouseButton(0) && gatherAttack ==1 && shoot == false)
         {
-            // 활 발사도 만들어야함 
-             shoot = true;
-            playerStateMachine.AnimHandler.ShootBowWeapon();           
+            arrow.gameObject.GetComponent<Arrow>().Shoot = true;
+            playerStateMachine.AnimHandler.ShootBowWeapon();
+            shoot = true;
         }
         else if (Input.GetMouseButton(1) && shoot ==false)
         {
             //playerStateMachine.Cam.Priority = 11;
-
 
             gatherAttack = Mathf.MoveTowards(gatherAttack, 1.0f, playerStateMachine.Runner.DeltaTime);
 
             ropePosX = Mathf.MoveTowards(ropePosX, 0.8f, playerStateMachine.Runner.DeltaTime*1.2f);
 
 
-            
-
+          
             rope.localPosition = new Vector3(ropePosX, rope.localPosition.y, rope.localPosition.z);
 
 
@@ -87,7 +87,7 @@ public class BowState : BaseState<PlayerStateMachine.PlayerState>
 
 
         if (gatherAttack == 0)
-           // playerStateMachine.ChangeState(PlayerStateMachine.PlayerState.Idle);
+            playerStateMachine.ChangeState(PlayerStateMachine.PlayerState.Idle);
         return;
 
 

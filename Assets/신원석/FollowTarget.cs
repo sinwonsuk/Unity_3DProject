@@ -68,14 +68,14 @@ public class FollowTarget : MonoBehaviour
 
         if(Input.GetKeyDown(KeyCode.H) && mousecheck ==false)          
         {
-            Cursor.lockState = CursorLockMode.Locked;
-            Cursor.visible = false;
+            //Cursor.lockState = CursorLockMode.Locked;
+            //Cursor.visible = false;
             mousecheck = true;
         }
         else if(Input.GetKeyDown(KeyCode.H) && mousecheck == true)
         {
-            Cursor.lockState = CursorLockMode.None;
-            Cursor.visible = true;
+            //Cursor.lockState = CursorLockMode.None;
+            //Cursor.visible = true;
             mousecheck = false;
         }
       

@@ -59,7 +59,7 @@ public class InputHandler
             Vector3 moveInput = new Vector3(data.moveAxis.x, 0, data.moveAxis.z).normalized;
             float yaw = data.CameraRotateY;
             planarRotation = Quaternion.Euler(0, yaw, 0);
-            moveDir = planarRotation * moveInput;
+            moveDir = planarRotation * Vector3.forward;
 
             return moveInput.sqrMagnitude > 0.01f;
         }

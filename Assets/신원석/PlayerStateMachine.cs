@@ -14,6 +14,7 @@ public enum ItemState
     Bow,
     Magic,
     Position,
+    Arrow,
 }
 
 
@@ -108,7 +109,7 @@ public class PlayerStateMachine : StageManager<PlayerStateMachine.PlayerState>
 
 
         Cursor.lockState = CursorLockMode.Locked;
-        Cursor.visible = false;
+        Cursor.visible = true;
 
         // 너무 비대해져서 역활 나눔 
         inputHandler = new InputHandler(this, CameraFollow);
@@ -185,21 +186,17 @@ public class PlayerStateMachine : StageManager<PlayerStateMachine.PlayerState>
 
         // 카메라 기준 이동 direction
 
-        if (GetInput(out NetworkInputData data))
-        {
-            Quaternion cameraRotationY = Quaternion.Euler(0, data.CameraRotateY, 0);
-            Vector3 move = cameraRotationY * new Vector3(Input.GetAxis("Horizontal"), 0, Input.GetAxis("Vertical")) * Runner.DeltaTime * moveSpeed;
+        inputHandler.TryGetMoveDirection(out Vector3 _moveDir, out Quaternion planarRot);
 
 
+        playerController.Move(_moveDir);
 
-            playerController.Move(move);
-        }
 
        
 
 
 
-        inputHandler.TryGetMoveDirection(out Vector3 _moveDir, out Quaternion planarRot);
+        //inputHandler.TryGetMoveDirection(out Vector3 _moveDir, out Quaternion planarRot);
 
        // // 시뮬레이션 목표치 결정
        // targetMove = _moveDir;

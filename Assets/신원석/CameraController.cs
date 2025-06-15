@@ -35,8 +35,8 @@ public class CameraController : MonoBehaviour
     private void Start()
     {
         // 게임 시작시 마우스 커서 숨기고 고정
-        Cursor.visible = false;
-        Cursor.lockState = CursorLockMode.Locked;
+        //Cursor.visible = false;
+        //Cursor.lockState = CursorLockMode.Locked;
     }
 
     private void Update()

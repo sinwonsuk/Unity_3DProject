@@ -110,7 +110,7 @@ public class BasicSpawner : MonoBehaviour, INetworkRunnerCallbacks
         if (Input.GetKey(KeyCode.D))
             data.direction += Vector3.right;
 
-        data.CameraRotateY = FollowTarget.CachedYaw;
+        data.CameraRotateY = Camera.main.transform.eulerAngles.y;
 
 
         data.test = Camera.main.transform.forward;

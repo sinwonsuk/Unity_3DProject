@@ -12,6 +12,7 @@ public class WeaponManager
     private Transform rightHandSocket;
     private Transform leftHandSocket;
     private GameObject currentWeapon;
+    private ItemState currentWeaponState;
 
     public WeaponManager(WeaponsConfig config, Transform rightHandSocket, Transform leftHandSocket)
     {
@@ -33,13 +34,23 @@ public class WeaponManager
         else if(prefab != null && Dir == isDir.Left)
         {
             currentWeapon = GameObject.Instantiate(prefab, leftHandSocket);
-        }
-
+        } 
         else
         {
             Debug.LogWarning("무기 없음");
         }
+
+        currentWeaponState = state;
     }
+
+    public GameObject CreateArrow()
+    {
+        if (currentWeaponState != ItemState.Bow)
+            return null;
+
+        return GameObject.Instantiate (config.GetWeapon(ItemState.Arrow), currentWeapon.GetComponent<Bow>().Rope.transform);     
+    }
+
 
     public void Unequip()
     {
@@ -49,6 +60,5 @@ public class WeaponManager
             currentWeapon = null;
         }
     }
-
     public GameObject GetCurrentWeapon() => currentWeapon;
 }
