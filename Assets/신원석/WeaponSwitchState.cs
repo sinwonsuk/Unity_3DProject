@@ -6,18 +6,14 @@ public class WeaponSwitchState : BaseState<PlayerStateMachine.PlayerState>
     PlayerStateMachine playerStateMachine;
     public WeaponSwitchState(PlayerStateMachine.PlayerState key, Animator animator,PlayerStateMachine playerStateMachine) : base(key, animator)
     {
-        cameraController = Camera.main.GetComponent<CameraController>();
-
         this.playerStateMachine = playerStateMachine;
-
     }
 
     public override void EnterState()
     {
-        animator.SetTrigger("HalberdEquip");
+        playerStateMachine.WeaponManager.Equip(ItemState.Bow,isDir.Left);
+        playerStateMachine.AnimHandler.ChangeWeapon(ItemState.Bow);
         playerStateMachine.isWeapon = true;
-
-        //EventBus<EquipWeaponEvent>.Raise(new EquipWeaponEvent(1));
     }
     public override void ExitState()
     {
@@ -29,8 +25,7 @@ public class WeaponSwitchState : BaseState<PlayerStateMachine.PlayerState>
     }
 
     public override PlayerStateMachine.PlayerState GetNextState()
-    {
-       
+    {      
         return PlayerStateMachine.PlayerState.Idle;
     }
 
@@ -47,9 +42,7 @@ public class WeaponSwitchState : BaseState<PlayerStateMachine.PlayerState>
 
     }
 
-    float moveAmount;
-    CameraController cameraController;
+
     [SerializeField] float rotationSpeed = 500f;
-    Quaternion targetRotation;
-    Transform transform;
+
 }

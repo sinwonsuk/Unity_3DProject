@@ -23,7 +23,6 @@ public class AttackState : BaseState<PlayerStateMachine.PlayerState>
     }
     public override void ExitState()
     {
-
         stateMachine.SetIsAttackFalse();
         animator.SetBool("RunAttack", false);
         animator.SetBool("Attack", false);

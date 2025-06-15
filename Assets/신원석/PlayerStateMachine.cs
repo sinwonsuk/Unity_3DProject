@@ -4,6 +4,17 @@ using System.Collections;
 using Unity.Android.Gradle.Manifest;
 using UnityEngine;
 using static Unity.Collections.Unicode;
+using static UnityEngine.InputSystem.OnScreen.OnScreenStick;
+
+public enum ItemState
+{
+    none,
+    Sword,
+    Harberd,
+    Bow,
+    Magic,
+    Position,
+}
 
 
 public class PlayerStateMachine : StageManager<PlayerStateMachine.PlayerState>
@@ -17,12 +28,21 @@ public class PlayerStateMachine : StageManager<PlayerStateMachine.PlayerState>
         Jump,
         Attack,
         Roll,
+        BowAttack,
     }
+
+
+    public WeaponsConfig weapons;
+
+    public ItemState Item { get; set; } = ItemState.none;
 
 
     Animator animator;
     public PlayerCombat Combat { get; private set; }
     public AnimationHandler AnimHandler { get; private set; }
+    public InputHandler inputHandler { get; private set; }
+
+    public WeaponManager WeaponManager { get; private set; }
 
     [SerializeField]
     float moveSpeed = 5.0f;
@@ -34,9 +54,27 @@ public class PlayerStateMachine : StageManager<PlayerStateMachine.PlayerState>
     float rollSpeed = 15.0f;
     [SerializeField]
     float attackSpeed = 2.0f;
+    [SerializeField]
+    Transform rightHandTransform;
+    [SerializeField]
+    Transform leftHandTransform;
 
 
-    private CinemachineVirtualCamera cam;
+    Quaternion targetRotation;
+    Vector3 targetMove;
+
+    public Transform RightHandTransform
+    {
+        get => rightHandTransform;
+        set => rightHandTransform = value;
+    }
+    public Transform CameraFollow
+    {
+        get => cameraFollow;
+        set => cameraFollow = value;
+    }
+
+    public CinemachineVirtualCamera Cam { get; set; }
 
     public Transform groundCheck;
     public LayerMask groundMask;
@@ -45,7 +83,7 @@ public class PlayerStateMachine : StageManager<PlayerStateMachine.PlayerState>
 
 
     public NetworkCharacterController playerController {  get; private set; }
-    private InputHandler inputHandler;
+   
 
     public Vector3 rootMotionDelta { get; set; }
     public Quaternion rootMotionRotation { get; set; }
@@ -62,7 +100,6 @@ public class PlayerStateMachine : StageManager<PlayerStateMachine.PlayerState>
         set => animator.SetInteger(hashAttackCount, value);
     }
 
-
     private void Awake()
     {
 
@@ -74,25 +111,27 @@ public class PlayerStateMachine : StageManager<PlayerStateMachine.PlayerState>
         Cursor.visible = false;
 
         // 너무 비대해져서 역활 나눔 
-        inputHandler = new InputHandler(this);
+        inputHandler = new InputHandler(this, CameraFollow);
         Combat = new PlayerCombat(this);
         AnimHandler = new AnimationHandler(animator);
+        WeaponManager = new WeaponManager(weapons,rightHandTransform, leftHandTransform);
 
-        GameObject camObj = GameObject.FindGameObjectWithTag("VirtualCam");
-        cam = camObj.GetComponent<CinemachineVirtualCamera>();
-        cam.Follow = cameraFollow;
-        cam.LookAt = transform;
+        //GameObject camObj = GameObject.FindGameObjectWithTag("VirtualCam");
+        //Cam = camObj.GetComponent<CinemachineVirtualCamera>();
+        //Cam.Follow = cameraFollow;
+        //Cam.LookAt = transform;
 
         GameObject camObj2 = GameObject.FindGameObjectWithTag("VirtualCam2");
         CinemachineVirtualCamera cam2 = camObj2.GetComponent<CinemachineVirtualCamera>();
         cam2.Follow = cameraFollow;
-        cam2.LookAt = transform;
+        cam2.LookAt = cameraFollow;
 
         states[PlayerState.Idle] = new IdleState(PlayerState.Idle,animator, this);
         states[PlayerState.Move] = new MoveState(PlayerState.Move, animator, this);
         states[PlayerState.Switch] = new WeaponSwitchState(PlayerState.Switch, animator, this);
         states[PlayerState.Attack] = new AttackState(PlayerState.Attack,animator, this);
         states[PlayerState.Roll] = new RollState(PlayerState.Roll, animator, this);
+        states[PlayerState.BowAttack] = new BowState(PlayerState.BowAttack, animator, this);
         states[PlayerState.Jump] = new JumpState(PlayerState.Jump, animator, this);
 
         currentState = states[PlayerState.Idle];
@@ -133,26 +172,77 @@ public class PlayerStateMachine : StageManager<PlayerStateMachine.PlayerState>
         animator.SetInteger("RollCount", (int)dir);
         ChangeState(PlayerState.Roll);
     }
-
+    private Tick _initial;
     public void MoveInput()
     {
-        // 2. 입력 처리 (XZ)
-        inputHandler.TryGetMoveDirection(out Vector3 moveDir, out Quaternion planarRotation);
 
-        // 3. 회전 처리
-        if (Object.HasInputAuthority)
+        //if (!Object.HasInputAuthority)
+        //    return;
+
+
+
+        if (!Object.HasInputAuthority) return;
+
+        // 카메라 기준 이동 direction
+
+        if (GetInput(out NetworkInputData data))
         {
-            transform.rotation = Quaternion.RotateTowards(
-                transform.rotation,
-                planarRotation,
-                Time.fixedDeltaTime * rotationSpeed
-            );
+            Quaternion cameraRotationY = Quaternion.Euler(0, data.CameraRotateY, 0);
+            Vector3 move = cameraRotationY * new Vector3(Input.GetAxis("Horizontal"), 0, Input.GetAxis("Vertical")) * Runner.DeltaTime * moveSpeed;
 
-            // 4. Y축 이동값 직접 추가
-            Vector3 moveWithGravity = moveDir * moveSpeed;
 
-            playerController.Move(moveWithGravity * Runner.DeltaTime);
+
+            playerController.Move(move);
         }
+
+       
+
+
+
+        inputHandler.TryGetMoveDirection(out Vector3 _moveDir, out Quaternion planarRot);
+
+       // // 시뮬레이션 목표치 결정
+       // targetMove = _moveDir;
+       // targetRotation = planarRot;
+
+
+       // transform.rotation = Quaternion.RotateTowards(
+       //transform.rotation,
+       //targetRotation,
+       //rotationSpeed * Time.deltaTime);
+
+
+       // // 결정론 보장된 물리 이동
+        //playerController.Move(move);
+    }
+
+    public void testte()
+    {
+       //if (!Object.HasInputAuthority)
+       //    return;
+
+       // // 부드러운 회전 보간
+       // transform.rotation = Quaternion.RotateTowards(
+       // transform.rotation,
+       // targetRotation,
+       // rotationSpeed * Time.deltaTime)
+       //;
+    }
+
+    public void RotatePlayer()
+    {
+        //if (Object.HasInputAuthority)
+        //{
+        //    Quaternion quaternion = Quaternion.Euler(0, Camera.main.transform.eulerAngles.y, 0);
+
+        //    transform.rotation = Quaternion.RotateTowards(
+        //        transform.rotation,
+        //        quaternion,
+        //        Runner.DeltaTime * rotationSpeed
+        //    );
+        //    // 4. Y축 이동값 직접 추가
+
+        //}
     }
 
     public bool ComboAttackInput()

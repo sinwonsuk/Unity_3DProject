@@ -6,12 +6,15 @@ public class InputHandler
 {
     private NetworkRunner runner;
     private NetworkBehaviour behaviour;
-
+    private Transform transform;
     [Networked] private TickTimer delay { get; set; }
-    public InputHandler(NetworkBehaviour behaviour)
+    public InputHandler(NetworkBehaviour behaviour, Transform transform)
     {
         this.behaviour = behaviour;
         this.runner = behaviour.Runner;
+
+
+        this.transform = transform;
     }
 
 
@@ -43,6 +46,8 @@ public class InputHandler
 
 
 
+
+
     // 방향 계산 및 처리
     public bool TryGetMoveDirection(out Vector3 moveDir, out Quaternion planarRotation)
     {
@@ -52,7 +57,7 @@ public class InputHandler
         if (behaviour.GetInput(out NetworkInputData data))
         {
             Vector3 moveInput = new Vector3(data.moveAxis.x, 0, data.moveAxis.z).normalized;
-            float yaw = Camera.main.transform.eulerAngles.y;
+            float yaw = data.CameraRotateY;
             planarRotation = Quaternion.Euler(0, yaw, 0);
             moveDir = planarRotation * moveInput;
 
@@ -63,16 +68,25 @@ public class InputHandler
     }
 
     // 공격 입력 처리
-    public bool IsAttackPressed()
+    public bool IsRightAttackPressed()
     {
         if (behaviour.GetInput(out NetworkInputData data))
-        {
-         
-            return data.buttons.IsSet(NetworkInputData.MOUSEBUTTON0);
+        {      
+            return data.buttons.IsSet(NetworkInputData.MOUSEBUTTON1);
         }
 
         return false;
     }
+
+    public bool IsAttackPressed()
+    {
+        if (behaviour.GetInput(out NetworkInputData data))
+        {
+            return data.buttons.IsSet(NetworkInputData.MOUSEBUTTON0);
+        }
+        return false;
+    }
+
     // 대시 공격 입력 처리 
     public bool IsDashAttackPressed()
     {

@@ -26,10 +26,10 @@ public abstract class StageManager<EStage> : NetworkBehaviour where EStage : Enu
         {
             currentState.UpdateState();
         }
-        else
-        {
-            ChangeState(nextStateKey);
-        }
+        //else
+        //{
+        //    ChangeState(nextStateKey);
+        //}
     }
     public override void FixedUpdateNetwork()
     {
@@ -51,15 +51,19 @@ public abstract class StageManager<EStage> : NetworkBehaviour where EStage : Enu
         {
             currentState.LateUpdateState();
         }
-        else
-        {
-            ChangeState(nextStateKey);
-        }
+            
     }
 
 
     public void ChangeState(EStage nextStateKey)
     {
+
+        if (nextStateKey.Equals(currentState.StateKey))
+        {
+            return;
+        }
+
+
         IsTransition = true;
         currentState.ExitState();
         currentState = states[nextStateKey];

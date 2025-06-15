@@ -5,11 +5,13 @@ using Fusion.Sockets;
 using System.Collections.Generic;
 using System;
 using ExitGames.Client.Photon.StructWrapping;
+using Cinemachine;
 
 public class BasicSpawner : MonoBehaviour, INetworkRunnerCallbacks
 {
     private NetworkRunner _runner;
-
+    [SerializeField]
+    private CinemachineVirtualCamera cam;
     async void StartGame(GameMode mode)
     {
         // Create the Fusion runner and let it know that we will be providing user input
@@ -28,7 +30,7 @@ public class BasicSpawner : MonoBehaviour, INetworkRunnerCallbacks
         await _runner.StartGame(new StartGameArgs()
         {
             GameMode = mode,
-            SessionName = "TestRoom",
+            SessionName = "TestRoom1",
             Scene = scene,
             SceneManager = gameObject.AddComponent<NetworkSceneManagerDefault>()
         });
@@ -83,10 +85,11 @@ public class BasicSpawner : MonoBehaviour, INetworkRunnerCallbacks
     }
 
     private bool _mouseButton0;
-
+    private bool _mouseButton1;
     private void Update()
     {
         _mouseButton0 = _mouseButton0 | Input.GetMouseButton(0);
+        _mouseButton1 = _mouseButton1 | Input.GetMouseButton(1);
     }
 
     public void OnInput(NetworkRunner runner, NetworkInput input)
@@ -107,13 +110,20 @@ public class BasicSpawner : MonoBehaviour, INetworkRunnerCallbacks
         if (Input.GetKey(KeyCode.D))
             data.direction += Vector3.right;
 
+        data.CameraRotateY = FollowTarget.CachedYaw;
+
+
+        data.test = Camera.main.transform.forward;
+
+
+
 
         data.buttons.Set(NetworkInputData.KEY_C, Input.GetKey(KeyCode.C));
         data.buttons.Set(NetworkInputData.KEY_SPACE, Input.GetKey(KeyCode.Space));
-
+        data.buttons.Set(NetworkInputData.MOUSEBUTTON1, _mouseButton1);
         data.buttons.Set(NetworkInputData.MOUSEBUTTON0, _mouseButton0);
         _mouseButton0 = false;
-
+        _mouseButton1 = false;
         input.Set(data);
     }
     public void OnInputMissing(NetworkRunner runner, PlayerRef player, NetworkInput input) { }

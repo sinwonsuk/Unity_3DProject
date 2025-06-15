@@ -5,7 +5,7 @@ using static UnityEngine.Rendering.DebugUI;
 using Fusion;
 public class MoveState : BaseState<PlayerStateMachine.PlayerState>
 {
-    PlayerStateMachine PlayerStateMachine;
+    PlayerStateMachine playerStateMachine;
 
     [SerializeField] float rotationSpeed = 500f;
     float moveSpeed = 2.0f;
@@ -13,7 +13,7 @@ public class MoveState : BaseState<PlayerStateMachine.PlayerState>
     public MoveState(PlayerStateMachine.PlayerState key, Animator animator, PlayerStateMachine playerStateMachine)
         : base(key, animator)
     {
-        this.PlayerStateMachine = playerStateMachine;
+        this.playerStateMachine = playerStateMachine;
     }
 
     public override void EnterState()
@@ -31,7 +31,7 @@ public class MoveState : BaseState<PlayerStateMachine.PlayerState>
     public override void UpdateState()
     {
         Debug.Log("Move");
-        
+       
 
 
         if (TryHandleJumpInput()) return;
@@ -41,17 +41,19 @@ public class MoveState : BaseState<PlayerStateMachine.PlayerState>
 
     public override void FixedUpdateState()
     {
-        PlayerStateMachine.MoveInput();
+        playerStateMachine.MoveInput();
 
 
-        if (TryHandleRollInput()) return;
+        if (TryHandleRollInput()) 
+            return;
+
         TryHandleAttackInput();
 
        
     }
     public override void LateUpdateState()
     {
-        
+        playerStateMachine.testte();
     }
     public override PlayerStateMachine.PlayerState GetNextState()
     {
@@ -67,40 +69,38 @@ public class MoveState : BaseState<PlayerStateMachine.PlayerState>
 
     private bool TryHandleRollInput()
     {
-        return PlayerStateMachine.RollInput();
+        return playerStateMachine.RollInput();
     }
     private bool TryHandleJumpInput()
     {
         if (Input.GetKey(KeyCode.LeftControl))
         {
             animator.SetBool("Jump", true);
-            PlayerStateMachine.ChangeState(PlayerStateMachine.PlayerState.Jump);
+            playerStateMachine.ChangeState(PlayerStateMachine.PlayerState.Jump);
             return true;
         }
         
         return false;
     }
 
-
-    private void Roll(ERollState dir)
-    {
-        animator.SetInteger("RollCount", (int)dir);
-        PlayerStateMachine.ChangeState(PlayerStateMachine.PlayerState.Roll);
-    }
-
     private void TryHandleAttackInput()
     {
-        PlayerStateMachine.ComboAttackInput();
-        PlayerStateMachine.DashAttackInput();
+        playerStateMachine.ComboAttackInput();
+        playerStateMachine.DashAttackInput();
+
+        if(playerStateMachine.inputHandler.IsRightAttackPressed() && playerStateMachine.isWeapon ==true && playerStateMachine.AnimHandler.WeaponCount == (int)ItemState.Bow)
+        {
+            playerStateMachine.ChangeState(PlayerStateMachine.PlayerState.BowAttack);
+            return;
+        }
+
+
     }
 
     private void UpdateMovementAnimation()
     {
         float h = Input.GetAxis("Horizontal");
         float v = Input.GetAxis("Vertical");
-
-        //v = Mathf.Clamp01(v);
-
 
         if (Input.GetKey(KeyCode.LeftShift) && v > 0f)
         {

@@ -17,7 +17,6 @@ public class RollState : BaseState<PlayerStateMachine.PlayerState>
     public RollState(PlayerStateMachine.PlayerState key, Animator animator, PlayerStateMachine playerStateMachine) : base(key, animator)
     {
         this.playerStateMachine = playerStateMachine;
-
     }
 
     public override void EnterState()
