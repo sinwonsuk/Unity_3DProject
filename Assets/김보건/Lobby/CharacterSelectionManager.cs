@@ -35,6 +35,12 @@ public class CharacterSelectionManager : NetworkBehaviour
         readyButton.interactable = true;
         SelectedIndex = 0;
 
+        //¸ÅÄªÃë¼Ò
+        if (AutoMatchManager.Instance != null)
+        {
+            AutoMatchManager.Instance.CancelMatch();
+        }
+
         LobbyCameraManager.Instance.ReturnToOriginalPosition();
         LobbyUIManager.Instance.HideZoomUI();
     }

@@ -95,6 +95,28 @@ public class AutoMatchManager : MonoBehaviour, INetworkRunnerCallbacks
             await runner.LoadScene(SceneRef.FromIndex(2), LoadSceneMode.Single);
         }
     }
+    public void CancelMatch()
+    {
+        if (runner != null && runner.IsRunning)
+        {
+            Debug.Log("매칭 취소 중");
+            runner.Shutdown(); // 네트워크 연결 종료
+        }
+
+        matchTimerUI?.StopTimer(); // 타이머 중지
+        MatchQueueManager.Instance.CurrentRoomName = ""; // 방 초기화
+
+        // 기존 러너 파괴 및 새로 생성
+        RunnerSingleton.ClearRunner();
+        runner = RunnerSingleton.CreateRunner();
+        if (runner != null)
+        {
+            runner.ProvideInput = true;
+            runner.AddCallbacks(this);
+            Debug.Log("새 runner 재등록 완료");
+        }
+
+    }
     public void OnSessionListUpdated(NetworkRunner runner, List<SessionInfo> sessionList)
     {
     }
