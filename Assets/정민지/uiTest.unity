@@ -2331,9 +2331,9 @@ MonoBehaviour:
   m_OnClick:
     m_PersistentCalls:
       m_Calls:
-      - m_Target: {fileID: 2089945451}
-        m_TargetAssemblyTypeName: TestStamina, Assembly-CSharp
-        m_MethodName: OnclickStamina
+      - m_Target: {fileID: 2089945450}
+        m_TargetAssemblyTypeName: Resell, Assembly-CSharp
+        m_MethodName: OnClickResellButton
         m_Mode: 1
         m_Arguments:
           m_ObjectArgument: {fileID: 0}

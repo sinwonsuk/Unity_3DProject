@@ -97,7 +97,6 @@ public class Inventory : MonoBehaviour
 
                 if (slot.quantity <= 0)
                 {
-                    EventBus<GetGold>.Raise(new GetGold(item.price));
                     slot.Clear();
                     UpdateAllInventoryUI();
                     break;
