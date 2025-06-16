@@ -150,7 +150,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   virtualCamera: {fileID: 2006497877}
   zoomSpeed: 2
-  CameraFocus: {fileID: 0}
+  CameraFocus: {fileID: 1417867762}
 --- !u!4 &501945745
 Transform:
   m_ObjectHideFlags: 0

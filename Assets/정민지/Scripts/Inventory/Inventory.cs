@@ -1,4 +1,3 @@
-using static UnityEditor.Progress;
 using UnityEngine;
 using TMPro;
 

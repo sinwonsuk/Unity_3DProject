@@ -16,6 +16,7 @@ public class LobbyCameraManager : MonoBehaviour
         // 시네머신의 Follow / LookAt 초기화
         virtualCamera.Follow = CameraFocus;
         virtualCamera.LookAt = CameraFocus;
+
     }
 
     public void ZoomToCharacter(Transform target)
