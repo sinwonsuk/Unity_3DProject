@@ -1,4 +1,4 @@
-using static UnityEditor.Progress;
+using UnityEngine;
 
 [System.Serializable]
 public class InventorySlot

@@ -1,7 +1,5 @@
-using static UnityEditor.Progress;
 using UnityEngine;
 using TMPro;
-using WebSocketSharp;
 
 public class Inventory : MonoBehaviour
 {
