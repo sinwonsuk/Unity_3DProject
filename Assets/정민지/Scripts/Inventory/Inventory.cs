@@ -92,12 +92,12 @@ public class Inventory : MonoBehaviour
             var slot = slots[i];
             if (!slot.IsEmpty && slot.item == item&&i==bigInventoryUI.selectedIndex)
             {
-                goldUI.SubtractGold(item.price);
+                EventBus<GetGold>.Raise(new GetGold(item.price));
                 slot.quantity--;
 
                 if (slot.quantity <= 0)
                 {
-                    goldUI.SubtractGold(item.price);
+                    EventBus<GetGold>.Raise(new GetGold(item.price));
                     slot.Clear();
                     UpdateAllInventoryUI();
                     break;

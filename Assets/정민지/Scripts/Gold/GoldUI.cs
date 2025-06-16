@@ -10,13 +10,15 @@ public class GoldUI : MonoBehaviour
     private void OnEnable()
     {
         EventBus<Gold>.OnEvent += UpdateGoldUI;
-        EventBus<BuyItemRequested>.OnEvent += AddGold; 
+        EventBus<BuyItemRequested>.OnEvent += AddGold;
+        EventBus<GetGold>.OnEvent += SubtractGold;
     }
 
     private void OnDisable()
     {
         EventBus<Gold>.OnEvent -= UpdateGoldUI;
         EventBus<BuyItemRequested>.OnEvent -= AddGold;
+        EventBus<GetGold>.OnEvent -= SubtractGold;
     }
 
     private void UpdateGoldUI(Gold newGold)
@@ -39,9 +41,9 @@ public class GoldUI : MonoBehaviour
         EventBus<Gold>.Raise(new Gold(showGold));
     }
 
-    public void SubtractGold(int price)
+    public void SubtractGold(GetGold use)
     {
-        showGold += price/10;
+        showGold += use.getGold/10;
         EventBus<Gold>.Raise(new Gold(showGold));
     }
 }
