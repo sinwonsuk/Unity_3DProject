@@ -1,5 +1,4 @@
 using System.Collections.Generic;
-using Unity.VisualScripting;
 using UnityEngine;
 
 public class BigInventoryUI : MonoBehaviour
@@ -11,7 +10,7 @@ public class BigInventoryUI : MonoBehaviour
     [SerializeField] private Inventory inventory;
     private List<InventorySlotUI> slotUIs = new List<InventorySlotUI>();
 
-    private int selectedIndex = -1;
+    public int selectedIndex = -1;
 
     void Start()
     {

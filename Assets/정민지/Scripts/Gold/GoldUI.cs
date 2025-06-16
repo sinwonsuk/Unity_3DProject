@@ -10,11 +10,13 @@ public class GoldUI : MonoBehaviour
     private void OnEnable()
     {
         EventBus<Gold>.OnEvent += UpdateGoldUI;
+        EventBus<BuyItemRequested>.OnEvent += AddGold; 
     }
 
     private void OnDisable()
     {
         EventBus<Gold>.OnEvent -= UpdateGoldUI;
+        EventBus<BuyItemRequested>.OnEvent -= AddGold;
     }
 
     private void UpdateGoldUI(Gold newGold)
@@ -23,16 +25,23 @@ public class GoldUI : MonoBehaviour
         goldText.text = ($"{showGold}");
     }
 
-    public void AddGold(int amount)
+    public void AddGold(BuyItemRequested newItem)
     {
-        showGold += amount;
+        int totalPrice = newItem.price * newItem.amount;
+
+        if (showGold < totalPrice)
+        {
+            Debug.Log("°ñµå ºÎÁ·");
+            return;
+        }
+
+        showGold -= totalPrice;
         EventBus<Gold>.Raise(new Gold(showGold));
     }
 
-    public void SubtractGold(int amount)
+    public void SubtractGold(int price)
     {
-        showGold -= amount;
+        showGold -= price;
         EventBus<Gold>.Raise(new Gold(showGold));
     }
-    
 }

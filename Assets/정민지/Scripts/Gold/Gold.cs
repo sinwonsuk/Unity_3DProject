@@ -9,4 +9,5 @@ public class Gold : IEvent
     {
         currentGold = _gold;
     }
+
 }

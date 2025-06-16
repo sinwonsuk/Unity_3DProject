@@ -1,4 +1,3 @@
-using static UnityEditor.Progress;
 using UnityEngine;
 using TMPro;
 
@@ -32,12 +31,14 @@ public class Inventory : MonoBehaviour
     private void OnEnable()
     {
         EventBus<Gold>.OnEvent += UpdateGold;
+        EventBus<BuyItemRequested>.OnEvent += BuyItem;
     }
 
     //돈UI 구독 해제
     private void OnDisable()
     {
         EventBus<Gold>.OnEvent -= UpdateGold;
+        EventBus<BuyItemRequested>.OnEvent -= BuyItem;
     }
 
     //돈 실시간 업데이트
@@ -46,18 +47,13 @@ public class Inventory : MonoBehaviour
         gold = _gold.currentGold;
     }
 
-    //public void AddItemById(int itemId)
-    //{
-    //    var itemData = itemManager.GetItem(itemId);
-    //    if (itemData != null)
-    //    {
-    //        AddItem(itemData);
-    //    }
-    //    else
-    //    {
-    //        Debug.LogWarning($"Item ID {itemId}에 해당하는 아이템을 찾을 수 없습니다.");
-    //    }
-    //}
+    private void BuyItem(BuyItemRequested newItem)
+    {
+        for (int i = 0; i < newItem.amount; i++)
+        {
+            AddItem(newItem.itemData);
+        }
+    }
 
     public void UpdateAllInventoryUI()
     {
@@ -70,53 +66,23 @@ public class Inventory : MonoBehaviour
     {
         foreach (var slot in slots)
         {
-            if(slot.item.itemType == ItemType.Potion)
+            if (!slot.IsEmpty && slot.item == item && item.itemType == ItemType.Potion)
             {
-                if (!slot.IsEmpty && slot.item == item)
-                {
-                    slot.quantity++;
-                    UpdateAllInventoryUI();
-                    return;
-                }
-                else if (slot.IsEmpty)
-                {
-                    slot.item = item;
-                    slot.quantity = 1;
-                    UpdateAllInventoryUI();
-                    return;
-                }
+                slot.quantity++;
+                UpdateAllInventoryUI();
+                return;
             }
-            else
+            if (slot.IsEmpty)
             {
-                if(slot.IsEmpty)
-                {
-                    slot.item = item;
-                    slot.quantity = 1;
-                    UpdateAllInventoryUI();
-                    return;
-                }
+                slot.item = item;
+                slot.quantity = 1;
+                UpdateAllInventoryUI();
+                return;
             }
-              
-        }      
+        }
+
+        Debug.Log("인벤토리에 빈 슬롯이 없습니다.");
     }
-
-    ////아이템 구매
-    //public void BuyItemById(int itemId)
-    //{
-    //    var item = itemManager.GetItem(itemId);
-    //    if (item == null)
-    //    {
-    //        Debug.LogWarning($"아이템 ID {itemId}는 존재하지 않습니다.");
-    //        return;
-    //    }
-
-    //    if (gold >= item.price)
-    //    {
-    //        goldUI.SubtractGold(item.price);
-    //        AddItem(item);
-    //        Debug.Log("아이템 구매 완료");
-    //    }
-    //}
 
     //아이템 삭제
     public void SellItem(ItemData item)
@@ -124,7 +90,7 @@ public class Inventory : MonoBehaviour
         for (int i = 0; i < slots.Length; i++)
         {
             var slot = slots[i];
-            if (!slot.IsEmpty && slot.item == item)
+            if (!slot.IsEmpty && slot.item == item&&i==bigInventoryUI.selectedIndex)
             {
                 slot.quantity--;
 
@@ -139,18 +105,5 @@ public class Inventory : MonoBehaviour
         }
     }
 
-    //public bool HasItem(ItemData item, int count = 1)
-    //{
-    //    int total = 0;
-    //    foreach (var slot in slots)
-    //    {
-    //        if (!slot.IsEmpty && slot.item == item)
-    //        {
-    //            total += slot.quantity;
-    //            if (total >= count)
-    //                return true;
-    //        }
-    //    }
-    //    return false;
-    //}
+    
 }
