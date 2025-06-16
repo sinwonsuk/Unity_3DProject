@@ -1,10 +1,11 @@
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.Assertions.Must;
 
 public class ShopManager : baseManager, IGameManager
 {
 	private ShopManagerConfig config;
-	private Dictionary<int, ShopItem> shopItemDict = new();
+	private Dictionary<string, List<ShopItem>> npcShopTable = new();
 
 	public ShopManager(ShopManagerConfig config)
 	{
@@ -19,29 +20,25 @@ public class ShopManager : baseManager, IGameManager
 
 	public override void Init()
 	{
-		foreach (var item in config.shopItems)
+		foreach (var item in config.npcShops)
 		{
-			if (!shopItemDict.ContainsKey(item.itemId))
-				shopItemDict.Add(item.itemId, item);
+			if (!npcShopTable.ContainsKey(item.npcId))
+				npcShopTable[item.npcId] = item.shopItems;
 		}
 
-		Debug.Log($"ShopManager 초기화 완료: {shopItemDict.Count}개 상품 등록됨");
-	}
-	public List<ShopItem> GetShopItems()
-	{
-		return config.shopItems;
+		EventBus<RequestShopItems>.OnEvent += HandleShopItemRequest;
+
+		Debug.Log($"[ShopManager] 초기화 완료: {npcShopTable.Count}개 NPC 상점 로드됨");
 	}
 
-	public bool TryPurchase(int itemId, int playerGold, out int newGold)
+	private void HandleShopItemRequest(RequestShopItems evt)
 	{
-		var item = config.shopItems.Find(i => i.itemId == itemId);
-		if (item == null || playerGold < item.price)
-		{
-			newGold = playerGold;
-			return false;
-		}
+		var list = GetShopItemsForNpc(evt.npcId);
+		evt.OnResponse?.Invoke(list);
+	}
 
-		newGold = playerGold - item.price;
-		return true;
+	public List<ShopItem> GetShopItemsForNpc(string npcId)
+	{
+		return npcShopTable.TryGetValue(npcId, out var list) ? list : new List<ShopItem>();
 	}
 }

@@ -17,11 +17,14 @@ public class ItemManager : baseManager, IGameManager
 	}
 	public override void Init()
 	{
-		foreach (var item in config.itemList)
+		Debug.Log("ItemManager 초기화 시작");
+
+		foreach (var item in config.ItemList)
 		{
 			if(!itemDict.ContainsKey(item.itemId))
 			{
 				itemDict.Add(item.itemId, item);
+				Debug.Log($"ItemManager 초기화 중: {item.name}, {item.itemId} 로드됨");
 			}
 
 			Debug.Log($"ItemManager 초기화 완료: {itemDict.Count}개 아이템 로드됨");

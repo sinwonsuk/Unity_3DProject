@@ -23,3 +23,4 @@ MonoBehaviour:
   itemPrefab: {fileID: 1352579538443736, guid: d97af9500bf6b8643ae184f668c1630c, type: 3}
   price: 250
   description: 
+  isStackable: 0
