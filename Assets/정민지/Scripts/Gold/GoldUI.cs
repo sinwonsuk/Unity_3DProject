@@ -41,7 +41,7 @@ public class GoldUI : MonoBehaviour
 
     public void SubtractGold(int price)
     {
-        showGold += price;
+        showGold += price/10;
         EventBus<Gold>.Raise(new Gold(showGold));
     }
 }
