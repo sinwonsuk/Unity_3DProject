@@ -50,6 +50,7 @@ public class InventorySlotUI : MonoBehaviour, IPointerClickHandler, IBeginDragHa
 
         draggedIcon.gameObject.SetActive(true);
         draggedIcon.SetIcon(iconImage.sprite);
+        draggedIcon.StartDrag(iconImage.sprite); // ← 여기서 호출!
     }
 
     public void OnDrag(PointerEventData eventData)
