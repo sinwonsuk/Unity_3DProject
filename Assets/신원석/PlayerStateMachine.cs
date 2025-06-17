@@ -1,6 +1,8 @@
-using Cinemachine;
 using Fusion;
+using Cinemachine;
 using UnityEngine;
+using static UnityEngine.InputSystem.OnScreen.OnScreenStick;
+using System;
 
 
 public enum ItemState
@@ -17,7 +19,7 @@ public enum ItemState
 
 public class PlayerStateMachine : StageManager<PlayerStateMachine.PlayerState>
 {
-
+    public NetworkMecanimAnimator NetAnim { get; set; }
 
     public enum PlayerState
     {
@@ -31,6 +33,13 @@ public class PlayerStateMachine : StageManager<PlayerStateMachine.PlayerState>
         Magic,
     }
 
+    public Action<PlayerStateMachine.PlayerState> aniAction { get; set; }
+
+    [Rpc(RpcSources.InputAuthority, RpcTargets.StateAuthority)]
+    public void RPC_Ani(PlayerState playerState)
+    {
+        ChangeState(playerState);
+    } 
 
     public WeaponsConfig weapons;
 
@@ -110,10 +119,9 @@ public class PlayerStateMachine : StageManager<PlayerStateMachine.PlayerState>
 
     public override void Spawned()
     {
+        NetAnim = GetComponent<NetworkMecanimAnimator>();
         animator = GetComponent<Animator>();
         playerController = GetComponent<NetworkCharacterController>();
-
-
 
         states[PlayerState.Idle] = new IdleState(PlayerState.Idle, animator, this);
         states[PlayerState.Move] = new MoveState(PlayerState.Move, animator, this);
@@ -143,6 +151,8 @@ public class PlayerStateMachine : StageManager<PlayerStateMachine.PlayerState>
         AnimHandler = new AnimationHandler(animator);
         WeaponManager = new WeaponManager(weapons, rightHandTransform, leftHandTransform);
         cameraManager = new CameraManager(Cam);
+
+
     }
   
     private void OnEnable()
@@ -183,29 +193,95 @@ public class PlayerStateMachine : StageManager<PlayerStateMachine.PlayerState>
 
     public void MoveInput()
     {
-  
-
-        if (inputHandler.TryGetMoveDirection(out Vector3 moveDir, out Quaternion planarRot))
+        if (Object.HasInputAuthority)
         {
+            inputHandler.TryGetMoveDirection(out Vector3 moveDir, out Quaternion planarRot);
+
             Debug.DrawRay(transform.position, moveDir * 2f, Color.green, 0.1f);
-            Debug.Log("이동 방향 적용중");
+
             playerController.Move(moveDir * moveSpeed * Runner.DeltaTime);
+            playerController.Rotate(planarRot);
         }
         else
         {
-            Debug.Log("입력 없음거나 0방향");
+            MoveInit();
         }
     }
 
-    //public override void FixedUpdateNetwork()
-    //{
-    //    if (GetInput(out NetworkInputData data))
-    //    {
-    //        data.direction.Normalize();
-    //        playerController.Move(5 * data.direction * Runner.DeltaTime);
+    public override void FixedUpdateNetwork()
+    {
 
-    //    }
-    //}
+        MoveInput();
+
+
+
+
+
+        if (!Runner.IsForward) return;
+
+
+        if (Object.HasInputAuthority)
+        {
+            if (GetInput<NetworkInputData>(out var data))
+            {
+                float h = data.direction.x;
+                float v = data.direction.z;
+                // 로컬 화면에서 즉시 반영
+                NetAnim.Animator.SetFloat("MoveLeftRight", h);
+                NetAnim.Animator.SetFloat("MoveForWard", v);
+            }
+        }
+
+        else if (Object.HasStateAuthority)
+        {
+            if (GetInput<NetworkInputData>(out var data))
+            {
+                float h = data.direction.x;
+                float v = data.direction.z;
+                // 이 호출이 네트워크를 통해 나머지 프록시에 복제됩니다
+                NetAnim.Animator.SetFloat("MoveLeftRight", h);
+                NetAnim.Animator.SetFloat("MoveForWard", v);
+            }
+        }
+
+
+
+
+
+
+        //var nextStateKey = currentState.GetNextState();
+        //if (nextStateKey.Equals(currentState.StateKey))
+        //{
+        //    currentState.FixedUpdateState();
+        //}
+        //else
+        //{
+        //    ChangeState(nextStateKey);
+        //}
+
+
+
+    }
+
+
+    public void MoveInit()
+    {
+        inputHandler.TryGetMoveDirection(out Vector3 moveDir, out Quaternion planarRot);
+
+        if (Object.HasStateAuthority)
+        {
+            
+            
+            playerController.Move(moveDir * moveSpeed * Runner.DeltaTime);
+            playerController.Rotate(planarRot);        
+        }
+
+        else
+        {
+            playerController.Move(Vector3.zero * Runner.DeltaTime);
+            playerController.Rotate(planarRot);
+        }
+    }
 
     public bool ComboAttackInput()
     {

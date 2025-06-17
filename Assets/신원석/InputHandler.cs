@@ -49,7 +49,7 @@ public class InputHandler
 
 
     // 방향 계산 및 처리
-    public bool TryGetMoveDirection(out Vector3 moveDir, out Quaternion planarRotation)
+    public void TryGetMoveDirection(out Vector3 moveDir, out Quaternion planarRotation)
     {
         planarRotation = Quaternion.identity;
         moveDir = Vector3.zero;
@@ -60,11 +60,7 @@ public class InputHandler
             float yaw = data.CameraRotateY;
             planarRotation = Quaternion.Euler(0, yaw, 0);
             moveDir = planarRotation * moveInput;
-
-            return moveInput.sqrMagnitude > 0.01f;
         }
-
-        return false;
     }
 
     // 공격 입력 처리

@@ -18,13 +18,19 @@ public class MoveState : BaseState<PlayerStateMachine.PlayerState>
 
     public override void EnterState()
     {
-        animator.SetBool("Walk", true);
+
+
+        playerStateMachine.NetAnim.Animator.SetBool("Walk", true);
+        //animator.SetBool("Walk", true);
     }
 
     public override void ExitState()
     {
-        animator.SetFloat("MoveLeftRight", 0.0f);
-        animator.SetFloat("MoveForWard", 0.0f);
+        playerStateMachine.NetAnim.Animator.SetFloat("MoveLeftRight", 0);
+        playerStateMachine.NetAnim.Animator.SetFloat("MoveForWard", 0);
+
+        //animator.SetFloat("MoveLeftRight", 0.0f);
+        //animator.SetFloat("MoveForWard", 0.0f);
         moveSpeed = 2.0f;
     }
 
@@ -36,7 +42,7 @@ public class MoveState : BaseState<PlayerStateMachine.PlayerState>
 
         if (TryHandleJumpInput()) return;
 
-        UpdateMovementAnimation();
+       
     }
 
     public override void FixedUpdateState()
@@ -48,8 +54,8 @@ public class MoveState : BaseState<PlayerStateMachine.PlayerState>
             return;
 
         TryHandleAttackInput();
+        UpdateMovementAnimation();
 
-       
     }
     public override void LateUpdateState()
     {
@@ -116,9 +122,18 @@ public class MoveState : BaseState<PlayerStateMachine.PlayerState>
             moveSpeed = 2.0f;
         }
 
+        if (playerStateMachine.IsProxy == true)
+            return;
+
+        if (playerStateMachine.Runner.IsForward == false)
+            return;
+
+
+        playerStateMachine.NetAnim.Animator.SetFloat("MoveLeftRight", h);
+        playerStateMachine.NetAnim.Animator.SetFloat("MoveForWard", v);
         // 애니메이션 파라미터 설정
-        animator.SetFloat("MoveLeftRight", h);
-        animator.SetFloat("MoveForWard", v);
+        //animator.SetFloat("MoveLeftRight", h);
+        //animator.SetFloat("MoveForWard", v);
 
     }
 

@@ -66,7 +66,7 @@ namespace Fusion {
 
 
             transform.rotation = Quaternion.Slerp(transform.rotation, targetRotation, rotationSpeed * Runner.DeltaTime);
-        }
+     }
 
         public void Teleport(Vector3? position = null, Quaternion? rotation = null) {
       _controller.enabled = false;
@@ -106,10 +106,10 @@ namespace Fusion {
         horizontalVel      = Vector3.ClampMagnitude(horizontalVel + direction * acceleration * deltaTime, maxSpeed);
 
 
-                float camYaw = Camera.main.transform.eulerAngles.y;
-                Quaternion camPlanarRot = Quaternion.Euler(0, camYaw, 0);
+                //float camYaw = Camera.main.transform.eulerAngles.y;
+                //Quaternion camPlanarRot = Quaternion.Euler(0, camYaw, 0);
 
-                transform.rotation = Quaternion.Slerp(transform.rotation, camPlanarRot, rotationSpeed * Runner.DeltaTime);
+                //transform.rotation = Quaternion.Slerp(transform.rotation, camPlanarRot, rotationSpeed * Runner.DeltaTime);
       }
 
       moveVelocity.x = horizontalVel.x;

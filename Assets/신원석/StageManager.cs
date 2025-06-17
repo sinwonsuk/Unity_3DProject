@@ -8,13 +8,11 @@ using UnityEngine;
 
 public abstract class StageManager<EStage> : NetworkBehaviour where EStage : Enum
 {
-
     protected Dictionary<EStage, BaseState<EStage>> states = new();
 
     protected BaseState<EStage> currentState;
 
     protected bool IsTransition = false;
-
 
     private void Start()
     {
@@ -23,7 +21,7 @@ public abstract class StageManager<EStage> : NetworkBehaviour where EStage : Enu
 
     private void Update()
     {
-        if (!Object.HasInputAuthority) return;
+        if (!Object.HasStateAuthority) return;
 
 
         EStage nextStateKey = currentState.GetNextState();
@@ -32,27 +30,11 @@ public abstract class StageManager<EStage> : NetworkBehaviour where EStage : Enu
             currentState.UpdateState();
         }
     }
-    public override void FixedUpdateNetwork()
-    {
-        if (!Object.HasInputAuthority) return;
-
-        EStage nextStateKey = currentState.GetNextState();
-        if (nextStateKey.Equals(currentState.StateKey))
-        {
-            currentState.FixedUpdateState();
-        }
-        else
-        {
-            ChangeState(nextStateKey);
-        }
-
-    }
-
 
 
     private void LateUpdate()
     {
-        if (!Object.HasInputAuthority) return;
+        if (!Object.HasStateAuthority) return;
 
         EStage nextStateKey = currentState.GetNextState();
         if (nextStateKey.Equals(currentState.StateKey))
@@ -62,7 +44,6 @@ public abstract class StageManager<EStage> : NetworkBehaviour where EStage : Enu
             
     }
 
-
     public void ChangeState(EStage nextStateKey)
     {
 
@@ -70,7 +51,6 @@ public abstract class StageManager<EStage> : NetworkBehaviour where EStage : Enu
         {
             return;
         }
-
 
         IsTransition = true;
         currentState.ExitState();

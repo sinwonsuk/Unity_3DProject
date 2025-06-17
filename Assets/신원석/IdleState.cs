@@ -21,8 +21,7 @@ public class IdleState : BaseState<PlayerStateMachine.PlayerState>
 
     public override void FixedUpdateState()
     {
-
-    
+        playerStateMachine.MoveInit();
     }
 
     public override PlayerStateMachine.PlayerState GetNextState()

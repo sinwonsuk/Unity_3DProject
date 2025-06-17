@@ -12,6 +12,9 @@ public class BasicSpawner : MonoBehaviour, INetworkRunnerCallbacks
     private NetworkRunner _runner;
     [SerializeField]
     private CinemachineVirtualCamera cam;
+
+    int a = 0;
+
     async void StartGame(GameMode mode)
     {
         // Create the Fusion runner and let it know that we will be providing user input
@@ -69,9 +72,10 @@ public class BasicSpawner : MonoBehaviour, INetworkRunnerCallbacks
         // Host/Server 모드일 경우 서버에서 모두 생성
         else if (runner.IsServer)
         {
-            Vector3 spawnPosition = new Vector3(5, 1, 0);
-            NetworkObject networkPlayerObject = runner.Spawn(_playerPrefab, spawnPosition, Quaternion.identity, player);
+            Vector3 spawnPosition = new Vector3(5, 1, a);
+            NetworkObject networkPlayerObject = runner.Spawn(_playerPrefab, spawnPosition, Quaternion.identity, inputAuthority: player);
             _spawnedCharacters.Add(player, networkPlayerObject);
+            a += 3;
         }
     
     }
