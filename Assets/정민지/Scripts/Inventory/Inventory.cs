@@ -1,5 +1,6 @@
 using UnityEngine;
 using TMPro;
+using System.Linq;
 
 public class Inventory : MonoBehaviour
 {
@@ -12,6 +13,7 @@ public class Inventory : MonoBehaviour
     public GoldUI goldUI; //골드 UI
     public BigInventoryUI bigInventoryUI; //인벤토리 전체 화면
     [SerializeField] private ItemManager itemManager;
+
 
     private void Awake()
     {
@@ -64,24 +66,56 @@ public class Inventory : MonoBehaviour
     //아이템 추가
     public void AddItem(ItemData item)
     {
-        foreach (var slot in slots)
+        if (item.itemType == ItemType.Potion)
         {
-            if (!slot.IsEmpty && slot.item == item && item.itemType == ItemType.Potion)
+            // 이미 같은 포션이 있으면 수량만 증가
+            foreach (var slot in slots)
             {
-                slot.quantity++;
-                UpdateAllInventoryUI();
-                return;
+                if (!slot.IsEmpty && slot.item == item)
+                {
+                    slot.quantity++;
+                    UpdateAllInventoryUI();
+                    Debug.Log($"포션 스택 증가: {item.itemName}, 현재 수량: {slot.quantity}");
+                    return;
+                }
             }
-            if (slot.IsEmpty)
+
+            // 같은 포션 없으면 빈 슬롯 있는지 체크 후 추가
+            bool hasEmptySlot = slots.Any(slot => slot.IsEmpty);
+            if (!hasEmptySlot) return;
+
+            foreach (var slot in slots)
             {
-                slot.item = item;
-                slot.quantity = 1;
-                UpdateAllInventoryUI();
-                return;
+                if (slot.IsEmpty)
+                {
+                    slot.item = item;
+                    slot.quantity = 1;
+                    UpdateAllInventoryUI();
+                    Debug.Log($"빈 슬롯에 포션 추가: {item.itemName}");
+                    return;
+                }
+            }
+        }
+        else
+        {
+            // 포션이 아닐 때는 무조건 빈 슬롯 필요
+            bool hasEmptySlot = slots.Any(slot => slot.IsEmpty);
+            if (!hasEmptySlot) return;
+
+            foreach (var slot in slots)
+            {
+                if (slot.IsEmpty)
+                {
+                    slot.item = item;
+                    slot.quantity = 1;
+                    UpdateAllInventoryUI();
+                    Debug.Log($"빈 슬롯에 아이템 추가: {item.itemName}");
+                    return;
+                }
             }
         }
 
-        Debug.Log("인벤토리에 빈 슬롯이 없습니다.");
+        Debug.Log("아이템 추가 실패");
     }
 
     //아이템 삭제
