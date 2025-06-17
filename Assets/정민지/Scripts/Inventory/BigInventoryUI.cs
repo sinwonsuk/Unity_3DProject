@@ -1,5 +1,6 @@
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.EventSystems;
 
 public class BigInventoryUI : MonoBehaviour
 {
@@ -54,6 +55,7 @@ public class BigInventoryUI : MonoBehaviour
         inventoryOnoff.SetSelectedIndex(selectedIndex); // 작은 인벤토리 UI에도 반영
     }
 
+
     public void SetSelectedIndexInBigUI(int index)
     {
         selectedIndex = index;
@@ -79,9 +81,9 @@ public class BigInventoryUI : MonoBehaviour
 
     public void SwapSlots(int fromIndex, int toIndex)
     {
-        InventorySlot temp = slots[fromIndex];
+        InventorySlot bowl = slots[fromIndex];
         slots[fromIndex] = slots[toIndex];
-        slots[toIndex] = temp;
+        slots[toIndex] = bowl;
 
         UpdateSlotUI(fromIndex);
         UpdateSlotUI(toIndex);
