@@ -1,5 +1,6 @@
+
 using UnityEngine;
-using static UnityEditor.Recorder.OutputPath;
+
 
 public class BowState : BaseState<PlayerStateMachine.PlayerState>
 {
@@ -13,6 +14,9 @@ public class BowState : BaseState<PlayerStateMachine.PlayerState>
     Quaternion targetRotation;
 
     GameObject arrow;
+    Vector3 targetPos;
+
+
     public BowState(PlayerStateMachine.PlayerState key, Animator animator, PlayerStateMachine stateMachine) : base(key, animator)
     {
         this.playerStateMachine = stateMachine;
@@ -25,9 +29,13 @@ public class BowState : BaseState<PlayerStateMachine.PlayerState>
         rope = playerStateMachine.WeaponManager.GetCurrentWeapon().GetComponent<Bow>().Rope.transform;
 
         arrow = playerStateMachine.WeaponManager.CreateArrow();
+
+        playerStateMachine.StartCoroutine(playerStateMachine.cameraManager.StartCameraScaleUp());
+
     }
     public override void ExitState()
     {
+        playerStateMachine.StartCoroutine(playerStateMachine.cameraManager.StartCameraScaleDown());
         playerStateMachine.AnimHandler.SetAttackBool(false);
         shoot = false;
         arrow = null;
@@ -54,20 +62,34 @@ public class BowState : BaseState<PlayerStateMachine.PlayerState>
 
         if (playerStateMachine.inputHandler.IsRightAttackPressed() && Input.GetMouseButton(0) && gatherAttack ==1 && shoot == false)
         {
-            arrow.gameObject.GetComponent<Arrow>().Shoot = true;
+
+             Ray ray = Camera.main.ScreenPointToRay(Input.mousePosition);
+
+
+            if (Physics.Raycast(ray, out var hit, 999f, playerStateMachine.LayerMask))
+            {
+                targetPos = hit.point;
+            }
+            else
+            {
+                // 2) 안 맞으면, 레이 방향으로 적당한 거리만큼 포인트를 잡는다
+                float fallbackDist = 50f;
+                targetPos = ray.origin + ray.direction * fallbackDist;
+            }
+
+            arrow.GetComponent<Arrow>().Shoot(targetPos);
+                
+                 
             playerStateMachine.AnimHandler.ShootBowWeapon();
             shoot = true;
         }
         else if (Input.GetMouseButton(1) && shoot ==false)
         {
-            //playerStateMachine.Cam.Priority = 11;
-
+           
             gatherAttack = Mathf.MoveTowards(gatherAttack, 1.0f, playerStateMachine.Runner.DeltaTime);
 
             ropePosX = Mathf.MoveTowards(ropePosX, 0.8f, playerStateMachine.Runner.DeltaTime*1.2f);
-
-
-          
+       
             rope.localPosition = new Vector3(ropePosX, rope.localPosition.y, rope.localPosition.z);
 
 
@@ -89,21 +111,14 @@ public class BowState : BaseState<PlayerStateMachine.PlayerState>
         if (gatherAttack == 0)
             playerStateMachine.ChangeState(PlayerStateMachine.PlayerState.Idle);
         return;
-
-
     }
     public override void LateUpdateState() 
     {
         if (!playerStateMachine.HasInputAuthority)
             return;
-
-        // 부드러운 회전 보간
-        playerStateMachine.transform.rotation = Quaternion.RotateTowards(
-            playerStateMachine.transform.rotation,
-            targetRotation,
-            rotationSpeed * Time.deltaTime
-        );
     }
+
+ 
 
     public override PlayerStateMachine.PlayerState GetNextState()
     {
@@ -127,7 +142,5 @@ public class BowState : BaseState<PlayerStateMachine.PlayerState>
 
     bool shoot = false;
     float gatherAttack = 0;
-
- 
 
 }

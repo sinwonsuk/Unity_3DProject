@@ -2,7 +2,6 @@ namespace Fusion {
     using System.Runtime.CompilerServices;
   using System.Runtime.InteropServices;
   using UnityEngine;
-    using static Codice.Client.Commands.WkTree.WorkspaceTreeNode;
 
   [StructLayout(LayoutKind.Explicit)]
   [NetworkStructWeaved(WORDS + 4)]
@@ -135,37 +134,6 @@ namespace Fusion {
         public override void Render() {
           NetworkTRSP.Render(this, transform, false, false, false, ref _initial);
         }
-        //public override void Render()
-        //{
-        //    if (Object.HasInputAuthority)
-        //    {
-        //        // ── 로컬 플레이어 ─────────────────
-        //        NetworkTRSP.Render(
-        //            this,
-        //            transform,
-        //            /* syncScale  */ false,  // 스케일 동기화 끄기(0으로 덮어쓰기 방지)
-        //            /* syncParent */ false,  // 부모 변경 동기화 끄기
-        //            /* local      */ true,   // 로컬 분기로 타서 smoothing 동작
-        //            ref _initial
-        //        );
-
-        //        // 여러분의 RotateTowards 로테이션 보간
-                
-        //    }
-        //    else
-        //    {
-        //        // ── 원격 플레이어 ─────────────────
-        //        NetworkTRSP.Render(
-        //            this,
-        //            transform,
-        //            /* syncScale  */ false, // scale은 여전히 끕니다
-        //            /* syncParent */ false,
-        //            /* local      */ false,// 원격 분기로 타서 네트워크 회전 복원
-        //            ref _initial
-        //        );
-        //    }
-        //}
-
         void IBeforeAllTicks.BeforeAllTicks(bool resimulation, int tickCount) {
       CopyToEngine();
     }
@@ -197,23 +165,6 @@ namespace Fusion {
       // Re-enable CC
       _controller.enabled = true;
     }
-        //void CopyToEngine()
-        //{
-        //    // CharacterController 끄고…
-        //    //_controller.enabled = false;
-
-        //    // ① 위치만 무조건 복원
-        //    transform.position = Data.TRSPData.Position;
-
-        //    // ② 원격 플레이어일 때만 Rotation 복원
-        //    if (!Object.HasInputAuthority)
-        //    {
-        //        transform.rotation = Data.TRSPData.Rotation;
-        //    }
-
-        //    // 다시 켜기
-        //    // _controller.enabled = true;
-        //}
 
 
     }

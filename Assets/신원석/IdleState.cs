@@ -19,9 +19,6 @@ public class IdleState : BaseState<PlayerStateMachine.PlayerState>
 
     }
 
-    private float attack = 0f;  // 필드로 선언
-
-
     public override void FixedUpdateState()
     {
 
@@ -30,6 +27,7 @@ public class IdleState : BaseState<PlayerStateMachine.PlayerState>
 
     public override PlayerStateMachine.PlayerState GetNextState()
     {
+
         if (Input.GetKey(KeyCode.W) || Input.GetKey(KeyCode.S) || Input.GetKey(KeyCode.A) || Input.GetKey(KeyCode.D))
             return PlayerStateMachine.PlayerState.Move;    
         if(Input.GetKeyDown(KeyCode.L))
@@ -40,7 +38,8 @@ public class IdleState : BaseState<PlayerStateMachine.PlayerState>
             return PlayerStateMachine.PlayerState.Jump;
         if (Input.GetMouseButtonDown(1) && playerStateMachine.isWeapon == true && playerStateMachine.AnimHandler.WeaponCount == (int)ItemState.Bow)
             return PlayerStateMachine.PlayerState.BowAttack;
-
+        if (Input.GetMouseButtonDown(1) && playerStateMachine.isWeapon == true && playerStateMachine.AnimHandler.WeaponCount == (int)ItemState.Magic)
+            return PlayerStateMachine.PlayerState.Magic;
 
 
         return PlayerStateMachine.PlayerState.Idle;

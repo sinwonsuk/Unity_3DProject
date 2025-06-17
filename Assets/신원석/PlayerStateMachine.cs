@@ -1,10 +1,7 @@
 using Cinemachine;
 using Fusion;
-using System.Collections;
-using Unity.Android.Gradle.Manifest;
 using UnityEngine;
-using static Unity.Collections.Unicode;
-using static UnityEngine.InputSystem.OnScreen.OnScreenStick;
+
 
 public enum ItemState
 {
@@ -20,7 +17,8 @@ public enum ItemState
 
 public class PlayerStateMachine : StageManager<PlayerStateMachine.PlayerState>
 {
-    // [Networked] private TickTimer delay { get; set; }
+
+
     public enum PlayerState
     {
         Idle,
@@ -30,6 +28,7 @@ public class PlayerStateMachine : StageManager<PlayerStateMachine.PlayerState>
         Attack,
         Roll,
         BowAttack,
+        Magic,
     }
 
 
@@ -43,6 +42,7 @@ public class PlayerStateMachine : StageManager<PlayerStateMachine.PlayerState>
     public AnimationHandler AnimHandler { get; private set; }
     public InputHandler inputHandler { get; private set; }
 
+    public CameraManager cameraManager { get; private set; }
     public WeaponManager WeaponManager { get; private set; }
 
     [SerializeField]
@@ -59,10 +59,13 @@ public class PlayerStateMachine : StageManager<PlayerStateMachine.PlayerState>
     Transform rightHandTransform;
     [SerializeField]
     Transform leftHandTransform;
-
+    [SerializeField]
+    LayerMask layerMask;
 
     Quaternion targetRotation;
     Vector3 targetMove;
+
+
 
     public Transform RightHandTransform
     {
@@ -74,7 +77,11 @@ public class PlayerStateMachine : StageManager<PlayerStateMachine.PlayerState>
         get => cameraFollow;
         set => cameraFollow = value;
     }
-
+    public LayerMask LayerMask
+    {
+        get => layerMask;
+        set => layerMask = value;
+    }
     public CinemachineVirtualCamera Cam { get; set; }
 
     public Transform groundCheck;
@@ -101,43 +108,43 @@ public class PlayerStateMachine : StageManager<PlayerStateMachine.PlayerState>
         set => animator.SetInteger(hashAttackCount, value);
     }
 
-    private void Awake()
+    public override void Spawned()
     {
-
         animator = GetComponent<Animator>();
         playerController = GetComponent<NetworkCharacterController>();
 
 
-        Cursor.lockState = CursorLockMode.Locked;
-        Cursor.visible = true;
+
+        states[PlayerState.Idle] = new IdleState(PlayerState.Idle, animator, this);
+        states[PlayerState.Move] = new MoveState(PlayerState.Move, animator, this);
+        states[PlayerState.Switch] = new WeaponSwitchState(PlayerState.Switch, animator, this);
+        states[PlayerState.Attack] = new AttackState(PlayerState.Attack, animator, this);
+        states[PlayerState.Roll] = new RollState(PlayerState.Roll, animator, this);
+        states[PlayerState.BowAttack] = new BowState(PlayerState.BowAttack, animator, this);
+        states[PlayerState.Jump] = new JumpState(PlayerState.Jump, animator, this);
+        states[PlayerState.Magic] = new MagicAttackState(PlayerState.Magic, animator, this);
+        currentState = states[PlayerState.Idle];
+
+
+
+        if (Object.HasInputAuthority)
+        {
+            Cursor.lockState = CursorLockMode.Locked;
+            Cursor.visible = true;
+            GameObject camObj = GameObject.FindGameObjectWithTag("VirtualCam2");
+            Cam = camObj.GetComponent<CinemachineVirtualCamera>();
+            Cam.Follow = cameraFollow;
+            Cam.LookAt = cameraFollow;
+        }
 
         // 너무 비대해져서 역활 나눔 
         inputHandler = new InputHandler(this, CameraFollow);
         Combat = new PlayerCombat(this);
         AnimHandler = new AnimationHandler(animator);
-        WeaponManager = new WeaponManager(weapons,rightHandTransform, leftHandTransform);
-
-        //GameObject camObj = GameObject.FindGameObjectWithTag("VirtualCam");
-        //Cam = camObj.GetComponent<CinemachineVirtualCamera>();
-        //Cam.Follow = cameraFollow;
-        //Cam.LookAt = transform;
-
-        GameObject camObj2 = GameObject.FindGameObjectWithTag("VirtualCam2");
-        CinemachineVirtualCamera cam2 = camObj2.GetComponent<CinemachineVirtualCamera>();
-        cam2.Follow = cameraFollow;
-        cam2.LookAt = cameraFollow;
-
-        states[PlayerState.Idle] = new IdleState(PlayerState.Idle,animator, this);
-        states[PlayerState.Move] = new MoveState(PlayerState.Move, animator, this);
-        states[PlayerState.Switch] = new WeaponSwitchState(PlayerState.Switch, animator, this);
-        states[PlayerState.Attack] = new AttackState(PlayerState.Attack,animator, this);
-        states[PlayerState.Roll] = new RollState(PlayerState.Roll, animator, this);
-        states[PlayerState.BowAttack] = new BowState(PlayerState.BowAttack, animator, this);
-        states[PlayerState.Jump] = new JumpState(PlayerState.Jump, animator, this);
-
-        currentState = states[PlayerState.Idle];
+        WeaponManager = new WeaponManager(weapons, rightHandTransform, leftHandTransform);
+        cameraManager = new CameraManager(Cam);
     }
-
+  
     private void OnEnable()
     {
 
@@ -173,74 +180,32 @@ public class PlayerStateMachine : StageManager<PlayerStateMachine.PlayerState>
         animator.SetInteger("RollCount", (int)dir);
         ChangeState(PlayerState.Roll);
     }
-    private Tick _initial;
+
     public void MoveInput()
     {
+  
 
-        //if (!Object.HasInputAuthority)
-        //    return;
-
-
-
-        if (!Object.HasInputAuthority) return;
-
-        // 카메라 기준 이동 direction
-
-        inputHandler.TryGetMoveDirection(out Vector3 _moveDir, out Quaternion planarRot);
-
-
-        playerController.Move(_moveDir);
-
-
-       
-
-
-
-        //inputHandler.TryGetMoveDirection(out Vector3 _moveDir, out Quaternion planarRot);
-
-       // // 시뮬레이션 목표치 결정
-       // targetMove = _moveDir;
-       // targetRotation = planarRot;
-
-
-       // transform.rotation = Quaternion.RotateTowards(
-       //transform.rotation,
-       //targetRotation,
-       //rotationSpeed * Time.deltaTime);
-
-
-       // // 결정론 보장된 물리 이동
-        //playerController.Move(move);
+        if (inputHandler.TryGetMoveDirection(out Vector3 moveDir, out Quaternion planarRot))
+        {
+            Debug.DrawRay(transform.position, moveDir * 2f, Color.green, 0.1f);
+            Debug.Log("이동 방향 적용중");
+            playerController.Move(moveDir * moveSpeed * Runner.DeltaTime);
+        }
+        else
+        {
+            Debug.Log("입력 없음거나 0방향");
+        }
     }
 
-    public void testte()
-    {
-       //if (!Object.HasInputAuthority)
-       //    return;
+    //public override void FixedUpdateNetwork()
+    //{
+    //    if (GetInput(out NetworkInputData data))
+    //    {
+    //        data.direction.Normalize();
+    //        playerController.Move(5 * data.direction * Runner.DeltaTime);
 
-       // // 부드러운 회전 보간
-       // transform.rotation = Quaternion.RotateTowards(
-       // transform.rotation,
-       // targetRotation,
-       // rotationSpeed * Time.deltaTime)
-       //;
-    }
-
-    public void RotatePlayer()
-    {
-        //if (Object.HasInputAuthority)
-        //{
-        //    Quaternion quaternion = Quaternion.Euler(0, Camera.main.transform.eulerAngles.y, 0);
-
-        //    transform.rotation = Quaternion.RotateTowards(
-        //        transform.rotation,
-        //        quaternion,
-        //        Runner.DeltaTime * rotationSpeed
-        //    );
-        //    // 4. Y축 이동값 직접 추가
-
-        //}
-    }
+    //    }
+    //}
 
     public bool ComboAttackInput()
     {

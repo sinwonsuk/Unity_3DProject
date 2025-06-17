@@ -6,6 +6,9 @@ public class AnimationHandler
     private Animator animator;
     private int hashAttackCount = Animator.StringToHash("AttackCount");
     private int hashWeaponCount = Animator.StringToHash("WeaponCount");
+
+
+
     public AnimationHandler(Animator animator)
     {
         this.animator = animator;
@@ -26,6 +29,12 @@ public class AnimationHandler
     {
         animator.SetFloat("BowAttackFloat", val);
     }
+
+    public void ChangeMagicAttackState(float val)
+    {
+        animator.SetFloat("MagicAttack", val);
+    }
+
     public void ShootBowWeapon()
     {
         animator.SetTrigger("Shoot");

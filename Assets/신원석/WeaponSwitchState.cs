@@ -11,8 +11,11 @@ public class WeaponSwitchState : BaseState<PlayerStateMachine.PlayerState>
 
     public override void EnterState()
     {
-        playerStateMachine.WeaponManager.Equip(ItemState.Bow,isDir.Left);
-        playerStateMachine.AnimHandler.ChangeWeapon(ItemState.Bow);
+
+
+
+        playerStateMachine.WeaponManager.Equip(ItemState.Magic,isDir.Left);
+        playerStateMachine.AnimHandler.ChangeWeapon(ItemState.Magic);
         playerStateMachine.isWeapon = true;
     }
     public override void ExitState()

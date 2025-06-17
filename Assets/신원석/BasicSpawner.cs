@@ -17,6 +17,7 @@ public class BasicSpawner : MonoBehaviour, INetworkRunnerCallbacks
         // Create the Fusion runner and let it know that we will be providing user input
         _runner = gameObject.AddComponent<NetworkRunner>();
         _runner.ProvideInput = true;
+        _runner.AddCallbacks(this);
 
         // Create the NetworkSceneInfo from the current scene
         var scene = SceneRef.FromIndex(SceneManager.GetActiveScene().buildIndex);
@@ -94,6 +95,9 @@ public class BasicSpawner : MonoBehaviour, INetworkRunnerCallbacks
 
     public void OnInput(NetworkRunner runner, NetworkInput input)
     {
+
+        Debug.Log($"OnInput: IsServer:{runner.IsServer} Auth:{runner.LocalPlayer} Axis:{Input.GetAxisRaw("Horizontal")}");
+
         var data = new NetworkInputData();
 
         data.moveAxis = new Vector3(Input.GetAxis("Horizontal"),0,Input.GetAxis("Vertical"));
@@ -115,13 +119,10 @@ public class BasicSpawner : MonoBehaviour, INetworkRunnerCallbacks
 
         data.test = Camera.main.transform.forward;
 
-
-
-
         data.buttons.Set(NetworkInputData.KEY_C, Input.GetKey(KeyCode.C));
         data.buttons.Set(NetworkInputData.KEY_SPACE, Input.GetKey(KeyCode.Space));
-        data.buttons.Set(NetworkInputData.MOUSEBUTTON1, _mouseButton1);
-        data.buttons.Set(NetworkInputData.MOUSEBUTTON0, _mouseButton0);
+        data.buttons.Set(NetworkInputData.MOUSEBUTTON1, Input.GetMouseButton(1));
+        data.buttons.Set(NetworkInputData.MOUSEBUTTON0, Input.GetMouseButton(0));
         _mouseButton0 = false;
         _mouseButton1 = false;
         input.Set(data);

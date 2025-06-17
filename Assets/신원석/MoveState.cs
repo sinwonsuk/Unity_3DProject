@@ -53,7 +53,7 @@ public class MoveState : BaseState<PlayerStateMachine.PlayerState>
     }
     public override void LateUpdateState()
     {
-        playerStateMachine.testte();
+        //playerStateMachine.testte();
     }
     public override PlayerStateMachine.PlayerState GetNextState()
     {
@@ -93,7 +93,11 @@ public class MoveState : BaseState<PlayerStateMachine.PlayerState>
             playerStateMachine.ChangeState(PlayerStateMachine.PlayerState.BowAttack);
             return;
         }
-
+        if (playerStateMachine.inputHandler.IsRightAttackPressed() && playerStateMachine.isWeapon == true && playerStateMachine.AnimHandler.WeaponCount == (int)ItemState.Magic)
+        {
+            playerStateMachine.ChangeState(PlayerStateMachine.PlayerState.Magic);
+            return;
+        }
 
     }
 

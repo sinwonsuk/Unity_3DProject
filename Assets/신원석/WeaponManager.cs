@@ -50,7 +50,13 @@ public class WeaponManager
 
         return GameObject.Instantiate (config.GetWeapon(ItemState.Arrow), currentWeapon.GetComponent<Bow>().Rope.transform);     
     }
+    public GameObject CreateMagic()
+    {
+        if (currentWeaponState != ItemState.Magic)
+            return null;
 
+        return GameObject.Instantiate(config.GetWeapon(ItemState.Harberd), rightHandSocket);
+    }
 
     public void Unequip()
     {

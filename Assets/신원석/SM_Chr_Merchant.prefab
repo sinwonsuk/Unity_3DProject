@@ -1208,6 +1208,7 @@ GameObject:
   - component: {fileID: 3090258092248914074}
   - component: {fileID: 4271482361781194061}
   - component: {fileID: 1937740767345190456}
+  - component: {fileID: -4785278166820212655}
   m_Layer: 6
   m_Name: SM_Chr_Merchant
   m_TagString: Player
@@ -1322,6 +1323,7 @@ MonoBehaviour:
   NetworkedBehaviours:
   - {fileID: 3090258092248914074}
   - {fileID: 4271482361781194061}
+  - {fileID: -4785278166820212655}
   ForceRemoteRenderTimeframe: 0
 --- !u!114 &3090258092248914074
 MonoBehaviour:
@@ -1362,6 +1364,9 @@ MonoBehaviour:
   attackSpeed: 5
   rightHandTransform: {fileID: 1827334682947334435}
   leftHandTransform: {fileID: 8548521808931949514}
+  layerMask:
+    serializedVersion: 2
+    m_Bits: 2048
   groundCheck: {fileID: 2941686035267341368}
   groundMask:
     serializedVersion: 2
@@ -1383,6 +1388,18 @@ MonoBehaviour:
   rotationSpeed: 5
   topClamp: 70
   bottomClamp: -10
+--- !u!114 &-4785278166820212655
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2059063748732853934}
+  m_Enabled: 0
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: d6de057638d9e2241a06d98935ff8d9a, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1 &2214411710377538837
 GameObject:
   m_ObjectHideFlags: 0

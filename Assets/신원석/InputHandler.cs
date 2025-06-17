@@ -56,10 +56,10 @@ public class InputHandler
 
         if (behaviour.GetInput(out NetworkInputData data))
         {
-            Vector3 moveInput = new Vector3(data.moveAxis.x, 0, data.moveAxis.z).normalized;
+            Vector3 moveInput = data.direction.normalized;
             float yaw = data.CameraRotateY;
             planarRotation = Quaternion.Euler(0, yaw, 0);
-            moveDir = planarRotation * Vector3.forward;
+            moveDir = planarRotation * moveInput;
 
             return moveInput.sqrMagnitude > 0.01f;
         }
