@@ -16,27 +16,117 @@ public class AutoMatchManager : MonoBehaviour, INetworkRunnerCallbacks
         Instance = this;
     }
 
+    //public void OnMatchButtonClick()
+    //{
+    //    if (RunnerSingleton.Instance != null && RunnerSingleton.Instance.IsRunning && !isMatching)
+    //    { 
+    //        Debug.LogWarning("러너 종료 중 - 재매칭은 잠시 뒤에 가능합니다"); 
+    //        return; 
+    //    }
+
+    //    if (RunnerSingleton.Instance != null && !RunnerSingleton.Instance.IsRunning)
+    //        RunnerSingleton.ClearRunner();
+
+    //    matchTimerUI?.StartTimer();
+
+    //    isMatching = true;
+
+    //    if (RunnerSingleton.Instance == null)
+    //        RunnerSingleton.CreateRunner();
+
+    //    runner = RunnerSingleton.Instance;
+
+    //    runner.ProvideInput = true;
+    //    runner.AddCallbacks(this);
+
+    //    string roomName = MatchQueueManager.Instance.CurrentRoomName;
+
+    //    if (string.IsNullOrEmpty(roomName))
+    //    {
+    //        roomName = $"Room_{Random.Range(1000, 9999)}";
+    //        MatchQueueManager.Instance.CurrentRoomName = roomName;
+    //        Debug.Log($"방 생성 및 접속: {roomName}");
+    //    }
+    //    else
+    //    {
+    //        Debug.Log($"참가자 기존 방 입장: {roomName}");
+    //    }
+
+    //    StartGameWithRoomName(roomName);
+    //}
+
     public void OnMatchButtonClick()
     {
-        matchTimerUI?.StartTimer();
+        // 아직 매칭이 끝나지 않았거나 Runner가 종료 중이면 클릭 무시
+        if (isMatching || shuttingDown) return;
 
-        if (!MatchQueueManager.Instance.RoomStarted)
+        if (matchTimerUI != null)
         {
-            // 매칭 1등, 방 생성
-            string roomName = $"Room_7777"; 
-            MatchQueueManager.Instance.CurrentRoomName = roomName;
+            matchTimerUI.StartTimer();
+        }
 
-            Debug.Log($"방 생성 및 접속: {roomName}");
-            StartGameWithRoomName(roomName);
+        StartCoroutine(StartMatchFlow());
+    }
+
+
+    private IEnumerator StartMatchFlow()
+    {
+        //Runner가 살아 있다면 완전히 내려갈 때까지 대기
+        if (RunnerSingleton.Instance != null)
+        {
+            shuttingDown = true;
+
+            var task = RunnerSingleton.Instance.Shutdown(true);
+            while (!task.IsCompleted)          // Disconnected 상태까지 기다림
+                yield return null;
+
+            RunnerSingleton.ClearRunner();
+            shuttingDown = false;
+        }
+
+        //새 Runner 생성 후 처음부터 매칭 시작
+        RunnerSingleton.CreateRunner();
+        runner = RunnerSingleton.Instance;
+
+        runner.ProvideInput = true;
+        runner.AddCallbacks(this);
+
+        var lobbyResult = runner.JoinSessionLobby(SessionLobby.ClientServer);
+        while (!lobbyResult.IsCompleted) 
+            yield return null;
+
+        if (!lobbyResult.Result.Ok)
+        {
+            Debug.LogError("로비 참가 실패");
+            yield break;
+        }
+
+        // 세션 리스트 대기 후 확인
+        sessionListReceived = false;
+        float timeout = 3f;
+        while (!sessionListReceived && timeout > 0f)
+        {
+            timeout -= Time.deltaTime;
+            yield return null;
+        }
+
+        string roomName = "";
+
+        if (cachedSessionList.Count > 0)
+        {
+            roomName = cachedSessionList[0].Name;
+            Debug.Log($"기존 방 참가: {roomName}");
         }
         else
         {
-            // 매칭2등 동일한 방 입장
-            string roomName = MatchQueueManager.Instance.CurrentRoomName;
-
-            Debug.Log($"참가자 기존 방 입장: {roomName}");
-            StartGameWithRoomName(roomName);
+            roomName = $"Room_{Random.Range(1000, 9999)}";
+            Debug.Log($"새 방 생성: {roomName}");
         }
+
+        MatchQueueManager.Instance.CurrentRoomName = roomName;
+
+        isMatching = true;
+        StartGameWithRoomName(roomName);
     }
 
     public async void StartGameWithRoomName(string roomName)
@@ -97,37 +187,59 @@ public class AutoMatchManager : MonoBehaviour, INetworkRunnerCallbacks
     }
     public void CancelMatch()
     {
+        if (!isMatching) return;
+
+        isMatching = false;
+
         if (runner != null && runner.IsRunning)
         {
             Debug.Log("매칭 취소 중");
-            runner.Shutdown(); // 네트워크 연결 종료
+            // 러너 내부 정리가 끝날 때까지 기다렸다가 리셋
+            StartCoroutine(ShutdownAndReset());
         }
-
-        matchTimerUI?.StopTimer(); // 타이머 중지
-        MatchQueueManager.Instance.CurrentRoomName = ""; // 방 초기화
-
-        // 기존 러너 파괴 및 새로 생성
-        RunnerSingleton.ClearRunner();
-        runner = RunnerSingleton.CreateRunner();
-        if (runner != null)
+        else
         {
-            runner.ProvideInput = true;
-            runner.AddCallbacks(this);
-            Debug.Log("새 runner 재등록 완료");
+            // 러너가 이미 죽어있다면 UI만 리셋
+            ResetLobbyState();
         }
-
     }
+
+    private IEnumerator ShutdownAndReset()
+    {
+        var shutdownTask = runner.Shutdown(true); // 셧다운 완료까지 대기
+        while (!shutdownTask.IsCompleted)
+            yield return null;                    // 한 프레임씩 대기
+
+        ResetLobbyState();
+    }
+
+    private void ResetLobbyState()
+    {
+        matchTimerUI.ResetTimer();                // 버튼/타이머 UI 정상화
+        MatchQueueManager.Instance.CurrentRoomName = null;
+
+        RunnerSingleton.ClearRunner();            // 러너 파괴 후 초기화
+        runner = null;                           
+    }
+
+
     public void OnSessionListUpdated(NetworkRunner runner, List<SessionInfo> sessionList)
     {
+        cachedSessionList = sessionList;
+        sessionListReceived = true;
+
+        Debug.Log($"세션 리스트 수신됨. 방 수: {cachedSessionList.Count}");
     }
 
     public void OnPlayerLeft(NetworkRunner runner, PlayerRef player) { }
-    public void OnConnectedToServer(NetworkRunner runner) { }
+    public void OnConnectedToServer(NetworkRunner runner) { Debug.Log("서버에 연결 성공"); }
     public void OnConnectRequest(NetworkRunner runner, NetworkRunnerCallbackArgs.ConnectRequest request) { }
     public void OnConnectFailed(NetworkRunner runner, NetAddress remoteAddress, NetConnectFailedReason reason) { }
     public void OnInput(NetworkRunner runner, NetworkInput input) { }
     public void OnInputMissing(NetworkRunner runner, PlayerRef player, NetworkInput input) { }
-    public void OnShutdown(NetworkRunner runner, ShutdownReason shutdownReason) { }
+    public void OnShutdown(NetworkRunner runner, ShutdownReason shutdownReason) {
+        Debug.Log($"Shutdown 완료, Reason = {shutdownReason}");
+    }
     public void OnUserSimulationMessage(NetworkRunner runner, SimulationMessagePtr message) { }
     public void OnCustomAuthenticationResponse(NetworkRunner runner, Dictionary<string, object> data) { }
     public void OnHostMigration(NetworkRunner runner, HostMigrationToken hostMigrationToken) { }
@@ -173,6 +285,12 @@ public class AutoMatchManager : MonoBehaviour, INetworkRunnerCallbacks
 
     private NetworkRunner runner;
     public MatchTimerUI matchTimerUI;
+    private bool isMatching = false;
+    private bool shuttingDown = false;
+
+    private List<SessionInfo> cachedSessionList = new List<SessionInfo>();
+    private bool sessionListReceived = false;
 
     public static AutoMatchManager Instance { get; private set; }
+    public bool IsMatching => isMatching;
 }

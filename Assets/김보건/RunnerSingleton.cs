@@ -34,6 +34,7 @@ public class RunnerSingleton : MonoBehaviour
             Destroy(Instance.gameObject); // 러너만 제거
             Instance = null;
         }
+
     }
 
     public static NetworkRunner CreateRunner()
@@ -41,7 +42,7 @@ public class RunnerSingleton : MonoBehaviour
         var singletonObj = Object.FindFirstObjectByType<RunnerSingleton>();
         if (singletonObj == null)
         {
-            Debug.LogError("RunnerSingleton 오브젝트가 씬에 없음");
+            Debug.LogError("러너싱글톤 오브젝트가 씬에 없음");
             return null;
         }
 
