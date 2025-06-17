@@ -20,6 +20,6 @@ MonoBehaviour:
   weaponType: 4
   magicType: 3
   potionType: 0
-  itemPrefab: {fileID: 1931006898372906, guid: 0309a9f2366cb584085e6d76b65b29c7, type: 3}
+  itemPrefab: {fileID: 1088038288684730, guid: fdefbd8b5a4224d46ae3c02becbf7f38, type: 3}
   price: 100
-  description: Heal Potion
+  description: 

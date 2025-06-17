@@ -13,8 +13,18 @@ MonoBehaviour:
   m_Name: Item Manager Config
   m_EditorClassIdentifier: 
   itemList:
-  - {fileID: 11400000, guid: dc06d416fb3c75f428464033d09d2b57, type: 2}
+  - {fileID: 11400000, guid: b03db8a9567d26a4fa5f2beb7408f818, type: 2}
   - {fileID: 11400000, guid: fc8380ff7e8d0c046a97a4fecd6913fe, type: 2}
   - {fileID: 11400000, guid: 62de3ea9b53e747419a6a0a411c76025, type: 2}
+  - {fileID: 11400000, guid: 23bac04565c306c4ab02818ab7f0b53b, type: 2}
+  - {fileID: 11400000, guid: 1cb29909a0a3bc84d97bad573a9d18b0, type: 2}
+  - {fileID: 11400000, guid: 269a4ddb0a0227a4285ccfb9e4d093eb, type: 2}
+  - {fileID: 11400000, guid: 85990286ca87e774eafd47889d80e7b6, type: 2}
+  - {fileID: 11400000, guid: 3f8acf4686c33174db4b9de6f9f283b6, type: 2}
+  - {fileID: 11400000, guid: 3425b107a8eba684cae5d4b273fee2fb, type: 2}
   - {fileID: 11400000, guid: d66413bc55e6ae4459686aa7babe41dc, type: 2}
+  - {fileID: 11400000, guid: c90593b50a077c648af728f70a2d5047, type: 2}
+  - {fileID: 11400000, guid: fdf5e581717e20d4aba02fe1c87850bb, type: 2}
   - {fileID: 11400000, guid: 0a8cf3380c3f35e4baa75575ac7593f7, type: 2}
+  - {fileID: 11400000, guid: d42267508a7d3cb40a789396b30c945e, type: 2}
+  - {fileID: 11400000, guid: 935e543113a47a7459bb4b0aad0a5162, type: 2}
