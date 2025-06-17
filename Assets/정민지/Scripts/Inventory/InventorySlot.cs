@@ -1,15 +1,15 @@
+using UnityEngine;
 
 [System.Serializable]
 public class InventorySlot
 {
     public ItemData item;
-    public int quantity; //¾ÆÀÌÅÛ °³¼ö
+    public int quantity; //ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½
 
     public bool IsEmpty => item == null || quantity <= 0;
 
     public void Clear()
     {
-
         item = null;
         quantity = 0;
     }

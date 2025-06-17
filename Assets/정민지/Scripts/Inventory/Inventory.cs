@@ -1,5 +1,6 @@
 using UnityEngine;
 using TMPro;
+using System.Linq;
 
 public class Inventory : MonoBehaviour
 {
@@ -12,6 +13,7 @@ public class Inventory : MonoBehaviour
     public GoldUI goldUI; //골드 UI
     public BigInventoryUI bigInventoryUI; //인벤토리 전체 화면
     [SerializeField] private ItemManager itemManager;
+
 
     private void Awake()
     {
@@ -31,12 +33,14 @@ public class Inventory : MonoBehaviour
     private void OnEnable()
     {
         EventBus<Gold>.OnEvent += UpdateGold;
+        EventBus<BuyItemRequested>.OnEvent += BuyItem;
     }
 
     //돈UI 구독 해제
     private void OnDisable()
     {
         EventBus<Gold>.OnEvent -= UpdateGold;
+        EventBus<BuyItemRequested>.OnEvent -= BuyItem;
     }
 
     //돈 실시간 업데이트
@@ -45,18 +49,13 @@ public class Inventory : MonoBehaviour
         gold = _gold.currentGold;
     }
 
-    //public void AddItemById(int itemId)
-    //{
-    //    var itemData = itemManager.GetItem(itemId);
-    //    if (itemData != null)
-    //    {
-    //        AddItem(itemData);
-    //    }
-    //    else
-    //    {
-    //        Debug.LogWarning($"Item ID {itemId}에 해당하는 아이템을 찾을 수 없습니다.");
-    //    }
-    //}
+    private void BuyItem(BuyItemRequested newItem)
+    {
+        for (int i = 0; i < newItem.amount; i++)
+        {
+            AddItem(newItem.itemData);
+        }
+    }
 
     public void UpdateAllInventoryUI()
     {
@@ -67,55 +66,57 @@ public class Inventory : MonoBehaviour
     //아이템 추가
     public void AddItem(ItemData item)
     {
-        foreach (var slot in slots)
+        if (item.itemType == ItemType.Potion)
         {
-            if(slot.item.itemType == ItemType.Potion)
+            // 이미 같은 포션이 있으면 수량만 증가
+            foreach (var slot in slots)
             {
                 if (!slot.IsEmpty && slot.item == item)
                 {
                     slot.quantity++;
                     UpdateAllInventoryUI();
-                    return;
-                }
-                else if (slot.IsEmpty)
-                {
-                    slot.item = item;
-                    slot.quantity = 1;
-                    UpdateAllInventoryUI();
+                    Debug.Log($"포션 스택 증가: {item.itemName}, 현재 수량: {slot.quantity}");
                     return;
                 }
             }
-            else
+
+            // 같은 포션 없으면 빈 슬롯 있는지 체크 후 추가
+            bool hasEmptySlot = slots.Any(slot => slot.IsEmpty);
+            if (!hasEmptySlot) return;
+
+            foreach (var slot in slots)
             {
-                if(slot.IsEmpty)
+                if (slot.IsEmpty)
                 {
                     slot.item = item;
                     slot.quantity = 1;
                     UpdateAllInventoryUI();
+                    Debug.Log($"빈 슬롯에 포션 추가: {item.itemName}");
                     return;
                 }
             }
-              
-        }      
+        }
+        else
+        {
+            // 포션이 아닐 때는 무조건 빈 슬롯 필요
+            bool hasEmptySlot = slots.Any(slot => slot.IsEmpty);
+            if (!hasEmptySlot) return;
+
+            foreach (var slot in slots)
+            {
+                if (slot.IsEmpty)
+                {
+                    slot.item = item;
+                    slot.quantity = 1;
+                    UpdateAllInventoryUI();
+                    Debug.Log($"빈 슬롯에 아이템 추가: {item.itemName}");
+                    return;
+                }
+            }
+        }
+
+        Debug.Log("아이템 추가 실패");
     }
-
-    ////아이템 구매
-    //public void BuyItemById(int itemId)
-    //{
-    //    var item = itemManager.GetItem(itemId);
-    //    if (item == null)
-    //    {
-    //        Debug.LogWarning($"아이템 ID {itemId}는 존재하지 않습니다.");
-    //        return;
-    //    }
-
-    //    if (gold >= item.price)
-    //    {
-    //        goldUI.SubtractGold(item.price);
-    //        AddItem(item);
-    //        Debug.Log("아이템 구매 완료");
-    //    }
-    //}
 
     //아이템 삭제
     public void SellItem(ItemData item)
@@ -123,33 +124,21 @@ public class Inventory : MonoBehaviour
         for (int i = 0; i < slots.Length; i++)
         {
             var slot = slots[i];
-            if (!slot.IsEmpty && slot.item == item)
+            if (!slot.IsEmpty && slot.item == item&&i==bigInventoryUI.selectedIndex)
             {
+                EventBus<GetGold>.Raise(new GetGold(item.price));
                 slot.quantity--;
 
                 if (slot.quantity <= 0)
                 {
                     slot.Clear();
                     UpdateAllInventoryUI();
+                    break;
                 }
+
                 UpdateAllInventoryUI();
                 break;
             }
         }
     }
-
-    //public bool HasItem(ItemData item, int count = 1)
-    //{
-    //    int total = 0;
-    //    foreach (var slot in slots)
-    //    {
-    //        if (!slot.IsEmpty && slot.item == item)
-    //        {
-    //            total += slot.quantity;
-    //            if (total >= count)
-    //                return true;
-    //        }
-    //    }
-    //    return false;
-    //}
 }

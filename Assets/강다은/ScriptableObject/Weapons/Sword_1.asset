@@ -13,14 +13,13 @@ MonoBehaviour:
   m_Name: Sword_1
   m_EditorClassIdentifier: 
   itemId: 101
-  itemName: Rusted Sword
-  itemIcon: {fileID: 21300000, guid: eee8f54e0e461a045b9eeffc2bc3ec90, type: 3}
+  itemName: Blood Edge
+  itemIcon: {fileID: 21300000, guid: f892cea14c2b6e54986163cdd36a853b, type: 3}
   itemType: 0
-  itemGrade: 2
+  itemGrade: 1
   weaponType: 0
   magicType: 3
   potionType: 3
-  itemPrefab: {fileID: 1912503009637456, guid: 12d578ba423ecb0499f22068b393c104, type: 3}
+  itemPrefab: {fileID: 1855137969317316, guid: 8fd0d5f054eabd84a835357d1db51e19, type: 3}
   price: 100
   description: 
-  isStackable: 1

@@ -7,6 +7,7 @@ public class InventoryUI : MonoBehaviour
     public Transform slotParent;
     public ItemData basicSword;
     public GameObject bigInventoryPanel;
+    public GameObject combi;
     [SerializeField] private BigInventoryUI bigInventoryUI;
 
     public int rowSize = 5;
@@ -16,13 +17,17 @@ public class InventoryUI : MonoBehaviour
     private List<InventorySlotUI> slotUIs = new List<InventorySlotUI>();
     private int currentPage = 0;
     private int selectedIndex = 0;
+    private bool isActive;
+    private bool canSee;
 
     private void Start()
     {
         inventory = GetComponent<Inventory>();
         InitSlots();
-      //  inventory.AddItemById(101);
+        inventory.AddItem(basicSword);
         UpdateUI();
+        isActive = bigInventoryPanel.activeSelf;
+        canSee = combi.activeSelf;
     }
 
 
@@ -54,7 +59,9 @@ public class InventoryUI : MonoBehaviour
     {
         if (Input.GetKeyDown(KeyCode.I))
         {
-            bool isActive = bigInventoryPanel.activeSelf;
+            if (combi.activeSelf) return;
+
+            isActive = bigInventoryPanel.activeSelf;
             bigInventoryPanel.SetActive(!isActive); // 토글 방식
 
             int index = currentPage * rowSize + selectedIndex;
@@ -66,6 +73,18 @@ public class InventoryUI : MonoBehaviour
             currentPage = (currentPage + 1) % maxRow;
             selectedIndex = 0;
             UpdateUI();
+        }
+
+        if(Input.GetKeyDown(KeyCode.C))
+        {
+            canSee = combi.activeSelf;
+            isActive = bigInventoryPanel.activeSelf;
+            combi.SetActive(!canSee);
+
+            if (!(isActive&&!canSee))
+            {
+                bigInventoryPanel.SetActive(!isActive);
+            }
         }
 
         if (bigInventoryPanel.activeSelf == false)

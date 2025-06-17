@@ -19,9 +19,9 @@ public class UIManager : baseManager,IGameManager
 
     public override void Init()
     {
-        for (int i = 0; i < conFig.GetUiGameObjects().Count; i++)
-        {
-            GameObject.Instantiate(conFig.GetUiGameObjects()[i]);
-        }
+        //for (int i = 0; i < conFig.GetUiGameObjects().Count; i++)
+       // {
+          //  GameObject.Instantiate(conFig.GetUiGameObjects()[i]);
+       // }
     }
 }
