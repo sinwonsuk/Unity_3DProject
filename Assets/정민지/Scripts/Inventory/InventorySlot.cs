@@ -10,7 +10,6 @@ public class InventorySlot
 
     public void Clear()
     {
-
         item = null;
         quantity = 0;
     }

@@ -13,8 +13,8 @@ MonoBehaviour:
   m_Name: Sword_2
   m_EditorClassIdentifier: 
   itemId: 102
-  itemName: Ironblade
-  itemIcon: {fileID: 21300000, guid: 4a11c4d6510d46f4eb6fdae0cc5ef83b, type: 3}
+  itemName: Shadow Slasher
+  itemIcon: {fileID: 21300000, guid: 84b5b637da08d8a40bc22cb896cf1b15, type: 3}
   itemType: 0
   itemGrade: 2
   weaponType: 0
@@ -23,4 +23,3 @@ MonoBehaviour:
   itemPrefab: {fileID: 1352579538443736, guid: d97af9500bf6b8643ae184f668c1630c, type: 3}
   price: 250
   description: 
-  isStackable: 0
