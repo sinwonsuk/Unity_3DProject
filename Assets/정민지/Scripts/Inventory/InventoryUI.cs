@@ -12,7 +12,6 @@ public class InventoryUI : MonoBehaviour
 
     public int rowSize = 5;
     public int maxRow = 3;
-    public ItemData basicItem;
 
     private Inventory inventory;
     private List<InventorySlotUI> slotUIs = new List<InventorySlotUI>();
@@ -25,7 +24,7 @@ public class InventoryUI : MonoBehaviour
     {
         inventory = GetComponent<Inventory>();
         InitSlots();
-        inventory.AddItem(basicItem);
+        inventory.AddItem(basicSword);
         UpdateUI();
         isActive = bigInventoryPanel.activeSelf;
         canSee = combi.activeSelf;

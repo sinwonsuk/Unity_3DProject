@@ -13,7 +13,7 @@ MonoBehaviour:
   m_Name: Sword2Recipe
   m_EditorClassIdentifier: 
   ingredients:
-  - {fileID: 11400000, guid: dc06d416fb3c75f428464033d09d2b57, type: 2}
-  - {fileID: 11400000, guid: dc06d416fb3c75f428464033d09d2b57, type: 2}
-  - {fileID: 11400000, guid: dc06d416fb3c75f428464033d09d2b57, type: 2}
+  - {fileID: 11400000, guid: b03db8a9567d26a4fa5f2beb7408f818, type: 2}
+  - {fileID: 11400000, guid: b03db8a9567d26a4fa5f2beb7408f818, type: 2}
+  - {fileID: 11400000, guid: b03db8a9567d26a4fa5f2beb7408f818, type: 2}
   result: {fileID: 11400000, guid: fc8380ff7e8d0c046a97a4fecd6913fe, type: 2}
