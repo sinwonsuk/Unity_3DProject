@@ -54,24 +54,18 @@ public class BasicSpawner : MonoBehaviour, INetworkRunnerCallbacks
 
     public void OnPlayerJoined(NetworkRunner runner, PlayerRef player)
     {
-        if (runner.GameMode == GameMode.Shared)
+        if (runner.IsServer || (runner.GameMode == GameMode.Shared && player == runner.LocalPlayer))
         {
-            if (player == runner.LocalPlayer)
-            {
-                Vector3 spawnPosition = new Vector3((player.RawEncoded % 4) * 3, 1, 0);
-                NetworkObject networkPlayerObject = runner.Spawn(_playerPrefab, spawnPosition, Quaternion.identity, player);
-                _spawnedCharacters.Add(player, networkPlayerObject);
-            }
+            var spawnManager = FindAnyObjectByType<SpawnManager>();
+            Vector3 spawnPosition = spawnManager != null
+                ? spawnManager.GetNextSpawnPosition()
+                : Vector3.zero;
+
+            NetworkObject playerObj = runner.Spawn(_playerPrefab, spawnPosition, Quaternion.identity, player);
+            _spawnedCharacters.Add(player, playerObj);
         }
-        // Host/Server 모드일 경우 서버에서 모두 생성
-        else if (runner.IsServer)
-        {
-            Vector3 spawnPosition = new Vector3((player.RawEncoded % 4) * 3, 1, 0);
-            NetworkObject networkPlayerObject = runner.Spawn(_playerPrefab, spawnPosition, Quaternion.identity, player);
-            _spawnedCharacters.Add(player, networkPlayerObject);
-        }
-    
     }
+
 
     public void OnPlayerLeft(NetworkRunner runner, PlayerRef player)
     {

@@ -12,4 +12,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 51f85a21512e87a4f8b5579f1aa805c3, type: 3}
   m_Name: SpawnManager
   m_EditorClassIdentifier: 
-  <SpawnPositions>k__BackingField: []
+  spawnPositions:
+  - {x: 1, y: 1, z: 0}
+  - {x: 3, y: 1, z: 0}
+  - {x: 5, y: 1, z: 0}
+  - {x: 7, y: 1, z: 0}
+  - {x: 9, y: 1, z: 0}
