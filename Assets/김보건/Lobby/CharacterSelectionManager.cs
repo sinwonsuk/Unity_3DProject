@@ -6,23 +6,36 @@ using UnityEngine;
 using UnityEngine.UI;
 public class CharacterSelectionManager : NetworkBehaviour
 {
+    private void Awake()
+    {
+        Instance = this;
+    }
 
     private void Start()
     {
         readyButton.onClick.AddListener(ConfirmSelection);
     }
 
+    public void SetSelectedIndex(int index)
+    {
+        SelectedIndex = index;
+        if (index >= 0 && index < characterTypes.Length)
+        {
+            Debug.Log($"캐릭터 선택됨: {characterTypes[index]} (index: {index})");
+        }
+        else
+        {
+            Debug.LogWarning($"잘못된 캐릭터 인덱스: {index}");
+        }
+    }
 
     private void ConfirmSelection()
     {
-        if (IsReady) return;
+        if (IsReady || SelectedIndex < 0) return;
 
         IsReady = true;
-
-        Debug.Log($"캐릭터 선택 완료: {characterTypes[SelectedIndex]} (index: {SelectedIndex})");
-
+        Debug.Log($"최종 캐릭터 확정: {characterTypes[SelectedIndex]}");
         readyButton.interactable = false;
-
     }
 
     public void CancelSelection()
@@ -30,10 +43,10 @@ public class CharacterSelectionManager : NetworkBehaviour
         if (!IsReady && !LobbyCameraManager.Instance.IsZoomedIn) return;
 
         IsReady = false;
-        Debug.Log("캐릭터 선택 취소됨");
-
+        SelectedIndex = -1;
         readyButton.interactable = true;
-        SelectedIndex = 0;
+
+        Debug.Log("캐릭터 선택 취소됨");
 
         //매칭취소
         if (AutoMatchManager.Instance != null)
@@ -47,8 +60,18 @@ public class CharacterSelectionManager : NetworkBehaviour
 
     [SerializeField] private Button readyButton;
 
-    public int SelectedIndex { get; private set; }
-    public bool IsReady { get; private set; }
+    private string[] characterTypes = {
+        "King_Mccully",    
+        "Mage_Evan",       
+        "Joker",           
+        "Queen_Emily",    
+        "Soldier_James"  
+    };
 
-    private string[] characterTypes = { "Warrior", "Mage", "Archer" };
+    public int SelectedIndex { get; private set; } = -1;
+    public bool IsReady { get; private set; }
+    public string SelectedCharacterName => (SelectedIndex >= 0 && SelectedIndex < characterTypes.Length)
+                                           ? characterTypes[SelectedIndex]
+                                           : null;
+    public static CharacterSelectionManager Instance { get; private set; }
 }

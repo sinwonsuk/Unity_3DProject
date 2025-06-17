@@ -11,9 +11,12 @@ public class CharacterSelector : MonoBehaviour
         LobbyCameraManager.Instance.ZoomToCharacter(zoomTarget);
         //UI 갱신
         LobbyUIManager.Instance.ShowCharacterInfo(characterName, characterDesc);
+
+        CharacterSelectionManager.Instance?.SetSelectedIndex(characterIndex);
     }
 
     public Transform zoomTarget; // 카메라가 이동할 위치
+    public int characterIndex;
     public string characterName;
     public string characterDesc;
 }
