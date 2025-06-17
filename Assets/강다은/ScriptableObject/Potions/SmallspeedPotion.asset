@@ -14,7 +14,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   itemId: 1005
   itemName: Speed Potion (Small)
-  itemIcon: {fileID: 21300000, guid: 4a11c4d6510d46f4eb6fdae0cc5ef83b, type: 3}
+  itemIcon: {fileID: 21300000, guid: 8a3fe1ce19462004f80df05dd99c79d8, type: 3}
   itemType: 2
   itemGrade: 0
   weaponType: 4

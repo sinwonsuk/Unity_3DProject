@@ -14,7 +14,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   itemId: 130
   itemName: Skyblade Spear
-  itemIcon: {fileID: 21300000, guid: 9122c4cd331b74d478434454b868aae9, type: 3}
+  itemIcon: {fileID: 21300000, guid: 065ea14c4e9ae8148a6b5342b107a2c8, type: 3}
   itemType: 0
   itemGrade: 0
   weaponType: 3

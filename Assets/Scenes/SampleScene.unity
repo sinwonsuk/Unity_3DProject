@@ -222,7 +222,7 @@ Transform:
   m_GameObject: {fileID: 81234847}
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0, y: -2.81, z: 0}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
@@ -453,6 +453,10 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 4954228619636473244, guid: a4355a3947ab53248abdf209df7ddb2d, type: 3}
+      propertyPath: slotPrefab
+      value: 
+      objectReference: {fileID: -8290236435999207561, guid: 1f32243463366a4489f4f2d615cc3397, type: 3}
     - target: {fileID: 5339253927009625634, guid: a4355a3947ab53248abdf209df7ddb2d, type: 3}
       propertyPath: m_Name
       value: ShopUICanvas
@@ -460,30 +464,6 @@ PrefabInstance:
     - target: {fileID: 5339253927009625634, guid: a4355a3947ab53248abdf209df7ddb2d, type: 3}
       propertyPath: m_IsActive
       value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 6889074585218879296, guid: a4355a3947ab53248abdf209df7ddb2d, type: 3}
-      propertyPath: m_AnchorMax.y
-      value: 1
-      objectReference: {fileID: 0}
-    - target: {fileID: 6889074585218879296, guid: a4355a3947ab53248abdf209df7ddb2d, type: 3}
-      propertyPath: m_AnchorMin.y
-      value: 1
-      objectReference: {fileID: 0}
-    - target: {fileID: 6889074585218879296, guid: a4355a3947ab53248abdf209df7ddb2d, type: 3}
-      propertyPath: m_SizeDelta.x
-      value: 100
-      objectReference: {fileID: 0}
-    - target: {fileID: 6889074585218879296, guid: a4355a3947ab53248abdf209df7ddb2d, type: 3}
-      propertyPath: m_SizeDelta.y
-      value: 100
-      objectReference: {fileID: 0}
-    - target: {fileID: 6889074585218879296, guid: a4355a3947ab53248abdf209df7ddb2d, type: 3}
-      propertyPath: m_AnchoredPosition.x
-      value: 50
-      objectReference: {fileID: 0}
-    - target: {fileID: 6889074585218879296, guid: a4355a3947ab53248abdf209df7ddb2d, type: 3}
-      propertyPath: m_AnchoredPosition.y
-      value: -50
       objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
@@ -625,7 +605,7 @@ PrefabInstance:
       objectReference: {fileID: 1402688716}
     - target: {fileID: 6299151774026347023, guid: 75adf9e48e1b4b649bdf85bb56c8ad7a, type: 3}
       propertyPath: m_Name
-      value: Babo
+      value: FairyShop
       objectReference: {fileID: 0}
     - target: {fileID: 9098321323189530758, guid: 75adf9e48e1b4b649bdf85bb56c8ad7a, type: 3}
       propertyPath: m_LocalPosition.x
@@ -633,7 +613,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 9098321323189530758, guid: 75adf9e48e1b4b649bdf85bb56c8ad7a, type: 3}
       propertyPath: m_LocalPosition.y
-      value: -1.92
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 9098321323189530758, guid: 75adf9e48e1b4b649bdf85bb56c8ad7a, type: 3}
       propertyPath: m_LocalPosition.z
@@ -682,15 +662,15 @@ PrefabInstance:
     m_Modifications:
     - target: {fileID: 985345274195706165, guid: 4dfb5f2e67ed31e44b3c711b4c4e3887, type: 3}
       propertyPath: m_LocalPosition.x
-      value: -1.4722655
+      value: -0.41
       objectReference: {fileID: 0}
     - target: {fileID: 985345274195706165, guid: 4dfb5f2e67ed31e44b3c711b4c4e3887, type: 3}
       propertyPath: m_LocalPosition.y
-      value: -2.33
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 985345274195706165, guid: 4dfb5f2e67ed31e44b3c711b4c4e3887, type: 3}
       propertyPath: m_LocalPosition.z
-      value: 3.765
+      value: 0.58
       objectReference: {fileID: 0}
     - target: {fileID: 985345274195706165, guid: 4dfb5f2e67ed31e44b3c711b4c4e3887, type: 3}
       propertyPath: m_LocalRotation.w
@@ -790,6 +770,10 @@ PrefabInstance:
       propertyPath: shopUI
       value: 
       objectReference: {fileID: 1402688716}
+    - target: {fileID: 6146110540479660566, guid: b1eb75f3e89a43445bd9e5c8014521c4, type: 3}
+      propertyPath: m_Enabled
+      value: 0
+      objectReference: {fileID: 0}
     - target: {fileID: 6299151774026347023, guid: b1eb75f3e89a43445bd9e5c8014521c4, type: 3}
       propertyPath: m_Name
       value: BlackSmith
@@ -800,7 +784,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 9098321323189530758, guid: b1eb75f3e89a43445bd9e5c8014521c4, type: 3}
       propertyPath: m_LocalPosition.y
-      value: -1.92
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 9098321323189530758, guid: b1eb75f3e89a43445bd9e5c8014521c4, type: 3}
       propertyPath: m_LocalPosition.z

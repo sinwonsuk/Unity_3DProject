@@ -14,7 +14,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   itemId: 1002
   itemName: HealingPotion (Big)
-  itemIcon: {fileID: 21300000, guid: 2d73479cf571d21409b2656fd24f7737, type: 3}
+  itemIcon: {fileID: 21300000, guid: d8ac4d3f46c304343a5a5b45e0ffa5cd, type: 3}
   itemType: 2
   itemGrade: 0
   weaponType: 4

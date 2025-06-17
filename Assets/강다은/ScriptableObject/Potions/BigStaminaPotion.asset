@@ -14,7 +14,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   itemId: 1004
   itemName: Stamina Potion (Big)
-  itemIcon: {fileID: 21300000, guid: decc33e0428e74349941f54fe6299753, type: 3}
+  itemIcon: {fileID: 21300000, guid: 026c43cbf90c6f447a827a07edabf5cc, type: 3}
   itemType: 2
   itemGrade: 0
   weaponType: 4
