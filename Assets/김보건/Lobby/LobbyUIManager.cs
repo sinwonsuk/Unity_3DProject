@@ -30,5 +30,6 @@ public class LobbyUIManager : MonoBehaviour
     public TMP_Text introduceText;  // introduce 오브젝트
 
     public MatchTimerUI matchTimerUI;
+    public GameObject chooseCharacterUI;
 
 }

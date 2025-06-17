@@ -880,10 +880,34 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 2174836940037908305, guid: f9fdf76ca0b1f4d44a1b95fc304d7a15, type: 3}
+      propertyPath: m_fontAsset
+      value: 
+      objectReference: {fileID: 11400000, guid: bc2719c17c7fc934bafcc9890864499a, type: 2}
+    - target: {fileID: 2174836940037908305, guid: f9fdf76ca0b1f4d44a1b95fc304d7a15, type: 3}
+      propertyPath: m_sharedMaterial
+      value: 
+      objectReference: {fileID: 6737083814206023001, guid: bc2719c17c7fc934bafcc9890864499a, type: 2}
+    - target: {fileID: 2174836940037908305, guid: f9fdf76ca0b1f4d44a1b95fc304d7a15, type: 3}
+      propertyPath: m_hasFontAssetChanged
+      value: 0
+      objectReference: {fileID: 0}
     - target: {fileID: 4591798156968353374, guid: f9fdf76ca0b1f4d44a1b95fc304d7a15, type: 3}
       propertyPath: m_Camera
       value: 
       objectReference: {fileID: 1870906458}
+    - target: {fileID: 7735008320326625545, guid: f9fdf76ca0b1f4d44a1b95fc304d7a15, type: 3}
+      propertyPath: m_fontAsset
+      value: 
+      objectReference: {fileID: 11400000, guid: bc2719c17c7fc934bafcc9890864499a, type: 2}
+    - target: {fileID: 7735008320326625545, guid: f9fdf76ca0b1f4d44a1b95fc304d7a15, type: 3}
+      propertyPath: m_sharedMaterial
+      value: 
+      objectReference: {fileID: 6737083814206023001, guid: bc2719c17c7fc934bafcc9890864499a, type: 2}
+    - target: {fileID: 7735008320326625545, guid: f9fdf76ca0b1f4d44a1b95fc304d7a15, type: 3}
+      propertyPath: m_hasFontAssetChanged
+      value: 0
+      objectReference: {fileID: 0}
     - target: {fileID: 8647884760359983528, guid: f9fdf76ca0b1f4d44a1b95fc304d7a15, type: 3}
       propertyPath: m_Name
       value: LobbyUI

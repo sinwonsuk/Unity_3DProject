@@ -31,6 +31,8 @@ public class LobbyCameraManager : MonoBehaviour
         originalCamPos = virtualCamera.transform.position;
         originalCamRot = virtualCamera.transform.rotation;
 
+        LobbyUIManager.Instance.chooseCharacterUI.SetActive(false);
+
 
         StopAllCoroutines(); // 기존 코루틴이 돌고 있다면 정지
         StartCoroutine(ZoomInCamera(target));
@@ -81,6 +83,8 @@ public class LobbyCameraManager : MonoBehaviour
         isZoomedIn = false;
         virtualCamera.Follow = CameraFocus;
         virtualCamera.LookAt = CameraFocus;
+
+        LobbyUIManager.Instance.chooseCharacterUI.SetActive(true);
 
     }
 
