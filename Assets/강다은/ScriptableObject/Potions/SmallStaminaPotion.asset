@@ -10,16 +10,16 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: d17ebbd53a8e466428190081b710475f, type: 3}
-  m_Name: Sword_1
+  m_Name: SmallStaminaPotion
   m_EditorClassIdentifier: 
-  itemId: 101
-  itemName: Blood Edge
-  itemIcon: {fileID: 21300000, guid: f892cea14c2b6e54986163cdd36a853b, type: 3}
-  itemType: 0
-  itemGrade: 1
-  weaponType: 0
+  itemId: 1003
+  itemName: Stamina Potion (Small)
+  itemIcon: {fileID: 21300000, guid: 229e92a25916f7e488f711d7d1c04118, type: 3}
+  itemType: 2
+  itemGrade: 0
+  weaponType: 4
   magicType: 3
-  potionType: 3
-  itemPrefab: {fileID: 1855137969317316, guid: 8fd0d5f054eabd84a835357d1db51e19, type: 3}
+  potionType: 1
+  itemPrefab: {fileID: 1931006898372906, guid: 0309a9f2366cb584085e6d76b65b29c7, type: 3}
   price: 100
-  description: 
+  description: Heal Potion

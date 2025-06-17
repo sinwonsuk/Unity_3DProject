@@ -10,16 +10,16 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: d17ebbd53a8e466428190081b710475f, type: 3}
-  m_Name: Sword_1
+  m_Name: BigHealingPotion
   m_EditorClassIdentifier: 
-  itemId: 101
-  itemName: Blood Edge
-  itemIcon: {fileID: 21300000, guid: f892cea14c2b6e54986163cdd36a853b, type: 3}
-  itemType: 0
-  itemGrade: 1
-  weaponType: 0
+  itemId: 1002
+  itemName: HealingPotion (Big)
+  itemIcon: {fileID: 21300000, guid: d8ac4d3f46c304343a5a5b45e0ffa5cd, type: 3}
+  itemType: 2
+  itemGrade: 0
+  weaponType: 4
   magicType: 3
-  potionType: 3
-  itemPrefab: {fileID: 1855137969317316, guid: 8fd0d5f054eabd84a835357d1db51e19, type: 3}
-  price: 100
-  description: 
+  potionType: 0
+  itemPrefab: {fileID: 1848628977646670, guid: dbbc2f4abfccabb4d9cd04699a36f6f2, type: 3}
+  price: 300
+  description: Heal Potion

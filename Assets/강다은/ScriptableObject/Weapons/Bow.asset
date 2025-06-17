@@ -10,16 +10,16 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: d17ebbd53a8e466428190081b710475f, type: 3}
-  m_Name: Sword_1
+  m_Name: Bow
   m_EditorClassIdentifier: 
-  itemId: 101
-  itemName: Blood Edge
-  itemIcon: {fileID: 21300000, guid: f892cea14c2b6e54986163cdd36a853b, type: 3}
+  itemId: 110
+  itemName: Phantom Bow
+  itemIcon: {fileID: 21300000, guid: db8235c40c752cc41a6b901ba6366860, type: 3}
   itemType: 0
   itemGrade: 1
-  weaponType: 0
+  weaponType: 1
   magicType: 3
   potionType: 3
-  itemPrefab: {fileID: 1855137969317316, guid: 8fd0d5f054eabd84a835357d1db51e19, type: 3}
-  price: 100
+  itemPrefab: {fileID: 1836698891882270, guid: 999de633b0a5f0848b10c37d407a9d10, type: 3}
+  price: 300
   description: 
