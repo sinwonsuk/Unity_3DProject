@@ -23,7 +23,7 @@ public abstract class BaseState<EState> where EState : Enum
     public abstract void ExitState();
     public abstract void UpdateState();
     public abstract void FixedUpdateState();
-
+    public abstract void OnAttackAnimationEnd();
     public abstract void LateUpdateState();
     public abstract EState GetNextState();
     public abstract void OnTriggerEnter(Collider collider);

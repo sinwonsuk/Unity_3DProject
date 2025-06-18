@@ -4,6 +4,7 @@ public class playertest : MonoBehaviour
 {
     int adad = 0;
 
+    
     private void OnEnable()
     {
         EventBus<Eventplatertest>.OnEvent += asdadasd;    
@@ -15,7 +16,8 @@ public class playertest : MonoBehaviour
     }
     void asdadasd(Eventplatertest adada)
     {
-        int a = 0;
+        GameObject dawhdiuah = adada.objdasdadect;
+
     }
     // Start is called once before the first execution of Update after the MonoBehaviour is created
     void Start()
@@ -26,6 +28,6 @@ public class playertest : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        EventBus<Eventplatertest>.Raise(new Eventplatertest(40));
+        EventBus<Eventplatertest>.Raise(new Eventplatertest());
     }
 }

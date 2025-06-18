@@ -4,6 +4,7 @@
     "com.unity.2d.sprite": "1.0.0",
     "com.unity.ai.navigation": "2.0.6",
     "com.unity.burst": "1.8.19",
+    "com.unity.cinemachine": "2.9.5",
     "com.unity.collab-proxy": "2.8.2",
     "com.unity.collections": "2.5.1",
     "com.unity.ext.nunit": "2.0.5",
@@ -60,8 +61,6 @@
     "com.unity.modules.video": "1.0.0",
     "com.unity.modules.vr": "1.0.0",
     "com.unity.modules.wind": "1.0.0",
-    "com.unity.modules.xr": "1.0.0",
-    "com.unity.cinemachine": "2.9.5"
-
+    "com.unity.modules.xr": "1.0.0"
   }
 }
