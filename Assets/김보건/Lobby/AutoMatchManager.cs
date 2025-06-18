@@ -114,12 +114,13 @@ public class AutoMatchManager : MonoBehaviour, INetworkRunnerCallbacks
 
         if (cachedSessionList.Count > 0)
         {
-            roomName = cachedSessionList[0].Name;
+            //roomName = cachedSessionList[0].Name;
+            roomName = $"Room_{Random.Range(0, 9999)}";
             Debug.Log($"기존 방 참가: {roomName}");
         }
         else
         {
-            roomName = $"Room_{Random.Range(1000, 9999)}";
+            roomName = $"Room_{Random.Range(0, 9999)}";
             Debug.Log($"새 방 생성: {roomName}");
         }
 
@@ -152,22 +153,31 @@ public class AutoMatchManager : MonoBehaviour, INetworkRunnerCallbacks
 
         // 네트워크 씬 매니저에 로비 씬 등록
         SceneRef startScene = SceneRef.FromIndex(lobbySceneIndex);
-
-        var result = await runner.StartGame(new StartGameArgs
+        var startArgs = new StartGameArgs
         {
             GameMode = GameMode.AutoHostOrClient,
             SessionName = roomName,
-            Scene = startScene,
-            SceneManager = sceneManager
-        });
+            Scene = startScene,         // Host 가 나중에 LoadScene
+            SceneManager = sceneManager,
+            PlayerCount = 2
+        };
 
-        if (result.Ok)
+        try
         {
-            Debug.Log("클라이언트 StartGame 성공 ");
+            StartGameResult result = await runner.StartGame(startArgs);
+
+            if (result.Ok)
+            {
+                Debug.Log("StartGame 성공");
+            }
+            else
+            {
+                Debug.LogError($"StartGame 실패 ▶ {result.ShutdownReason}  Msg={result.ErrorMessage}");
+            }
         }
-        else
+        catch (System.Exception ex)
         {
-            Debug.LogError($"클라이언트 StartGame 실패 : {result.ShutdownReason}");
+            Debug.LogError($"StartGame 중 예외 발생: {ex.Message}\n{ex.StackTrace}");
         }
     }
 
