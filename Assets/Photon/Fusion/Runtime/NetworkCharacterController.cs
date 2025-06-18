@@ -1,5 +1,5 @@
 namespace Fusion {
-    using System.Runtime.CompilerServices;
+  using System.Runtime.CompilerServices;
   using System.Runtime.InteropServices;
   using UnityEngine;
 
@@ -46,8 +46,7 @@ namespace Fusion {
     public float maxSpeed      = 2.0f;
     public float rotationSpeed = 15.0f;
 
-
-        Tick                _initial;
+    Tick                _initial;
     CharacterController _controller;
 
     public Vector3 Velocity {
@@ -59,15 +58,10 @@ namespace Fusion {
       get => Data.Grounded;
       set => Data.Grounded = value;
     }
-
-     public void Rotate(Quaternion targetRotation)
-     {
-
-
-
-            transform.rotation = Quaternion.Slerp(transform.rotation, targetRotation, rotationSpeed * Runner.DeltaTime);
-     }
-
+    public void Rotate(Quaternion targetRotation)
+    {
+        transform.rotation = Quaternion.Slerp(transform.rotation, targetRotation, rotationSpeed * Runner.DeltaTime);
+    }
         public void Teleport(Vector3? position = null, Quaternion? rotation = null) {
       _controller.enabled = false;
       NetworkTRSP.Teleport(this, transform, position, rotation);
@@ -104,12 +98,7 @@ namespace Fusion {
         horizontalVel = Vector3.Lerp(horizontalVel, default, braking * deltaTime);
       } else {
         horizontalVel      = Vector3.ClampMagnitude(horizontalVel + direction * acceleration * deltaTime, maxSpeed);
-
-
-                //float camYaw = Camera.main.transform.eulerAngles.y;
-                //Quaternion camPlanarRot = Quaternion.Euler(0, camYaw, 0);
-
-                //transform.rotation = Quaternion.Slerp(transform.rotation, camPlanarRot, rotationSpeed * Runner.DeltaTime);
+       
       }
 
       moveVelocity.x = horizontalVel.x;
@@ -131,10 +120,11 @@ namespace Fusion {
       CopyToBuffer();
     }
 
-        public override void Render() {
-          NetworkTRSP.Render(this, transform, false, false, false, ref _initial);
-        }
-        void IBeforeAllTicks.BeforeAllTicks(bool resimulation, int tickCount) {
+    public override void Render() {
+      NetworkTRSP.Render(this, transform, false, false, false, ref _initial);
+    }
+
+    void IBeforeAllTicks.BeforeAllTicks(bool resimulation, int tickCount) {
       CopyToEngine();
     }
 
@@ -158,14 +148,12 @@ namespace Fusion {
     void CopyToEngine() {
       // CC must be disabled before resetting the transform state
       _controller.enabled = false;
-    
+
       // set position and rotation
       transform.SetPositionAndRotation(Data.TRSPData.Position, Data.TRSPData.Rotation);
-    
+
       // Re-enable CC
       _controller.enabled = true;
     }
-
-
-    }
+  }
 }
