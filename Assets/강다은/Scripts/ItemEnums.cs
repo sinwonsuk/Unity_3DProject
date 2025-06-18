@@ -29,3 +29,12 @@ public enum PotionType
 	Speed,
 	NONE
 }
+
+public enum EffectType
+{
+	Heal,
+	Stamina,
+	Speed,
+	Attack,
+	NONE
+}

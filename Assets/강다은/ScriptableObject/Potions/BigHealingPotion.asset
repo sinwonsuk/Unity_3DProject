@@ -23,3 +23,5 @@ MonoBehaviour:
   itemPrefab: {fileID: 1848628977646670, guid: dbbc2f4abfccabb4d9cd04699a36f6f2, type: 3}
   price: 300
   description: Heal Potion
+  effectType: 0
+  effectValue: 300

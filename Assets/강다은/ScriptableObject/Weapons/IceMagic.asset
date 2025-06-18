@@ -23,3 +23,5 @@ MonoBehaviour:
   itemPrefab: {fileID: 1068037597256404, guid: 3b34afe598dadcf449e3242bdd3542e0, type: 3}
   price: 300
   description: 
+  effectType: 3
+  effectValue: 100
