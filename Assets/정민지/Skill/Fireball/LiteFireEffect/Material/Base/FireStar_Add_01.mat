@@ -8,8 +8,8 @@ Material:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_Name: FireStar_Add_01
-  m_Shader: {fileID: 10721, guid: 0000000000000000f000000000000000, type: 0}
-  m_Parent: {fileID: 2100000, guid: e98a56c94877757469ada537eaa187b8, type: 2}
+  m_Shader: {fileID: 4800000, guid: 9fcbb735800f51f4496e87cc6ece3e83, type: 3}
+  m_Parent: {fileID: 2100000, guid: 41b2f17198c79274a9d0f0f7509aa563, type: 2}
   m_ModifiedSerializedProperties: 0
   m_ValidKeywords: []
   m_InvalidKeywords: []
@@ -23,13 +23,16 @@ Material:
   m_SavedProperties:
     serializedVersion: 3
     m_TexEnvs:
+    - _CutTex:
+        m_Texture: {fileID: 2800000, guid: 9f3407d7c5f9bf74382aa1be4f3d5a84, type: 3}
+        m_Scale: {x: 1, y: 1}
+        m_Offset: {x: 0, y: 0}
     - _MainTex:
-        m_Texture: {fileID: 2800000, guid: eaffc20b940751240bb1cde78f2b8aee, type: 3}
+        m_Texture: {fileID: 2800000, guid: e814102136e242a488563f19bfa24227, type: 3}
         m_Scale: {x: 1, y: 1}
         m_Offset: {x: 0, y: 0}
     m_Ints: []
     m_Floats: []
-    m_Colors:
-    - _TintColor: {r: 1, g: 1, b: 1, a: 0.49803922}
+    m_Colors: []
   m_BuildTextureStacks: []
   m_AllowLocking: 1
