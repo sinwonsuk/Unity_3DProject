@@ -1,0 +1,15 @@
+fileFormatVersion: 2
+guid: 8a51f2d13184d7048a0f060fda54f346
+NativeFormatImporter:
+  externalObjects: {}
+  mainObjectFileID: 9100000
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 
+AssetOrigin:
+  serializedVersion: 1
+  productId: 287809
+  packageName: Archer Bow and Arrow Cover Animations Pack
+  packageVersion: 1.1
+  assetPath: Assets/YashMakesGames/Archer Demo Scene/Scene Requirements/AnimationControllers/Death_Animation.controller
+  uploadId: 711616

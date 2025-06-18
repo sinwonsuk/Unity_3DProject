@@ -1,6 +1,7 @@
 using Fusion;
 using UnityEngine;
 using UnityEngine.AI;
+using static Unity.Collections.Unicode;
 
 public enum ERollState
 {
@@ -12,14 +13,10 @@ public enum ERollState
 
 public class RollState : BaseState<PlayerStateMachine.PlayerState>
 {
-    PlayerStateMachine PlayerStateMachine;
-    Transform transform;
 
     public RollState(PlayerStateMachine.PlayerState key, Animator animator, PlayerStateMachine playerStateMachine) : base(key, animator)
     {
-        this.PlayerStateMachine = playerStateMachine;
-
-        transform = PlayerStateMachine.transform;
+        this.playerStateMachine = playerStateMachine;
     }
 
     public override void EnterState()
@@ -28,7 +25,7 @@ public class RollState : BaseState<PlayerStateMachine.PlayerState>
     }
     public override void ExitState()
     {
-       
+        playerStateMachine.startRoll();
     }
     public override void UpdateState()
     {
@@ -36,28 +33,9 @@ public class RollState : BaseState<PlayerStateMachine.PlayerState>
     }
 
     public override void FixedUpdateState()
-    {
-        float deltaTime = PlayerStateMachine.Runner.DeltaTime;
-
-        if ((ERollState)RollCount == ERollState.Left)
-        {
-            PlayerStateMachine.playerController.Move(-transform.right * rollSpeed * deltaTime);
-        }
-        else if ((ERollState)RollCount == ERollState.Right)
-        {
-            PlayerStateMachine.playerController.Move(transform.right * rollSpeed * deltaTime);
-        }
-        else if ((ERollState)RollCount == ERollState.Forward)
-        {
-            PlayerStateMachine.playerController.Move(transform.forward * rollSpeed * deltaTime);
-        }
-        else if ((ERollState)RollCount == ERollState.Backward)
-        {
-            PlayerStateMachine.playerController.Move(-transform.forward * rollSpeed * deltaTime);
-        }
+    {    
+        playerStateMachine.MoveRoll(RollCount);
     }
-
-
 
     public override PlayerStateMachine.PlayerState GetNextState()
     {
@@ -67,14 +45,14 @@ public class RollState : BaseState<PlayerStateMachine.PlayerState>
     public override void OnTriggerEnter(Collider collider) { }
     public override void OnTriggerExit(Collider collider) { }
     public override void OnTriggerStay(Collider collider) { }
-
     public override void LateUpdateState(){ }
 
-    float moveSpeed = 2.0f;
+    public override void OnAttackAnimationEnd()
+    {
 
+    }
 
     int hashRollCount = Animator.StringToHash("RollCount");
-
 
     public int RollCount
     {
@@ -82,5 +60,6 @@ public class RollState : BaseState<PlayerStateMachine.PlayerState>
     }
 
     [SerializeField] float rollSpeed = 10f;
-    Quaternion targetRotation;
+
+    PlayerStateMachine playerStateMachine;
 }

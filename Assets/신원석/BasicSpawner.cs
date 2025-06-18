@@ -5,16 +5,22 @@ using Fusion.Sockets;
 using System.Collections.Generic;
 using System;
 using ExitGames.Client.Photon.StructWrapping;
+using Cinemachine;
 
 public class BasicSpawner : MonoBehaviour, INetworkRunnerCallbacks
 {
     private NetworkRunner _runner;
+    [SerializeField]
+    private CinemachineVirtualCamera cam;
+
+    int a = 0;
 
     async void StartGame(GameMode mode)
     {
         // Create the Fusion runner and let it know that we will be providing user input
         _runner = gameObject.AddComponent<NetworkRunner>();
         _runner.ProvideInput = true;
+        _runner.AddCallbacks(this);
 
         // Create the NetworkSceneInfo from the current scene
         var scene = SceneRef.FromIndex(SceneManager.GetActiveScene().buildIndex);
@@ -28,7 +34,7 @@ public class BasicSpawner : MonoBehaviour, INetworkRunnerCallbacks
         await _runner.StartGame(new StartGameArgs()
         {
             GameMode = mode,
-            SessionName = "TestRoom",
+            SessionName = "TestRoom1",
             Scene = scene,
             SceneManager = gameObject.AddComponent<NetworkSceneManagerDefault>()
         });
@@ -58,7 +64,7 @@ public class BasicSpawner : MonoBehaviour, INetworkRunnerCallbacks
         {
             if (player == runner.LocalPlayer)
             {
-                Vector3 spawnPosition = new Vector3((player.RawEncoded % 4) * 3, 1, 0);
+                Vector3 spawnPosition = new Vector3(5, 1, 0);
                 NetworkObject networkPlayerObject = runner.Spawn(_playerPrefab, spawnPosition, Quaternion.identity, player);
                 _spawnedCharacters.Add(player, networkPlayerObject);
             }
@@ -66,9 +72,10 @@ public class BasicSpawner : MonoBehaviour, INetworkRunnerCallbacks
         // Host/Server 모드일 경우 서버에서 모두 생성
         else if (runner.IsServer)
         {
-            Vector3 spawnPosition = new Vector3((player.RawEncoded % 4) * 3, 1, 0);
-            NetworkObject networkPlayerObject = runner.Spawn(_playerPrefab, spawnPosition, Quaternion.identity, player);
+            Vector3 spawnPosition = new Vector3(5, 1, a);
+            NetworkObject networkPlayerObject = runner.Spawn(_playerPrefab, spawnPosition, Quaternion.identity, inputAuthority: player);
             _spawnedCharacters.Add(player, networkPlayerObject);
+            a += 3;
         }
     
     }
@@ -83,14 +90,18 @@ public class BasicSpawner : MonoBehaviour, INetworkRunnerCallbacks
     }
 
     private bool _mouseButton0;
-
+    private bool _mouseButton1;
     private void Update()
     {
         _mouseButton0 = _mouseButton0 | Input.GetMouseButton(0);
+        _mouseButton1 = _mouseButton1 | Input.GetMouseButton(1);
     }
 
     public void OnInput(NetworkRunner runner, NetworkInput input)
     {
+
+        Debug.Log($"OnInput: IsServer:{runner.IsServer} Auth:{runner.LocalPlayer} Axis:{Input.GetAxisRaw("Horizontal")}");
+
         var data = new NetworkInputData();
 
         data.moveAxis = new Vector3(Input.GetAxis("Horizontal"),0,Input.GetAxis("Vertical"));
@@ -107,13 +118,17 @@ public class BasicSpawner : MonoBehaviour, INetworkRunnerCallbacks
         if (Input.GetKey(KeyCode.D))
             data.direction += Vector3.right;
 
+        data.CameraRotateY = Camera.main.transform.eulerAngles.y;
+
+
+        data.test = Camera.main.transform.forward;
 
         data.buttons.Set(NetworkInputData.KEY_C, Input.GetKey(KeyCode.C));
         data.buttons.Set(NetworkInputData.KEY_SPACE, Input.GetKey(KeyCode.Space));
-
-        data.buttons.Set(NetworkInputData.MOUSEBUTTON0, _mouseButton0);
+        data.buttons.Set(NetworkInputData.MOUSEBUTTON1, Input.GetMouseButton(1));
+        data.buttons.Set(NetworkInputData.MOUSEBUTTON0, Input.GetMouseButton(0));
         _mouseButton0 = false;
-
+        _mouseButton1 = false;
         input.Set(data);
     }
     public void OnInputMissing(NetworkRunner runner, PlayerRef player, NetworkInput input) { }
