@@ -21,7 +21,7 @@ public class HealthBarUI : MonoBehaviour
 
     void OnHealthChanged(HealthChanged evt)
     {
-        if (evt.player != myPlayerRef) return;
+        if (!evt.playerInfo.Object.HasInputAuthority) return;
 
         fillImage.fillAmount = (float)evt.currentHp / evt.maxHp;
         hpText.text = ($"{evt.currentHp} / {evt.maxHp}");

@@ -5,29 +5,71 @@ using UnityEngine.UI;
 
 public class PlayerHealth : NetworkBehaviour
 {
-    [Networked] public int CurrentHp { get; private set; }
+    [Networked] public int currentHp { get; private set; }
     [SerializeField] private int maxHp;
 
     public override void Spawned()
     {
         if (HasStateAuthority)
-            CurrentHp = maxHp;
+            currentHp = maxHp;
 
         if (Object.HasInputAuthority)
         {
-            EventBus<HealthChanged>.Raise(new HealthChanged(Object.InputAuthority, CurrentHp,maxHp));
+            EventBus<HealthChanged>.Raise(new HealthChanged(this, currentHp,maxHp));
         }
     }
 
     public void TakeDamage(int dmg)
     {
+        if (!HasStateAuthority) return;
+
+        currentHp = Mathf.Clamp(currentHp - dmg, 0, maxHp);
+
+        Debug.Log($"플레이어 현재 체력 : {currentHp}");
+
+        // 클라이언트 UI 업데이트
+        if (Object.HasInputAuthority)
+        {
+            EventBus<HealthChanged>.Raise(new HealthChanged(this, currentHp, maxHp));
+        }
+
+        // 서버가 생존자 수 계산
+        if (currentHp <= 0)
+        {
+            CountAlivePlayers(); // 이건 HasStateAuthority니까 안전하게 호출됨
+        }
+    }
+
+    public void UseHealingItem(int heal)
+    {
+
         if (!HasStateAuthority) return; //권한을 가지고있지 않으면 리턴
 
-        CurrentHp-=dmg;
+        currentHp = Mathf.Clamp(currentHp + heal, 0, maxHp);
 
         if (Object.HasInputAuthority)
         {
-            EventBus<HealthChanged>.Raise(new HealthChanged(Object.InputAuthority, CurrentHp,maxHp));
+            EventBus<HealthChanged>.Raise(new HealthChanged(this, currentHp, maxHp));
+        }
+    }
+
+    public void CountAlivePlayers()
+    {
+        int alive = 0;
+        foreach (var player in Runner.ActivePlayers)
+        {
+            var obj = Runner.GetPlayerObject(player);
+            if (obj != null && obj.TryGetComponent<PlayerHealth>(out var health))
+            {
+                if (health.currentHp > 0)
+                    alive++;
+            }
+        }
+
+        // 서버만 발행
+        if (HasStateAuthority)
+        {
+            EventBus<SurvivorPlayerCount>.Raise(new SurvivorPlayerCount(alive));
         }
     }
 }

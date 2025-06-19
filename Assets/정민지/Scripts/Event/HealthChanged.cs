@@ -5,11 +5,11 @@ public class HealthChanged : IEvent
 {
     public int currentHp;
     public int maxHp;
-    public PlayerRef player;
+    public NetworkBehaviour playerInfo;
 
-    public HealthChanged(PlayerRef player, int hp,int max)
+    public HealthChanged(NetworkBehaviour player, int hp,int max)
     {
-        this.player = player;
+        playerInfo = player;
         currentHp = hp;
         maxHp = max;
     }
