@@ -1,0 +1,15 @@
+fileFormatVersion: 2
+guid: b9476ac5f60ad4c438d7ecf4457fe8d8
+NativeFormatImporter:
+  externalObjects: {}
+  mainObjectFileID: 9100000
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 
+AssetOrigin:
+  serializedVersion: 1
+  productId: 287809
+  packageName: Archer Bow and Arrow Cover Animations Pack
+  packageVersion: 1.1
+  assetPath: Assets/YashMakesGames/Archer Demo Scene/Scene Requirements/AnimationControllers/Right_Cover_Animation_Set.controller
+  uploadId: 711616

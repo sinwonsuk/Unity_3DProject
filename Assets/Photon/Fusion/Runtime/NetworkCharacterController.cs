@@ -58,8 +58,14 @@ namespace Fusion {
       get => Data.Grounded;
       set => Data.Grounded = value;
     }
+    public void Rotate(Quaternion targetRotation)
+    {
 
-    public void Teleport(Vector3? position = null, Quaternion? rotation = null) {
+
+
+        transform.rotation = Quaternion.Slerp(transform.rotation, targetRotation, rotationSpeed * Runner.DeltaTime);
+    }
+        public void Teleport(Vector3? position = null, Quaternion? rotation = null) {
       _controller.enabled = false;
       NetworkTRSP.Teleport(this, transform, position, rotation);
       _controller.enabled = true;

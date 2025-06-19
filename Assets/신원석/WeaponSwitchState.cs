@@ -6,18 +6,17 @@ public class WeaponSwitchState : BaseState<PlayerStateMachine.PlayerState>
     PlayerStateMachine playerStateMachine;
     public WeaponSwitchState(PlayerStateMachine.PlayerState key, Animator animator,PlayerStateMachine playerStateMachine) : base(key, animator)
     {
-        cameraController = Camera.main.GetComponent<CameraController>();
-
         this.playerStateMachine = playerStateMachine;
-
     }
 
     public override void EnterState()
     {
-        animator.SetTrigger("KatanaEquip");
-        playerStateMachine.isWeapon = true;
 
-        //EventBus<EquipWeaponEvent>.Raise(new EquipWeaponEvent(1));
+
+
+        playerStateMachine.WeaponManager.Equip(ItemState.Magic,isDir.Left);
+        playerStateMachine.AnimHandler.ChangeWeapon(ItemState.Magic);
+        playerStateMachine.isWeapon = true;
     }
     public override void ExitState()
     {
@@ -29,8 +28,7 @@ public class WeaponSwitchState : BaseState<PlayerStateMachine.PlayerState>
     }
 
     public override PlayerStateMachine.PlayerState GetNextState()
-    {
-       
+    {      
         return PlayerStateMachine.PlayerState.Idle;
     }
 
@@ -42,9 +40,12 @@ public class WeaponSwitchState : BaseState<PlayerStateMachine.PlayerState>
 
     public override void LateUpdateState(){ }
 
-    float moveAmount;
-    CameraController cameraController;
+    public override void OnAttackAnimationEnd()
+    {
+
+    }
+
+
     [SerializeField] float rotationSpeed = 500f;
-    Quaternion targetRotation;
-    Transform transform;
+
 }

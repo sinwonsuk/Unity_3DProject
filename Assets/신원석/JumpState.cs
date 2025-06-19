@@ -89,5 +89,10 @@ public class JumpState : BaseState<PlayerStateMachine.PlayerState>
     }
 
     public override void LateUpdateState(){}
+
+    public override void OnAttackAnimationEnd()
+    {
+
+    }
 }
 

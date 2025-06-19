@@ -1,15 +1,20 @@
 using Fusion;
 using UnityEngine;
+using static Unity.Collections.Unicode;
 
 public class InputHandler
 {
     private NetworkRunner runner;
     private NetworkBehaviour behaviour;
-
-    public InputHandler(NetworkBehaviour behaviour)
+    private Transform transform;
+    [Networked] private TickTimer delay { get; set; }
+    public InputHandler(NetworkBehaviour behaviour, Transform transform)
     {
         this.behaviour = behaviour;
         this.runner = behaviour.Runner;
+
+
+        this.transform = transform;
     }
 
 
@@ -39,35 +44,57 @@ public class InputHandler
     }
 
 
+
+
+
+
     // 방향 계산 및 처리
-    public bool TryGetMoveDirection(out Vector3 moveDir, out Quaternion planarRotation)
+    public void TryGetMoveDirection(out Vector3 moveDir, out Quaternion planarRotation)
     {
         planarRotation = Quaternion.identity;
         moveDir = Vector3.zero;
 
         if (behaviour.GetInput(out NetworkInputData data))
         {
-            Vector3 moveInput = new Vector3(data.moveAxis.x, 0, data.moveAxis.z).normalized;
-            float yaw = Camera.main.transform.eulerAngles.y;
+            Vector3 moveInput = data.direction.normalized;
+            float yaw = data.CameraRotateY;
             planarRotation = Quaternion.Euler(0, yaw, 0);
             moveDir = planarRotation * moveInput;
+        }
+    }
 
-            return moveInput.sqrMagnitude > 0.01f;
+    // 공격 입력 처리
+    public bool IsRightAttackPressed()
+    {
+        if (behaviour.GetInput(out NetworkInputData data))
+        {      
+            return data.buttons.IsSet(NetworkInputData.MOUSEBUTTON1);
         }
 
         return false;
     }
 
-    // 공격 입력 처리
     public bool IsAttackPressed()
     {
         if (behaviour.GetInput(out NetworkInputData data))
         {
             return data.buttons.IsSet(NetworkInputData.MOUSEBUTTON0);
         }
+        return false;
+    }
+
+    // 대시 공격 입력 처리 
+    public bool IsDashAttackPressed()
+    {
+        if (behaviour.GetInput(out NetworkInputData data))
+        {
+            return data.buttons.IsSet(NetworkInputData.MOUSEBUTTON0) && data.buttons.IsSet(NetworkInputData.KEY_SPACE);
+        }
 
         return false;
     }
+
+
     // 카메라 전환 
     public bool ChangeCamera()
     {
