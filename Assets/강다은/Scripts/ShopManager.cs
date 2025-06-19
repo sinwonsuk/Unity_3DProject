@@ -4,9 +4,6 @@ using UnityEngine.Assertions.Must;
 
 public class ShopManager : baseManager, IGameManager
 {
-	private ShopManagerConfig config;
-	private Dictionary<string, List<ShopItem>> npcShopTable = new();
-
 	public ShopManager(ShopManagerConfig config)
 	{
 		this.config = config;
@@ -41,4 +38,7 @@ public class ShopManager : baseManager, IGameManager
 	{
 		return npcShopTable.TryGetValue(npcId, out var list) ? list : new List<ShopItem>();
 	}
+
+	private ShopManagerConfig config;
+	private Dictionary<string, List<ShopItem>> npcShopTable = new();
 }

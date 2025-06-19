@@ -3,9 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 
 public class ItemManager : baseManager, IGameManager
-{
-	ItemManagerConfig config;
-	private Dictionary<int, ItemData> itemDict = new();
+{	
 	public ItemManager(ItemManagerConfig itemManagerConfig)
 	{
 		config = itemManagerConfig;
@@ -40,4 +38,7 @@ public class ItemManager : baseManager, IGameManager
 	{
 		return new List<ItemData>(itemDict.Values);
 	}
+
+	ItemManagerConfig config;
+	private Dictionary<int, ItemData> itemDict = new();
 }

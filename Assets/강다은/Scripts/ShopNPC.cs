@@ -2,9 +2,6 @@ using UnityEngine;
 
 public class ShopNPC : MonoBehaviour
 {
-	[SerializeField] private string npcId;           
-	[SerializeField] private ShopUI shopUI;         
-
 	private void OnTriggerEnter(Collider other)
 	{
 		if (other.CompareTag("Player"))
@@ -22,4 +19,7 @@ public class ShopNPC : MonoBehaviour
 			shopUI.Hide(); // UI ²ô±â
 		}
 	}
+
+	[SerializeField] private string npcId;
+	[SerializeField] private ShopUI shopUI;
 }

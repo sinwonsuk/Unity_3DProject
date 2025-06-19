@@ -5,32 +5,6 @@ using TMPro;
 
 public class ShopUI : MonoBehaviour
 {
-	[SerializeField] private Transform slotRoot;               // 슬롯 부모
-	[SerializeField] private ShopSlot slotPrefab;              // 슬롯 프리팹
-	[SerializeField] private GameObject detailPanel;           // 상세 정보 패널
-	[SerializeField] private Image detailItemIcon;             // 상세 아이콘
-	[SerializeField] private TMP_Text detailItemName;              // 상세 이름
-	[SerializeField] private TMP_Text detailItemPrice;             // 상세 가격
-	[SerializeField] private TMP_Text detailItemDescription;      // 상세 설명 
-	[SerializeField] private Button buyButton;                 // 구매 버튼
-	[SerializeField] private Button increaseButton;            // 수량 증가 버튼
-	[SerializeField] private Button decreaseButton;            // 수량 감소 버튼
-	[SerializeField] private TMP_Text amountText;              // 현재 수량 표시
-
-
-	private int currentAmount = 1; // 현재 선택된 아이템 수량
-	private int maxAmount = 99; // 최대 수량
-	private int minAmount = 1; // 최소 수량
-	private int currentItemPrice; // 현재 아이템 가격
-
-	private float holdDelay = 0.4f;
-	private float holdSpeed = 0.1f;
-	private float holdTimer = 0f;
-	private bool isHoldingLeft = false;
-	private bool isHoldingRight = false;
-
-	private List<ShopSlot> slotInstances = new();
-	private ItemData selectedItemData;
 
 	private void Update()
 	{
@@ -152,5 +126,33 @@ public class ShopUI : MonoBehaviour
 	{
 		gameObject.SetActive(false);
 	}
+
+	[SerializeField] private Transform slotRoot;               // 슬롯 부모
+	[SerializeField] private ShopSlot slotPrefab;              // 슬롯 프리팹
+	[SerializeField] private GameObject detailPanel;           // 상세 정보 패널
+	[SerializeField] private Image detailItemIcon;             // 상세 아이콘
+	[SerializeField] private TMP_Text detailItemName;              // 상세 이름
+	[SerializeField] private TMP_Text detailItemPrice;             // 상세 가격
+	[SerializeField] private TMP_Text detailItemDescription;      // 상세 설명 
+	[SerializeField] private Button buyButton;                 // 구매 버튼
+	[SerializeField] private Button increaseButton;            // 수량 증가 버튼
+	[SerializeField] private Button decreaseButton;            // 수량 감소 버튼
+	[SerializeField] private TMP_Text amountText;              // 현재 수량 표시
+
+
+	private int currentAmount = 1; // 현재 선택된 아이템 수량
+	private int maxAmount = 99; // 최대 수량
+	private int minAmount = 1; // 최소 수량
+	private int currentItemPrice; // 현재 아이템 가격
+
+	private float holdDelay = 0.4f;
+	private float holdSpeed = 0.1f;
+	private float holdTimer = 0f;
+	private bool isHoldingLeft = false;
+	private bool isHoldingRight = false;
+
+	private List<ShopSlot> slotInstances = new();
+	private ItemData selectedItemData;
+
 
 }
