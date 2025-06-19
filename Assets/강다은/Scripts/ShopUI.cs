@@ -205,7 +205,7 @@ public class ShopUI : MonoBehaviour
 	[SerializeField] private Transform slotRoot;               // 슬롯 부모
 	[SerializeField] private ShopSlot slotPrefab;              // 슬롯 프리팹
 	[SerializeField] private GameObject detailPanel;           // 상세 정보 패널
-	[SerializeField] private Image detailItemIcon;             // 상세 아이콘
+	//[SerializeField] private Image detailItemIcon;             // 상세 아이콘
 	[SerializeField] private TMP_Text detailItemName;              // 상세 이름
 	[SerializeField] private TMP_Text detailItemPrice;             // 상세 가격
 	[SerializeField] private TMP_Text detailItemDescription;      // 상세 설명 
