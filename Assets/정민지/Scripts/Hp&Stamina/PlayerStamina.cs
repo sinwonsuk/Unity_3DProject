@@ -69,4 +69,10 @@ public class PlayerStamina : NetworkBehaviour
     {
         UseStamina(stamina);
     }
+
+    [Rpc(RpcSources.InputAuthority, RpcTargets.StateAuthority)]
+    public void Rpc_RequestHealStamina(int stamina)
+    {
+        UseStaminaHealingItem(stamina);
+    }
 }

@@ -78,4 +78,10 @@ public class PlayerHealth : NetworkBehaviour
     {
         TakeDamage(damage);
     }
+
+    [Rpc(RpcSources.InputAuthority, RpcTargets.StateAuthority)]
+    public void Rpc_RequestHeal(int heal)
+    {
+        UseHealingItem(heal);
+    }
 }
