@@ -63,4 +63,16 @@ public class PlayerStamina : NetworkBehaviour
             }
         }
     }
+
+    [Rpc(RpcSources.InputAuthority, RpcTargets.StateAuthority)]
+    public void Rpc_RequestUseStamina(int stamina)
+    {
+        UseStamina(stamina);
+    }
+
+    [Rpc(RpcSources.InputAuthority, RpcTargets.StateAuthority)]
+    public void Rpc_RequestHealStamina(int stamina)
+    {
+        UseStaminaHealingItem(stamina);
+    }
 }

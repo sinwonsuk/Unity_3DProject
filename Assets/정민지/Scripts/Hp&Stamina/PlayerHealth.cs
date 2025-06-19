@@ -72,4 +72,16 @@ public class PlayerHealth : NetworkBehaviour
             EventBus<SurvivorPlayerCount>.Raise(new SurvivorPlayerCount(alive));
         }
     }
+
+    [Rpc(RpcSources.InputAuthority, RpcTargets.StateAuthority)]
+    public void Rpc_RequestDamage(int damage)
+    {
+        TakeDamage(damage);
+    }
+
+    [Rpc(RpcSources.InputAuthority, RpcTargets.StateAuthority)]
+    public void Rpc_RequestHeal(int heal)
+    {
+        UseHealingItem(heal);
+    }
 }
