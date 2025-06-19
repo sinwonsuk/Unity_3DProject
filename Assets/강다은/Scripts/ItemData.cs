@@ -15,6 +15,7 @@ public class ItemData : ScriptableObject
 	public PotionType potionType;
 
 	public GameObject itemPrefab;
+	public GameObject ItemModelPrefab => itemPrefab;
 
 	public int price;     // 상점 판매가
 	public string description;

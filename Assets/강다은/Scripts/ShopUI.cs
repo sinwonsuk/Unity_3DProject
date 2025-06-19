@@ -5,7 +5,6 @@ using TMPro;
 
 public class ShopUI : MonoBehaviour
 {
-
 	private void Update()
 	{
 		if (!detailPanel.activeSelf) return;
@@ -89,7 +88,7 @@ public class ShopUI : MonoBehaviour
 		detailItemDescription.text = selectedItemData.description;
 		detailPanel.SetActive(true);
 
-		detailItemIcon.sprite = selectedItemData.itemIcon;
+		ShowModel(selectedItemData.ItemModelPrefab, selectedItemData);
 		detailItemName.text = selectedItemData.itemName;
 		detailItemPrice.text = $"{shopItem.price} G";
 
@@ -116,6 +115,82 @@ public class ShopUI : MonoBehaviour
 		detailItemPrice.text = $"{currentItemPrice * currentAmount} G";
 	}
 
+	private void ShowModel(GameObject prefab, ItemData itemData)
+	{
+		if (currentModel != null)
+			Destroy(currentModel);
+
+		if (prefab == null)
+		{
+			modelPreviewImage.gameObject.SetActive(false);
+			return;
+		}
+		modelDisplayRoot.transform.localPosition = Vector3.zero;
+		modelDisplayRoot.transform.localRotation = Quaternion.identity;
+
+		currentModel = Instantiate(prefab, modelDisplayRoot);
+		
+		currentModel.transform.localPosition = Vector3.zero;
+
+		switch (itemData.weaponType)
+		{
+			case WeaponType.Bow:
+				modelDisplayRoot.transform.localPosition = new Vector3(0f, 2f, 0f);
+				currentModel.transform.localRotation = Quaternion.Euler(30f, 45f, 0f);
+				currentModel.transform.localScale = Vector3.one * 3f;
+				break;
+			case WeaponType.Spear:
+				currentModel.transform.localRotation = Quaternion.Euler(30f, 45f, 0f);
+				currentModel.transform.localScale = Vector3.one * 2f;
+				break;
+			default:
+				currentModel.transform.localRotation = Quaternion.Euler(30f, 45f, 0f);
+				currentModel.transform.localScale = Vector3.one * 4f;
+				break;
+
+		}
+		if(itemData.itemType == ItemType.Magic)
+		{
+			modelDisplayRoot.transform.localPosition = new Vector3(0f, 2f, 0f);
+			currentModel.transform.localRotation = Quaternion.Euler(-82f, 45f, -15f);
+			currentModel.transform.localScale = Vector3.one * 5f;
+		}
+		else if (itemData.itemType == ItemType.Potion)
+		{
+			currentModel.transform.localRotation = Quaternion.Euler(0f, 15f, 0f);
+			currentModel.transform.localScale = Vector3.one * 7f;
+		}
+
+		SetLayerRecursively(currentModel, LayerMask.NameToLayer("ModlePreview"));
+		modelPreviewImage.gameObject.SetActive(true);
+	}
+	private void SetLayerRecursively(GameObject obj, int layer)
+	{
+		obj.layer = layer;
+		foreach (Transform child in obj.transform)
+		{
+			SetLayerRecursively(child.gameObject, layer);
+		}
+	}
+	//private void AutoFitModel(GameObject model, float targetSize = 7.0f)
+	//{
+	//	var renderers = model.GetComponentsInChildren<Renderer>();
+	//	if (renderers.Length == 0) return;
+	//
+	//	Bounds combinedBounds = renderers[0].bounds;
+	//	foreach (var r in renderers)
+	//	{
+	//		combinedBounds.Encapsulate(r.bounds);
+	//	}
+	//
+	//	float maxDimension = Mathf.Max(combinedBounds.size.x, combinedBounds.size.y, combinedBounds.size.z);
+	//	if (maxDimension <= 0.0001f) maxDimension = 1f; // fallback
+	//
+	//	float scaleFactor = targetSize / maxDimension;
+	//	model.transform.localScale = Vector3.one * scaleFactor;
+	//}
+
+
 	public void Show()
 	{
 		gameObject.SetActive(true);
@@ -138,6 +213,12 @@ public class ShopUI : MonoBehaviour
 	[SerializeField] private Button increaseButton;            // 수량 증가 버튼
 	[SerializeField] private Button decreaseButton;            // 수량 감소 버튼
 	[SerializeField] private TMP_Text amountText;              // 현재 수량 표시
+	[SerializeField] private Transform modelDisplayRoot;
+	[SerializeField] private RawImage modelPreviewImage;
+	[SerializeField] private RenderTexture modelRenderTexture;
+	[SerializeField] private Camera modelPreviewCamera;
+
+	private GameObject currentModel;
 
 
 	private int currentAmount = 1; // 현재 선택된 아이템 수량
