@@ -1,3 +1,4 @@
+using Fusion;
 using UnityEngine;
 
 public class FollowTarget : MonoBehaviour
@@ -14,10 +15,10 @@ public class FollowTarget : MonoBehaviour
     float cinemachineTargetYaw;
     float cinemachineTargetPitch;
 
-
+    public static float CachedYaw { get; private set; } 
     bool mousecheck = false;
 
-    private void LateUpdate()
+    public void LateUpdate()
     {
         CameraLogic();
     }
@@ -31,11 +32,14 @@ public class FollowTarget : MonoBehaviour
         cinemachineTargetYaw = UpdateRotation(cinemachineTargetYaw, mouseX, float.MinValue, float.MaxValue, true);
 
         ApplyRotation(cinemachineTargetPitch, cinemachineTargetYaw);
+
+        CachedYaw = cinemachineTargetYaw;
     }
 
     private void ApplyRotation(float pitch, float yaw)
     {
         followTarget.rotation = Quaternion.Euler(pitch, yaw, followTarget.eulerAngles.z);
+
     }
 
 
@@ -64,14 +68,14 @@ public class FollowTarget : MonoBehaviour
 
         if(Input.GetKeyDown(KeyCode.H) && mousecheck ==false)          
         {
-            Cursor.lockState = CursorLockMode.Locked;
-            Cursor.visible = false;
+            //Cursor.lockState = CursorLockMode.Locked;
+            //Cursor.visible = false;
             mousecheck = true;
         }
         else if(Input.GetKeyDown(KeyCode.H) && mousecheck == true)
         {
-            Cursor.lockState = CursorLockMode.None;
-            Cursor.visible = true;
+            //Cursor.lockState = CursorLockMode.None;
+            //Cursor.visible = true;
             mousecheck = false;
         }
       

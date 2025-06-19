@@ -17,20 +17,7 @@ public class Player : NetworkBehaviour
         if (GetInput(out NetworkInputData data))
         {
             data.direction.Normalize();
-            _cc.Move(5 * data.direction * Runner.DeltaTime);
-
-
-            if (data.direction.sqrMagnitude > 0)
-                _forward = data.direction;
-
-            if (HasStateAuthority && delay.ExpiredOrNotRunning(Runner))
-            {
-                if (data.buttons.IsSet(NetworkInputData.MOUSEBUTTON0))
-                {
-                    delay = TickTimer.CreateFromSeconds(Runner, 0.5f);
-                  
-                }
-            }
+            _cc.Move(5 * data.direction * Runner.DeltaTime);       
         }
     }
 }
