@@ -36,6 +36,7 @@ public class CharacterSelectionManager : NetworkBehaviour
         IsReady = true;
         Debug.Log($"최종 캐릭터 확정: {characterTypes[SelectedIndex]}");
         readyButton.interactable = false;
+        MatchQueueManager.Instance.MySelectedCharacterName = SelectedCharacterName;
     }
 
     public void CancelSelection()

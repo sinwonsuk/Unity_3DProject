@@ -115,12 +115,14 @@ public class AutoMatchManager : MonoBehaviour, INetworkRunnerCallbacks
         if (cachedSessionList.Count > 0)
         {
             //roomName = cachedSessionList[0].Name;
-            roomName = $"Room_{Random.Range(0, 9999)}";
+            //roomName = $"Room_{Random.Range(0, 9999)}";
+            roomName = $"Room_000";
             Debug.Log($"기존 방 참가: {roomName}");
         }
         else
         {
-            roomName = $"Room_{Random.Range(0, 9999)}";
+            //roomName = $"Room_{Random.Range(0, 9999)}";
+            roomName = $"Room_000";
             Debug.Log($"새 방 생성: {roomName}");
         }
 

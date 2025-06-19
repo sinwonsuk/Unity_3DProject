@@ -15,8 +15,8 @@ EditorBuildSettings:
     path: Assets/Scenes/LobbyScene.unity
     guid: 8298298f40afed4449977ec99c1c9c83
   - enabled: 1
-    path: Assets/Scenes/BoTest.unity
-    guid: c5c36d9000873a74abd1043954a2abc4
+    path: "Assets/\uAE40\uBCF4\uAC74/InGame/DemoBo.unity"
+    guid: 8c5c49ded3e0fc54e9d6b94e2503938a
   m_configObjects:
     com.unity.input.settings.actions: {fileID: -944628639613478452, guid: 052faaac586de48259a63d0c4782560b, type: 3}
   m_UseUCBPForAssetBundles: 0
