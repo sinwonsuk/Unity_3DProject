@@ -188,13 +188,12 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   slotPrefab: {fileID: 8747101624993313401, guid: 3c40781db86f59340b03e6a9416a2280, type: 3}
   slotParent: {fileID: 9097936210661982129}
-  basicSword: {fileID: 11400000, guid: dc06d416fb3c75f428464033d09d2b57, type: 2}
+  basicSword: {fileID: 11400000, guid: b03db8a9567d26a4fa5f2beb7408f818, type: 2}
   bigInventoryPanel: {fileID: 4762163573841002610}
   combi: {fileID: 3682312640515073675}
   bigInventoryUI: {fileID: 4880448135119066925}
   rowSize: 5
   maxRow: 3
-  basicItem: {fileID: 11400000, guid: dc06d416fb3c75f428464033d09d2b57, type: 2}
 --- !u!114 &4371114472460355706
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -506,6 +505,8 @@ GameObject:
   - component: {fileID: 1797504843818449803}
   - component: {fileID: 9030812884790670278}
   - component: {fileID: 4949314911859286889}
+  - component: {fileID: 8471751877324363277}
+  - component: {fileID: 356965069724306249}
   m_Layer: 5
   m_Name: hp
   m_TagString: Untagged
@@ -555,9 +556,40 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 717dc6844d09be94697c869017bbac3d, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  hp: 80
+  _CurrentHp: 0
   maxHp: 100
-  hpFill: {fileID: 2038609184859296011}
+--- !u!114 &8471751877324363277
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1316686849733605243}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: -1552182283, guid: e725a070cec140c4caffb81624c8c787, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  SortKey: 2257484899
+  ObjectInterest: 1
+  Flags: 262145
+  NestedObjects: []
+  NetworkedBehaviours:
+  - {fileID: 4949314911859286889}
+  ForceRemoteRenderTimeframe: 0
+--- !u!114 &356965069724306249
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1316686849733605243}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 02bde830cacb3c741858a1bb530d5a02, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  fillImage: {fileID: 2038609184859296011}
   hpText: {fileID: 8969767979684718929}
 --- !u!1 &2604130996895054585
 GameObject:
@@ -705,7 +737,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
-  m_AnchoredPosition: {x: 0, y: 0}
+  m_AnchoredPosition: {x: 3, y: 0}
   m_SizeDelta: {x: 100, y: 100}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &1077035289779363854
