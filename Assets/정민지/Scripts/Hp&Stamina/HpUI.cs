@@ -12,15 +12,11 @@ public class HpUI : MonoBehaviour
     private void OnEnable()
     {
         EventBus<Hp>.OnEvent += UpdateHp;
-        EventBus<Damage>.OnEvent += TakeDamage;
-        EventBus<Heal>.OnEvent += UseHealingItem;
     }
 
     private void OnDisable()
     {
         EventBus<Hp>.OnEvent -= UpdateHp;
-        EventBus<Damage>.OnEvent -= TakeDamage;
-        EventBus<Heal>.OnEvent -= UseHealingItem;
     }
 
     private void Start()
@@ -33,17 +29,5 @@ public class HpUI : MonoBehaviour
         hp = _hp.currentHp;
         hpFill.fillAmount = (float)hp / maxHp;
         hpText.text = ($"{hp} / {maxHp}");
-    }
-
-    public void TakeDamage(Damage damage)
-    {
-        hp -= damage.damage;
-        EventBus<Hp>.Raise(new Hp(hp));
-    }
-
-    public void UseHealingItem(Heal heal)
-    {
-        hp += heal.heal;
-        EventBus<Hp>.Raise(new Hp(hp));
     }
 }
