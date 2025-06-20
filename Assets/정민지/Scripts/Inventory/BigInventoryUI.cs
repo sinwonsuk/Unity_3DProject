@@ -87,6 +87,7 @@ public class BigInventoryUI : MonoBehaviour
 
         UpdateSlotUI(fromIndex);
         UpdateSlotUI(toIndex);
+        inventoryOnoff.SetSelectedIndex(selectedIndex);
     }
 
 

@@ -22,4 +22,6 @@ MonoBehaviour:
   potionType: 3
   itemPrefab: {fileID: 1352579538443736, guid: d97af9500bf6b8643ae184f668c1630c, type: 3}
   price: 250
-  description: 
+  description: "\uC774\uB984\uC774 \uBA4B\uC788\uC73C\uB2C8\uAE4C\uC694."
+  effectType: 3
+  effectValue: 100
