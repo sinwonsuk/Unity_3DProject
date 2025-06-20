@@ -16,6 +16,17 @@ public class CharacterSelectionManager : NetworkBehaviour
         readyButton.onClick.AddListener(ConfirmSelection);
     }
 
+    private void Update()
+    {
+        if (Input.GetKeyDown(KeyCode.Escape))
+        {
+            if (LobbyCameraManager.Instance != null && LobbyCameraManager.Instance.IsZoomedIn)
+            {
+                CancelSelection();
+            }
+        }
+    }
+
     public void SetSelectedIndex(int index)
     {
         SelectedIndex = index;

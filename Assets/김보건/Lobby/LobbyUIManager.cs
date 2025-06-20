@@ -1,5 +1,6 @@
 using TMPro;
 using UnityEngine;
+using UnityEngine.SceneManagement;
 
 public class LobbyUIManager : MonoBehaviour
 {
@@ -8,9 +9,15 @@ public class LobbyUIManager : MonoBehaviour
         Instance = this;
     }
 
+    private void Start()
+    {
+        zoomUI.SetActive(false);
+    }
+
     public void ShowCharacterInfo(string name, string desc)
     {
         zoomUI.SetActive(true);
+        BackButton.SetActive(false);
 
         nameText.text = name;
         introduceText.text = desc;
@@ -19,11 +26,18 @@ public class LobbyUIManager : MonoBehaviour
     public void HideZoomUI()
     {
         zoomUI.SetActive(false);
+        BackButton.SetActive(true);
+    }
+
+    public void BackToMenu()
+    {
+        SceneManager.LoadScene("TitleScene");
     }
 
     public static LobbyUIManager Instance;
 
     public GameObject zoomUI;
+    public GameObject BackButton;
 
     [Header("UI 텍스트 오브젝트들")]
     public TMP_Text nameText;       // Name 오브젝트
