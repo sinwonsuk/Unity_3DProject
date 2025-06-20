@@ -190,7 +190,6 @@ public class ShopUI : MonoBehaviour
 	//	model.transform.localScale = Vector3.one * scaleFactor;
 	//}
 
-
 	public void Show()
 	{
 		gameObject.SetActive(true);
