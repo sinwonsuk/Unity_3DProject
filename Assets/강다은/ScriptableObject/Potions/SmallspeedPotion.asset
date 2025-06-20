@@ -22,4 +22,7 @@ MonoBehaviour:
   potionType: 2
   itemPrefab: {fileID: 1200035444335532, guid: 3e5c9de0fa990894697d1049a05c9afe, type: 3}
   price: 100
-  description: 
+  description: "\uC870\uAE08\uC740 \uBE60\uB974\uAC8C \uB2EC\uB824\uBCF4\uB294 \uAC83\uB3C4
+    \uC88B\uC796\uC544\uC694?"
+  effectType: 2
+  effectValue: 5
