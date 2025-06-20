@@ -1,114 +1,104 @@
+using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using Fusion;
 
 public class ZoneController : NetworkBehaviour
 {
-    [Header("자기장 프리팹 (자기 자신)")]
+    [Header("존 페이즈 설정")]
+    [SerializeField] private ZoneConfig zoneConfig;
+
+    [Header("네트워크 존 프리팹")]
     [SerializeField] private NetworkPrefabRef zonePrefab;
 
-    [Header("자기장 설정")]
-    [SerializeField] private ZoneConfig config;
-
-    private GameObject zoneVisual;
-
-    [Networked] private int phaseIndex { get; set; }
-    [Networked] private float zoneRadius { get; set; }
-    [Networked] private Vector3 zoneCenter { get; set; }
-    [Networked] private float shrinkStartTime { get; set; }
-
-    private ZonePhase currentPhase => config.phases[phaseIndex];
-    private float elapsed => (float)(Runner.SimulationTime - shrinkStartTime);
-    private float shrinkLerp => Mathf.Clamp01(elapsed / currentPhase.shrinkDuration);
-
-    private Vector3 startCenter;
-    private float startRadius;
-    private bool shrinking;
+    private GameObject _zoneInstance;
+    private SphereCollider _zoneCollider;
+    private int _currentPhaseIndex = 0;
 
     public override void Spawned()
     {
-        zoneVisual = transform.Find("Visual")?.gameObject;
+        base.Spawned();
 
-        if (HasStateAuthority)
+        // 호스트(서버)만 존 생성 및 관리 시작
+        if (Runner.IsServer)
         {
-            // 첫 페이즈 시작
-            BeginPhase(0);
+            // 네트워크 오브젝트로 존 비주얼 Spawn
+            var netObj = Runner.Spawn(zonePrefab, Vector3.zero, Quaternion.identity);
+            _zoneInstance = netObj.gameObject;
+
+            // SphereCollider(trigger) 확보
+            _zoneCollider = _zoneInstance.GetComponent<SphereCollider>();
+            if (_zoneCollider == null)
+                _zoneCollider = _zoneInstance.AddComponent<SphereCollider>();
+
+            _zoneCollider.isTrigger = true;
+
+            // 코루틴으로 페이즈별 로직 실행
+            StartCoroutine(ManageZone());
         }
     }
 
-    private void Start()
+    private IEnumerator ManageZone()
     {
-        if (Runner != null && Runner.IsServer && !HasStateAuthority)
+        var phases = zoneConfig.phases;
+
+        for (int i = 0; i < phases.Count; i++)
         {
-            // 최초 실행 시 자기장을 동적으로 생성
-            Runner.Spawn(zonePrefab, Vector3.zero, Quaternion.identity);
-            Debug.Log("[ZoneController] 자기장 네트워크로 생성됨");
-        }
-    }
+            _currentPhaseIndex = i;
+            var phase = phases[i];
 
-    private void Update()
-    {
-        if (!HasStateAuthority) return;
+            // 1) 해당 페이즈의 초기 설정
+            SetZone(phase.center, phase.radius);
 
-        if (shrinking)
-        {
-            zoneCenter = Vector3.Lerp(startCenter, currentPhase.center, shrinkLerp);
-            zoneRadius = Mathf.Lerp(startRadius, currentPhase.radius, shrinkLerp);
-
-            if (shrinkLerp >= 1f)
+            // 2) wait 구간: while 루프로 바꿔서 매 프레임 데미지 적용
+            float waitElapsed = 0f;
+            while (waitElapsed < phase.waitDuration)
             {
-                shrinking = false;
-                Invoke(nameof(AdvancePhase), currentPhase.waitDuration);
+                ApplyDamage(Time.deltaTime);
+                waitElapsed += Time.deltaTime;
+                yield return null;
             }
-        }
 
-        UpdateZoneVisual();
-        DamagePlayersOutsideZone();
-    }
-
-    void BeginPhase(int index)
-    {
-        if (index >= config.phases.Count) return;
-
-        phaseIndex = index;
-        zoneCenter = startCenter = config.phases[index].center;
-        zoneRadius = startRadius = (index == 0) ? config.phases[0].radius : zoneRadius;
-        shrinkStartTime = (float)Runner.SimulationTime;
-        shrinking = true;
-
-        Debug.Log($"[Zone] Phase {index + 1} 시작!");
-    }
-
-    void AdvancePhase()
-    {
-        BeginPhase(phaseIndex + 1);
-    }
-
-    void DamagePlayersOutsideZone()
-    {
-        foreach (var playerRef in Runner.ActivePlayers)
-        {
-            if (Runner.TryGetPlayerObject(playerRef, out var obj))
+            // 3) shrink 구간 (기존 코드)
+            if (i < phases.Count - 1)
             {
-                var dist = Vector3.Distance(obj.transform.position, zoneCenter);
-                if (dist > zoneRadius)
+                var next = phases[i + 1];
+                float shrinkElapsed = 0f;
+                while (shrinkElapsed < phase.shrinkDuration)
                 {
-                    if (obj.TryGetComponent(out PlayerHealth hp))
-                    {
-                        float dps = currentPhase.damagePerSecond;
-                        hp.ApplyDamage(dps * Time.deltaTime);
-                    }
+                    float t = shrinkElapsed / phase.shrinkDuration;
+                    Vector3 center = Vector3.Lerp(phase.center, next.center, t);
+                    float radius = Mathf.Lerp(phase.radius, next.radius, t);
+
+                    SetZone(center, radius);
+                    ApplyDamage(Time.deltaTime);
+
+                    shrinkElapsed += Time.deltaTime;
+                    yield return null;
                 }
             }
         }
     }
 
-    void UpdateZoneVisual()
+
+    private void SetZone(Vector3 center, float radius)
     {
-        if (zoneVisual != null)
+        _zoneInstance.transform.position = center;
+        _zoneInstance.transform.localScale = Vector3.one * radius * 2f;
+        _zoneCollider.center = Vector3.zero;
+        _zoneCollider.radius = radius;
+    }
+
+    private void ApplyDamage(float deltaTime)
+    {
+        float dps = zoneConfig.phases[_currentPhaseIndex].damagePerSecond;
+
+        foreach (var player in PlayerHealth.All)
         {
-            zoneVisual.transform.position = zoneCenter;
-            zoneVisual.transform.localScale = Vector3.one * zoneRadius * 2f;
+            float dist = Vector3.Distance(player.transform.position, _zoneInstance.transform.position);
+            if (dist > _zoneCollider.radius)
+                player.TakeDamage(dps * deltaTime);
         }
     }
+
 }

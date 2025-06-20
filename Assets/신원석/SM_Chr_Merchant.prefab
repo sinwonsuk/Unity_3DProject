@@ -1210,6 +1210,7 @@ GameObject:
   - component: {fileID: 1937740767345190456}
   - component: {fileID: -4785278166820212655}
   - component: {fileID: -1013130676285194114}
+  - component: {fileID: -2431479043280482228}
   m_Layer: 6
   m_Name: SM_Chr_Merchant
   m_TagString: Player
@@ -1326,6 +1327,7 @@ MonoBehaviour:
   - {fileID: 4271482361781194061}
   - {fileID: -4785278166820212655}
   - {fileID: -1013130676285194114}
+  - {fileID: -2431479043280482228}
   ForceRemoteRenderTimeframe: 0
 --- !u!114 &3090258092248914074
 MonoBehaviour:
@@ -1420,6 +1422,19 @@ MonoBehaviour:
   StateHashes: 000000002da0f5ead4390fac089a4d5485a8327a8555caeba6e5c94d70aef7331b8e14dc1aab361c49175e6450130c0770dab36738a3ee9c04edde5e5536a4f5bebcd7c7ef67ad6c288cd0b07957aa1b8b19b42edac2ce85917b71824bbb133d6b119efa5203dbb5aa12228cb0df68d3236ae627a27f3e78e54d875fdcc41a82958341e296919b8dff03502f10b55e566384ee4e0fbf9b57e5a0820db5ee92ce5ff18b9423de95b9c9c18ce3804bf1276a54e87de388358f6043dbf388a8b80b708ef91bd187d0b5312eb78070f5471e013ee56906dcabfd8de6ca8d247de092b8761a0d16c2213e72410774bce8c4f068ebe3372a7531313fd9803eb735db618a18fce46d549c7cc55fd1f93b0fed1a5ff9e986f791eaad0cfd58f1458ab33737ad1fb95407f86b0496c9dc540308c33163d4a8d713ecfb49eed280610228f41d9c598c4e8a67c2763f1ec7177df3ca655913f2d46d2f49
   TriggerHashes: 000000001b8274fc2b1228980fa4101e7d3aa7e02500d390bad385b1
   TotalWords: 11
+--- !u!114 &-2431479043280482228
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2059063748732853934}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: aba8a60a758075649a2173ff95584d8a, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  _Health: 100
 --- !u!1 &2214411710377538837
 GameObject:
   m_ObjectHideFlags: 0
