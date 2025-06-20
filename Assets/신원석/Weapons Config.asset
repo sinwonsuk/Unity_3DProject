@@ -14,14 +14,26 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   weaponEntries:
   - itemState: 1
-    weaponPrefab: {fileID: 6625035787644139224, guid: 31c13abe45318794b88d6f6c1a334146, type: 3}
+    weaponPrefab:
+      RawGuidValue: 31c13abe45318794b88d6f6c1a334146
+    transform: {fileID: 6621464681374380500, guid: 31c13abe45318794b88d6f6c1a334146, type: 3}
   - itemState: 2
-    weaponPrefab: {fileID: 3175949931512061078, guid: 84db689eb1d46b54383b47b0af51f72f, type: 3}
+    weaponPrefab:
+      RawGuidValue: 84db689eb1d46b54383b47b0af51f72f
+    transform: {fileID: 3172493033512462034, guid: 84db689eb1d46b54383b47b0af51f72f, type: 3}
   - itemState: 3
-    weaponPrefab: {fileID: 4937231868779863448, guid: b8cc9f47c1b27054fafbfd63c3b7012a, type: 3}
+    weaponPrefab:
+      RawGuidValue: a95a3dc85f8ee0449bcaf3a8d163845f
+    transform: {fileID: 6631435397594522532, guid: a95a3dc85f8ee0449bcaf3a8d163845f, type: 3}
   - itemState: 3
-    weaponPrefab: {fileID: 4937231868779863448, guid: b8cc9f47c1b27054fafbfd63c3b7012a, type: 3}
+    weaponPrefab:
+      RawGuidValue: a95a3dc85f8ee0449bcaf3a8d163845f
+    transform: {fileID: 6631435397594522532, guid: a95a3dc85f8ee0449bcaf3a8d163845f, type: 3}
   - itemState: 6
-    weaponPrefab: {fileID: 1381610650362966, guid: 67c60fa84a9c4854c8d4a1c85873e21d, type: 3}
+    weaponPrefab:
+      RawGuidValue: 67c60fa84a9c4854c8d4a1c85873e21d
+    transform: {fileID: 4789443884669178, guid: 67c60fa84a9c4854c8d4a1c85873e21d, type: 3}
   - itemState: 4
-    weaponPrefab: {fileID: 1545150870326890, guid: 9209546c3f583ed45a05225e8c18f678, type: 3}
+    weaponPrefab:
+      RawGuidValue: 84db689eb1d46b54383b47b0af51f72f
+    transform: {fileID: 3172493033512462034, guid: 84db689eb1d46b54383b47b0af51f72f, type: 3}

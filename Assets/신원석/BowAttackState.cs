@@ -17,7 +17,7 @@ public class BowState : BaseState<PlayerStateMachine.PlayerState>
     Vector3 targetPos;
 
 
-    public BowState(PlayerStateMachine.PlayerState key, Animator animator, PlayerStateMachine stateMachine) : base(key, animator)
+    public BowState(PlayerStateMachine.PlayerState key, Animator animator, PlayerStateMachine stateMachine) : base(key)
     {
         this.playerStateMachine = stateMachine;
       
@@ -40,13 +40,6 @@ public class BowState : BaseState<PlayerStateMachine.PlayerState>
         shoot = false;
         arrow = null;
     }
-
-    public override void UpdateState()
-    {
-
-    }
-
-
 
     public override void FixedUpdateState()
     {
@@ -112,13 +105,6 @@ public class BowState : BaseState<PlayerStateMachine.PlayerState>
             playerStateMachine.ChangeState(PlayerStateMachine.PlayerState.Idle);
         return;
     }
-    public override void LateUpdateState() 
-    {
-        if (!playerStateMachine.HasInputAuthority)
-            return;
-    }
-
- 
 
     public override PlayerStateMachine.PlayerState GetNextState()
     {

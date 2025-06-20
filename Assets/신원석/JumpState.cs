@@ -12,7 +12,7 @@ public class JumpState : BaseState<PlayerStateMachine.PlayerState>
     private float moveSpeed = 3;
     private LayerMask groundMask;
 
-    public JumpState(PlayerStateMachine.PlayerState key, Animator animator,PlayerStateMachine playerStateMachine) : base(key, animator)
+    public JumpState(PlayerStateMachine.PlayerState key,PlayerStateMachine playerStateMachine) : base(key)
     {
         this.playerStateMachine = playerStateMachine;
         groundMask = playerStateMachine.groundMask;
@@ -25,19 +25,12 @@ public class JumpState : BaseState<PlayerStateMachine.PlayerState>
 
     public override void EnterState()
     {
-        animator.SetBool("Jump", true);
+        playerStateMachine.NetAnim.Animator.SetBool("Jump", true);
         velocity = Vector3.zero;
 
         // 점프 순간 속도 계산: sqrt(2gh)
         velocity.y = Mathf.Sqrt(jumpHeight * -2f * gravity);
     }
-
-    public override void UpdateState()
-    {      
-        
-    }
-
-
 
     public override void FixedUpdateState()
     {
@@ -46,7 +39,7 @@ public class JumpState : BaseState<PlayerStateMachine.PlayerState>
         if (isGrounded && velocity.y < 0)
         {
             velocity.y = -2f; // 착지시 눌림 효과
-            animator.SetBool("Jump", false);
+            playerStateMachine.NetAnim.Animator.SetBool("Jump", false);
             playerStateMachine.ChangeState(PlayerStateMachine.PlayerState.Idle);
             return;
         }
@@ -87,9 +80,6 @@ public class JumpState : BaseState<PlayerStateMachine.PlayerState>
     {
         
     }
-
-    public override void LateUpdateState(){}
-
     public override void OnAttackAnimationEnd()
     {
 

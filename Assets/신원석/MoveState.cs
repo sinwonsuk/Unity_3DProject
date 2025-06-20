@@ -3,6 +3,8 @@ using UnityEngine.AI;
 using static Unity.Collections.Unicode;
 using static UnityEngine.Rendering.DebugUI;
 using Fusion;
+using static PlayerStateMachine;
+using RPGCharacterAnims;
 public class MoveState : BaseState<PlayerStateMachine.PlayerState>
 {
     PlayerStateMachine playerStateMachine;
@@ -10,78 +12,78 @@ public class MoveState : BaseState<PlayerStateMachine.PlayerState>
     [SerializeField] float rotationSpeed = 500f;
     float moveSpeed = 2.0f;
 
-    public MoveState(PlayerStateMachine.PlayerState key, Animator animator, PlayerStateMachine playerStateMachine)
-        : base(key, animator)
+    public MoveState(PlayerStateMachine.PlayerState key, PlayerStateMachine playerStateMachine)
+        : base(key)
     {
         this.playerStateMachine = playerStateMachine;
     }
 
     public override void EnterState()
     {
-
-
-        playerStateMachine.NetAnim.Animator.SetBool("Walk", true);
-        //animator.SetBool("Walk", true);
+        //playerStateMachine.NetAnim.Animator.SetFloat("MoveLeftRight", 0);
+        //playerStateMachine.NetAnim.Animator.SetFloat("MoveForWard", 0);
     }
 
     public override void ExitState()
     {
+ 
         playerStateMachine.NetAnim.Animator.SetFloat("MoveLeftRight", 0);
         playerStateMachine.NetAnim.Animator.SetFloat("MoveForWard", 0);
 
-        //animator.SetFloat("MoveLeftRight", 0.0f);
-        //animator.SetFloat("MoveForWard", 0.0f);
         moveSpeed = 2.0f;
     }
-
-    public override void UpdateState()
+    public void Move()
     {
-        Debug.Log("Move");
-       
-
-
-        if (TryHandleJumpInput()) return;
-
-       
+        playerStateMachine.MoveInput();
     }
 
     public override void FixedUpdateState()
     {
-        playerStateMachine.MoveInput();
-
-
-        if (TryHandleRollInput()) 
-            return;
-
+        TryHandleRollInput();
+        TryHandleJumpInput();
         TryHandleAttackInput();
         UpdateMovementAnimation();
-
-    }
-    public override void LateUpdateState()
-    {
-        //playerStateMachine.testte();
+        Move();
+        ChangeIdle();
     }
     public override PlayerStateMachine.PlayerState GetNextState()
     {
-        if (Input.GetAxis("Horizontal") == 0 && Input.GetAxis("Vertical") == 0)
-            return PlayerStateMachine.PlayerState.Idle;
-
         return PlayerStateMachine.PlayerState.Move;
     }
-
+    public void ChangeIdle()
+    {
+        if (playerStateMachine.inputHandler.IsMove() == false)
+        {
+            if (playerStateMachine.Object.HasInputAuthority)
+            {
+                playerStateMachine.RPC_BroadcastState(PlayerState.Idle);
+                return;
+            }
+        }
+    }
     public override void OnTriggerEnter(Collider collider) { }
     public override void OnTriggerExit(Collider collider) { }
     public override void OnTriggerStay(Collider collider) { }
 
-    private bool TryHandleRollInput()
+    private void TryHandleRollInput()
     {
-        return playerStateMachine.RollInput();
+        if (playerStateMachine.IsWeapon == false)
+            return;
+
+        if (playerStateMachine.inputHandler.RollInput(out ERollState dir))
+            Roll(dir);
     }
+    private void Roll(ERollState dir)
+    {
+        playerStateMachine.NetAnim.Animator.SetInteger("RollCount", (int)dir);
+        playerStateMachine.ChangeState(PlayerState.Roll);
+    }
+
     private bool TryHandleJumpInput()
     {
         if (Input.GetKey(KeyCode.LeftControl))
         {
-            animator.SetBool("Jump", true);
+            playerStateMachine.NetAnim.Animator.SetBool("Jump", true);
             playerStateMachine.ChangeState(PlayerStateMachine.PlayerState.Jump);
             return true;
         }
@@ -94,12 +96,12 @@ public class MoveState : BaseState<PlayerStateMachine.PlayerState>
         playerStateMachine.ComboAttackInput();
         playerStateMachine.DashAttackInput();
 
-        if(playerStateMachine.inputHandler.IsRightAttackPressed() && playerStateMachine.isWeapon ==true && playerStateMachine.AnimHandler.WeaponCount == (int)ItemState.Bow)
+        if(playerStateMachine.inputHandler.IsRightAttackPressed() && playerStateMachine.IsWeapon ==true && playerStateMachine.AnimHandler.WeaponCount == (int)ItemState.Bow)
         {
             playerStateMachine.ChangeState(PlayerStateMachine.PlayerState.BowAttack);
             return;
         }
-        if (playerStateMachine.inputHandler.IsRightAttackPressed() && playerStateMachine.isWeapon == true && playerStateMachine.AnimHandler.WeaponCount == (int)ItemState.Magic)
+        if (playerStateMachine.inputHandler.IsRightAttackPressed() && playerStateMachine.IsWeapon == true && playerStateMachine.AnimHandler.WeaponCount == (int)ItemState.Magic)
         {
             playerStateMachine.ChangeState(PlayerStateMachine.PlayerState.Magic);
             return;
@@ -109,32 +111,28 @@ public class MoveState : BaseState<PlayerStateMachine.PlayerState>
 
     private void UpdateMovementAnimation()
     {
-        float h = Input.GetAxis("Horizontal");
-        float v = Input.GetAxis("Vertical");
+        //if (playerStateMachine.IsProxy == true || playerStateMachine.Runner.IsForward == false)
+        //    return;
 
-        if (Input.GetKey(KeyCode.LeftShift) && v > 0f)
+        if (playerStateMachine.GetInput(out NetworkInputData data))
         {
-            v = Mathf.Lerp(0f, 2f, v); // 결과: 0 ~ 2
-            moveSpeed = 4.0f;
+            Debug.Log("Host SetFloat");
+
+            float x = data.moveAxis.x;
+            float z = data.moveAxis.z;
+
+            if (Input.GetKey(KeyCode.LeftShift) && z > 0f)
+            {
+                z = Mathf.Lerp(0f, 2f, z); // 결과: 0 ~ 2
+                moveSpeed = 4.0f;
+            }
+            else
+            {
+                moveSpeed = 2.0f;   
+            }         
+            playerStateMachine.NetAnim.Animator.SetFloat("MoveLeftRight", x);
+            playerStateMachine.NetAnim.Animator.SetFloat("MoveForWard", z);
         }
-        else
-        {
-            moveSpeed = 2.0f;
-        }
-
-        if (playerStateMachine.IsProxy == true)
-            return;
-
-        if (playerStateMachine.Runner.IsForward == false)
-            return;
-
-
-        playerStateMachine.NetAnim.Animator.SetFloat("MoveLeftRight", h);
-        playerStateMachine.NetAnim.Animator.SetFloat("MoveForWard", v);
-        // 애니메이션 파라미터 설정
-        //animator.SetFloat("MoveLeftRight", h);
-        //animator.SetFloat("MoveForWard", v);
-
     }
 
     public override void OnAttackAnimationEnd()

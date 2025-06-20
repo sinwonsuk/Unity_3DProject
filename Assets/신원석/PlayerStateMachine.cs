@@ -3,6 +3,7 @@ using Cinemachine;
 using UnityEngine;
 using static UnityEngine.InputSystem.OnScreen.OnScreenStick;
 using System;
+using UnityEngine.InputSystem.XR;
 
 
 public enum ItemState
@@ -19,6 +20,10 @@ public enum ItemState
 
 public class PlayerStateMachine : StageManager<PlayerStateMachine.PlayerState>
 {
+    [Networked] public PlayerState SyncedState { get; set; }
+    [Networked] public bool comboAnimEnded { get; set; } = false;
+
+    [Networked] public int AttackCount { get; set; } = 0;
     public NetworkMecanimAnimator NetAnim { get; set; }
 
     public enum PlayerState
@@ -32,21 +37,12 @@ public class PlayerStateMachine : StageManager<PlayerStateMachine.PlayerState>
         BowAttack,
         Magic,
     }
-
-    public Action<PlayerStateMachine.PlayerState> aniAction { get; set; }
-
-    [Rpc(RpcSources.InputAuthority, RpcTargets.StateAuthority)]
-    public void RPC_Ani(PlayerState playerState)
-    {
-        ChangeState(playerState);
-    } 
+    public Action action;
 
     public WeaponsConfig weapons;
-
     public ItemState Item { get; set; } = ItemState.none;
 
-
-    Animator animator;
+    private Animator animator;
     public PlayerCombat Combat { get; private set; }
     public AnimationHandler AnimHandler { get; private set; }
     public InputHandler inputHandler { get; private set; }
@@ -71,15 +67,20 @@ public class PlayerStateMachine : StageManager<PlayerStateMachine.PlayerState>
     [SerializeField]
     LayerMask layerMask;
 
-    Quaternion targetRotation;
-    Vector3 targetMove;
-
-
-
+    public float AttackSpeed
+    {
+        get => attackSpeed;
+        set => attackSpeed = value;
+    }
     public Transform RightHandTransform
     {
         get => rightHandTransform;
         set => rightHandTransform = value;
+    }
+    public Transform LeftHandTransform
+    {
+        get => leftHandTransform;
+        set => leftHandTransform = value;
     }
     public Transform CameraFollow
     {
@@ -95,45 +96,38 @@ public class PlayerStateMachine : StageManager<PlayerStateMachine.PlayerState>
 
     public Transform groundCheck;
     public LayerMask groundMask;
-    public bool isWeapon = false;
-    public bool is3rdPersonCamera { get; set; }
-
-
+   [Networked] public bool IsWeapon { get; set; } = false;
+   
     public NetworkCharacterController playerController {  get; private set; }
    
-
     public Vector3 rootMotionDelta { get; set; }
     public Quaternion rootMotionRotation { get; set; }
-
     public bool isRoll { get; set; } = false;
-    bool isAttack = true;
-
-    int hashAttackCount = Animator.StringToHash("AttackCount");
+    [Networked] public bool isAttack { get; set; } = true;
 
     public bool nextAttackQueued { get; set; } = false;
-    public int AttackCount
-    {
-        get => animator.GetInteger(hashAttackCount);
-        set => animator.SetInteger(hashAttackCount, value);
-    }
-
+ 
+    bool _isInitialized = false;
     public override void Spawned()
     {
         NetAnim = GetComponent<NetworkMecanimAnimator>();
         animator = GetComponent<Animator>();
         playerController = GetComponent<NetworkCharacterController>();
 
-        states[PlayerState.Idle] = new IdleState(PlayerState.Idle, animator, this);
-        states[PlayerState.Move] = new MoveState(PlayerState.Move, animator, this);
-        states[PlayerState.Switch] = new WeaponSwitchState(PlayerState.Switch, animator, this);
-        states[PlayerState.Attack] = new AttackState(PlayerState.Attack, animator, this);
+        states[PlayerState.Idle] = new IdleState(PlayerState.Idle, this);
+        states[PlayerState.Move] = new MoveState(PlayerState.Move, this);
+        states[PlayerState.Switch] = new WeaponSwitchState(PlayerState.Switch, this);
+        states[PlayerState.Attack] = new AttackState(PlayerState.Attack, this);
         states[PlayerState.Roll] = new RollState(PlayerState.Roll, animator, this);
         states[PlayerState.BowAttack] = new BowState(PlayerState.BowAttack, animator, this);
-        states[PlayerState.Jump] = new JumpState(PlayerState.Jump, animator, this);
+        states[PlayerState.Jump] = new JumpState(PlayerState.Jump, this);
         states[PlayerState.Magic] = new MagicAttackState(PlayerState.Magic, animator, this);
-        currentState = states[PlayerState.Idle];
 
 
+        if (Object.HasStateAuthority)
+            SyncedState = PlayerState.Idle;
+
+        currentState = states[SyncedState];
 
         if (Object.HasInputAuthority)
         {
@@ -148,11 +142,12 @@ public class PlayerStateMachine : StageManager<PlayerStateMachine.PlayerState>
         // 너무 비대해져서 역활 나눔 
         inputHandler = new InputHandler(this, CameraFollow);
         Combat = new PlayerCombat(this);
-        AnimHandler = new AnimationHandler(animator);
-        WeaponManager = new WeaponManager(weapons, rightHandTransform, leftHandTransform);
+        AnimHandler = new AnimationHandler(NetAnim);
+        WeaponManager = GetComponent<WeaponManager>();
+        WeaponManager.Init(weapons, rightHandTransform, leftHandTransform, Runner, this);
         cameraManager = new CameraManager(Cam);
-
-
+        action = adad;
+        _isInitialized = true;
     }
   
     private void OnEnable()
@@ -168,157 +163,161 @@ public class PlayerStateMachine : StageManager<PlayerStateMachine.PlayerState>
     {
         if (currentState is BaseState<PlayerState> attackState)
         {
-            attackState.OnAttackAnimationEnd();
+            if (!Object.HasStateAuthority) return;
+            comboAnimEnded = true;
+
         }
     }
-
-    public bool RollInput()
-    {
-        if (!isWeapon)
-            return false;
-
-        if (inputHandler.RollInput(out ERollState dir))
-        {
-            Roll(dir);
-            return true;
-        }
-
-        return false;
-    }
-    private void Roll(ERollState dir)
-    {
-        animator.SetInteger("RollCount", (int)dir);
-        ChangeState(PlayerState.Roll);
-    }
-
     public void MoveInput()
+    {
+        if (inputHandler.IsMove() == true)
+        {
+            if (Object.HasInputAuthority && !Object.HasStateAuthority)
+            {              
+               MoveAndRotate(inputHandler.GetNetworkInputData());
+            }
+            else if (Object.HasStateAuthority)
+            {
+               MoveAndRotate(inputHandler.GetNetworkInputData());
+            }
+        }
+    }
+
+    public void MoveAndRotate(NetworkInputData data)
+    {
+        Vector3 moveInput = data.direction.normalized;
+        Quaternion planarRot = Quaternion.Euler(0, data.CameraRotateY, 0);
+        Vector3 moveDir = planarRot * moveInput;
+
+        playerController.Move(moveDir * moveSpeed * Runner.DeltaTime);
+        playerController.Rotate(planarRot);
+    }
+
+    [Rpc(RpcSources.InputAuthority, RpcTargets.StateAuthority)]
+    public void RPC_BroadcastState(PlayerState next, RpcInfo info = default)
+    {
+        if (!Object.HasStateAuthority) return;
+
+        if (SyncedState == next) return;
+        SyncedState = next;
+    }
+    [Rpc(RpcSources.InputAuthority, RpcTargets.StateAuthority)]
+    public void Rpc_SetWeapon(bool hasWeapon, RpcInfo info = default)
+    {
+        if (!Object.HasStateAuthority) return;
+
+        IsWeapon = hasWeapon; 
+    }
+
+
+
+    [Rpc(RpcSources.InputAuthority, RpcTargets.StateAuthority)]
+    public void Rpc_EndAttack(RpcInfo info = default)
+    {
+        AnimHandler.SetAttackBool(false);
+
+    }
+
+    public void SetWeapon(bool hasWeapon)
     {
         if (Object.HasInputAuthority)
         {
-            inputHandler.TryGetMoveDirection(out Vector3 moveDir, out Quaternion planarRot);
-
-            Debug.DrawRay(transform.position, moveDir * 2f, Color.green, 0.1f);
-
-            playerController.Move(moveDir * moveSpeed * Runner.DeltaTime);
-            playerController.Rotate(planarRot);
+            Rpc_SetWeapon(hasWeapon);
         }
-        else
+        if(Object.HasStateAuthority)
         {
-            MoveInit();
+            IsWeapon = hasWeapon;  // 이 한 줄이면 모든 클라이언트 동기화
+        }
+
+    }
+
+    public void BroadcastIdleEvent(PlayerState nextStateKey)
+    {
+        if (Object.HasStateAuthority)
+        {
+            SyncedState = nextStateKey;
+        }
+        else if(Object.HasInputAuthority)
+        {
+            RPC_BroadcastState(nextStateKey);
         }
     }
 
     public override void FixedUpdateNetwork()
     {
+        if (!_isInitialized) return;
 
-        MoveInput();
+        string who = Object.HasInputAuthority && Runner.LocalPlayer == Object.InputAuthority
+        ? "내 플레이어"
+        : "다른 플레이어";
 
+        Debug.Log($"[{who}] ObjID={Object.Id} InputAuth={Object.HasInputAuthority} StateAuth={Object.HasStateAuthority} SyncedState={SyncedState}");
 
-
-
-
-        if (!Runner.IsForward) return;
-
-
-        if (Object.HasInputAuthority)
-        {
-            if (GetInput<NetworkInputData>(out var data))
-            {
-                float h = data.direction.x;
-                float v = data.direction.z;
-                // 로컬 화면에서 즉시 반영
-                NetAnim.Animator.SetFloat("MoveLeftRight", h);
-                NetAnim.Animator.SetFloat("MoveForWard", v);
-            }
-        }
-
-        else if (Object.HasStateAuthority)
-        {
-            if (GetInput<NetworkInputData>(out var data))
-            {
-                float h = data.direction.x;
-                float v = data.direction.z;
-                // 이 호출이 네트워크를 통해 나머지 프록시에 복제됩니다
-                NetAnim.Animator.SetFloat("MoveLeftRight", h);
-                NetAnim.Animator.SetFloat("MoveForWard", v);
-            }
-        }
-
-
-
-
-
-
-        //var nextStateKey = currentState.GetNextState();
-        //if (nextStateKey.Equals(currentState.StateKey))
-        //{
-        //    currentState.FixedUpdateState();
-        //}
-        //else
-        //{
-        //    ChangeState(nextStateKey);
-        //}
-
-
-
-    }
-
-
-    public void MoveInit()
-    {
-        inputHandler.TryGetMoveDirection(out Vector3 moveDir, out Quaternion planarRot);
 
         if (Object.HasStateAuthority)
         {
-            
-            
-            playerController.Move(moveDir * moveSpeed * Runner.DeltaTime);
-            playerController.Rotate(planarRot);        
+            var next = currentState.GetNextState();
+            if (next != currentState.StateKey)
+            {
+                SyncedState = next;
+            }        
         }
-
-        else
+        // (3) 공통: 동기화된 상태 반영
+        if (SyncedState != currentState.StateKey)
         {
-            playerController.Move(Vector3.zero * Runner.DeltaTime);
-            playerController.Rotate(planarRot);
+            currentState.ExitState();
+            currentState = states[SyncedState];
+            currentState.EnterState();
+        }
+        // (4) 공통: 상태별 행동 실행
+        currentState.FixedUpdateState();
+
+        // (5) 이벤트 실행
+
+    }
+    public void adad()
+    {
+        if (currentState is BaseState<PlayerState> attackState && comboAnimEnded == true)
+        {
+            attackState.OnAttackAnimationEnd();
+            comboAnimEnded = false;
         }
     }
 
-    public bool ComboAttackInput()
+    public void ComboAttackInput()
     {
-        if (isWeapon == false)
-            return false;
+        if (IsWeapon == false)
+            return;
 
-        if (inputHandler.IsAttackPressed() == true)
+        if (inputHandler.IsAttackPressed() == true && Object.HasInputAuthority)
         {
-            animator.SetBool("Attack", true);
-            ChangeState(PlayerState.Attack);
-            return true;
-        }
+            if (Object.HasStateAuthority)
+            {
+                // 호스트 자신은 직접 상태 변경
+                SyncedState = PlayerState.Attack;
+            }
+            else
+            {
+                // 클라이언트는 RPC 요청
+                RPC_BroadcastState(PlayerState.Attack);
+            }
 
-        return false;
+        }
     }
 
     public bool DashAttackInput()
     {
-        if (isWeapon == false)
+        if (IsWeapon == false)
             return false;
 
         if (inputHandler.IsDashAttackPressed())
         {
-            animator.SetBool("RunAttack", true);
-            ChangeState(PlayerState.Attack);
+            NetAnim.Animator.SetBool("RunAttack", true);
+            RPC_BroadcastState(PlayerState.Attack);
             return true;
         }
 
         return false;
-    }
-
-    public void AttackMove()
-    {
-        if (isAttack == false)
-            return;
-
-        playerController.Move(transform.forward * Runner.DeltaTime * attackSpeed);
     }
 
     public void MoveRoll(int count)
@@ -344,20 +343,15 @@ public class PlayerStateMachine : StageManager<PlayerStateMachine.PlayerState>
         }
     }
 
-    public void StopRoll()
+    public void StopRoll() => isRoll = true;
+    public void startRoll() => isRoll = false;
+    public void SetIsAttackTrue() => isAttack = true;
+    public void SetIsAttackFalse() => isAttack = false;
+
+    public override void Render()
     {
-        isRoll = true;
+        //AnimHandler.SetAttackCount(AttackCount);  
+        //AnimHandler.SetAttackBool(IsAttacking);   
     }
-    public void startRoll()
-    {
-        isRoll = false;
-    }
-    public void SetIsAttackTrue()
-    {
-        isAttack = true;
-    }
-    public void SetIsAttackFalse()
-    {
-        isAttack = false;
-    }  
+
 }

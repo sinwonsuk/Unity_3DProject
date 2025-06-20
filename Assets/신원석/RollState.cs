@@ -14,24 +14,19 @@ public enum ERollState
 public class RollState : BaseState<PlayerStateMachine.PlayerState>
 {
 
-    public RollState(PlayerStateMachine.PlayerState key, Animator animator, PlayerStateMachine playerStateMachine) : base(key, animator)
+    public RollState(PlayerStateMachine.PlayerState key, Animator animator, PlayerStateMachine playerStateMachine) : base(key)
     {
         this.playerStateMachine = playerStateMachine;
     }
 
     public override void EnterState()
     {
-        animator.SetTrigger("RollTrigger");      
+        playerStateMachine.NetAnim.Animator.SetTrigger("RollTrigger");      
     }
     public override void ExitState()
     {
         playerStateMachine.startRoll();
     }
-    public override void UpdateState()
-    {
-        
-    }
-
     public override void FixedUpdateState()
     {    
         playerStateMachine.MoveRoll(RollCount);
@@ -45,8 +40,6 @@ public class RollState : BaseState<PlayerStateMachine.PlayerState>
     public override void OnTriggerEnter(Collider collider) { }
     public override void OnTriggerExit(Collider collider) { }
     public override void OnTriggerStay(Collider collider) { }
-    public override void LateUpdateState(){ }
-
     public override void OnAttackAnimationEnd()
     {
 
@@ -56,7 +49,7 @@ public class RollState : BaseState<PlayerStateMachine.PlayerState>
 
     public int RollCount
     {
-        get => animator.GetInteger(hashRollCount);
+        get => playerStateMachine.NetAnim.Animator.GetInteger(hashRollCount);
     }
 
     [SerializeField] float rollSpeed = 10f;

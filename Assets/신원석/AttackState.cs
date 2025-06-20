@@ -1,81 +1,113 @@
 using System.Collections;
+using Unity.VisualScripting;
 using UnityEngine;
+using static Unity.Collections.Unicode;
 
 public class AttackState : BaseState<PlayerStateMachine.PlayerState>
 {
-    PlayerStateMachine stateMachine;
+    PlayerStateMachine playerStateMachine;
 
-    private float comboInputWindow = 0.5f; // 콤보 입력을 기다리는 시간
-    private float comboTimer = 0f;
-    private bool isWaitingForCombo = false;
-
-    //private int AttackCount = 0;
-    private bool nextAttackQueued = false;
-
-    public AttackState(PlayerStateMachine.PlayerState key, Animator animator, PlayerStateMachine stateMachine ) : base(key, animator)
+    float time;
+    bool attackStart = false;
+    bool attackContinue = false;
+    public AttackState(PlayerStateMachine.PlayerState key, PlayerStateMachine stateMachine ) : base(key)
     {
-        this.stateMachine = stateMachine;
+        this.playerStateMachine = stateMachine;
     }
 
     public override void EnterState()
     {
-        stateMachine.Combat.StartAttack();
+
+         playerStateMachine.Combat.StartAttack();
+         
     }
     public override void ExitState()
     {
-        stateMachine.SetIsAttackFalse();
-        animator.SetBool("RunAttack", false);
-        animator.SetBool("Attack", false);
+        if (playerStateMachine.Object.HasStateAuthority)
+        {
+            playerStateMachine.SetIsAttackFalse();
+            playerStateMachine.NetAnim.Animator.SetBool("RunAttack", false);
+            playerStateMachine.NetAnim.Animator.SetBool("Attack", false);
+        }
+
+        time = 0.0f;
     }
 
-    public override void UpdateState()
-    {
-
-      
-       
-    }
     public override void FixedUpdateState() 
     {
-        if (!stateMachine.HasInputAuthority)
-            return;
+        //if (!playerStateMachine.Object.HasStateAuthority)
+        //    return;
 
-        // 카메라의 현재 수평(Y) 회전만 가져와서 적용
-        float yaw = Camera.main.transform.eulerAngles.y;
+        NetworkInputData data = playerStateMachine.inputHandler.GetNetworkInputData();
+
+        float yaw = data.CameraRotateY;
         Quaternion planarRotation = Quaternion.Euler(0, yaw, 0);
-        stateMachine.transform.rotation = planarRotation;
 
-        stateMachine.AttackMove();
+        playerStateMachine.playerController.Rotate(planarRotation);
+
+        if(playerStateMachine.isAttack == true)
+        {
+            time += playerStateMachine.Runner.DeltaTime;
+
+            if (time < 0.2f)
+                return;
+
+            if (playerStateMachine.inputHandler.IsAttackPressed())
+            {
+                playerStateMachine.Combat.TryQueueNextCombo();
+
+                time = 0.0f;
+            }
+
+            if(time > 0.5f)
+            {
+                playerStateMachine.isAttack = false;
+            }
+
+        }
+
+        playerStateMachine.action.Invoke();
+
+        //if (playerStateMachine.IsProxy == true || playerStateMachine.Runner.IsForward == false)
+        //    return;
+
+        playerStateMachine.AnimHandler.SetAttackCount(playerStateMachine.AttackCount);
+        playerStateMachine.AnimHandler.SetAttackBool(true);
     }
+
+    public void AttackMove()
+    {
+        if (playerStateMachine.Object.HasInputAuthority && !playerStateMachine.Object.HasStateAuthority)
+        {
+            if (playerStateMachine.isAttack == false)
+                return;
+
+            playerStateMachine.playerController.Move(playerStateMachine.transform.forward * playerStateMachine.Runner.DeltaTime * playerStateMachine.AttackSpeed);
+        }
+        if (playerStateMachine.Object.HasStateAuthority)
+        {
+            if (playerStateMachine.isAttack == false)
+                return;
+
+            playerStateMachine.playerController.Move(playerStateMachine.transform.forward * playerStateMachine.Runner.DeltaTime * playerStateMachine.AttackSpeed);
+        }
+
+        
+    }
+
 
     public override PlayerStateMachine.PlayerState GetNextState()
-    {       
+    {
         return PlayerStateMachine.PlayerState.Attack;
     }
-    public void ChangeRotate()
-    {
 
-    }
     public override void OnTriggerEnter(Collider collider) { }
     public override void OnTriggerExit(Collider collider) { }
     public override void OnTriggerStay(Collider collider) { }
-
-    public override void LateUpdateState(){ }
-
     public override void OnAttackAnimationEnd()
     {
-        stateMachine.Combat.OnAnimationEnd();
+        playerStateMachine.Combat.OnAnimationEnd();
     }
 
-    int hashAttackCount = Animator.StringToHash("AttackCount");
-
-
-    public int AttackCount
-    {
-        get => animator.GetInteger(hashAttackCount);
-        set => animator.SetInteger(hashAttackCount, value);
-    }
-
-    float rotationSpeed = 100.0f;
-    Quaternion targetRotation;
 
 }

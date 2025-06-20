@@ -36,7 +36,7 @@ namespace Fusion {
   [NetworkBehaviourWeaved(NetworkCCData.WORDS)]
   // ReSharper disable once CheckNamespace
   public sealed unsafe class NetworkCharacterController : NetworkTRSP, INetworkTRSPTeleport, IBeforeAllTicks, IAfterAllTicks, IBeforeCopyPreviousState {
-    new ref NetworkCCData Data => ref ReinterpretState<NetworkCCData>();
+        public new ref NetworkCCData Data => ref ReinterpretState<NetworkCCData>();
 
     [Header("Character Controller Settings")]
     public float gravity = -20.0f;
@@ -60,9 +60,6 @@ namespace Fusion {
     }
     public void Rotate(Quaternion targetRotation)
     {
-
-
-
         transform.rotation = Quaternion.Slerp(transform.rotation, targetRotation, rotationSpeed * Runner.DeltaTime);
     }
         public void Teleport(Vector3? position = null, Quaternion? rotation = null) {

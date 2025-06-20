@@ -59635,8 +59635,15 @@ AnimationClip:
   m_HasGenericRootTransform: 1
   m_HasMotionFloatCurves: 0
   m_Events:
-  - time: 0.5
+  - time: 0.033333335
     functionName: SetIsAttackTrue
+    data: 
+    objectReferenceParameter: {fileID: 0}
+    floatParameter: 0
+    intParameter: 0
+    messageOptions: 0
+  - time: 0.5
+    functionName: SetIsAttackFalse
     data: 
     objectReferenceParameter: {fileID: 0}
     floatParameter: 0
@@ -59650,7 +59657,7 @@ AnimationClip:
     intParameter: 0
     messageOptions: 0
   - time: 0.96666664
-    functionName: ChangeState
+    functionName: BroadcastIdleEvent
     data: 
     objectReferenceParameter: {fileID: 0}
     floatParameter: 0
