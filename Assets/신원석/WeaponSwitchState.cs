@@ -18,14 +18,17 @@ public class WeaponSwitchState : BaseState<PlayerStateMachine.PlayerState>
             PlayerRef me = playerStateMachine.Object.InputAuthority;
 
             playerStateMachine.SetWeapon(true);
-            playerStateMachine.WeaponManager.RequestEquip(ItemState.Sword, isDir.Right, me);
+            playerStateMachine.WeaponManager.RequestEquip(ItemState.Bow, HandSide.Left, me);
             
         }
 
-        playerStateMachine.AnimHandler.ChangeWeapon(ItemState.Sword);
+        playerStateMachine.AnimHandler.ChangeWeapon(ItemState.Bow);
     }
     public override void ExitState()
     {
+
+
+
 
     }
 

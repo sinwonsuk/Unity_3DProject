@@ -67,7 +67,7 @@ public class MoveState : BaseState<PlayerStateMachine.PlayerState>
 
     private void TryHandleRollInput()
     {
-        if (playerStateMachine.IsWeapon == false)
+         if (playerStateMachine.IsWeapon == false)
             return;
 
         if (playerStateMachine.inputHandler.RollInput(out ERollState dir))
@@ -76,7 +76,19 @@ public class MoveState : BaseState<PlayerStateMachine.PlayerState>
     private void Roll(ERollState dir)
     {
         playerStateMachine.NetAnim.Animator.SetInteger("RollCount", (int)dir);
-        playerStateMachine.ChangeState(PlayerState.Roll);
+        
+        if (playerStateMachine.Object.HasStateAuthority)
+        {
+            playerStateMachine.SyncedState = PlayerState.Roll;
+            playerStateMachine.RollCount = (int)dir;
+        }         
+        else
+        {
+            playerStateMachine.RPC_BroadcastState(PlayerState.Roll);
+            playerStateMachine.RPC_SetRollCount((int)dir);
+        }
+          
+        return;
     }
 
     private bool TryHandleJumpInput()
@@ -96,14 +108,17 @@ public class MoveState : BaseState<PlayerStateMachine.PlayerState>
         playerStateMachine.ComboAttackInput();
         playerStateMachine.DashAttackInput();
 
-        if(playerStateMachine.inputHandler.IsRightAttackPressed() && playerStateMachine.IsWeapon ==true && playerStateMachine.AnimHandler.WeaponCount == (int)ItemState.Bow)
+        if (playerStateMachine.cameraManager.isCameraCheck == false)
+            return;
+
+        if (playerStateMachine.inputHandler.IsRightAttackPressed() && playerStateMachine.IsWeapon ==true && playerStateMachine.AnimHandler.WeaponCount == (int)ItemState.Bow)
         {
-            playerStateMachine.ChangeState(PlayerStateMachine.PlayerState.BowAttack);
+            playerStateMachine.RPC_BroadcastState(PlayerStateMachine.PlayerState.BowAttack);
             return;
         }
         if (playerStateMachine.inputHandler.IsRightAttackPressed() && playerStateMachine.IsWeapon == true && playerStateMachine.AnimHandler.WeaponCount == (int)ItemState.Magic)
         {
-            playerStateMachine.ChangeState(PlayerStateMachine.PlayerState.Magic);
+            playerStateMachine.RPC_BroadcastState(PlayerStateMachine.PlayerState.Magic);
             return;
         }
 

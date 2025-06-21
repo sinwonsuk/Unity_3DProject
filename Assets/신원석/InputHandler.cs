@@ -21,16 +21,13 @@ public class InputHandler
         if (!behaviour.GetInput(out NetworkInputData data))
             return false;
 
-        if (!data.buttons.IsSet(NetworkInputData.KEY_SPACE))
-            return false;
-
-        if (data.direction == Vector3.forward)
+        if (data.direction == Vector3.forward && data.buttons.IsSet(NetworkInputData.KEY_SPACE))
             rollDirection = ERollState.Forward;
-        else if (data.direction == Vector3.back)
+        else if (data.direction == Vector3.back && data.buttons.IsSet(NetworkInputData.KEY_SPACE))
             rollDirection = ERollState.Backward;
-        else if (data.direction == Vector3.left)
+        else if (data.direction == Vector3.left && data.buttons.IsSet(NetworkInputData.KEY_SPACE))
             rollDirection = ERollState.Left;
-        else if (data.direction == Vector3.right)
+        else if (data.direction == Vector3.right && data.buttons.IsSet(NetworkInputData.KEY_SPACE))
             rollDirection = ERollState.Right;
         else
             return false;

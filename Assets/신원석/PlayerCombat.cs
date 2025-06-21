@@ -43,15 +43,11 @@ public class PlayerCombat
 
     public void OnAnimationEnd()
     {
-
-
         if (nextComboQueued && AttackCount < 4)
         {
             AttackCount++;
             nextComboQueued = false;
             player.SetIsAttackTrue();
-            //player.AnimHandler.SetAttackCount(AttackCount);
-            //player.AnimHandler.SetAttackBool(true);
         }
         else
         {   

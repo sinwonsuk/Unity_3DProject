@@ -10,7 +10,7 @@ public struct NetworkInputData : INetworkInput
     public const int KEY_L = 4;
     public const int KEY_CTRL = 5;
     public float CameraRotateY;
-    public Vector3 test;
+    public Vector3 CameraForward;
 
     public Vector3 moveAxis;
     public NetworkButtons buttons;

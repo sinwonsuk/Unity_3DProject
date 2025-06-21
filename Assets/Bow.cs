@@ -6,12 +6,17 @@ public class Bow : MonoBehaviour
 
     public BowRope Rope { get; set; }
 
-    void Start()
+    private void Awake()
     {
         Rope = GetComponentInChildren<BowRope>();
     }
 
-    // Update is called once per frame
+    void Start()
+    {
+
+    }
+
+
     void Update()
     {
        

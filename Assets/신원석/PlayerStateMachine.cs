@@ -24,6 +24,11 @@ public class PlayerStateMachine : StageManager<PlayerStateMachine.PlayerState>
     [Networked] public bool comboAnimEnded { get; set; } = false;
 
     [Networked] public int AttackCount { get; set; } = 0;
+    [Networked] public bool isRoll { get; set; } = false;
+    [Networked] public bool isAttack { get; set; } = true;
+    [Networked] public int RollCount { get; set; } = 0;
+
+    [Networked] public float gatherAttack {get;set;}= 0;
     public NetworkMecanimAnimator NetAnim { get; set; }
 
     public enum PlayerState
@@ -93,6 +98,7 @@ public class PlayerStateMachine : StageManager<PlayerStateMachine.PlayerState>
         set => layerMask = value;
     }
     public CinemachineVirtualCamera Cam { get; set; }
+    public CinemachineVirtualCamera aimingCam { get; set; }
 
     public Transform groundCheck;
     public LayerMask groundMask;
@@ -102,8 +108,7 @@ public class PlayerStateMachine : StageManager<PlayerStateMachine.PlayerState>
    
     public Vector3 rootMotionDelta { get; set; }
     public Quaternion rootMotionRotation { get; set; }
-    public bool isRoll { get; set; } = false;
-    [Networked] public bool isAttack { get; set; } = true;
+
 
     public bool nextAttackQueued { get; set; } = false;
  
@@ -137,12 +142,25 @@ public class PlayerStateMachine : StageManager<PlayerStateMachine.PlayerState>
             Cam = camObj.GetComponent<CinemachineVirtualCamera>();
             Cam.Follow = cameraFollow;
             Cam.LookAt = cameraFollow;
+
+
+            GameObject camObj2 = GameObject.FindGameObjectWithTag("VirtualCam");
+            aimingCam = camObj2.GetComponent<CinemachineVirtualCamera>();
+            aimingCam.Follow = cameraFollow;
+            aimingCam.LookAt = cameraFollow;
         }
+
+
+
+
+
+
+
 
         // 너무 비대해져서 역활 나눔 
         inputHandler = new InputHandler(this, CameraFollow);
         Combat = new PlayerCombat(this);
-        AnimHandler = new AnimationHandler(NetAnim);
+        AnimHandler = new AnimationHandler(NetAnim,this);
         WeaponManager = GetComponent<WeaponManager>();
         WeaponManager.Init(weapons, rightHandTransform, leftHandTransform, Runner, this);
         cameraManager = new CameraManager(Cam);
@@ -158,7 +176,15 @@ public class PlayerStateMachine : StageManager<PlayerStateMachine.PlayerState>
     {
        
     }
+    public void SetAimMode(bool aimOn)
+    {
+        // 로컬 플레이어일 때만 실행
+        if (!Object.HasInputAuthority) return;
 
+        // Aim 모드일 땐 AimCam 우선순위 올리고, DefaultCam 내리기
+        aimingCam.Priority = aimOn ? 20 : 5;
+        Cam.Priority = aimOn ? 5 : 10;
+    }
     public void OnAnimationEnd()
     {
         if (currentState is BaseState<PlayerState> attackState)
@@ -202,6 +228,13 @@ public class PlayerStateMachine : StageManager<PlayerStateMachine.PlayerState>
         SyncedState = next;
     }
     [Rpc(RpcSources.InputAuthority, RpcTargets.StateAuthority)]
+    public void RPC_SetRollCount(int rollCount, RpcInfo info = default)
+    {
+        RollCount = rollCount;
+    }
+
+
+    [Rpc(RpcSources.InputAuthority, RpcTargets.StateAuthority)]
     public void Rpc_SetWeapon(bool hasWeapon, RpcInfo info = default)
     {
         if (!Object.HasStateAuthority) return;
@@ -217,6 +250,31 @@ public class PlayerStateMachine : StageManager<PlayerStateMachine.PlayerState>
         AnimHandler.SetAttackBool(false);
 
     }
+    [Rpc(RpcSources.InputAuthority, RpcTargets.All)]
+    public void RPC_RequestShoot(Vector3 targetPos, RpcInfo info = default)
+    {
+        Arrow arrow = WeaponManager.Arrow.GetComponent<Arrow>();
+
+        Vector3 dir = targetPos;
+        arrow.Shoot(dir);
+    }
+    public void SetArrowShoot(Vector3 targetPos)
+    {
+        if (Object.HasInputAuthority)
+        {
+            RPC_RequestShoot(targetPos);
+        }
+        if (Object.HasStateAuthority)
+        {
+            Arrow arrow = WeaponManager.Arrow.GetComponent<Arrow>();
+
+            Vector3 dir = targetPos;
+            arrow.Shoot(dir);
+        }
+
+    }
+
+
 
     public void SetWeapon(bool hasWeapon)
     {
@@ -282,6 +340,7 @@ public class PlayerStateMachine : StageManager<PlayerStateMachine.PlayerState>
             attackState.OnAttackAnimationEnd();
             comboAnimEnded = false;
         }
+
     }
 
     public void ComboAttackInput()
@@ -320,38 +379,9 @@ public class PlayerStateMachine : StageManager<PlayerStateMachine.PlayerState>
         return false;
     }
 
-    public void MoveRoll(int count)
-    {
-        if (isRoll == true)
-            return;
-
-        if (ERollState.Backward == (ERollState)count)
-        {
-            playerController.Move(-transform.forward * Runner.DeltaTime * rollSpeed);
-        }
-        else if(ERollState.Forward == (ERollState)count)
-        {
-            playerController.Move(transform.forward * rollSpeed * Runner.DeltaTime);
-        }
-        else if(ERollState.Left == (ERollState)count)
-        {
-            playerController.Move(-transform.right * rollSpeed * Runner.DeltaTime);
-        }
-        else
-        {
-            playerController.Move(transform.right * rollSpeed * Runner.DeltaTime);
-        }
-    }
-
     public void StopRoll() => isRoll = true;
     public void startRoll() => isRoll = false;
     public void SetIsAttackTrue() => isAttack = true;
     public void SetIsAttackFalse() => isAttack = false;
-
-    public override void Render()
-    {
-        //AnimHandler.SetAttackCount(AttackCount);  
-        //AnimHandler.SetAttackBool(IsAttacking);   
-    }
 
 }

@@ -113,7 +113,7 @@ public class BasicSpawner : MonoBehaviour, INetworkRunnerCallbacks
         data.CameraRotateY = Camera.main.transform.eulerAngles.y;
 
 
-        data.test = Camera.main.transform.forward;
+        data.CameraForward = Camera.main.transform.forward;
 
         data.buttons.Set(NetworkInputData.KEY_C, Input.GetKey(KeyCode.C));
         data.buttons.Set(NetworkInputData.KEY_SPACE, Input.GetKey(KeyCode.Space));

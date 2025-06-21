@@ -4035,6 +4035,11 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   _SyncedState: 0
+  _comboAnimEnded: 0
+  _AttackCount: 0
+  _isRoll: 0
+  _isAttack: 1
+  _RollCount: 0
   weapons: {fileID: 0}
   moveSpeed: 5
   rotationSpeed: 500
@@ -4050,7 +4055,7 @@ MonoBehaviour:
   groundMask:
     serializedVersion: 2
     m_Bits: 512
-  isWeapon: 0
+  _IsWeapon: 0
 --- !u!114 &-4961512351059619321
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -5112,16 +5117,12 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 6979726927957982520, guid: a95a3dc85f8ee0449bcaf3a8d163845f, type: 3}
       propertyPath: NetworkedBehaviours.Array.size
-      value: 2
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 6979726927957982520, guid: a95a3dc85f8ee0449bcaf3a8d163845f, type: 3}
       propertyPath: 'NetworkedBehaviours.Array.data[0]'
       value: 
       objectReference: {fileID: 789609957218758956}
-    - target: {fileID: 6979726927957982520, guid: a95a3dc85f8ee0449bcaf3a8d163845f, type: 3}
-      propertyPath: 'NetworkedBehaviours.Array.data[1]'
-      value: 
-      objectReference: {fileID: 8754505321171108868}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
@@ -5152,16 +5153,5 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: -1552182283, guid: e725a070cec140c4caffb81624c8c787, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
---- !u!114 &8754505321171108868 stripped
-MonoBehaviour:
-  m_CorrespondingSourceObject: {fileID: -6653145930443302255, guid: a95a3dc85f8ee0449bcaf3a8d163845f, type: 3}
-  m_PrefabInstance: {fileID: 6545145546892156565}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 0}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 091ce8006b5afb941ac94a89a6610d6e, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 

@@ -19,6 +19,9 @@ public class IdleState : BaseState<PlayerStateMachine.PlayerState>
 
     public override void FixedUpdateState()
     {
+        if (playerStateMachine.cameraManager.isCameraCheck == false)
+            return;
+
         if (playerStateMachine.inputHandler.IsAttackPressed() && playerStateMachine.Object.HasInputAuthority &&
             playerStateMachine.IsWeapon == true && playerStateMachine.AnimHandler.WeaponCount != (int)ItemState.Bow)
         {
@@ -62,21 +65,6 @@ public class IdleState : BaseState<PlayerStateMachine.PlayerState>
 
     public override PlayerStateMachine.PlayerState GetNextState()
     {
-
-        //if (Input.GetKey(KeyCode.W) || Input.GetKey(KeyCode.S) || Input.GetKey(KeyCode.A) || Input.GetKey(KeyCode.D))
-        //    return PlayerStateMachine.PlayerState.Move;    
-        //if(Input.GetKeyDown(KeyCode.L))
-        //    return PlayerStateMachine.PlayerState.Switch;
-        //if (Input.GetMouseButtonDown(0) && playerStateMachine.isWeapon ==true && playerStateMachine.AnimHandler.WeaponCount != (int)ItemState.Bow)
-        //    return PlayerStateMachine.PlayerState.Attack;
-        //if (Input.GetKey(KeyCode.LeftControl))
-        //    return PlayerStateMachine.PlayerState.Jump;
-        //if (Input.GetMouseButtonDown(1) && playerStateMachine.isWeapon == true && playerStateMachine.AnimHandler.WeaponCount == (int)ItemState.Bow)
-        //    return PlayerStateMachine.PlayerState.BowAttack;
-        //if (Input.GetMouseButtonDown(1) && playerStateMachine.isWeapon == true && playerStateMachine.AnimHandler.WeaponCount == (int)ItemState.Magic)
-        //    return PlayerStateMachine.PlayerState.Magic;
-
-
         return PlayerStateMachine.PlayerState.Idle;
     }
 

@@ -1,8 +1,10 @@
 using Fusion;
 using UnityEngine;
+using UnityEngine.UIElements;
 using static Unity.Collections.Unicode;
+using static UnityEngine.UI.GridLayoutGroup;
 
-public enum isDir
+public enum HandSide
 {
     Right,
     Left,
@@ -13,10 +15,16 @@ public class WeaponManager : NetworkBehaviour
     private WeaponsConfig config;
     private Transform rightHandSocket;
     private Transform leftHandSocket;
-    private NetworkObject currentWeapon;
+   [Networked] public HandSide Side { get; set; }
+
+    [Networked] public HandSide ArrowSide { get; set; }
+
+    [Networked] public NetworkObject currentWeapon { get; set; }
+   [Networked] public NetworkObject Arrow { get; set; }
     private ItemState currentWeaponState;
     private NetworkRunner runner;
-    private NetworkBehaviour networkBehaviour;
+    
+
 
     public void Init(WeaponsConfig config, Transform rightHandSocket, Transform leftHandSocket, NetworkRunner runner, NetworkBehaviour networkBehaviour)
     {
@@ -24,11 +32,10 @@ public class WeaponManager : NetworkBehaviour
         this.rightHandSocket = rightHandSocket;
         this.leftHandSocket = leftHandSocket;
         this.runner = runner;
-        this.networkBehaviour = networkBehaviour;
     }
 
 
-    public void Equip(ItemState state,isDir Dir, PlayerRef owner = default)
+    public void Equip(ItemState state,HandSide Dir, PlayerRef owner = default)
     {
 
         // (1) 이미 무기가 있으면 Despawn
@@ -42,13 +49,17 @@ public class WeaponManager : NetworkBehaviour
         Vector3 position = config.GetTransform(state).localPosition;
         Quaternion rotation = config.GetTransform(state).localRotation;
 
-        if (Dir == isDir.Right)
+        if (Dir == HandSide.Right)
         {
+            Side = HandSide.Right;
             currentWeapon = runner.Spawn(prefab, position, rotation, owner);
+
         }
-        else if(Dir == isDir.Left)
+        else if(Dir == HandSide.Left)
         {
+            Side = HandSide.Left;
             currentWeapon = runner.Spawn(prefab, position, rotation, owner);
+
         } 
         else
         {
@@ -59,13 +70,42 @@ public class WeaponManager : NetworkBehaviour
 
         currentWeaponState = state;
     }
+    public void CreateArrow(ItemState state, HandSide Dir, PlayerRef owner = default)
+    {
+        if (currentWeapon.GetComponent<Bow>() == null)
+            Debug.Log("활없는데 화살 만듬");
+
+        NetworkPrefabRef prefab = config.GetWeapon(state);
+        Vector3 position = config.GetTransform(state).localPosition;
+        Quaternion rotation = config.GetTransform(state).localRotation;
+        NetworkObject obj = null;
+
+        obj = runner.Spawn(prefab, position, rotation, owner, onBeforeSpawned: (runner, obj) =>
+        {
+            var wno = obj.GetComponent<WeaponNetworkArrow>();
+            wno.RopeTransform = currentWeapon.GetComponent<Bow>().Rope.transform;
+        }
+            );
+
+        Arrow = obj;
+    }
+
+
 
     [Rpc(RpcSources.InputAuthority, RpcTargets.StateAuthority)]
-    public void RPC_RequestEquip(ItemState state, isDir isDir, RpcInfo info = default)
+    public void RPC_RequestEquip(ItemState state, HandSide isDir, RpcInfo info = default)
     {
         // 호스트만 여기 진입
         Equip(state, isDir, info.Source);
     }
+
+    [Rpc(RpcSources.InputAuthority, RpcTargets.StateAuthority)]
+    public void RPC_RequestArrow(ItemState state, HandSide isDir, RpcInfo info = default )
+    {
+        // 호스트만 여기 진입
+        CreateArrow(state, isDir, info.Source);
+    }
+
 
     public void AttachWeaponToSocket(/*isDir Dir*/)
     {
@@ -75,7 +115,7 @@ public class WeaponManager : NetworkBehaviour
         //    currentWeapon.transform.SetParent(leftHandSocket, false);
     }   
 
-    public void RequestEquip(ItemState state, isDir dir, PlayerRef owner = default)
+    public void RequestEquip(ItemState state, HandSide dir, PlayerRef owner = default)
     {
         // (1) 클라이언트일 때만 RPC
         if (Object.HasInputAuthority && !Object.HasStateAuthority)
@@ -89,15 +129,21 @@ public class WeaponManager : NetworkBehaviour
         }
     }
 
-
-
-    public GameObject CreateArrow()
+    public void RequestArrow(ItemState state, HandSide dir, PlayerRef owner = default)
     {
-        if (currentWeaponState != ItemState.Bow)
-            return null;
-
-        return null;    
+        // (1) 클라이언트일 때만 RPC
+        if (Object.HasInputAuthority && !Object.HasStateAuthority)
+        {
+            RPC_RequestArrow(state, dir);
+        }
+        // (2) 호스트일 때는 곧바로 실행
+        else if (Object.HasStateAuthority)
+        {
+            CreateArrow(state, dir, owner);
+        }
     }
+
+
     public GameObject CreateMagic()
     {
         if (currentWeaponState != ItemState.Magic)
@@ -114,5 +160,4 @@ public class WeaponManager : NetworkBehaviour
             currentWeapon = null;
         }
     }
-    public NetworkObject GetCurrentWeapon() => currentWeapon;
 }

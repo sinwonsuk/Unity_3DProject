@@ -21,20 +21,47 @@ public class RollState : BaseState<PlayerStateMachine.PlayerState>
 
     public override void EnterState()
     {
-        playerStateMachine.NetAnim.Animator.SetTrigger("RollTrigger");      
+        playerStateMachine.NetAnim.Animator.SetTrigger("RollTrigger");
+
+        rollDirection = GetDirectionFromCount(playerStateMachine.AnimHandler.RollCount);
+
     }
     public override void ExitState()
     {
         playerStateMachine.startRoll();
+        playerStateMachine.NetAnim.Animator.ResetTrigger("RollTrigger");
     }
     public override void FixedUpdateState()
-    {    
-        playerStateMachine.MoveRoll(RollCount);
+    {
+        if (playerStateMachine.isRoll == true)
+            return;
+
+        if (!playerStateMachine.Object.HasStateAuthority && playerStateMachine.Object.HasInputAuthority)
+            playerStateMachine.playerController.Move(rollDirection * rollSpeed * playerStateMachine.Runner.DeltaTime);
+
+        else if (playerStateMachine.Object.HasStateAuthority)
+            playerStateMachine.playerController.Move(rollDirection * rollSpeed * playerStateMachine.Runner.DeltaTime);
+
+
+        playerStateMachine.AnimHandler.ChangeRoll(playerStateMachine.AnimHandler.RollCount);
+
     }
 
     public override PlayerStateMachine.PlayerState GetNextState()
     {
         return PlayerStateMachine.PlayerState.Roll;
+    }
+
+    private Vector3 GetDirectionFromCount(int count)
+    {
+        switch ((ERollState)count)
+        {
+            case ERollState.Forward: return playerStateMachine.transform.forward;
+            case ERollState.Backward: return -playerStateMachine.transform.forward;
+            case ERollState.Left: return -playerStateMachine.transform.right;
+            case ERollState.Right: return playerStateMachine.transform.right;
+            default: return Vector3.zero;
+        }
     }
 
     public override void OnTriggerEnter(Collider collider) { }
@@ -51,6 +78,7 @@ public class RollState : BaseState<PlayerStateMachine.PlayerState>
     {
         get => playerStateMachine.NetAnim.Animator.GetInteger(hashRollCount);
     }
+    Vector3 rollDirection;
 
     [SerializeField] float rollSpeed = 10f;
 

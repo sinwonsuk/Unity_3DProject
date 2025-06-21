@@ -72,27 +72,23 @@ public class AttackState : BaseState<PlayerStateMachine.PlayerState>
         //    return;
 
         playerStateMachine.AnimHandler.SetAttackCount(playerStateMachine.AttackCount);
-        playerStateMachine.AnimHandler.SetAttackBool(true);
+
+        AttackMove();
+
+        //playerStateMachine.AnimHandler.SetAttackBool(true);
     }
 
     public void AttackMove()
     {
-        if (playerStateMachine.Object.HasInputAuthority && !playerStateMachine.Object.HasStateAuthority)
-        {
-            if (playerStateMachine.isAttack == false)
-                return;
-
-            playerStateMachine.playerController.Move(playerStateMachine.transform.forward * playerStateMachine.Runner.DeltaTime * playerStateMachine.AttackSpeed);
-        }
         if (playerStateMachine.Object.HasStateAuthority)
         {
             if (playerStateMachine.isAttack == false)
                 return;
 
-            playerStateMachine.playerController.Move(playerStateMachine.transform.forward * playerStateMachine.Runner.DeltaTime * playerStateMachine.AttackSpeed);
-        }
+            NetworkInputData data = playerStateMachine.inputHandler.GetNetworkInputData();
 
-        
+            playerStateMachine.playerController.Move(data.CameraForward * playerStateMachine.Runner.DeltaTime * playerStateMachine.AttackSpeed);
+        }      
     }
 
 

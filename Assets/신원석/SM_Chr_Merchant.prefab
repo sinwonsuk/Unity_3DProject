@@ -1356,6 +1356,9 @@ MonoBehaviour:
   _SyncedState: 0
   _comboAnimEnded: 0
   _AttackCount: 0
+  _isRoll: 0
+  _isAttack: 1
+  _RollCount: 0
   weapons: {fileID: 11400000, guid: bb10c1def4f7b9d42a86027dc3b35f91, type: 2}
   moveSpeed: 5
   rotationSpeed: 500
@@ -1372,7 +1375,6 @@ MonoBehaviour:
     serializedVersion: 2
     m_Bits: 512
   _IsWeapon: 0
-  _isAttack: 1
 --- !u!114 &-1013130676285194114
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -1387,10 +1389,10 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   Animator: {fileID: 7347605875457031395}
   ApplyTiming: 2
-  SyncSettings: 127
-  StateHashes: 000000002da0f5ead4390fac089a4d5485a8327a8555caeba6e5c94d70aef7331b8e14dc1aab361c49175e6450130c0770dab36738a3ee9c04edde5e5536a4f5bebcd7c7ef67ad6c288cd0b07957aa1b8b19b42edac2ce85917b71824bbb133d6b119efa5203dbb5aa12228cb0df68d3236ae627a27f3e78e54d875fdcc41a82958341e296919b8dff03502f10b55e566384ee4e0fbf9b57e5a0820db5ee92ce5ff18b9423de95b9c9c18ce3804bf1276a54e87de388358f6043dbf388a8b80b708ef91bd187d0b5312eb78070f5471e013ee56906dcabfd8de6ca8d247de092b8761a0d16c2213e72410774bce8c4f068ebe3372a7531313fd9803eb735db618a18fce46d549c7cc55fd1f93b0fed1a5ff9e986f791eaad0cfd58f1458ab33737ad1fb95407f86b0496c9dc540308c33163d4a8d713ecfb49eed280610228f41d9c598c4e8a67c2763f1ec7177df3ca655913f2d46d2f49
-  TriggerHashes: 000000001b8274fc2b1228980fa4101e7d3aa7e02500d390bad385b1
-  TotalWords: 11
+  SyncSettings: 79
+  StateHashes: 000000002da0f5ead4390fac089a4d5485a8327a8555caeba6e5c94d70aef7331b8e14dc1aab361c49175e6450130c0704edde5e5536a4f5bebcd7c7ef67ad6c288cd0b07957aa1b8b19b42edac2ce85917b71824bbb133d6b119efa5203dbb5aa12228cb0df68d3236ae627a27f3e78e54d875fdcc41a82958341e296919b8dff03502f10b55e5670dab3676384ee4e0fbf9b57e5a0820db5ee92ce5ff18b9423de95b9c9c18ce3804bf1276a54e87de388358f6043dbf388a8b80b708ef91bd187d0b5312eb78070f5471e013ee56906dcabfd8de6ca8d247de092b8761a0d16c2213e72410774bce8c4f068ebe3372a7531313fd9803eb735db618a18fce46d549c7cc55fd1f93b0fed1a5ff9e986f791eaad0cfd58f1458ab33737ad1fb95407f86b0496c9dc540308c33163d4a8d713ecfb49eed280610228f41d9c598c4e8a67c2763f1ec7177df3ca655913f2d46d2f49
+  TriggerHashes: 000000001b8274fc2b1228987d3aa7e02500d390bad385b10fa4101e
+  TotalWords: 9
 --- !u!114 &-3079344771459812112
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -1403,6 +1405,10 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 8280acb8c09cdb84ea2cb4cd44e0484d, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  _Side: 0
+  _ArrowSide: 0
+  _currentWeapon: {fileID: 0}
+  _Arrow: {fileID: 0}
 --- !u!1 &2214411710377538837
 GameObject:
   m_ObjectHideFlags: 0

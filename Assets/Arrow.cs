@@ -1,68 +1,43 @@
+using Fusion;
+using static Unity.Collections.Unicode;
 using UnityEngine;
+using Unity.VisualScripting;
 
-public class Arrow : MonoBehaviour
+public class Arrow : NetworkBehaviour
 {
-    LayerMask mask;
-    Vector3 dir;
-    Ray ray;
-    // Start is called once before the first execution of Update after the MonoBehaviour is created
-    void Start()
-    {
-        Destroy(gameObject, 10f);
-    }
+    // 네트워크 복제할 프로퍼티들
+    [Networked] public bool flying { get; set; }
+    [Networked] public Vector3 flyDir { get; set; }
 
-    // Update is called once per frame
-    void Update()
+    private float speed = 1.5f;
+
+    public override void FixedUpdateNetwork()
     {
 
-        if (!flying) return;
-
-        transform.position += flyDir * speed * Time.deltaTime;
-
-        Debug.DrawRay(ray.origin, ray.direction * 999f, Color.red);
-    }
-
-    //private void OnTriggerEnter(Collision collision)
-    //{
-    //    transform.SetParent(collision.transform);
-    //    gameObject.GetComponent<MeshCollider>().enabled = false;
-    //}
-
-    private void OnTriggerEnter(Collider other)
-    {
-        if (other.CompareTag("Object"))
+        if (!Object.HasStateAuthority && flying && Object.HasInputAuthority)
         {
-            gameObject.GetComponent<BoxCollider>().enabled = false;
-            flying = false;
+            transform.position += Runner.DeltaTime * speed * flyDir;
         }
 
-        //transform.SetParent(other.transform);
-        
+        else if (Object.HasStateAuthority && flying)
+        {
+            transform.position += Runner.DeltaTime * speed * flyDir;
+        }
+  
+    
     }
 
-    private void OnCollisionEnter2D(Collision2D collision)
+    // 반드시 호스트에서만 호출
+    public void Shoot(Vector3 dir)
     {
-        
-    }
+        flyDir = (dir - transform.position).normalized;
 
-    void OnDrawGizmos()
-    {
-        if (Camera.main == null) return;
-        Ray ray = Camera.main.ScreenPointToRay(Input.mousePosition);
-        Gizmos.color = Color.yellow;
-        Gizmos.DrawRay(ray.origin, ray.direction * 10f);
-    }
-    public void Shoot(Vector3 pos)
-    {
-        Vector3 dir = pos - transform.position;
+        flying = true;   // ← 이 순간 flying과 flyDir 둘 다 네트워크로 복제
 
-        flying = true;
-        flyDir = dir.normalized;
-        transform.SetParent(null);              // 부모 분리
-        transform.forward = flyDir;             // 화살 방향
-    }
+        transform.SetParent(null, true);
 
-    private Vector3 flyDir;
-    private bool flying = false;
-    private float speed = 1.0f;
+        // 로컬에서 즉시 보이도록
+        transform.forward = flyDir;
+        Destroy(gameObject, 10f);
+    }
 }
