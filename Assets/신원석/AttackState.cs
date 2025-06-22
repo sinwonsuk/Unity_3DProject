@@ -44,7 +44,7 @@ public class AttackState : BaseState<PlayerStateMachine.PlayerState>
         float yaw = data.CameraRotateY;
         Quaternion planarRotation = Quaternion.Euler(0, yaw, 0);
 
-        playerStateMachine.playerController.Rotate(planarRotation);
+        //playerStateMachine.playerController.Rotate(planarRotation);
 
         if(playerStateMachine.isAttack == true)
         {
@@ -88,7 +88,7 @@ public class AttackState : BaseState<PlayerStateMachine.PlayerState>
 
             NetworkInputData data = playerStateMachine.inputHandler.GetNetworkInputData();
 
-            playerStateMachine.playerController.Move(data.CameraForward * playerStateMachine.Runner.DeltaTime * playerStateMachine.AttackSpeed);
+            //playerStateMachine.playerController.Move(data.CameraForward * playerStateMachine.Runner.DeltaTime * playerStateMachine.AttackSpeed);
         }      
     }
 

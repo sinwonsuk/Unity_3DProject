@@ -65,7 +65,7 @@ public class BasicSpawner : MonoBehaviour, INetworkRunnerCallbacks
         // Host/Server 모드일 경우 서버에서 모두 생성
         if (runner.IsServer)
         {
-            Vector3 spawnPosition = new Vector3(5, 1, a);
+            Vector3 spawnPosition = new Vector3(0, 0, 0);
             NetworkObject networkPlayerObject = runner.Spawn(_playerPrefab, spawnPosition, Quaternion.identity,  player);
             _spawnedCharacters.Add(player, networkPlayerObject);
             a += 3;

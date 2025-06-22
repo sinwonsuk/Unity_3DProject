@@ -36,11 +36,11 @@ public class RollState : BaseState<PlayerStateMachine.PlayerState>
         if (playerStateMachine.isRoll == true)
             return;
 
-        if (!playerStateMachine.Object.HasStateAuthority && playerStateMachine.Object.HasInputAuthority)
-            playerStateMachine.playerController.Move(rollDirection * rollSpeed * playerStateMachine.Runner.DeltaTime);
+        //if (!playerStateMachine.Object.HasStateAuthority && playerStateMachine.Object.HasInputAuthority)
+        //    playerStateMachine.playerController.Move(rollDirection * rollSpeed * playerStateMachine.Runner.DeltaTime);
 
-        else if (playerStateMachine.Object.HasStateAuthority)
-            playerStateMachine.playerController.Move(rollDirection * rollSpeed * playerStateMachine.Runner.DeltaTime);
+        //else if (playerStateMachine.Object.HasStateAuthority)
+        //    playerStateMachine.playerController.Move(rollDirection * rollSpeed * playerStateMachine.Runner.DeltaTime);
 
 
         playerStateMachine.AnimHandler.ChangeRoll(playerStateMachine.AnimHandler.RollCount);

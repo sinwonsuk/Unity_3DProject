@@ -40,7 +40,7 @@ public class MagicAttackState : BaseState<PlayerStateMachine.PlayerState>
         {
             Quaternion quaternion = Quaternion.Euler(0, data.CameraRotateY, 0);
 
-            playerStateMachine.playerController.Rotate(quaternion);
+           // playerStateMachine.playerController.Rotate(quaternion);
         }
 
 
