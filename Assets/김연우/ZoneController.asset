@@ -33,3 +33,8 @@ MonoBehaviour:
     waitDuration: 5
     shrinkDuration: 5
     damagePerSecond: 10
+  - center: {x: 0, y: 0, z: 0}
+    radius: 1
+    waitDuration: 5
+    shrinkDuration: 5
+    damagePerSecond: 10

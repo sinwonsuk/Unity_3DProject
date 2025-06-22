@@ -3222,11 +3222,13 @@ GameObject:
   m_Component:
   - component: {fileID: 4454599636911048}
   - component: {fileID: 95131711804755588}
+  - component: {fileID: -6792596483365356132}
   - component: {fileID: -6663233340814259751}
-  - component: {fileID: -7470560265563743443}
+  - component: {fileID: 4069936770036073879}
+  - component: {fileID: 7878659587418029863}
   m_Layer: 0
   m_Name: SM_Chr_Jester_01
-  m_TagString: Untagged
+  m_TagString: Player
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -3291,6 +3293,20 @@ Animator:
   m_AllowConstantClipSamplingOptimization: 1
   m_KeepAnimatorStateOnDisable: 0
   m_WriteDefaultValuesOnDisable: 0
+--- !u!114 &-6792596483365356132
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1793230569793294}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 717dc6844d09be94697c869017bbac3d, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  _currentHp: 100
+  maxHp: 100
 --- !u!114 &-6663233340814259751
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -3308,9 +3324,35 @@ MonoBehaviour:
   Flags: 262145
   NestedObjects: []
   NetworkedBehaviours:
-  - {fileID: -7470560265563743443}
+  - {fileID: -6792596483365356132}
+  - {fileID: 7878659587418029863}
   ForceRemoteRenderTimeframe: 0
---- !u!114 &-7470560265563743443
+--- !u!143 &4069936770036073879
+CharacterController:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1793230569793294}
+  m_Material: {fileID: 0}
+  m_IncludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_ExcludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_LayerOverridePriority: 0
+  m_ProvidesContacts: 0
+  m_Enabled: 1
+  serializedVersion: 3
+  m_Height: 2
+  m_Radius: 0.5
+  m_SlopeLimit: 45
+  m_StepOffset: 0.3
+  m_SkinWidth: 0.08
+  m_MinMoveDistance: 0.001
+  m_Center: {x: 0, y: 0, z: 0}
+--- !u!114 &7878659587418029863
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -3319,14 +3361,16 @@ MonoBehaviour:
   m_GameObject: {fileID: 1793230569793294}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 158639473, guid: e725a070cec140c4caffb81624c8c787, type: 3}
+  m_Script: {fileID: 11500000, guid: 378411a89480da345945c2f888327a2d, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
   _stateAuthorityChangeErrorCorrectionDelta: 0
-  SyncScale: 0
-  SyncParent: 0
-  _autoAOIOverride: 1
-  DisableSharedModeInterpolation: 0
+  gravity: -20
+  jumpImpulse: 8
+  acceleration: 10
+  braking: 10
+  maxSpeed: 2
+  rotationSpeed: 15
 --- !u!1 &1794561630452804
 GameObject:
   m_ObjectHideFlags: 0
