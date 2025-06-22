@@ -9,7 +9,7 @@ public class Arrow : NetworkBehaviour
     [Networked] public bool flying { get; set; }
     [Networked] public Vector3 flyDir { get; set; }
 
-    private float speed = 1.5f;
+    private float speed = 10.5f;
 
     public override void FixedUpdateNetwork()
     {
