@@ -36,43 +36,7 @@ namespace Fusion
   [RequireComponent(typeof(CharacterController))]
   [NetworkBehaviourWeaved(NetworkCCData.WORDS)]
   // ReSharper disable once CheckNamespace
-  public sealed unsafe class NetworkCharacterController : NetworkTRSP, INetworkTRSPTeleport, IBeforeAllTicks, IAfterAllTicks, IBeforeCopyPreviousState {
-        public new ref NetworkCCData Data => ref ReinterpretState<NetworkCCData>();
 
-    [Header("Character Controller Settings")]
-    public float gravity = -20.0f;
-    public float jumpImpulse   = 8.0f;
-    public float acceleration  = 10.0f;
-    public float braking       = 10.0f;
-    public float maxSpeed      = 2.0f;
-    public float rotationSpeed = 15.0f;
-
-    Tick                _initial;
-    CharacterController _controller;
-
-    public Vector3 Velocity {
-      get => Data.Velocity;
-      set => Data.Velocity = value;
-    }
-
-    public bool Grounded {
-      get => Data.Grounded;
-      set => Data.Grounded = value;
-    }
-    public void Rotate(Quaternion targetRotation)
-    {
-        transform.rotation = Quaternion.Slerp(transform.rotation, targetRotation, rotationSpeed * Runner.DeltaTime);
-    }
-        public void Teleport(Vector3? position = null, Quaternion? rotation = null) {
-      _controller.enabled = false;
-      NetworkTRSP.Teleport(this, transform, position, rotation);
-      _controller.enabled = true;
-    }
-
-    [DisallowMultipleComponent]
-    [RequireComponent(typeof(CharacterController))]
-    [NetworkBehaviourWeaved(NetworkCCData.WORDS)]
-    // ReSharper disable once CheckNamespace
     public sealed unsafe class NetworkCharacterController : NetworkTRSP, INetworkTRSPTeleport, IBeforeAllTicks, IAfterAllTicks, IBeforeCopyPreviousState
     {
         new ref NetworkCCData Data => ref ReinterpretState<NetworkCCData>();
