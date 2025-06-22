@@ -1,5 +1,7 @@
 
+using Fusion;
 using UnityEngine;
+using static PlayerStateMachine;
 
 
 public class BowState : BaseState<PlayerStateMachine.PlayerState>
@@ -7,17 +9,17 @@ public class BowState : BaseState<PlayerStateMachine.PlayerState>
     PlayerStateMachine playerStateMachine;
     Transform rope;
     float ropePosX;
-    float rotationSpeed = 300.0f;
+    Coroutine zoomRoutine;
 
     public float ySmoothT = 0.1f;
 
     Quaternion targetRotation;
 
-    GameObject arrow;
+    NetworkObject arrow;
     Vector3 targetPos;
 
 
-    public BowState(PlayerStateMachine.PlayerState key, Animator animator, PlayerStateMachine stateMachine) : base(key, animator)
+    public BowState(PlayerStateMachine.PlayerState key, Animator animator, PlayerStateMachine stateMachine) : base(key)
     {
         this.playerStateMachine = stateMachine;
       
@@ -25,31 +27,51 @@ public class BowState : BaseState<PlayerStateMachine.PlayerState>
 
     public override void EnterState()
     {
+
         playerStateMachine.AnimHandler.SetAttackBool(true);
-        rope = playerStateMachine.WeaponManager.GetCurrentWeapon().GetComponent<Bow>().Rope.transform;
+         gatherAttack = 0;
 
-        arrow = playerStateMachine.WeaponManager.CreateArrow();
+        var ad = playerStateMachine.WeaponManager.currentWeapon;
 
-        playerStateMachine.StartCoroutine(playerStateMachine.cameraManager.StartCameraScaleUp());
+        rope = playerStateMachine.WeaponManager.currentWeapon.GetComponent<Bow>().Rope.transform;
+
+
+        if (playerStateMachine.Object.HasStateAuthority)
+        {
+            PlayerRef me = playerStateMachine.Object.InputAuthority;
+            playerStateMachine.WeaponManager.RequestArrow(ItemState.Arrow, HandSide.Right, me);
+            arrow = playerStateMachine.WeaponManager.Arrow;
+        }
+
+        playerStateMachine.cameraManager.isCameraCheck = false;
+
+
+        if (playerStateMachine.Object.HasInputAuthority)
+            zoomRoutine = playerStateMachine.StartCoroutine(playerStateMachine.cameraManager.ZoomDistance(1f));
 
     }
     public override void ExitState()
     {
-        playerStateMachine.StartCoroutine(playerStateMachine.cameraManager.StartCameraScaleDown());
+        playerStateMachine.cameraManager.isCameraCheck = false;
+
+        if (playerStateMachine.Object.HasInputAuthority)
+        {
+            if (zoomRoutine != null) 
+                playerStateMachine.StopCoroutine(zoomRoutine);
+
+            zoomRoutine = playerStateMachine.StartCoroutine(playerStateMachine.cameraManager.ZoomDistance(2f));
+        }
+
         playerStateMachine.AnimHandler.SetAttackBool(false);
         shoot = false;
         arrow = null;
     }
 
-    public override void UpdateState()
-    {
-
-    }
-
-
-
     public override void FixedUpdateState()
     {
+   
+        playerStateMachine.AnimHandler.ChangeBowWeaponState(gatherAttack);
+
 
         if (playerStateMachine.GetInput(out NetworkInputData data))
         {
@@ -57,68 +79,50 @@ public class BowState : BaseState<PlayerStateMachine.PlayerState>
 
             playerStateMachine.playerController.Rotate(quaternion);
         }
-
-
-
-        if (playerStateMachine.inputHandler.IsRightAttackPressed() && Input.GetMouseButton(0) && gatherAttack ==1 && shoot == false)
+   
+        if (playerStateMachine.HasInputAuthority && 
+            playerStateMachine.inputHandler.IsRightAttackPressed() &&
+            playerStateMachine.inputHandler.IsAttackPressed() && gatherAttack ==1 
+            && shoot == false && playerStateMachine.cameraManager.isCameraCheck ==true)
         {
-
              Ray ray = Camera.main.ScreenPointToRay(Input.mousePosition);
-
-
+  
             if (Physics.Raycast(ray, out var hit, 999f, playerStateMachine.LayerMask))
-            {
                 targetPos = hit.point;
-            }
             else
             {
-                // 2) 안 맞으면, 레이 방향으로 적당한 거리만큼 포인트를 잡는다
                 float fallbackDist = 50f;
                 targetPos = ray.origin + ray.direction * fallbackDist;
             }
 
-            arrow.GetComponent<Arrow>().Shoot(targetPos);
-                
-                 
+            playerStateMachine.SetArrowShoot(targetPos);
+
             playerStateMachine.AnimHandler.ShootBowWeapon();
             shoot = true;
         }
-        else if (Input.GetMouseButton(1) && shoot ==false)
+        else if (playerStateMachine.inputHandler.IsRightAttackPressed() && shoot ==false)
         {
-           
+         
             gatherAttack = Mathf.MoveTowards(gatherAttack, 1.0f, playerStateMachine.Runner.DeltaTime);
 
             ropePosX = Mathf.MoveTowards(ropePosX, 0.8f, playerStateMachine.Runner.DeltaTime*1.2f);
        
             rope.localPosition = new Vector3(ropePosX, rope.localPosition.y, rope.localPosition.z);
-
-
-            playerStateMachine.AnimHandler.ChangeBowWeaponState(gatherAttack);
-            playerStateMachine.AnimHandler.ChangeBowWeaponState(gatherAttack);
         }
         else
         {
             ropePosX = Mathf.MoveTowards(ropePosX, 0.19f, playerStateMachine.Runner.DeltaTime * 8.0f);
-
             rope.localPosition = new Vector3(ropePosX, rope.localPosition.y, rope.localPosition.z);
-
             gatherAttack = Mathf.MoveTowards(gatherAttack, 0, playerStateMachine.Runner.DeltaTime * 2.0f);
-            playerStateMachine.AnimHandler.ChangeBowWeaponState(gatherAttack);
         }
 
+        if (playerStateMachine.Object.HasInputAuthority && gatherAttack == 0)
+        {
 
-
-        if (gatherAttack == 0)
-            playerStateMachine.ChangeState(PlayerStateMachine.PlayerState.Idle);
-        return;
-    }
-    public override void LateUpdateState() 
-    {
-        if (!playerStateMachine.HasInputAuthority)
+            playerStateMachine.RPC_BroadcastState(PlayerState.Idle);
             return;
+        }
     }
-
- 
 
     public override PlayerStateMachine.PlayerState GetNextState()
     {

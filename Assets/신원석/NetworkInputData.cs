@@ -3,12 +3,14 @@ using UnityEngine;
 
 public struct NetworkInputData : INetworkInput
 {
-    public const byte MOUSEBUTTON0 = 1;
-    public const byte KEY_C = 1 << 1;
-    public const byte KEY_SPACE = 1 << 2;
-    public const byte MOUSEBUTTON1 = 1 << 3;
+    public const int MOUSEBUTTON0 = 0;
+    public const int KEY_C = 1;
+    public const int KEY_SPACE = 2;
+    public const int MOUSEBUTTON1 = 3;
+    public const int KEY_L = 4;
+    public const int KEY_CTRL = 5;
     public float CameraRotateY;
-    public Vector3 test;
+    public Vector3 CameraForward;
 
     public Vector3 moveAxis;
     public NetworkButtons buttons;

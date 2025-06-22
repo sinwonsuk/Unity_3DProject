@@ -21,26 +21,13 @@ public abstract class StageManager<EStage> : NetworkBehaviour where EStage : Enu
 
     private void Update()
     {
-        if (!Object.HasStateAuthority) return;
 
-
-        EStage nextStateKey = currentState.GetNextState();
-        if (nextStateKey.Equals(currentState.StateKey))
-        {
-            currentState.UpdateState();
-        }
     }
 
 
     private void LateUpdate()
     {
-        if (!Object.HasStateAuthority) return;
 
-        EStage nextStateKey = currentState.GetNextState();
-        if (nextStateKey.Equals(currentState.StateKey))
-        {
-            currentState.LateUpdateState();
-        }
             
     }
 

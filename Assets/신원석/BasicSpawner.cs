@@ -33,11 +33,13 @@ public class BasicSpawner : MonoBehaviour, INetworkRunnerCallbacks
         // Start or join (depends on gamemode) a session with a specific name
         await _runner.StartGame(new StartGameArgs()
         {
-            GameMode = mode,
+            GameMode = GameMode.AutoHostOrClient,
             SessionName = "TestRoom1",
             Scene = scene,
             SceneManager = gameObject.AddComponent<NetworkSceneManagerDefault>()
         });
+
+
     }
 
     private void OnGUI()
@@ -60,24 +62,16 @@ public class BasicSpawner : MonoBehaviour, INetworkRunnerCallbacks
 
     public void OnPlayerJoined(NetworkRunner runner, PlayerRef player)
     {
-        if (runner.GameMode == GameMode.Shared)
-        {
-            if (player == runner.LocalPlayer)
-            {
-                Vector3 spawnPosition = new Vector3(5, 1, 0);
-                NetworkObject networkPlayerObject = runner.Spawn(_playerPrefab, spawnPosition, Quaternion.identity, player);
-                _spawnedCharacters.Add(player, networkPlayerObject);
-            }
-        }
         // Host/Server 모드일 경우 서버에서 모두 생성
-        else if (runner.IsServer)
+        if (runner.IsServer)
         {
             Vector3 spawnPosition = new Vector3(5, 1, a);
-            NetworkObject networkPlayerObject = runner.Spawn(_playerPrefab, spawnPosition, Quaternion.identity, inputAuthority: player);
+            NetworkObject networkPlayerObject = runner.Spawn(_playerPrefab, spawnPosition, Quaternion.identity,  player);
             _spawnedCharacters.Add(player, networkPlayerObject);
             a += 3;
         }
-    
+        
+
     }
 
     public void OnPlayerLeft(NetworkRunner runner, PlayerRef player)
@@ -100,8 +94,6 @@ public class BasicSpawner : MonoBehaviour, INetworkRunnerCallbacks
     public void OnInput(NetworkRunner runner, NetworkInput input)
     {
 
-        Debug.Log($"OnInput: IsServer:{runner.IsServer} Auth:{runner.LocalPlayer} Axis:{Input.GetAxisRaw("Horizontal")}");
-
         var data = new NetworkInputData();
 
         data.moveAxis = new Vector3(Input.GetAxis("Horizontal"),0,Input.GetAxis("Vertical"));
@@ -121,12 +113,15 @@ public class BasicSpawner : MonoBehaviour, INetworkRunnerCallbacks
         data.CameraRotateY = Camera.main.transform.eulerAngles.y;
 
 
-        data.test = Camera.main.transform.forward;
+        data.CameraForward = Camera.main.transform.forward;
 
         data.buttons.Set(NetworkInputData.KEY_C, Input.GetKey(KeyCode.C));
         data.buttons.Set(NetworkInputData.KEY_SPACE, Input.GetKey(KeyCode.Space));
         data.buttons.Set(NetworkInputData.MOUSEBUTTON1, Input.GetMouseButton(1));
         data.buttons.Set(NetworkInputData.MOUSEBUTTON0, Input.GetMouseButton(0));
+        data.buttons.Set(NetworkInputData.KEY_L, Input.GetKey(KeyCode.L));
+        data.buttons.Set(NetworkInputData.KEY_CTRL, Input.GetKey(KeyCode.LeftControl));
+
         _mouseButton0 = false;
         _mouseButton1 = false;
         input.Set(data);

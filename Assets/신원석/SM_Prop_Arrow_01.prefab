@@ -14,6 +14,9 @@ GameObject:
   - component: {fileID: 8051050659715753120}
   - component: {fileID: 1800835218732158537}
   - component: {fileID: 5530761680372303706}
+  - component: {fileID: -839716654171969071}
+  - component: {fileID: 553125417233770266}
+  - component: {fileID: 2673981718304931741}
   m_Layer: 0
   m_Name: SM_Prop_Arrow_01
   m_TagString: Untagged
@@ -29,8 +32,8 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1381610650362966}
   serializedVersion: 2
-  m_LocalRotation: {x: 0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: -0, y: 0, z: 0.7}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0.674}
   m_LocalScale: {x: 1, y: 1, z: 1.2}
   m_ConstrainProportionsScale: 0
   m_Children: []
@@ -101,6 +104,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 13956d8a7005e734ea925da59acb432a, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  _flying: 0
+  _flyDir: {x: 0, y: 0, z: 0}
 --- !u!65 &1800835218732158537
 BoxCollider:
   m_ObjectHideFlags: 0
@@ -149,3 +154,53 @@ Rigidbody:
   m_Interpolate: 0
   m_Constraints: 112
   m_CollisionDetection: 0
+--- !u!114 &-839716654171969071
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1381610650362966}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 158639473, guid: e725a070cec140c4caffb81624c8c787, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  _stateAuthorityChangeErrorCorrectionDelta: 0
+  SyncScale: 0
+  SyncParent: 0
+  _autoAOIOverride: 1
+  DisableSharedModeInterpolation: 0
+--- !u!114 &553125417233770266
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1381610650362966}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: -1552182283, guid: e725a070cec140c4caffb81624c8c787, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  SortKey: 3954106926
+  ObjectInterest: 1
+  Flags: 262145
+  NestedObjects: []
+  NetworkedBehaviours:
+  - {fileID: 8051050659715753120}
+  - {fileID: -839716654171969071}
+  - {fileID: 2673981718304931741}
+  ForceRemoteRenderTimeframe: 0
+--- !u!114 &2673981718304931741
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1381610650362966}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 8ee3f6348d1316444a4df6d8c5ff9077, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 

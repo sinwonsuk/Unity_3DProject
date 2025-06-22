@@ -14,27 +14,37 @@ public enum ERollState
 public class RollState : BaseState<PlayerStateMachine.PlayerState>
 {
 
-    public RollState(PlayerStateMachine.PlayerState key, Animator animator, PlayerStateMachine playerStateMachine) : base(key, animator)
+    public RollState(PlayerStateMachine.PlayerState key, Animator animator, PlayerStateMachine playerStateMachine) : base(key)
     {
         this.playerStateMachine = playerStateMachine;
     }
 
     public override void EnterState()
     {
-        animator.SetTrigger("RollTrigger");      
+        playerStateMachine.NetAnim.Animator.SetTrigger("RollTrigger");
+
+        rollDirection = GetDirectionFromCount(playerStateMachine.AnimHandler.RollCount);
+
     }
     public override void ExitState()
     {
         playerStateMachine.startRoll();
+        playerStateMachine.NetAnim.Animator.ResetTrigger("RollTrigger");
     }
-    public override void UpdateState()
-    {
-        
-    }
-
     public override void FixedUpdateState()
-    {    
-        playerStateMachine.MoveRoll(RollCount);
+    {
+        if (playerStateMachine.isRoll == true)
+            return;
+
+        if (!playerStateMachine.Object.HasStateAuthority && playerStateMachine.Object.HasInputAuthority)
+            playerStateMachine.playerController.Move(rollDirection * rollSpeed * playerStateMachine.Runner.DeltaTime);
+
+        else if (playerStateMachine.Object.HasStateAuthority)
+            playerStateMachine.playerController.Move(rollDirection * rollSpeed * playerStateMachine.Runner.DeltaTime);
+
+
+        playerStateMachine.AnimHandler.ChangeRoll(playerStateMachine.AnimHandler.RollCount);
+
     }
 
     public override PlayerStateMachine.PlayerState GetNextState()
@@ -42,11 +52,21 @@ public class RollState : BaseState<PlayerStateMachine.PlayerState>
         return PlayerStateMachine.PlayerState.Roll;
     }
 
+    private Vector3 GetDirectionFromCount(int count)
+    {
+        switch ((ERollState)count)
+        {
+            case ERollState.Forward: return playerStateMachine.transform.forward;
+            case ERollState.Backward: return -playerStateMachine.transform.forward;
+            case ERollState.Left: return -playerStateMachine.transform.right;
+            case ERollState.Right: return playerStateMachine.transform.right;
+            default: return Vector3.zero;
+        }
+    }
+
     public override void OnTriggerEnter(Collider collider) { }
     public override void OnTriggerExit(Collider collider) { }
     public override void OnTriggerStay(Collider collider) { }
-    public override void LateUpdateState(){ }
-
     public override void OnAttackAnimationEnd()
     {
 
@@ -56,8 +76,9 @@ public class RollState : BaseState<PlayerStateMachine.PlayerState>
 
     public int RollCount
     {
-        get => animator.GetInteger(hashRollCount);
+        get => playerStateMachine.NetAnim.Animator.GetInteger(hashRollCount);
     }
+    Vector3 rollDirection;
 
     [SerializeField] float rollSpeed = 10f;
 

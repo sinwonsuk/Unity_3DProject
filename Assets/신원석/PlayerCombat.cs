@@ -1,27 +1,35 @@
+using Fusion;
+using System;
 using System.Collections;
 using UnityEngine;
 
-public class PlayerCombat
+public class PlayerCombat 
 {
     private PlayerStateMachine player;
-    private Coroutine comboCoroutine;
     private bool nextComboQueued = false;
-    private int attackCount = 0;
-    private float comboWindow = 0.5f;
+
+
+
+    public Action<int,RpcInfo> Rpc_AttackAction;
+    public Action<RpcInfo> Rpc_EndAttack;
 
     public PlayerCombat(PlayerStateMachine player)
     {
         this.player = player;
     }
 
+    public int AttackCount
+    {
+        get => player.AttackCount;      // 네트워크 프로퍼티 읽기
+        set => player.AttackCount = value;  // 네트워크 프로퍼티 쓰기
+    }
+
     public void StartAttack()
     {
-        attackCount = 1;
+        AttackCount = 1;
         nextComboQueued = false;
-        player.SetIsAttackTrue();
-        player.AnimHandler.SetAttackCount(attackCount);
+        player.AnimHandler.SetAttackCount(AttackCount);
         player.AnimHandler.SetAttackBool(true);
-        StartComboWindow();
     }
 
 
@@ -29,51 +37,24 @@ public class PlayerCombat
 
     public void TryQueueNextCombo()
     {
-        if (attackCount < 4)
+        if (AttackCount < 4)
             nextComboQueued = true;
     }
 
     public void OnAnimationEnd()
     {
-        if (nextComboQueued && attackCount < 4)
+        if (nextComboQueued && AttackCount < 4)
         {
-            attackCount++;
+            AttackCount++;
             nextComboQueued = false;
             player.SetIsAttackTrue();
-            player.AnimHandler.SetAttackCount(attackCount);
-            player.AnimHandler.SetAttackBool(true);
-            StartComboWindow();
         }
         else
         {   
             player.SetIsAttackFalse();
-            player.AnimHandler.SetAttackBool(false);
         }
       
     }
 
-    private void StartComboWindow()
-    {
-        if (comboCoroutine != null)
-            player.StopCoroutine(comboCoroutine);
-        comboCoroutine = player.StartCoroutine(ComboInputWindow());
-    }
 
-    private IEnumerator ComboInputWindow()
-    {
-        yield return new WaitForSeconds(0.1f);
-
-        float timer = comboWindow;
-        while (timer > 0)
-        {
-            if (Input.GetMouseButtonDown(0)) // or Fusion 방식 입력
-            {
-                TryQueueNextCombo();
-                yield break;
-            }
-
-            timer -= Time.deltaTime;
-            yield return null;
-        }
-    }
 }

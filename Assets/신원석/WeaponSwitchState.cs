@@ -1,35 +1,40 @@
+using Fusion;
 using UnityEngine;
 using UnityEngine.AI;
 
 public class WeaponSwitchState : BaseState<PlayerStateMachine.PlayerState>
 {
     PlayerStateMachine playerStateMachine;
-    public WeaponSwitchState(PlayerStateMachine.PlayerState key, Animator animator,PlayerStateMachine playerStateMachine) : base(key, animator)
+    public WeaponSwitchState(PlayerStateMachine.PlayerState key,PlayerStateMachine playerStateMachine) : base(key)
     {
         this.playerStateMachine = playerStateMachine;
     }
 
     public override void EnterState()
     {
+        if (playerStateMachine.Object.HasStateAuthority)
+        {
 
+            PlayerRef me = playerStateMachine.Object.InputAuthority;
 
+            playerStateMachine.SetWeapon(true);
+            playerStateMachine.WeaponManager.RequestEquip(ItemState.Sword, HandSide.Right, me);
+            
+        }
 
-        playerStateMachine.WeaponManager.Equip(ItemState.Magic,isDir.Left);
-        playerStateMachine.AnimHandler.ChangeWeapon(ItemState.Magic);
-        playerStateMachine.isWeapon = true;
+        playerStateMachine.AnimHandler.ChangeWeapon(ItemState.Sword);
     }
     public override void ExitState()
     {
 
-    }
-    public override void UpdateState()
-    {
-       
+
+
+
     }
 
     public override PlayerStateMachine.PlayerState GetNextState()
     {      
-        return PlayerStateMachine.PlayerState.Idle;
+        return PlayerStateMachine.PlayerState.Switch;
     }
 
     public override void OnTriggerEnter(Collider collider) { }
@@ -38,14 +43,8 @@ public class WeaponSwitchState : BaseState<PlayerStateMachine.PlayerState>
 
     public override void FixedUpdateState(){ }
 
-    public override void LateUpdateState(){ }
-
     public override void OnAttackAnimationEnd()
     {
 
     }
-
-
-    [SerializeField] float rotationSpeed = 500f;
-
 }
