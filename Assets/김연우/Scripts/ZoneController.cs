@@ -1,5 +1,4 @@
 using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
 using Fusion;
 
@@ -13,53 +12,42 @@ public class ZoneController : NetworkBehaviour
 
     private GameObject _zoneInstance;
     private SphereCollider _zoneCollider;
-    private int _currentPhaseIndex = 0;
+    private int _currentPhaseIndex;
 
     public override void Spawned()
     {
-        base.Spawned();
+        if (!Runner.IsServer)
+            return;
 
-        // 호스트(서버)만 존 생성 및 관리 시작
-        if (Runner.IsServer)
-        {
-            // 네트워크 오브젝트로 존 비주얼 Spawn
-            var netObj = Runner.Spawn(zonePrefab, Vector3.zero, Quaternion.identity);
-            _zoneInstance = netObj.gameObject;
+        // 존 오브젝트 생성
+        var netObj = Runner.Spawn(zonePrefab, Vector3.zero, Quaternion.identity);
+        _zoneInstance = netObj.gameObject;
+        _zoneCollider = _zoneInstance.GetComponent<SphereCollider>() ?? _zoneInstance.AddComponent<SphereCollider>();
+        _zoneCollider.isTrigger = true;
 
-            // SphereCollider(trigger) 확보
-            _zoneCollider = _zoneInstance.GetComponent<SphereCollider>();
-            if (_zoneCollider == null)
-                _zoneCollider = _zoneInstance.AddComponent<SphereCollider>();
-
-            _zoneCollider.isTrigger = true;
-
-            // 코루틴으로 페이즈별 로직 실행
-            StartCoroutine(ManageZone());
-        }
+        // 페이즈 로직 및 데미지 틱 시작
+        StartCoroutine(ManageZone());
+        StartCoroutine(DamageTicker());
     }
 
     private IEnumerator ManageZone()
     {
         var phases = zoneConfig.phases;
-
         for (int i = 0; i < phases.Count; i++)
         {
             _currentPhaseIndex = i;
             var phase = phases[i];
 
-            // 1) 해당 페이즈의 초기 설정
-            SetZone(phase.center, phase.radius);
+            // 존 위치 및 크기 설정
+            _zoneInstance.transform.position = phase.center;
+            _zoneInstance.transform.localScale = Vector3.one * phase.radius * 2f;
+            _zoneCollider.center = Vector3.zero;
+            _zoneCollider.radius = phase.radius;
 
-            // 2) wait 구간: while 루프로 바꿔서 매 프레임 데미지 적용
-            float waitElapsed = 0f;
-            while (waitElapsed < phase.waitDuration)
-            {
-                ApplyDamage(Time.deltaTime);
-                waitElapsed += Time.deltaTime;
-                yield return null;
-            }
+            // 대기 구간
+            yield return new WaitForSeconds(phase.waitDuration);
 
-            // 3) shrink 구간 (기존 코드)
+            // 수축 구간
             if (i < phases.Count - 1)
             {
                 var next = phases[i + 1];
@@ -70,8 +58,9 @@ public class ZoneController : NetworkBehaviour
                     Vector3 center = Vector3.Lerp(phase.center, next.center, t);
                     float radius = Mathf.Lerp(phase.radius, next.radius, t);
 
-                    SetZone(center, radius);
-                    ApplyDamage(Time.deltaTime);
+                    _zoneInstance.transform.position = center;
+                    _zoneInstance.transform.localScale = Vector3.one * radius * 2f;
+                    _zoneCollider.radius = radius;
 
                     shrinkElapsed += Time.deltaTime;
                     yield return null;
@@ -80,25 +69,31 @@ public class ZoneController : NetworkBehaviour
         }
     }
 
-
-    private void SetZone(Vector3 center, float radius)
+    /// <summary>
+    /// 1초 간격으로 현재 페이즈 DPS 적용
+    /// </summary>
+    private IEnumerator DamageTicker()
     {
-        _zoneInstance.transform.position = center;
-        _zoneInstance.transform.localScale = Vector3.one * radius * 2f;
-        _zoneCollider.center = Vector3.zero;
-        _zoneCollider.radius = radius;
-    }
-
-    private void ApplyDamage(float deltaTime)
-    {
-        float dps = zoneConfig.phases[_currentPhaseIndex].damagePerSecond;
-
-        foreach (var player in PlayerHealth.All)
+        while (true)
         {
-            float dist = Vector3.Distance(player.transform.position, _zoneInstance.transform.position);
-            if (dist > _zoneCollider.radius)
-                player.TakeDamage(dps * deltaTime);
+            yield return new WaitForSeconds(1f);
+            ApplyZoneDamagePerSecond();
         }
     }
 
+    private void ApplyZoneDamagePerSecond()
+    {
+        var phase = zoneConfig.phases[_currentPhaseIndex];
+        int damage = Mathf.CeilToInt(phase.damagePerSecond);
+
+        foreach (var health in PlayerHealth.All)
+        {
+            if (!health.HasStateAuthority)
+                continue;
+
+            float dist = Vector3.Distance(health.transform.position, _zoneInstance.transform.position);
+            if (dist > _zoneCollider.radius)
+                health.TakeDamage(damage);
+        }
+    }
 }
