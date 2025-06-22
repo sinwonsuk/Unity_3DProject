@@ -8,7 +8,7 @@ public class MagicAttackState : BaseState<PlayerStateMachine.PlayerState>
 {
     PlayerStateMachine playerStateMachine;
 
-    public MagicAttackState(PlayerStateMachine.PlayerState key, Animator animator, PlayerStateMachine stateMachine) : base(key, animator)
+    public MagicAttackState(PlayerStateMachine.PlayerState key, Animator animator, PlayerStateMachine stateMachine) : base(key)
     {
         this.playerStateMachine = stateMachine;
     }
@@ -25,10 +25,6 @@ public class MagicAttackState : BaseState<PlayerStateMachine.PlayerState>
         isAttack = false;
     }
 
-    public override void UpdateState()
-    {
-
-    }
     public override void FixedUpdateState()
     {
         if (!playerStateMachine.HasInputAuthority)
@@ -93,9 +89,6 @@ public class MagicAttackState : BaseState<PlayerStateMachine.PlayerState>
     public override void OnTriggerEnter(Collider collider) { }
     public override void OnTriggerExit(Collider collider) { }
     public override void OnTriggerStay(Collider collider) { }
-
-    public override void LateUpdateState() { }
-
     public override void OnAttackAnimationEnd()
     {
         playerStateMachine.Combat.OnAnimationEnd();

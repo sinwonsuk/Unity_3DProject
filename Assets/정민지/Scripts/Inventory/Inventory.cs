@@ -1,6 +1,7 @@
 using UnityEngine;
 using TMPro;
 using System.Linq;
+using UnityEditorInternal.Profiling.Memory.Experimental;
 
 public class Inventory : MonoBehaviour
 {
@@ -34,6 +35,7 @@ public class Inventory : MonoBehaviour
     {
         EventBus<Gold>.OnEvent += UpdateGold;
         EventBus<BuyItemRequested>.OnEvent += BuyItem;
+        EventBus<RequestItemToInventory>.OnEvent += GetItem;
     }
 
     //돈UI 구독 해제
@@ -41,6 +43,7 @@ public class Inventory : MonoBehaviour
     {
         EventBus<Gold>.OnEvent -= UpdateGold;
         EventBus<BuyItemRequested>.OnEvent -= BuyItem;
+        EventBus<RequestItemToInventory>.OnEvent -= GetItem;
     }
 
     //돈 실시간 업데이트
@@ -55,6 +58,11 @@ public class Inventory : MonoBehaviour
         {
             AddItem(newItem.itemData);
         }
+    }
+
+    private void GetItem(RequestItemToInventory evt)
+    {
+        AddItem(evt.itemData);
     }
 
     public void UpdateAllInventoryUI()

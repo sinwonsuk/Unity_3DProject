@@ -1,6 +1,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.EventSystems;
+using UnityEngine.InputSystem;
 
 public class BigInventoryUI : MonoBehaviour
 {
@@ -22,6 +23,7 @@ public class BigInventoryUI : MonoBehaviour
         InitSlots();
         slots = inventory.slots; // 슬롯 배열 초기화
         UpdateUI();
+
     }
 
     void InitSlots()
@@ -35,6 +37,10 @@ public class BigInventoryUI : MonoBehaviour
         }
     }
 
+    public void OpenOrClose(bool isOpen)
+    {
+        gameObject.SetActive(isOpen);
+    }
     public Transform GetDragLayer()
     {
         return dragLayer;

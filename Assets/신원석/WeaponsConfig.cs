@@ -32,6 +32,7 @@
 
 
 
+using Fusion;
 using System;
 using System.Collections.Generic;
 using UnityEngine;
@@ -43,37 +44,52 @@ public class WeaponsConfig : ScriptableObject
     public class WeaponEntry
     {
         public ItemState itemState;
-        public GameObject weaponPrefab;
+        public NetworkPrefabRef weaponPrefab;
+        public Transform transform;
     }
 
     [SerializeField]
     private List<WeaponEntry> weaponEntries;
 
-    private Dictionary<ItemState, GameObject> dicWeapons;
+    private Dictionary<ItemState, Transform> dicWeaponsTransform;
+    private Dictionary<ItemState, NetworkPrefabRef> dicWeapons;
 
     private void OnEnable()
     {
-        dicWeapons = new Dictionary<ItemState, GameObject>();
+        dicWeapons = new Dictionary<ItemState, NetworkPrefabRef>();
+        dicWeaponsTransform = new Dictionary<ItemState, Transform>();
 
         foreach (var entry in weaponEntries)
         {
             if (!dicWeapons.ContainsKey(entry.itemState))
                 dicWeapons.Add(entry.itemState, entry.weaponPrefab);
+
+            if (!dicWeaponsTransform.ContainsKey(entry.itemState))
+                dicWeaponsTransform.Add(entry.itemState, entry.transform);
+
+
         }
     }
 
-    public GameObject GetWeapon(ItemState state)
+    public NetworkPrefabRef GetWeapon(ItemState state)
     {
         if (dicWeapons.TryGetValue(state, out var weapon))
             return weapon;
 
         Debug.LogWarning($"Weapon for {state} not found!");
-        return null;
+        return default;
     }
-
-    public List<GameObject> GetWeaponGameObjects()
+    public Transform GetTransform(ItemState state)
     {
-        List<GameObject> list = new();
+        if (dicWeaponsTransform.TryGetValue(state, out var weapon))
+            return weapon;
+
+        Debug.LogWarning($"Weapon for {state} not found!");
+        return default;
+    }
+    public List<NetworkPrefabRef> GetWeaponGameObjects()
+    {
+        List<NetworkPrefabRef> list = new();
         foreach (var entry in weaponEntries)
             list.Add(entry.weaponPrefab);
         return list;

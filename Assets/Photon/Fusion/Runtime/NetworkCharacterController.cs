@@ -4,35 +4,69 @@ namespace Fusion
     using System.Runtime.InteropServices;
     using UnityEngine;
 
-    [StructLayout(LayoutKind.Explicit)]
-    [NetworkStructWeaved(WORDS + 4)]
-    public unsafe struct NetworkCCData : INetworkStruct
+  [StructLayout(LayoutKind.Explicit)]
+  [NetworkStructWeaved(WORDS + 4)]
+  public unsafe struct NetworkCCData : INetworkStruct {
+    public const int WORDS = NetworkTRSPData.WORDS + 4;
+    public const int SIZE  = WORDS * 4;
+
+    [FieldOffset(0)]
+    public NetworkTRSPData TRSPData;
+
+    [FieldOffset((NetworkTRSPData.WORDS + 0) * Allocator.REPLICATE_WORD_SIZE)]
+    int _grounded;
+
+    [FieldOffset((NetworkTRSPData.WORDS + 1) * Allocator.REPLICATE_WORD_SIZE)]
+    Vector3Compressed _velocityData;
+
+    public bool Grounded {
+      get => _grounded == 1;
+      set => _grounded = (value ? 1 : 0);
+    }
+
+    public Vector3 Velocity {
+      [MethodImpl(MethodImplOptions.AggressiveInlining)]
+      get => _velocityData;
+      [MethodImpl(MethodImplOptions.AggressiveInlining)]
+      set => _velocityData = value;
+    }
+  }
+
+  [DisallowMultipleComponent]
+  [RequireComponent(typeof(CharacterController))]
+  [NetworkBehaviourWeaved(NetworkCCData.WORDS)]
+  // ReSharper disable once CheckNamespace
+  public sealed unsafe class NetworkCharacterController : NetworkTRSP, INetworkTRSPTeleport, IBeforeAllTicks, IAfterAllTicks, IBeforeCopyPreviousState {
+        public new ref NetworkCCData Data => ref ReinterpretState<NetworkCCData>();
+
+    [Header("Character Controller Settings")]
+    public float gravity = -20.0f;
+    public float jumpImpulse   = 8.0f;
+    public float acceleration  = 10.0f;
+    public float braking       = 10.0f;
+    public float maxSpeed      = 2.0f;
+    public float rotationSpeed = 15.0f;
+
+    Tick                _initial;
+    CharacterController _controller;
+
+    public Vector3 Velocity {
+      get => Data.Velocity;
+      set => Data.Velocity = value;
+    }
+
+    public bool Grounded {
+      get => Data.Grounded;
+      set => Data.Grounded = value;
+    }
+    public void Rotate(Quaternion targetRotation)
     {
-        public const int WORDS = NetworkTRSPData.WORDS + 4;
-        public const int SIZE = WORDS * 4;
-
-        [FieldOffset(0)]
-        public NetworkTRSPData TRSPData;
-
-        [FieldOffset((NetworkTRSPData.WORDS + 0) * Allocator.REPLICATE_WORD_SIZE)]
-        int _grounded;
-
-        [FieldOffset((NetworkTRSPData.WORDS + 1) * Allocator.REPLICATE_WORD_SIZE)]
-        Vector3Compressed _velocityData;
-
-        public bool Grounded
-        {
-            get => _grounded == 1;
-            set => _grounded = (value ? 1 : 0);
-        }
-
-        public Vector3 Velocity
-        {
-            [MethodImpl(MethodImplOptions.AggressiveInlining)]
-            get => _velocityData;
-            [MethodImpl(MethodImplOptions.AggressiveInlining)]
-            set => _velocityData = value;
-        }
+        transform.rotation = Quaternion.Slerp(transform.rotation, targetRotation, rotationSpeed * Runner.DeltaTime);
+    }
+        public void Teleport(Vector3? position = null, Quaternion? rotation = null) {
+      _controller.enabled = false;
+      NetworkTRSP.Teleport(this, transform, position, rotation);
+      _controller.enabled = true;
     }
 
     [DisallowMultipleComponent]

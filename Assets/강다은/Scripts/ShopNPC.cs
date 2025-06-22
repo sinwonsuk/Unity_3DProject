@@ -1,4 +1,5 @@
 using UnityEngine;
+using UnityEngine.UI;
 
 public class ShopNPC : MonoBehaviour
 {
@@ -9,6 +10,8 @@ public class ShopNPC : MonoBehaviour
 			Debug.Log($"[ShopNpc] {npcId} 상점 열림");
 			shopUI.Show();
 			shopUI.OpenShop(npcId);
+			bigInventoryUI.OpenOrClose(true);
+			resellButton.OpenOrCloseResellButton(true);
 		}
 	}
 
@@ -17,9 +20,13 @@ public class ShopNPC : MonoBehaviour
 		if (other.CompareTag("Player"))
 		{
 			shopUI.Hide(); // UI 끄기
-		}
+            bigInventoryUI.OpenOrClose(false);
+            resellButton.OpenOrCloseResellButton(false);
+        }
 	}
 
 	[SerializeField] private string npcId;
 	[SerializeField] private ShopUI shopUI;
+	[SerializeField] private BigInventoryUI bigInventoryUI;
+	[SerializeField] private Resell resellButton;
 }
