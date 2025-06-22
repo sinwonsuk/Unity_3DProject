@@ -2,35 +2,34 @@ using UnityEngine;
 using TMPro;
 using System.Linq;
 
-
 public class Inventory : MonoBehaviour
 {
 
-    public int slotCount = 15; //ÀÎº¥Åä¸® Ä­ °³¼ö
-    public InventorySlot[] slots; //ÀÎº¥Åä¸® ½½·Ô Ä­
-    public InventoryUI inventoryUI; //ÀÎº¥Åä¸®UI
-    private int gold; //µ·ÀÇ ¾÷µ¥ÀÌÆ®¸¦ ¹Þ¾Æ¿À±â À§ÇÑ µ·
-    public int basicGold; //±âº»À¸·Î Á¦°øÇÏ´Â µ·
-    public GoldUI goldUI; //°ñµå UI
-    public BigInventoryUI bigInventoryUI; //ÀÎº¥Åä¸® ÀüÃ¼ È­¸é
+    public int slotCount = 15; //ï¿½Îºï¿½ï¿½ä¸® Ä­ ï¿½ï¿½ï¿½ï¿½
+    public InventorySlot[] slots; //ï¿½Îºï¿½ï¿½ä¸® ï¿½ï¿½ï¿½ï¿½ Ä­
+    public InventoryUI inventoryUI; //ï¿½Îºï¿½ï¿½ä¸®UI
+    private int gold; //ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Æ®ï¿½ï¿½ ï¿½Þ¾Æ¿ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½
+    public int basicGold; //ï¿½âº»ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½Ï´ï¿½ ï¿½ï¿½
+    public GoldUI goldUI; //ï¿½ï¿½ï¿½ UI
+    public BigInventoryUI bigInventoryUI; //ï¿½Îºï¿½ï¿½ä¸® ï¿½ï¿½Ã¼ È­ï¿½ï¿½
     [SerializeField] private ItemManager itemManager;
 
 
     private void Awake()
     {
        
-        slots = new InventorySlot[slotCount]; //Ä­ °³¼ö¿¡ ¸Â´Â ÀÎº¥Åä¸® ½½·Ô ¹è¿­ »ý¼º
+        slots = new InventorySlot[slotCount]; //Ä­ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½Â´ï¿½ ï¿½Îºï¿½ï¿½ä¸® ï¿½ï¿½ï¿½ï¿½ ï¿½è¿­ ï¿½ï¿½ï¿½ï¿½
 
-        for (int i = 0; i < slotCount; i++) //½½·Ô ¹è¿­¿¡ ½½·Ôµé ³Ö±â
+        for (int i = 0; i < slotCount; i++) //ï¿½ï¿½ï¿½ï¿½ ï¿½è¿­ï¿½ï¿½ ï¿½ï¿½ï¿½Ôµï¿½ ï¿½Ö±ï¿½
             slots[i] = new InventorySlot();
 
-        gold = basicGold; //µ· ±âº» Á¦°ø
-        EventBus<Gold>.Raise(new Gold(basicGold)); //±âº»À¸·Î Á¦°øÇÑ µ· ½÷ÁÖ±â
+        gold = basicGold; //ï¿½ï¿½ ï¿½âº» ï¿½ï¿½ï¿½ï¿½
+        EventBus<Gold>.Raise(new Gold(basicGold)); //ï¿½âº»ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ ï¿½ï¿½ï¿½Ö±ï¿½
 
     }
 
 
-    //µ·UI ±¸µ¶
+    //ï¿½ï¿½UI ï¿½ï¿½ï¿½ï¿½
     private void OnEnable()
     {
         EventBus<Gold>.OnEvent += UpdateGold;
@@ -38,7 +37,7 @@ public class Inventory : MonoBehaviour
         EventBus<RequestItemToInventory>.OnEvent += GetItem;
     }
 
-    //µ·UI ±¸µ¶ ÇØÁ¦
+    //ï¿½ï¿½UI ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½
     private void OnDisable()
     {
         EventBus<Gold>.OnEvent -= UpdateGold;
@@ -46,7 +45,7 @@ public class Inventory : MonoBehaviour
         EventBus<RequestItemToInventory>.OnEvent -= GetItem;
     }
 
-    //µ· ½Ç½Ã°£ ¾÷µ¥ÀÌÆ®
+    //ï¿½ï¿½ ï¿½Ç½Ã°ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Æ®
     private void UpdateGold(Gold _gold)
     {
         gold = _gold.currentGold;
@@ -71,24 +70,24 @@ public class Inventory : MonoBehaviour
         bigInventoryUI?.UpdateUI();
     }
 
-    //¾ÆÀÌÅÛ Ãß°¡
+    //ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ß°ï¿½
     public void AddItem(ItemData item)
     {
         if (item.itemType == ItemType.Potion)
         {
-            // ÀÌ¹Ì °°Àº Æ÷¼ÇÀÌ ÀÖÀ¸¸é ¼ö·®¸¸ Áõ°¡
+            // ï¿½Ì¹ï¿½ ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½
             foreach (var slot in slots)
             {
                 if (!slot.IsEmpty && slot.item == item)
                 {
                     slot.quantity++;
                     UpdateAllInventoryUI();
-                    Debug.Log($"Æ÷¼Ç ½ºÅÃ Áõ°¡: {item.itemName}, ÇöÀç ¼ö·®: {slot.quantity}");
+                    Debug.Log($"ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½: {item.itemName}, ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½: {slot.quantity}");
                     return;
                 }
             }
 
-            // °°Àº Æ÷¼Ç ¾øÀ¸¸é ºó ½½·Ô ÀÖ´ÂÁö Ã¼Å© ÈÄ Ãß°¡
+            // ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ ï¿½Ö´ï¿½ï¿½ï¿½ Ã¼Å© ï¿½ï¿½ ï¿½ß°ï¿½
             bool hasEmptySlot = slots.Any(slot => slot.IsEmpty);
             if (!hasEmptySlot) return;
 
@@ -99,14 +98,14 @@ public class Inventory : MonoBehaviour
                     slot.item = item;
                     slot.quantity = 1;
                     UpdateAllInventoryUI();
-                    Debug.Log($"ºó ½½·Ô¿¡ Æ÷¼Ç Ãß°¡: {item.itemName}");
+                    Debug.Log($"ï¿½ï¿½ ï¿½ï¿½ï¿½Ô¿ï¿½ ï¿½ï¿½ï¿½ï¿½ ï¿½ß°ï¿½: {item.itemName}");
                     return;
                 }
             }
         }
         else
         {
-            // Æ÷¼ÇÀÌ ¾Æ´Ò ¶§´Â ¹«Á¶°Ç ºó ½½·Ô ÇÊ¿ä
+            // ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½Æ´ï¿½ ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ ï¿½Ê¿ï¿½
             bool hasEmptySlot = slots.Any(slot => slot.IsEmpty);
             if (!hasEmptySlot) return;
 
@@ -117,16 +116,16 @@ public class Inventory : MonoBehaviour
                     slot.item = item;
                     slot.quantity = 1;
                     UpdateAllInventoryUI();
-                    Debug.Log($"ºó ½½·Ô¿¡ ¾ÆÀÌÅÛ Ãß°¡: {item.itemName}");
+                    Debug.Log($"ï¿½ï¿½ ï¿½ï¿½ï¿½Ô¿ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ß°ï¿½: {item.itemName}");
                     return;
                 }
             }
         }
 
-        Debug.Log("¾ÆÀÌÅÛ Ãß°¡ ½ÇÆÐ");
+        Debug.Log("ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ß°ï¿½ ï¿½ï¿½ï¿½ï¿½");
     }
 
-    //¾ÆÀÌÅÛ »èÁ¦
+    //ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½
     public void SellItem(ItemData item)
     {
         for (int i = 0; i < slots.Length; i++)

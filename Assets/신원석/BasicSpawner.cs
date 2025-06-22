@@ -33,8 +33,8 @@ public class BasicSpawner : MonoBehaviour, INetworkRunnerCallbacks
         // Start or join (depends on gamemode) a session with a specific name
         await _runner.StartGame(new StartGameArgs()
         {
-            GameMode = GameMode.AutoHostOrClient,
-            SessionName = "TestRoom1",
+            GameMode = mode,
+            SessionName = "TestRoom",
             Scene = scene,
             SceneManager = gameObject.AddComponent<NetworkSceneManagerDefault>()
         });
@@ -62,15 +62,16 @@ public class BasicSpawner : MonoBehaviour, INetworkRunnerCallbacks
 
     public void OnPlayerJoined(NetworkRunner runner, PlayerRef player)
     {
-        // Host/Server ����� ��� �������� ��� ����
-        if (runner.IsServer)
+        if (runner.IsServer || (runner.GameMode == GameMode.Shared && player == runner.LocalPlayer))
         {
-            Vector3 spawnPosition = new Vector3(5, 1, a);
-            NetworkObject networkPlayerObject = runner.Spawn(_playerPrefab, spawnPosition, Quaternion.identity,  player);
-            _spawnedCharacters.Add(player, networkPlayerObject);
-            a += 3;
+            var spawnManager = FindAnyObjectByType<SpawnManager>();
+            Vector3 spawnPosition = spawnManager != null
+                ? spawnManager.GetNextSpawnPosition()
+                : Vector3.zero;
+
+            NetworkObject playerObj = runner.Spawn(_playerPrefab, spawnPosition, Quaternion.identity, player);
+            _spawnedCharacters.Add(player, playerObj);
         }
-        
 
     }
 
