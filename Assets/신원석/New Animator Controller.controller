@@ -527,12 +527,12 @@ AnimatorStateMachine:
   - first: {fileID: -5198771327676870898}
     second:
     - {fileID: 4754730364054130533}
-  - first: {fileID: -3747348036164939946}
-    second:
-    - {fileID: 2929856820034522930}
   - first: {fileID: -1117422459253340933}
     second:
     - {fileID: -2363439185401564711}
+  - first: {fileID: -3747348036164939946}
+    second:
+    - {fileID: 2929856820034522930}
   - first: {fileID: 402507844200493933}
     second:
     - {fileID: 3862594278642338515}
@@ -2429,7 +2429,7 @@ AnimatorController:
     m_BlendingMode: 0
     m_SyncedLayerIndex: -1
     m_DefaultWeight: 0
-    m_IKPass: 1
+    m_IKPass: 0
     m_SyncedLayerAffectsTiming: 0
     m_Controller: {fileID: 9100000}
 --- !u!1101 &97269661915676157

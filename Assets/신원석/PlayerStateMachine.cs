@@ -113,6 +113,9 @@ public class PlayerStateMachine : StageManager<PlayerStateMachine.PlayerState>
     public bool nextAttackQueued { get; set; } = false;
  
     bool _isInitialized = false;
+
+    public int Hp { get; set; }
+
     public override void Spawned()
     {
         NetAnim = GetComponent<NetworkMecanimAnimator>();
@@ -149,13 +152,6 @@ public class PlayerStateMachine : StageManager<PlayerStateMachine.PlayerState>
             aimingCam.Follow = cameraFollow;
             aimingCam.LookAt = cameraFollow;
         }
-
-
-
-
-
-
-
 
         // 너무 비대해져서 역활 나눔 
         inputHandler = new InputHandler(this, CameraFollow);
@@ -343,6 +339,16 @@ public class PlayerStateMachine : StageManager<PlayerStateMachine.PlayerState>
 
     }
 
+    public void OnAttackStartEvent()
+    {
+        if (!Object.HasStateAuthority) return;    // 호스트만
+        WeaponManager.currentWeapon.enabled = true;
+    }
+
+    public void OnAttackEndEvent()
+    {
+        if (!Object.HasStateAuthority) return;    // 호스트만
+    }
     public void ComboAttackInput()
     {
         if (IsWeapon == false)

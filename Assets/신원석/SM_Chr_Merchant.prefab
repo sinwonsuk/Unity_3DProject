@@ -1199,12 +1199,12 @@ GameObject:
   m_Component:
   - component: {fileID: 2121428305738377400}
   - component: {fileID: 7347605875457031395}
-  - component: {fileID: 6288467723922499883}
   - component: {fileID: 1964020872223730300}
-  - component: {fileID: 3090258092248914074}
   - component: {fileID: 4271482361781194061}
   - component: {fileID: -1013130676285194114}
   - component: {fileID: -3079344771459812112}
+  - component: {fileID: 996420837362002046}
+  - component: {fileID: 1293700756841179598}
   m_Layer: 6
   m_Name: SM_Chr_Merchant
   m_TagString: Player
@@ -1274,31 +1274,6 @@ Animator:
   m_AllowConstantClipSamplingOptimization: 1
   m_KeepAnimatorStateOnDisable: 0
   m_WriteDefaultValuesOnDisable: 0
---- !u!143 &6288467723922499883
-CharacterController:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 2059063748732853934}
-  m_Material: {fileID: 0}
-  m_IncludeLayers:
-    serializedVersion: 2
-    m_Bits: 0
-  m_ExcludeLayers:
-    serializedVersion: 2
-    m_Bits: 0
-  m_LayerOverridePriority: 0
-  m_ProvidesContacts: 0
-  m_Enabled: 1
-  serializedVersion: 3
-  m_Height: 2
-  m_Radius: 0.5
-  m_SlopeLimit: 45
-  m_StepOffset: 0.15
-  m_SkinWidth: 0.08
-  m_MinMoveDistance: 0.001
-  m_Center: {x: 0, y: 1, z: 0}
 --- !u!114 &1964020872223730300
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -1317,30 +1292,11 @@ MonoBehaviour:
   NestedObjects:
   - {fileID: 6763168363039339222}
   NetworkedBehaviours:
-  - {fileID: 3090258092248914074}
   - {fileID: 4271482361781194061}
   - {fileID: -1013130676285194114}
   - {fileID: -3079344771459812112}
+  - {fileID: 1293700756841179598}
   ForceRemoteRenderTimeframe: 0
---- !u!114 &3090258092248914074
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 2059063748732853934}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 378411a89480da345945c2f888327a2d, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  _stateAuthorityChangeErrorCorrectionDelta: 0
-  gravity: -20
-  jumpImpulse: 8
-  acceleration: 10
-  braking: 10
-  maxSpeed: 2
-  rotationSpeed: 15
 --- !u!114 &4271482361781194061
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -1359,6 +1315,7 @@ MonoBehaviour:
   _isRoll: 0
   _isAttack: 1
   _RollCount: 0
+  _gatherAttack: 0
   weapons: {fileID: 11400000, guid: bb10c1def4f7b9d42a86027dc3b35f91, type: 2}
   moveSpeed: 5
   rotationSpeed: 500
@@ -1409,6 +1366,50 @@ MonoBehaviour:
   _ArrowSide: 0
   _currentWeapon: {fileID: 0}
   _Arrow: {fileID: 0}
+--- !u!143 &996420837362002046
+CharacterController:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2059063748732853934}
+  m_Material: {fileID: 0}
+  m_IncludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_ExcludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_LayerOverridePriority: 0
+  m_ProvidesContacts: 0
+  m_Enabled: 1
+  serializedVersion: 3
+  m_Height: 2
+  m_Radius: 0.5
+  m_SlopeLimit: 45
+  m_StepOffset: 0.3
+  m_SkinWidth: 0.08
+  m_MinMoveDistance: 0.001
+  m_Center: {x: 0, y: 1.2, z: 0}
+--- !u!114 &1293700756841179598
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2059063748732853934}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 378411a89480da345945c2f888327a2d, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  _stateAuthorityChangeErrorCorrectionDelta: 0
+  gravity: -20
+  jumpImpulse: 8
+  acceleration: 10
+  braking: 10
+  maxSpeed: 2
+  rotationSpeed: 15
 --- !u!1 &2214411710377538837
 GameObject:
   m_ObjectHideFlags: 0

@@ -1,3 +1,4 @@
+using Fusion;
 using System.Collections;
 using Unity.VisualScripting;
 using UnityEngine;
@@ -97,7 +98,25 @@ public class AttackState : BaseState<PlayerStateMachine.PlayerState>
         return PlayerStateMachine.PlayerState.Attack;
     }
 
-    public override void OnTriggerEnter(Collider collider) { }
+    public override void OnTriggerEnter(Collider collider)
+    {
+        // 1) 호스트에서만 충돌 처리
+        if (!playerStateMachine.Object.HasStateAuthority)
+            return;
+
+        // 2) Weapon 네트워크 오브젝트 가져오기
+        var weaponNetObj = collider.GetComponent<NetworkObject>();
+        if (weaponNetObj == null || !collider.CompareTag("Weapon"))
+            return;
+
+        // 3) Weapon의 입력 권한자가 이 플레이어와 같다면(self-hit) 스킵
+        if (weaponNetObj.InputAuthority == playerStateMachine.Object.InputAuthority)
+            return;
+
+        // 4) 진짜 타격 처리
+        Debug.Log("충돌 감지!");
+
+    }
     public override void OnTriggerExit(Collider collider) { }
     public override void OnTriggerStay(Collider collider) { }
     public override void OnAttackAnimationEnd()
