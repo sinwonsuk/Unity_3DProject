@@ -73,6 +73,14 @@ public class PlayerHealth : NetworkBehaviour
         }
     }
 
+    public void RequestDamage(int damage)
+    {
+        if (Object.HasInputAuthority)
+            Rpc_RequestDamage(damage);
+        else if(Object.HasStateAuthority)
+            TakeDamage(damage);
+    }
+
     [Rpc(RpcSources.InputAuthority, RpcTargets.StateAuthority)]
     public void Rpc_RequestDamage(int damage)
     {

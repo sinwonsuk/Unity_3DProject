@@ -80,7 +80,7 @@ public class InputHandler
     {
         if (behaviour.GetInput(out NetworkInputData data))
         {
-            return data.buttons.IsSet(NetworkInputData.KEY_L);
+            return data.buttons.IsSet(NetworkInputData.KEY_CTRL);
         }
 
         return false;

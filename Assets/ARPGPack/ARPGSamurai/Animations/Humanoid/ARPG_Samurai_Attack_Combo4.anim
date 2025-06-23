@@ -63767,28 +63767,21 @@ AnimationClip:
     intParameter: 0
     messageOptions: 0
   - time: 0.45
-    functionName: OnAttackEndEvent
+    functionName: OnAttackStartEvent
     data: 
     objectReferenceParameter: {fileID: 0}
     floatParameter: 0
     intParameter: 0
     messageOptions: 0
   - time: 0.48333332
-    functionName: OnAttackEndEvent
-    data: 
-    objectReferenceParameter: {fileID: 0}
-    floatParameter: 0
-    intParameter: 0
-    messageOptions: 0
-  - time: 0.5833333
     functionName: SetIsAttackFalse
     data: 
     objectReferenceParameter: {fileID: 0}
     floatParameter: 0
     intParameter: 0
     messageOptions: 0
-  - time: 0.6166667
-    functionName: SetIsAttackTrue
+  - time: 0.51666665
+    functionName: OnAttackEndEvent
     data: 
     objectReferenceParameter: {fileID: 0}
     floatParameter: 0

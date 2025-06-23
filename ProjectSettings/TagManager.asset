@@ -9,6 +9,7 @@ TagManager:
   - VirtualCam2
   - Object
   - Weapon
+  - Bow
   layers:
   - Default
   - TransparentFX

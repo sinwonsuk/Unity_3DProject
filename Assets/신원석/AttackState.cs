@@ -1,16 +1,16 @@
 using Fusion;
 using System.Collections;
 using Unity.VisualScripting;
+using Unity.VisualScripting.Antlr3.Runtime;
 using UnityEngine;
-using static Unity.Collections.Unicode;
+
 
 public class AttackState : BaseState<PlayerStateMachine.PlayerState>
 {
     PlayerStateMachine playerStateMachine;
 
     float time;
-    bool attackStart = false;
-    bool attackContinue = false;
+
     public AttackState(PlayerStateMachine.PlayerState key, PlayerStateMachine stateMachine ) : base(key)
     {
         this.playerStateMachine = stateMachine;
@@ -18,9 +18,9 @@ public class AttackState : BaseState<PlayerStateMachine.PlayerState>
 
     public override void EnterState()
     {
-
-         playerStateMachine.Combat.StartAttack();
-         
+        playerStateMachine.Combat.StartAttack();
+        playerStateMachine.hitSet.Clear();  // 스윙마다 초기화
+       // playerStateMachine.WeaponManager.currentWeapon.GetComponent<MeshCollider>().enabled = true;
     }
     public override void ExitState()
     {
@@ -30,14 +30,16 @@ public class AttackState : BaseState<PlayerStateMachine.PlayerState>
             playerStateMachine.NetAnim.Animator.SetBool("RunAttack", false);
             playerStateMachine.NetAnim.Animator.SetBool("Attack", false);
         }
-
+        //playerStateMachine.WeaponManager.currentWeapon.GetComponent<MeshCollider>().enabled = false;
         time = 0.0f;
     }
 
     public override void FixedUpdateState() 
     {
-        //if (!playerStateMachine.Object.HasStateAuthority)
-        //    return;
+        playerStateMachine.AnimHandler.SetAttackCount(playerStateMachine.AttackCount);
+
+        if (!playerStateMachine.Object.HasStateAuthority)
+            return;
 
         NetworkInputData data = playerStateMachine.inputHandler.GetNetworkInputData();
 
@@ -69,10 +71,7 @@ public class AttackState : BaseState<PlayerStateMachine.PlayerState>
 
         playerStateMachine.action.Invoke();
 
-        //if (playerStateMachine.IsProxy == true || playerStateMachine.Runner.IsForward == false)
-        //    return;
-
-        playerStateMachine.AnimHandler.SetAttackCount(playerStateMachine.AttackCount);
+        
 
         AttackMove();
 
@@ -88,7 +87,7 @@ public class AttackState : BaseState<PlayerStateMachine.PlayerState>
 
             NetworkInputData data = playerStateMachine.inputHandler.GetNetworkInputData();
 
-            //playerStateMachine.playerController.Move(data.CameraForward * playerStateMachine.Runner.DeltaTime * playerStateMachine.AttackSpeed);
+            playerStateMachine.playerController.Move(playerStateMachine.transform.forward * playerStateMachine.AttackSpeed);
         }      
     }
 
@@ -119,9 +118,9 @@ public class AttackState : BaseState<PlayerStateMachine.PlayerState>
     }
     public override void OnTriggerExit(Collider collider) { }
     public override void OnTriggerStay(Collider collider) { }
-    public override void OnAttackAnimationEnd()
+    public override void OnHitAnimationEvent()
     {
-        playerStateMachine.Combat.OnAnimationEnd();
+        playerStateMachine.Combat.OnAttackAnimationEnd();
     }
 
 

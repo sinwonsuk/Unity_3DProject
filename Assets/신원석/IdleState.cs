@@ -1,4 +1,6 @@
 using Fusion;
+using System.Collections;
+using Unity.VisualScripting.Antlr3.Runtime;
 using UnityEngine;
 using static PlayerStateMachine;
 using static Unity.Collections.Unicode;
@@ -14,6 +16,7 @@ public class IdleState : BaseState<PlayerStateMachine.PlayerState>
     public override void EnterState()
     {
         playerStateMachine.NetAnim.Animator.SetBool("Attack", false);
+        playerStateMachine.NetAnim.Animator.SetBool("Hit", false);
     }
     public override void ExitState() => Debug.Log("Exit Idle");
   
@@ -51,6 +54,7 @@ public class IdleState : BaseState<PlayerStateMachine.PlayerState>
        
         else if (playerStateMachine.inputHandler.IsCtrlButtonPress() && playerStateMachine.Object.HasInputAuthority)
         {
+            playerStateMachine.playerController.Move(Vector3.zero,5);
             playerStateMachine.RPC_BroadcastState(PlayerState.Jump);
             return;
         }
@@ -60,8 +64,22 @@ public class IdleState : BaseState<PlayerStateMachine.PlayerState>
             return;
         }
 
-
-
+        if(Input.GetKeyDown(KeyCode.Alpha1))
+        {
+            EventBus<WeaponChange>.Raise(new WeaponChange(ItemState.Sword));
+        }
+        if (Input.GetKeyDown(KeyCode.Alpha2))
+        {
+            EventBus<WeaponChange>.Raise(new WeaponChange(ItemState.Harberd));
+        }
+        if (Input.GetKeyDown(KeyCode.Alpha3))
+        {
+            EventBus<WeaponChange>.Raise(new WeaponChange(ItemState.Bow));
+        }
+        if (Input.GetKeyDown(KeyCode.Alpha4))
+        {
+            EventBus<WeaponChange>.Raise(new WeaponChange(ItemState.Magic));
+        }
     }
 
     public override PlayerStateMachine.PlayerState GetNextState()
@@ -73,7 +91,6 @@ public class IdleState : BaseState<PlayerStateMachine.PlayerState>
 
     public override void OnTriggerEnter(Collider collider)
     {
-        Debug.Log("박스 감지!");
 
         // 1) 호스트에서만 충돌 처리
         if (!playerStateMachine.Object.HasStateAuthority)
@@ -84,18 +101,24 @@ public class IdleState : BaseState<PlayerStateMachine.PlayerState>
         if (weaponNetObj == null || !collider.CompareTag("Weapon"))
             return;
 
-        // 3) Weapon의 입력 권한자가 이 플레이어와 같다면(self-hit) 스킵
+        // 3) Weapon의 입력 권한자가 이 플레이어와 같다면 스킵
         if (weaponNetObj.InputAuthority == playerStateMachine.Object.InputAuthority)
             return;
 
         // 4) 진짜 타격 처리
-        Debug.Log("충돌 감지!");
+        Debug.Log("충돌 감지!2");
+
+        playerStateMachine.health.TakeDamage(10);
+        playerStateMachine.RPC_PlayHit();
+
+        //playerStateMachine.BroadcastIdleEvent(PlayerState.Hit);
+
 
     }
 
     public override void OnTriggerExit(Collider collider) { }
     public override void OnTriggerStay(Collider collider) { }
-    public override void OnAttackAnimationEnd()
+    public override void OnHitAnimationEvent()
     {
 
     }

@@ -2,6 +2,7 @@
 using Fusion;
 using UnityEngine;
 using static PlayerStateMachine;
+using static Unity.Collections.Unicode;
 
 
 public class BowState : BaseState<PlayerStateMachine.PlayerState>
@@ -69,15 +70,20 @@ public class BowState : BaseState<PlayerStateMachine.PlayerState>
 
     public override void FixedUpdateState()
     {
-   
+
+
+
         playerStateMachine.AnimHandler.ChangeBowWeaponState(gatherAttack);
 
+        Vector3 ropePos1 = playerStateMachine.WeaponManager.currentWeapon.GetComponent<Bow>().Rope.transform.position;
+
+        Debug.Log(ropePos1);
 
         if (playerStateMachine.GetInput(out NetworkInputData data))
         {
             Quaternion quaternion = Quaternion.Euler(0, data.CameraRotateY, 0);
 
-            playerStateMachine.playerController.Rotate(quaternion);
+            playerStateMachine.Rotation(data);
         }
    
         if (playerStateMachine.HasInputAuthority && 
@@ -94,6 +100,10 @@ public class BowState : BaseState<PlayerStateMachine.PlayerState>
                 float fallbackDist = 50f;
                 targetPos = ray.origin + ray.direction * fallbackDist;
             }
+
+            Vector3 ropePos = playerStateMachine.WeaponManager.currentWeapon.GetComponent<Bow>().Rope.transform.position;
+
+
 
             playerStateMachine.SetArrowShoot(targetPos);
 
@@ -138,7 +148,7 @@ public class BowState : BaseState<PlayerStateMachine.PlayerState>
 
     
 
-    public override void OnAttackAnimationEnd()
+    public override void OnHitAnimationEvent()
     {
         //stateMachine.Combat.OnAnimationEnd();
     }

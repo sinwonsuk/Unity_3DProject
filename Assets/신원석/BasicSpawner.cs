@@ -12,9 +12,12 @@ public class BasicSpawner : MonoBehaviour, INetworkRunnerCallbacks
     private NetworkRunner _runner;
     [SerializeField]
     private CinemachineVirtualCamera cam;
-
+    [SerializeField]
+    private float lookSpeed =10.0f;
     int a = 0;
-
+    private CinemachinePOV _pov;
+    private float _prevYaw;
+    private float _prevPitch;
     async void StartGame(GameMode mode)
     {
         // Create the Fusion runner and let it know that we will be providing user input
@@ -65,7 +68,7 @@ public class BasicSpawner : MonoBehaviour, INetworkRunnerCallbacks
         // Host/Server 모드일 경우 서버에서 모두 생성
         if (runner.IsServer)
         {
-            Vector3 spawnPosition = new Vector3(0, 0, 0);
+            Vector3 spawnPosition = new Vector3(0, 0, a);
             NetworkObject networkPlayerObject = runner.Spawn(_playerPrefab, spawnPosition, Quaternion.identity,  player);
             _spawnedCharacters.Add(player, networkPlayerObject);
             a += 3;
@@ -85,6 +88,16 @@ public class BasicSpawner : MonoBehaviour, INetworkRunnerCallbacks
 
     private bool _mouseButton0;
     private bool _mouseButton1;
+
+
+    private void Awake()
+    {
+        _pov = cam.GetCinemachineComponent<CinemachinePOV>();
+        // 초기값 캡처
+        _prevYaw = _pov.m_HorizontalAxis.Value;
+        _prevPitch = _pov.m_VerticalAxis.Value;
+    }
+
     private void Update()
     {
         _mouseButton0 = _mouseButton0 | Input.GetMouseButton(0);
@@ -112,6 +125,17 @@ public class BasicSpawner : MonoBehaviour, INetworkRunnerCallbacks
 
         data.CameraRotateY = Camera.main.transform.eulerAngles.y;
 
+        // 2) POV 절대값 → 델타로 변환
+        float curYaw = _pov.m_HorizontalAxis.Value;
+        float curPitch = _pov.m_VerticalAxis.Value;
+
+        data.LookRotationDelta = new Vector2(
+            curYaw,
+             -curPitch
+        );
+
+
+       
 
         data.CameraForward = Camera.main.transform.forward;
 

@@ -5,7 +5,7 @@ using UnityEngine;
 public class AnimationHandler
 {
     private NetworkMecanimAnimator animator;
-    private int hashAttackCount = Animator.StringToHash("AttackCount");
+
     private int hashWeaponCount = Animator.StringToHash("WeaponCount");
 
 
@@ -16,6 +16,8 @@ public class AnimationHandler
         this.animator = animator;
         this.playerStateMachine = playerStateMachine;
     }
+   // public int WeaponCount { get; set; }
+
 
     public int WeaponCount
     {
@@ -27,10 +29,49 @@ public class AnimationHandler
         get => playerStateMachine.RollCount;      // 네트워크 프로퍼티 읽기
         set => playerStateMachine.RollCount = value;  // 네트워크 프로퍼티 쓰기
     }
+    public int HitCount
+    {
+        get => playerStateMachine.HitCount;      // 네트워크 프로퍼티 읽기
+        set => playerStateMachine.HitCount = value;  // 네트워크 프로퍼티 쓰기
+    }
+
+
+
+
 
     public void ChangeWeapon(ItemState itemState)
     {
-        animator.Animator.SetInteger("WeaponCount", (int)itemState);
+        switch (itemState)
+        {
+            case ItemState.none:
+                WeaponCount = 0;
+                animator.Animator.SetTrigger("NoWeaponTrigger");
+                break;
+            case ItemState.Sword:
+                WeaponCount = 1;
+                animator.Animator.SetTrigger("KatanaEquip");
+                break;
+            case ItemState.Harberd:
+                WeaponCount = 2;
+                animator.Animator.SetTrigger("HalberdEquip");
+                break;
+            case ItemState.Bow:
+                WeaponCount = 3;
+                animator.Animator.SetTrigger("BowEquip");
+                break;
+            case ItemState.Magic:
+                break;
+            case ItemState.Position:
+                break;
+            case ItemState.Arrow:
+                break;
+            default:
+                break;
+        }
+
+
+
+       // animator.Animator.SetInteger("WeaponCount", (int)itemState);
     }
     public void ChangeRoll(int RollCount)
     {
@@ -56,9 +97,21 @@ public class AnimationHandler
     {
         animator.Animator.SetBool("Attack", value);
     }
+    public void SetHitBool(bool value)
+    {
+        animator.Animator.SetBool("Hit", value);
+    }
 
     public void SetAttackCount(int value)
     {
         animator.Animator.SetInteger("AttackCount", value);
+    }
+    public void SetHitCount(int value)
+    {
+        animator.Animator.SetInteger("HitCount", value);
+    }
+    public void SetHitTrigger()
+    {
+        animator.Animator.SetTrigger("HitTrigger");
     }
 }

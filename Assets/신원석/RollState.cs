@@ -36,11 +36,11 @@ public class RollState : BaseState<PlayerStateMachine.PlayerState>
         if (playerStateMachine.isRoll == true)
             return;
 
-        //if (!playerStateMachine.Object.HasStateAuthority && playerStateMachine.Object.HasInputAuthority)
-        //    playerStateMachine.playerController.Move(rollDirection * rollSpeed * playerStateMachine.Runner.DeltaTime);
+         if (!playerStateMachine.Object.HasStateAuthority && playerStateMachine.Object.HasInputAuthority)
+           playerStateMachine.playerController.Move(rollDirection * rollSpeed );
 
-        //else if (playerStateMachine.Object.HasStateAuthority)
-        //    playerStateMachine.playerController.Move(rollDirection * rollSpeed * playerStateMachine.Runner.DeltaTime);
+        else if (playerStateMachine.Object.HasStateAuthority)
+            playerStateMachine.playerController.Move(rollDirection * rollSpeed);
 
 
         playerStateMachine.AnimHandler.ChangeRoll(playerStateMachine.AnimHandler.RollCount);
@@ -67,7 +67,7 @@ public class RollState : BaseState<PlayerStateMachine.PlayerState>
     public override void OnTriggerEnter(Collider collider) { }
     public override void OnTriggerExit(Collider collider) { }
     public override void OnTriggerStay(Collider collider) { }
-    public override void OnAttackAnimationEnd()
+    public override void OnHitAnimationEvent()
     {
 
     }

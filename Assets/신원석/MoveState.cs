@@ -93,10 +93,13 @@ public class MoveState : BaseState<PlayerStateMachine.PlayerState>
 
     private bool TryHandleJumpInput()
     {
-        if (Input.GetKey(KeyCode.LeftControl))
+        if (playerStateMachine.inputHandler.IsCtrlButtonPress())
         {
             playerStateMachine.NetAnim.Animator.SetBool("Jump", true);
-            playerStateMachine.ChangeState(PlayerStateMachine.PlayerState.Jump);
+
+            playerStateMachine.playerController.Move(playerStateMachine.playerController.transform.position, 5);
+
+            playerStateMachine.RPC_BroadcastState(PlayerState.Jump);
             return true;
         }
         
@@ -150,7 +153,7 @@ public class MoveState : BaseState<PlayerStateMachine.PlayerState>
         }
     }
 
-    public override void OnAttackAnimationEnd()
+    public override void OnHitAnimationEvent()
     {
 
     }
