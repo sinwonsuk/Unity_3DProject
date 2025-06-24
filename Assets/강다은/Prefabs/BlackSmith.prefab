@@ -127,7 +127,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   npcId: 1
-  shopUI: {fileID: 0}
+  shopUI: {fileID: 4954228619636473244, guid: a4355a3947ab53248abdf209df7ddb2d, type: 3}
   bigInventoryUI: {fileID: 0}
   resellButton: {fileID: 0}
 --- !u!54 &4627850338267578632

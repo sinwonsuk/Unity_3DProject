@@ -1001,6 +1001,10 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 9029847947791581656, guid: a254718c2aac2124b9e192a37e6d5065, type: 3}
+      propertyPath: SortKey
+      value: 2254268376
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
@@ -1022,6 +1026,10 @@ PrefabInstance:
       propertyPath: m_Controller
       value: 
       objectReference: {fileID: 9100000, guid: bc3396960acd5c44f8cf26f4d62574b6, type: 2}
+    - target: {fileID: 4080552011111963695, guid: b1eb75f3e89a43445bd9e5c8014521c4, type: 3}
+      propertyPath: SortKey
+      value: 315465115
+      objectReference: {fileID: 0}
     - target: {fileID: 6299151774026347023, guid: b1eb75f3e89a43445bd9e5c8014521c4, type: 3}
       propertyPath: m_Name
       value: BlackSmith
