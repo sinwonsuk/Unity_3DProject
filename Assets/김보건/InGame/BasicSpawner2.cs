@@ -15,8 +15,34 @@ public class BasicSpawner2 : NetworkBehaviour, INetworkRunnerCallbacks
     [SerializeField] private CharacterPrefabData prefabData;   // 캐릭터 이름 = 프리팹 찾기 
     [SerializeField] private SpawnManager spawnManager;  // 스폰 위치
 
+    [SerializeField]
+    private CinemachineVirtualCamera cam;
+    [SerializeField]
+    private float lookSpeed = 10.0f;
+    int a = 0;
+    private CinemachinePOV _pov;
+    private float _prevYaw;
+    private float _prevPitch;
+
+    private bool _mouseButton0;
+    private bool _mouseButton1;
+
     // 중복 스폰 방지
     private readonly Dictionary<PlayerRef, NetworkObject> _spawned = new();
+
+    private void Awake()
+    {
+        _pov = cam.GetCinemachineComponent<CinemachinePOV>();
+        // 초기값 캡처
+        _prevYaw = _pov.m_HorizontalAxis.Value;
+        _prevPitch = _pov.m_VerticalAxis.Value;
+    }
+
+    private void Update()
+    {
+        _mouseButton0 = _mouseButton0 | Input.GetMouseButton(0);
+        _mouseButton1 = _mouseButton1 | Input.GetMouseButton(1);
+    }
 
     public override void Spawned()
     {
@@ -95,7 +121,60 @@ public class BasicSpawner2 : NetworkBehaviour, INetworkRunnerCallbacks
             _spawned.Remove(p);
         }
     }
-    public void OnInput(NetworkRunner runner, NetworkInput input) { }
+    public void OnInput(NetworkRunner runner, NetworkInput input)
+    {
+
+        var data = new NetworkInputData();
+
+        data.moveAxis = new Vector3(Input.GetAxis("Horizontal"), 0, Input.GetAxis("Vertical"));
+
+        if (Input.GetKey(KeyCode.W))
+            data.direction += Vector3.forward;
+
+        if (Input.GetKey(KeyCode.S))
+            data.direction += Vector3.back;
+
+        if (Input.GetKey(KeyCode.A))
+            data.direction += Vector3.left;
+
+        if (Input.GetKey(KeyCode.D))
+            data.direction += Vector3.right;
+
+        data.CameraRotateY = Camera.main.transform.eulerAngles.y;
+
+        // 2) POV 절대값 → 델타로 변환
+        float curYaw = _pov.m_HorizontalAxis.Value;
+        float curPitch = _pov.m_VerticalAxis.Value;
+
+        data.LookRotationDelta = new Vector2(
+            curYaw,
+             -curPitch
+        );
+
+
+
+
+        data.CameraForward = Camera.main.transform.forward;
+
+        data.buttons.Set(NetworkInputData.KEY_C, Input.GetKey(KeyCode.C));
+        data.buttons.Set(NetworkInputData.KEY_SPACE, Input.GetKey(KeyCode.Space));
+        data.buttons.Set(NetworkInputData.MOUSEBUTTON1, Input.GetMouseButton(1));
+        data.buttons.Set(NetworkInputData.MOUSEBUTTON0, Input.GetMouseButton(0));
+        data.buttons.Set(NetworkInputData.KEY_L, Input.GetKey(KeyCode.L));
+        data.buttons.Set(NetworkInputData.KEY_CTRL, Input.GetKey(KeyCode.LeftControl));
+
+        //data.buttons.Set(NetworkInputData.NUM_1, Input.GetKey(KeyCode.LeftControl));
+        //data.buttons.Set(NetworkInputData.NUM_2, Input.GetKey(KeyCode.LeftControl));
+        //data.buttons.Set(NetworkInputData.NUM_3, Input.GetKey(KeyCode.LeftControl));
+        //data.buttons.Set(NetworkInputData.NUM_4, Input.GetKey(KeyCode.LeftControl));
+        //data.buttons.Set(NetworkInputData.NUM_5, Input.GetKey(KeyCode.LeftControl));
+        //data.buttons.Set(NetworkInputData.NUM_6, Input.GetKey(KeyCode.LeftControl));
+
+
+        _mouseButton0 = false;
+        _mouseButton1 = false;
+        input.Set(data);
+    }
     public void OnInputMissing(NetworkRunner runner, PlayerRef player, NetworkInput input) { }
     public void OnShutdown(NetworkRunner runner, ShutdownReason shutdownReason) { }
     public void OnConnectedToServer(NetworkRunner runner) { }
