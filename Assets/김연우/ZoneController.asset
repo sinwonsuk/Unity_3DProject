@@ -13,28 +13,23 @@ MonoBehaviour:
   m_Name: ZoneController
   m_EditorClassIdentifier: 
   phases:
-  - center: {x: 0, y: 0, z: 0}
-    radius: 10
-    waitDuration: 5
-    shrinkDuration: 5
+  - center: {x: -63, y: 0, z: -29}
+    radius: 225
+    waitDuration: 30
+    shrinkDuration: 10
     damagePerSecond: 1
-  - center: {x: 0, y: 0, z: 0}
-    radius: 7
-    waitDuration: 5
-    shrinkDuration: 5
+  - center: {x: -63, y: 0, z: -29}
+    radius: 160
+    waitDuration: 40
+    shrinkDuration: 10
     damagePerSecond: 3
-  - center: {x: 0, y: 0, z: 0}
-    radius: 3
-    waitDuration: 5
-    shrinkDuration: 5
+  - center: {x: -63, y: 0, z: -29}
+    radius: 110
+    waitDuration: 50
+    shrinkDuration: 10
     damagePerSecond: 7
-  - center: {x: 0, y: 0, z: 0}
-    radius: 1
-    waitDuration: 5
-    shrinkDuration: 5
-    damagePerSecond: 10
-  - center: {x: 0, y: 0, z: 0}
-    radius: 1
-    waitDuration: 5
-    shrinkDuration: 5
+  - center: {x: -63, y: 0, z: -29}
+    radius: 38
+    waitDuration: 60
+    shrinkDuration: 13
     damagePerSecond: 10
