@@ -187,7 +187,7 @@ public class AutoMatchManager : MonoBehaviour, INetworkRunnerCallbacks
     {
         Debug.Log($"플레이어 입장: {player}. 현재 인원: {runner.ActivePlayers.Count()}");
 
-        if (runner.IsServer && runner.ActivePlayers.Count() == 2)
+        if (runner.IsServer && runner.ActivePlayers.Count() == 5)
         {
             Debug.Log("인게임 씬으로 이동 시작");
 
