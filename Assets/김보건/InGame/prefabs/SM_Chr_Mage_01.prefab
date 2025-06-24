@@ -5084,10 +5084,13 @@ GameObject:
   m_Component:
   - component: {fileID: 4372348789597376}
   - component: {fileID: 95328103556620382}
-  - component: {fileID: -5503036234153336210}
-  - component: {fileID: -4065624347438022050}
-  - component: {fileID: 7058206219197316480}
-  - component: {fileID: 2318574651540298797}
+  - component: {fileID: -8331378152230947016}
+  - component: {fileID: -6302922368246825462}
+  - component: {fileID: 945729414135658137}
+  - component: {fileID: 3681377629764630649}
+  - component: {fileID: -8105987631063344275}
+  - component: {fileID: 2472376983157134627}
+  - component: {fileID: 563728898768534680}
   m_Layer: 0
   m_Name: SM_Chr_Mage_01
   m_TagString: Player
@@ -5144,32 +5147,18 @@ Animator:
   m_Enabled: 1
   m_Avatar: {fileID: 9000000, guid: 9d545e43681431348908eab98e78aa45, type: 3}
   m_Controller: {fileID: 9100000, guid: 80a49d9879353fa458b0e8b800969994, type: 2}
-  m_CullingMode: 1
+  m_CullingMode: 0
   m_UpdateMode: 0
   m_ApplyRootMotion: 1
   m_LinearVelocityBlending: 0
   m_StabilizeFeet: 0
-  m_AnimatePhysics: 0
+  m_AnimatePhysics: 1
   m_WarningMessage: 
   m_HasTransformHierarchy: 1
   m_AllowConstantClipSamplingOptimization: 1
   m_KeepAnimatorStateOnDisable: 0
   m_WriteDefaultValuesOnDisable: 0
---- !u!114 &-5503036234153336210
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1996767962855262}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 717dc6844d09be94697c869017bbac3d, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  _currentHp: 100
-  maxHp: 100
---- !u!114 &-4065624347438022050
+--- !u!114 &-8331378152230947016
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -5181,40 +5170,18 @@ MonoBehaviour:
   m_Script: {fileID: -1552182283, guid: e725a070cec140c4caffb81624c8c787, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  SortKey: 2776028252
+  SortKey: 149733878
   ObjectInterest: 1
   Flags: 262145
   NestedObjects: []
   NetworkedBehaviours:
-  - {fileID: -5503036234153336210}
-  - {fileID: 2318574651540298797}
+  - {fileID: -6302922368246825462}
+  - {fileID: 945729414135658137}
+  - {fileID: 3681377629764630649}
+  - {fileID: 2472376983157134627}
+  - {fileID: 563728898768534680}
   ForceRemoteRenderTimeframe: 0
---- !u!143 &7058206219197316480
-CharacterController:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1996767962855262}
-  m_Material: {fileID: 0}
-  m_IncludeLayers:
-    serializedVersion: 2
-    m_Bits: 0
-  m_ExcludeLayers:
-    serializedVersion: 2
-    m_Bits: 0
-  m_LayerOverridePriority: 0
-  m_ProvidesContacts: 0
-  m_Enabled: 1
-  serializedVersion: 3
-  m_Height: 2
-  m_Radius: 0.5
-  m_SlopeLimit: 45
-  m_StepOffset: 0.3
-  m_SkinWidth: 0.08
-  m_MinMoveDistance: 0.001
-  m_Center: {x: 0, y: 0, z: 0}
---- !u!114 &2318574651540298797
+--- !u!114 &-6302922368246825462
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -5223,16 +5190,150 @@ MonoBehaviour:
   m_GameObject: {fileID: 1996767962855262}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 378411a89480da345945c2f888327a2d, type: 3}
+  m_Script: {fileID: 11500000, guid: 71e22db9ac6af6a42afce302066c4e1a, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  _SyncedState: 0
+  _comboAnimEnded: 0
+  _AttackCount: 0
+  _isRoll: 0
+  _isAttack: 1
+  _isHit: 1
+  _RollCount: 0
+  _HitCount: 0
+  _gatherAttack: 0
+  __canBeHit: 1
+  invulnDuration: 0.15
+  weapons: {fileID: 11400000, guid: bb10c1def4f7b9d42a86027dc3b35f91, type: 2}
+  moveSpeed: 5
+  rotationSpeed: 500
+  cameraFollow: {fileID: 6333430755428912889, guid: 7dce397188bc05445b1d1a3151df1764, type: 3}
+  rollSpeed: 15
+  attackSpeed: 2
+  rightHandTransform: {fileID: 1827334682947334435, guid: 7dce397188bc05445b1d1a3151df1764, type: 3}
+  leftHandTransform: {fileID: 8548521808931949514, guid: 7dce397188bc05445b1d1a3151df1764, type: 3}
+  arrowHitMask:
+    serializedVersion: 2
+    m_Bits: 3136
+  groundCheck: {fileID: 2941686035267341368, guid: 7dce397188bc05445b1d1a3151df1764, type: 3}
+  groundMask:
+    serializedVersion: 2
+    m_Bits: 512
+  _IsWeapon: 0
+--- !u!114 &945729414135658137
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1996767962855262}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 506319458, guid: e725a070cec140c4caffb81624c8c787, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  Animator: {fileID: 7347605875457031395, guid: 7dce397188bc05445b1d1a3151df1764, type: 3}
+  ApplyTiming: 2
+  SyncSettings: 79
+  StateHashes: 000000002da0f5ead4390fac089a4d5485a8327a8555caeba6e5c94d70aef7331b8e14dc1aab361c49175e6450130c0704edde5e5536a4f5bebcd7c7ef67ad6c288cd0b07957aa1b8b19b42edac2ce85917b71824bbb133d6b119efa5203dbb5aa12228cb0df68d3236ae627a27f3e78e54d875fdcc41a82958341e296919b8dff03502f10b55e5670dab3676384ee4e0fbf9b57e5a0820db5ee92ce5ff18b9423de95b9c9c18ce3804bf1276a54e87de388358f6043dbf388a8b80b708ef91bd187d0b5312eb78070f5471e013ee56906dcabfd8de6ca8d247de092b8761a0d16c2213e72410774bce8c4f08a18fce46d549c7cc55fd1f93b0fed1a5ff9e986f791eaad0cfd58f1458ab33737ad1fb95407f86b0496c9dc540308c33163d4a8d713ecfb49eed280610228f41d9c598c4e8a67c2763f1ec7177df3ca655913f2d46d2f49a9e36f221a7c278613b266bba02d2e1f858261cc361d29682617055295884df6
+  TriggerHashes: 000000001b8274fc2b1228987d3aa7e02500d390bad385b10fa4101e086e87fe8b624a2948b7267c
+  TotalWords: 10
+--- !u!114 &3681377629764630649
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1996767962855262}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 8280acb8c09cdb84ea2cb4cd44e0484d, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  _Side: 0
+  _ArrowSide: 0
+  _currentWeapon: {fileID: 0}
+  _Arrow: {fileID: 0}
+  _Magic: {fileID: 0}
+  _magicState: 0
+--- !u!54 &-8105987631063344275
+Rigidbody:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1996767962855262}
+  serializedVersion: 4
+  m_Mass: 1
+  m_Drag: 0
+  m_AngularDrag: 0.05
+  m_CenterOfMass: {x: 0, y: 0, z: 0}
+  m_InertiaTensor: {x: 1, y: 1, z: 1}
+  m_InertiaRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_IncludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_ExcludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_ImplicitCom: 1
+  m_ImplicitTensor: 1
+  m_UseGravity: 1
+  m_IsKinematic: 0
+  m_Interpolate: 0
+  m_Constraints: 0
+  m_CollisionDetection: 0
+--- !u!114 &2472376983157134627
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1996767962855262}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 717dc6844d09be94697c869017bbac3d, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  _currentHp: 0
+  maxHp: 100
+--- !u!114 &563728898768534680
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1996767962855262}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: -1869825851, guid: 977dbcf975465374990f471e1497f563, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
   _stateAuthorityChangeErrorCorrectionDelta: 0
-  gravity: -20
-  jumpImpulse: 8
-  acceleration: 10
-  braking: 10
-  maxSpeed: 2
-  rotationSpeed: 15
+  _settings:
+    Shape: 1
+    IsTrigger: 0
+    Radius: 0.35
+    Height: 1.8
+    Extent: 0.035
+    ColliderLayer: 0
+    CollisionLayerMask:
+      serializedVersion: 2
+      m_Bits: 1
+    ProxyInterpolationMode: 0
+    MaxPenetrationSteps: 8
+    CCDRadiusMultiplier: 0.75
+    AntiJitterDistance: {x: 0.025, y: 0.01}
+    CompressNetworkPosition: 0
+    ForcePredictedLookRotation: 0
+    StepHeight: 0.5
+    StepDepth: 0.2
+    StepSpeed: 1
+    StepMinPushBack: 0.5
+    StepGroundCheckRadiusScale: 0.5
+    StepRequireGroundTarget: 0
+    SnapDistance: 0.25
+    SnapSpeed: 4
 --- !u!1 &1998894919796312
 GameObject:
   m_ObjectHideFlags: 0
