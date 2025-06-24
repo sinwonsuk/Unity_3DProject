@@ -14,7 +14,7 @@ public class DpiSetting : MonoBehaviour
         if (sensitivitySlider != null)
         {
             sensitivitySlider.minValue = 0.1f;
-            sensitivitySlider.maxValue = 20f;
+            sensitivitySlider.maxValue = 100.0f;
             sensitivitySlider.value = Sensitivity;
 
             sensitivitySlider.onValueChanged.AddListener(OnSliderChanged);

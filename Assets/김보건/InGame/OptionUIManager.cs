@@ -1,4 +1,6 @@
+using System.Collections;
 using UnityEngine;
+using UnityEngine.SceneManagement;
 
 public class OptionUIManager : MonoBehaviour
 {
@@ -48,6 +50,28 @@ public class OptionUIManager : MonoBehaviour
         // 마우스 포인터 다시 숨김
         Cursor.lockState = CursorLockMode.Locked;
         Cursor.visible = false;
+    }
+
+    public void EscapeGame()
+    {
+        StartCoroutine(ReturnToTitle());
+    }
+
+    private IEnumerator ReturnToTitle()
+    {
+        var runner = RunnerSingleton.Instance;
+        if (runner != null && runner.IsRunning)
+        {
+            Debug.Log("서버 종료 중...");
+            var task = runner.Shutdown(true);
+            while (!task.IsCompleted)
+                yield return null;
+
+            RunnerSingleton.ClearRunner();
+        }
+
+        // 타이틀 씬 인덱스 또는 이름으로 이동
+        SceneManager.LoadScene("TitleScene"); // 또는 SceneManager.LoadScene(0);
     }
 
 
