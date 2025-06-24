@@ -143,10 +143,7 @@ public class PlayerStateMachine : StageManager<PlayerStateMachine.PlayerState>
         playerController = GetComponent<SimpleKCC>();
         
 
-
         playerController.SetGravity(-9.8f);
-
-        states = new Dictionary<PlayerState, BaseState<PlayerState>>();
 
         states[PlayerState.Idle] = new IdleState(PlayerState.Idle, this);
         states[PlayerState.Move] = new MoveState(PlayerState.Move, this);
@@ -409,30 +406,29 @@ public class PlayerStateMachine : StageManager<PlayerStateMachine.PlayerState>
     {
         if (!_isInitialized) return;
 
-        Debug.Log(health.currentHp);
+        //Debug.Log(health.currentHp);
 
-        MoveInput();
+        //MoveInput();
 
 
-        //if (Object.HasStateAuthority)
-        //{
-        //    var next = currentState.GetNextState();
-        //    if (next != currentState.StateKey)
-        //    {
-        //        SyncedState = next;
-        //    }        
-        //}
-        //// (3) ����: ����ȭ�� ���� �ݿ�
-        //if (SyncedState != currentState.StateKey)
-        //{
-        //    currentState.ExitState();
-        //    currentState = states[SyncedState];
-        //    currentState.EnterState();
-        //}
-        //// (4) ����: ���º� �ൿ ����
-        //currentState.FixedUpdateState();
+        if (Object.HasStateAuthority)
+        {
+            var next = currentState.GetNextState();
+            if (next != currentState.StateKey)
+            {
+                SyncedState = next;
+            }        
+        }
 
-        // (5) �̺�Ʈ ����
+        if (SyncedState != currentState.StateKey)
+        {
+            currentState.ExitState();
+            currentState = states[SyncedState];
+            currentState.EnterState();
+        }
+
+        currentState.FixedUpdateState();
+
 
     }
     public void adad()
@@ -471,72 +467,11 @@ public class PlayerStateMachine : StageManager<PlayerStateMachine.PlayerState>
 
     }
 
-
-
-
-    //public void ComboAttackInput()
-    //{
-    //    if (IsWeapon == false)
-    //        return;
-
-
-
-    //    if (playerStateMachine.inputHandler.IsAttackPressed() && playerStateMachine.Object.HasInputAuthority &&  playerStateMachine.AnimHandler.WeaponCount != (int)ItemState.Bow && playerStateMachine.AnimHandler.WeaponCount != 4)
-    //    {
-    //        if (Object.HasStateAuthority)
-    //        {
-    //            SyncedState = PlayerState.Attack;
-    //        }
-    //        else
-    //        {
-    //            RPC_BroadcastState(PlayerState.Attack);
-    //        }
-
-    //        playerStateMachine.RPC_BroadcastState(PlayerState.Attack);
-    //        return;
-    //    }
-
-
-
-    //    //if (inputHandler.IsAttackPressed() == true && Object.HasInputAuthority && AnimHandler.WeaponCount != 4 && AnimHandler.WeaponCount != ItemState.Bow)
-    //    //{
-    //    //    if (Object.HasStateAuthority)
-    //    //    {
-
-    //    //        SyncedState = PlayerState.Attack;
-    //    //    }
-    //    //    else
-    //    //    {
-
-    //    //        RPC_BroadcastState(PlayerState.Attack);
-    //    //    }
-
-    //    //}
-    //}
-
-    //public bool DashAttackInput()
-    //{
-    //    if (IsWeapon == false)
-    //        return false;
-
-    //    if (inputHandler.IsDashAttackPressed())
-    //    {
-    //        NetAnim.Animator.SetBool("RunAttack", true);
-    //        RPC_BroadcastState(PlayerState.Attack);
-    //        return true;
-    //    }
-
-    //    return false;
-    //}
     public IEnumerator InvulnCoroutine()
     {
         yield return new WaitForSeconds(invulnDuration);
         _canBeHit = true;
     }
-    //public override void Render()
-    //{
-    //    AnimHandler.SetHitCount(HitCount);
-    //}
 
     public void StopRoll() => isRoll = true;
     public void startRoll() => isRoll = false;
