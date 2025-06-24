@@ -20,7 +20,7 @@ public class ShopNPC : NetworkBehaviour
     {
         if (Object.HasInputAuthority || Object.HasStateAuthority) // 로컬에서만
         {
-            GameObject ingameUI = GameObject.Find("IngameUI"); // 씬 안의 오브젝트
+            GameObject ingameUI = GameObject.Find("InGameUI"); // 씬 안의 오브젝트
             if (ingameUI != null)
                 LinkUI(ingameUI);
         }
