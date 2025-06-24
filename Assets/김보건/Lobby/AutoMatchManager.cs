@@ -161,7 +161,7 @@ public class AutoMatchManager : MonoBehaviour, INetworkRunnerCallbacks
             SessionName = roomName,
             Scene = startScene,         // Host 가 나중에 LoadScene
             SceneManager = sceneManager,
-            PlayerCount = 2
+            PlayerCount = 5
         };
 
         try
