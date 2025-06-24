@@ -146,6 +146,8 @@ public class PlayerStateMachine : StageManager<PlayerStateMachine.PlayerState>
 
         playerController.SetGravity(-9.8f);
 
+        states = new Dictionary<PlayerState, BaseState<PlayerState>>();
+
         states[PlayerState.Idle] = new IdleState(PlayerState.Idle, this);
         states[PlayerState.Move] = new MoveState(PlayerState.Move, this);
         states[PlayerState.Switch] = new WeaponSwitchState(PlayerState.Switch, this);
@@ -409,30 +411,26 @@ public class PlayerStateMachine : StageManager<PlayerStateMachine.PlayerState>
 
         Debug.Log(health.currentHp);
 
+        MoveInput();
 
-        //string who = Object.HasInputAuthority && Runner.LocalPlayer == Object.InputAuthority
-        //? "�� �÷��̾�"
-        //: "�ٸ� �÷��̾�";
 
-        //Debug.Log($"[{who}] ObjID={Object.Id} InputAuth={Object.HasInputAuthority} StateAuth={Object.HasStateAuthority} SyncedState={SyncedState}");
-
-        if (Object.HasStateAuthority)
-        {
-            var next = currentState.GetNextState();
-            if (next != currentState.StateKey)
-            {
-                SyncedState = next;
-            }        
-        }
-        // (3) ����: ����ȭ�� ���� �ݿ�
-        if (SyncedState != currentState.StateKey)
-        {
-            currentState.ExitState();
-            currentState = states[SyncedState];
-            currentState.EnterState();
-        }
-        // (4) ����: ���º� �ൿ ����
-        currentState.FixedUpdateState();
+        //if (Object.HasStateAuthority)
+        //{
+        //    var next = currentState.GetNextState();
+        //    if (next != currentState.StateKey)
+        //    {
+        //        SyncedState = next;
+        //    }        
+        //}
+        //// (3) ����: ����ȭ�� ���� �ݿ�
+        //if (SyncedState != currentState.StateKey)
+        //{
+        //    currentState.ExitState();
+        //    currentState = states[SyncedState];
+        //    currentState.EnterState();
+        //}
+        //// (4) ����: ���º� �ൿ ����
+        //currentState.FixedUpdateState();
 
         // (5) �̺�Ʈ ����
 
@@ -535,10 +533,10 @@ public class PlayerStateMachine : StageManager<PlayerStateMachine.PlayerState>
         yield return new WaitForSeconds(invulnDuration);
         _canBeHit = true;
     }
-    public override void Render()
-    {
-        AnimHandler.SetHitCount(HitCount);
-    }
+    //public override void Render()
+    //{
+    //    AnimHandler.SetHitCount(HitCount);
+    //}
 
     public void StopRoll() => isRoll = true;
     public void startRoll() => isRoll = false;

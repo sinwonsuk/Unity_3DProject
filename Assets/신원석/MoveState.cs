@@ -146,8 +146,8 @@ public class MoveState : BaseState<PlayerStateMachine.PlayerState>
     }
     private void UpdateMovementAnimation()
     {
-        //if (playerStateMachine.IsProxy == true || playerStateMachine.Runner.IsForward == false)
-        //    return;
+        if (playerStateMachine.IsProxy == true || playerStateMachine.Runner.IsForward == false)
+            return;
 
         if (playerStateMachine.GetInput(out NetworkInputData data))
         {
