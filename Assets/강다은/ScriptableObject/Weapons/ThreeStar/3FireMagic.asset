@@ -10,18 +10,18 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: d17ebbd53a8e466428190081b710475f, type: 3}
-  m_Name: LightningMagic
+  m_Name: 3FireMagic
   m_EditorClassIdentifier: 
-  itemId: 142
-  itemName: Thunder Crash
-  itemIcon: {fileID: 21300000, guid: 097cabb29a866fb4282715c1e26ee8b3, type: 3}
+  itemId: 146
+  itemName: Inferno Orb
+  itemIcon: {fileID: 21300000, guid: ac7138baccb8beb469a9c828be5b0bff, type: 3}
   itemType: 1
-  itemGrade: 0
+  itemGrade: 3
   weaponType: 4
-  magicType: 2
+  magicType: 0
   potionType: 3
-  itemPrefab: {fileID: 1747332915568510, guid: 2ae1d9d2d0f873845aa93b546c38bf86, type: 3}
-  price: 300
-  description: "\uB2F9\uC2E0\uC774 \uD1A0\uB974\uC778\uAC00\uC694?"
+  itemPrefab: {fileID: 1515393608869612, guid: a6d6168843a460e49b9a16cd0d3fbbc8, type: 3}
+  price: 3200
+  description: "\uC557 \uB728\uAC70."
   effectType: 3
   effectValue: 100
