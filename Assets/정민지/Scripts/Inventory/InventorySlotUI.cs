@@ -122,9 +122,17 @@ public class InventorySlotUI : MonoBehaviour, IPointerClickHandler, IBeginDragHa
             }
             else if(slot.item.magicType!=MagicType.NONE)
             {
-                EventBus<WeaponChange>.Raise(new WeaponChange(ItemState.Magic));
+                EventBus<WeaponChange>.Raise(new WeaponChange(ItemState.FireMagic));
             }
-           
+            else if (slot.item.magicType != MagicType.NONE)
+            {
+                EventBus<WeaponChange>.Raise(new WeaponChange(ItemState.IceMagic));
+            }
+            else if (slot.item.magicType != MagicType.NONE)
+            {
+                EventBus<WeaponChange>.Raise(new WeaponChange(ItemState.ElectricMagic));
+            }
+
         }
         else
         {
