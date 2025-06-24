@@ -5,7 +5,7 @@ public class ShopNPC : NetworkBehaviour
 {
     [SerializeField] private string npcId;
     [SerializeField] private ShopUI shopUI;
-    [SerializeField] private GameObject ingameUI;
+    //[SerializeField] private GameObject ingameUI;
 
     private BigInventoryUI bigInventoryUI;
     private Resell resellButton; // 버튼용 스크립트
