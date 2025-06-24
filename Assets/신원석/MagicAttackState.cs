@@ -1,3 +1,4 @@
+using Fusion;
 using System.Collections;
 using System.Collections.Generic;
 using Unity.Mathematics;
@@ -15,14 +16,27 @@ public class MagicAttackState : BaseState<PlayerStateMachine.PlayerState>
 
     public override void EnterState()
     {
-        playerStateMachine.StartCoroutine(playerStateMachine.cameraManager.StartCameraScaleUp());
+
         playerStateMachine.AnimHandler.SetAttackBool(true);
+        playerStateMachine.cameraManager.isCameraCheck = false;
+
+
+        if (playerStateMachine.Object.HasInputAuthority)
+            zoomRoutine = playerStateMachine.StartCoroutine(playerStateMachine.cameraManager.ZoomDistance(1f));
     }
     public override void ExitState()
     {
-        playerStateMachine.StartCoroutine(playerStateMachine.cameraManager.StartCameraScaleDown());
         playerStateMachine.AnimHandler.SetAttackBool(false);
+        playerStateMachine.cameraManager.isCameraCheck = false;
         isAttack = false;
+
+        if (playerStateMachine.Object.HasInputAuthority)
+        {
+            if (zoomRoutine != null)
+                playerStateMachine.StopCoroutine(zoomRoutine);
+
+            zoomRoutine = playerStateMachine.StartCoroutine(playerStateMachine.cameraManager.ZoomDistance(2f));
+        }
     }
 
     public override void FixedUpdateState()
@@ -30,27 +44,24 @@ public class MagicAttackState : BaseState<PlayerStateMachine.PlayerState>
         if (!playerStateMachine.HasInputAuthority)
             return;
 
-        if(attack == 0 && isAttack ==true)
-        {
-            playerStateMachine.ChangeState(PlayerStateMachine.PlayerState.Idle);
-            return;
-        }
-            
+        playerStateMachine.AnimHandler.ChangeMagicAttackState(attack);
+
+
         if (playerStateMachine.GetInput(out NetworkInputData data))
         {
             Quaternion quaternion = Quaternion.Euler(0, data.CameraRotateY, 0);
-
-           // playerStateMachine.playerController.Rotate(quaternion);
+            playerStateMachine.Rotation(data);
         }
-
 
         if (playerStateMachine.inputHandler.IsAttackPressed() && playerStateMachine.inputHandler.IsRightAttackPressed())
         {
+            isAttack = true;
+
 
             Ray ray = Camera.main.ScreenPointToRay(Input.mousePosition);
 
 
-            if (Physics.Raycast(ray, out var hit, 999f, playerStateMachine.LayerMask))
+            if (Physics.Raycast(ray, out var hit, 999f, playerStateMachine.ArrowHitMask))
             {
                 targetPos = hit.point;
             }
@@ -59,15 +70,15 @@ public class MagicAttackState : BaseState<PlayerStateMachine.PlayerState>
                 float fallbackDist = 50f;
                 targetPos = ray.origin + ray.direction * fallbackDist;
             }
-            adad = playerStateMachine.WeaponManager.CreateMagic();
-            //adad.GetComponent<Arrow>().Shoot(targetPos);
+            PlayerRef me = playerStateMachine.Object.InputAuthority;
+            playerStateMachine.WeaponManager.RequestMagic(playerStateMachine.WeaponManager.magicState, HandSide.Right, me);
 
-            //playerStateMachine.AnimHandler.ChangeMagicAttackState(attack);
+            playerStateMachine.SetShootObject(targetPos, playerStateMachine.WeaponManager.magicState);
+
         }
 
-        else if (playerStateMachine.inputHandler.IsRightAttackPressed())
+        else if (playerStateMachine.inputHandler.IsRightAttackPressed() && isAttack == false)
         {
-            isAttack = true;
             attack = Mathf.MoveTowards(attack, 0.5f, playerStateMachine.Runner.DeltaTime * speed);
             playerStateMachine.AnimHandler.ChangeMagicAttackState(attack);
         }
@@ -75,6 +86,12 @@ public class MagicAttackState : BaseState<PlayerStateMachine.PlayerState>
         {
             attack = Mathf.MoveTowards(attack, 0.0f, playerStateMachine.Runner.DeltaTime * speed);
             playerStateMachine.AnimHandler.ChangeMagicAttackState(attack);
+        }
+
+        if (attack == 0)
+        {
+            playerStateMachine.RPC_BroadcastState(PlayerStateMachine.PlayerState.Idle);
+            return;
         }
     }
 
@@ -95,8 +112,9 @@ public class MagicAttackState : BaseState<PlayerStateMachine.PlayerState>
     }
 
     Vector3 targetPos;
-    GameObject adad;
+    NetworkObject magic;
     float attack = 0;
     float speed = 1;
     bool isAttack = false;
+    Coroutine zoomRoutine;
 }

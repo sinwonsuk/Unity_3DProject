@@ -40,6 +40,29 @@ public class PlayerHealth : NetworkBehaviour
         }
     }
 
+
+    public void TakeDamages(int dmg)
+    {
+        if (!HasStateAuthority) return;
+
+        currentHp = Mathf.Clamp(currentHp - dmg, 0, maxHp);
+
+        Debug.Log($"플레이어 현재 체력 : {currentHp}");
+
+        // 클라이언트 UI 업데이트
+        if (Object.HasInputAuthority)
+        {
+            EventBus<HealthChanged>.Raise(new HealthChanged(this, currentHp, maxHp));
+        }
+
+        // 서버가 생존자 수 계산
+        if (currentHp <= 0)
+        {
+            CountAlivePlayers(); // 이건 HasStateAuthority니까 안전하게 호출됨
+        }
+    }
+
+
     public void UseHealingItem(int heal)
     {
 

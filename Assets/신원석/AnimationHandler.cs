@@ -45,7 +45,7 @@ public class AnimationHandler
         {
             case ItemState.none:
                 WeaponCount = 0;
-                animator.Animator.SetTrigger("NoWeaponTrigger");
+                animator.Animator.SetTrigger("NoWeaponEquip");
                 break;
             case ItemState.Sword:
                 WeaponCount = 1;
@@ -59,8 +59,22 @@ public class AnimationHandler
                 WeaponCount = 3;
                 animator.Animator.SetTrigger("BowEquip");
                 break;
-            case ItemState.Magic:
+            case ItemState.FireMagic:
+                WeaponCount = 4;
+                playerStateMachine.WeaponManager.magicState = ItemState.FireMagic;
+                animator.Animator.SetTrigger("MagicEquip");
                 break;
+            case ItemState.IceMagic:
+                WeaponCount = 4;
+                playerStateMachine.WeaponManager.magicState = ItemState.IceMagic;
+                animator.Animator.SetTrigger("MagicEquip");
+                break;
+            case ItemState.ElectricMagic:
+                WeaponCount = 4;
+                playerStateMachine.WeaponManager.magicState = ItemState.ElectricMagic;
+                animator.Animator.SetTrigger("MagicEquip");
+                break;
+
             case ItemState.Position:
                 break;
             case ItemState.Arrow:

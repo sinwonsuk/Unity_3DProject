@@ -4054,7 +4054,7 @@ MonoBehaviour:
   attackSpeed: 5
   rightHandTransform: {fileID: 0}
   leftHandTransform: {fileID: 0}
-  layerMask:
+  arrowHitMask:
     serializedVersion: 2
     m_Bits: 0
   groundCheck: {fileID: 3705941599731414572}

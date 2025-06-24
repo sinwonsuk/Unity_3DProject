@@ -1,8 +1,10 @@
 using Fusion;
+using RPGCharacterAnims;
 using System.Collections;
 using Unity.VisualScripting;
 using Unity.VisualScripting.Antlr3.Runtime;
 using UnityEngine;
+using static PlayerStateMachine;
 
 
 public class AttackState : BaseState<PlayerStateMachine.PlayerState>
@@ -30,7 +32,7 @@ public class AttackState : BaseState<PlayerStateMachine.PlayerState>
             playerStateMachine.NetAnim.Animator.SetBool("RunAttack", false);
             playerStateMachine.NetAnim.Animator.SetBool("Attack", false);
         }
-        //playerStateMachine.WeaponManager.currentWeapon.GetComponent<MeshCollider>().enabled = false;
+
         time = 0.0f;
     }
 
@@ -52,24 +54,25 @@ public class AttackState : BaseState<PlayerStateMachine.PlayerState>
         {
             time += playerStateMachine.Runner.DeltaTime;
 
-            if (time < 0.2f)
+            if (time < 0.1f)
                 return;
 
             if (playerStateMachine.inputHandler.IsAttackPressed())
             {
-                playerStateMachine.Combat.TryQueueNextCombo();
+                  playerStateMachine.Combat.TryQueueNextCombo();
 
                 time = 0.0f;
             }
 
-            if(time > 0.5f)
-            {
-                playerStateMachine.isAttack = false;
-            }
-
+        }
+        if (playerStateMachine.isAttack == false)
+        {
+            int a = 0;
         }
 
-        playerStateMachine.action.Invoke();
+
+
+            playerStateMachine.action.Invoke();
 
         
 
@@ -77,6 +80,9 @@ public class AttackState : BaseState<PlayerStateMachine.PlayerState>
 
         //playerStateMachine.AnimHandler.SetAttackBool(true);
     }
+
+
+
 
     public void AttackMove()
     {

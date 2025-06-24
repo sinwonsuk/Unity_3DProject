@@ -27,7 +27,7 @@ public class IdleState : BaseState<PlayerStateMachine.PlayerState>
             return;
 
         if (playerStateMachine.inputHandler.IsAttackPressed() && playerStateMachine.Object.HasInputAuthority &&
-            playerStateMachine.IsWeapon == true && playerStateMachine.AnimHandler.WeaponCount != (int)ItemState.Bow)
+            playerStateMachine.IsWeapon == true && playerStateMachine.AnimHandler.WeaponCount != (int)ItemState.Bow && playerStateMachine.AnimHandler.WeaponCount != 4)
         {
             playerStateMachine.RPC_BroadcastState(PlayerState.Attack);
             return;
@@ -40,7 +40,7 @@ public class IdleState : BaseState<PlayerStateMachine.PlayerState>
         }
 
         else if (playerStateMachine.inputHandler.IsRightAttackPressed() && playerStateMachine.Object.HasInputAuthority &&
-            playerStateMachine.IsWeapon == true && playerStateMachine.AnimHandler.WeaponCount == (int)ItemState.Magic)
+            playerStateMachine.IsWeapon == true && playerStateMachine.AnimHandler.WeaponCount ==4)
         {
             playerStateMachine.RPC_BroadcastState(PlayerState.Magic);
             return;
@@ -78,7 +78,15 @@ public class IdleState : BaseState<PlayerStateMachine.PlayerState>
         }
         if (Input.GetKeyDown(KeyCode.Alpha4))
         {
-            EventBus<WeaponChange>.Raise(new WeaponChange(ItemState.Magic));
+            EventBus<WeaponChange>.Raise(new WeaponChange(ItemState.FireMagic));
+        }
+        if (Input.GetKeyDown(KeyCode.Alpha5))
+        {
+            EventBus<WeaponChange>.Raise(new WeaponChange(ItemState.IceMagic));
+        }
+        if (Input.GetKeyDown(KeyCode.Alpha6))
+        {
+            EventBus<WeaponChange>.Raise(new WeaponChange(ItemState.ElectricMagic));
         }
     }
 

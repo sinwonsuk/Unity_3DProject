@@ -13,9 +13,14 @@ public enum ItemState
     Sword,
     Harberd,
     Bow,
-    Magic,
+    FireMagic,
+    IceMagic,
+    ElectricMagic,
     Position,
     Arrow,
+    FireBall,
+    IceBall,
+    ElectricBall,
 }
 
 
@@ -38,10 +43,9 @@ public class PlayerStateMachine : StageManager<PlayerStateMachine.PlayerState>
 
     public HashSet<NetworkObject> hitSet { get; set; } = new();
 
-   
+    int a = 0;
     [Networked] public bool _canBeHit { get; set; } = true;
 
-    [Tooltip("ù ��Ʈ �� �� �ð�(��) ���� �߰� ��Ʈ�� �����մϴ�.")]
     public float invulnDuration = 0.15f;
 
     public enum PlayerState
@@ -87,7 +91,7 @@ public class PlayerStateMachine : StageManager<PlayerStateMachine.PlayerState>
     [SerializeField]
     Transform leftHandTransform;
     [SerializeField]
-    LayerMask layerMask;
+    LayerMask arrowHitMask;
 
     public float AttackSpeed
     {
@@ -109,10 +113,10 @@ public class PlayerStateMachine : StageManager<PlayerStateMachine.PlayerState>
         get => cameraFollow;
         set => cameraFollow = value;
     }
-    public LayerMask LayerMask
+    public LayerMask ArrowHitMask
     {
-        get => layerMask;
-        set => layerMask = value;
+        get => arrowHitMask;
+        set => arrowHitMask = value;
     }
     public CinemachineVirtualCamera Cam { get; set; }
 
@@ -168,7 +172,6 @@ public class PlayerStateMachine : StageManager<PlayerStateMachine.PlayerState>
 
         }
 
-        // �ʹ� ��������� ��Ȱ ���� 
         inputHandler = new InputHandler(this, CameraFollow);
         Combat = new PlayerCombat(this);
         AnimHandler = new AnimationHandler(NetAnim,this);
@@ -239,13 +242,12 @@ public class PlayerStateMachine : StageManager<PlayerStateMachine.PlayerState>
 
     public void Rotation(NetworkInputData data)
     {
-        float targetYaw = data.CameraRotateY;  // OnInput ���� �� ������ ������ �� ���� ī�޶� yaw
+        float targetYaw = data.CameraRotateY;  
 
-        // 2) ���� yaw(����) �о����
+
         float currentYaw = playerController.TransformRotation.eulerAngles.y;
 
-        // 3) LerpAngle �� �ε巴�� ���� (t = smoothing * ��Time)
-        float smoothing = 10f;  // ���ϴ� ������ ����
+        float smoothing = 10f; 
         float smoothedYaw = Mathf.LerpAngle(currentYaw, targetYaw, smoothing * Runner.DeltaTime);
 
         playerController.SetLookRotation(0, smoothedYaw);
@@ -284,28 +286,66 @@ public class PlayerStateMachine : StageManager<PlayerStateMachine.PlayerState>
 
     }
     [Rpc(RpcSources.InputAuthority, RpcTargets.All)]
-    public void RPC_RequestShoot(Vector3 targetPos, RpcInfo info = default)
+    public void RPC_RequestShoot(Vector3 targetPos, ItemState State, RpcInfo info = default)
     {
-        Arrow arrow = WeaponManager.Arrow.GetComponent<Arrow>();
+        ShootObj arrow = null;
+
+        if (State == ItemState.IceMagic)
+        {
+            arrow = WeaponManager.Magic.GetComponent<ShootObj>();
+        }
+        if (State == ItemState.FireMagic)
+        {
+            arrow = WeaponManager.Magic.GetComponent<ShootObj>();
+        }
+        if (State == ItemState.ElectricMagic)
+        {
+            arrow = WeaponManager.Magic.GetComponent<ShootObj>();
+        }
+        if (State == ItemState.Arrow)
+        {
+            arrow = WeaponManager.Arrow.GetComponent<ShootObj>();
+        }
 
         Vector3 dir = targetPos;
+
         arrow.Shoot(dir);
     }
-    public void SetArrowShoot(Vector3 targetPos)
+    public void SetShootObject(Vector3 targetPos,ItemState State)
     {
         if (Object.HasInputAuthority)
         {
-            RPC_RequestShoot(targetPos);
+            RPC_RequestShoot(targetPos, State);
         }
         else if (Object.HasStateAuthority)
         {
-            Arrow arrow = WeaponManager.Arrow.GetComponent<Arrow>();
+            ShootObj arrow = null;
 
+            if (State == ItemState.IceMagic)
+            {
+                arrow = WeaponManager.Magic.GetComponent<ShootObj>();
+            }
+            if (State == ItemState.FireMagic)
+            {
+                arrow = WeaponManager.Magic.GetComponent<ShootObj>();
+            }
+            if (State == ItemState.ElectricMagic)
+            {
+                arrow = WeaponManager.Magic.GetComponent<ShootObj>();
+            }
+            if (State == ItemState.Arrow)
+            {
+                arrow = WeaponManager.Arrow.GetComponent<ShootObj>();
+            }
+                
             Vector3 dir = targetPos;
+
             arrow.Shoot(dir);
         }
-
     }
+
+ 
+
     [Rpc(RpcSources.InputAuthority, RpcTargets.StateAuthority)]
     public void RPC_ClearHitSet()
     {
@@ -313,7 +353,7 @@ public class PlayerStateMachine : StageManager<PlayerStateMachine.PlayerState>
     }
 
 
-    // ȣ��Ʈ�� ������ ȣ��Ʈ+��ο��� ����
+
     [Rpc(RpcSources.StateAuthority, RpcTargets.All)]
     public void RPC_PlayHitAnimation(int newHitCount)
     {
@@ -346,7 +386,7 @@ public class PlayerStateMachine : StageManager<PlayerStateMachine.PlayerState>
         }
         if(Object.HasStateAuthority)
         {
-            IsWeapon = hasWeapon;  // �� �� ���̸� ��� Ŭ���̾�Ʈ ����ȭ
+            IsWeapon = hasWeapon;  
         }
 
     }
@@ -370,11 +410,11 @@ public class PlayerStateMachine : StageManager<PlayerStateMachine.PlayerState>
         Debug.Log(health.currentHp);
 
 
-        string who = Object.HasInputAuthority && Runner.LocalPlayer == Object.InputAuthority
-        ? "�� �÷��̾�"
-        : "�ٸ� �÷��̾�";
+        //string who = Object.HasInputAuthority && Runner.LocalPlayer == Object.InputAuthority
+        //? "�� �÷��̾�"
+        //: "�ٸ� �÷��̾�";
 
-        Debug.Log($"[{who}] ObjID={Object.Id} InputAuth={Object.HasInputAuthority} StateAuth={Object.HasStateAuthority} SyncedState={SyncedState}");
+        //Debug.Log($"[{who}] ObjID={Object.Id} InputAuth={Object.HasInputAuthority} StateAuth={Object.HasStateAuthority} SyncedState={SyncedState}");
 
         if (Object.HasStateAuthority)
         {
@@ -428,7 +468,7 @@ public class PlayerStateMachine : StageManager<PlayerStateMachine.PlayerState>
 
     public void OnAttackEndEvent()
     {
-        if (!Object.HasStateAuthority) return;    // ȣ��Ʈ��
+        if (!Object.HasStateAuthority) return;   
         RPC_ToggleWeaponCollider(false);
 
     }
@@ -436,41 +476,60 @@ public class PlayerStateMachine : StageManager<PlayerStateMachine.PlayerState>
 
 
 
-    public void ComboAttackInput()
-    {
-        if (IsWeapon == false)
-            return;
+    //public void ComboAttackInput()
+    //{
+    //    if (IsWeapon == false)
+    //        return;
 
-        if (inputHandler.IsAttackPressed() == true && Object.HasInputAuthority)
-        {
-            if (Object.HasStateAuthority)
-            {
-                // ȣ��Ʈ �ڽ��� ���� ���� ����
-                SyncedState = PlayerState.Attack;
-            }
-            else
-            {
-                // Ŭ���̾�Ʈ�� RPC ��û
-                RPC_BroadcastState(PlayerState.Attack);
-            }
 
-        }
-    }
 
-    public bool DashAttackInput()
-    {
-        if (IsWeapon == false)
-            return false;
+    //    if (playerStateMachine.inputHandler.IsAttackPressed() && playerStateMachine.Object.HasInputAuthority &&  playerStateMachine.AnimHandler.WeaponCount != (int)ItemState.Bow && playerStateMachine.AnimHandler.WeaponCount != 4)
+    //    {
+    //        if (Object.HasStateAuthority)
+    //        {
+    //            SyncedState = PlayerState.Attack;
+    //        }
+    //        else
+    //        {
+    //            RPC_BroadcastState(PlayerState.Attack);
+    //        }
 
-        if (inputHandler.IsDashAttackPressed())
-        {
-            NetAnim.Animator.SetBool("RunAttack", true);
-            RPC_BroadcastState(PlayerState.Attack);
-            return true;
-        }
+    //        playerStateMachine.RPC_BroadcastState(PlayerState.Attack);
+    //        return;
+    //    }
 
-        return false;
-    }
+
+
+    //    //if (inputHandler.IsAttackPressed() == true && Object.HasInputAuthority && AnimHandler.WeaponCount != 4 && AnimHandler.WeaponCount != ItemState.Bow)
+    //    //{
+    //    //    if (Object.HasStateAuthority)
+    //    //    {
+
+    //    //        SyncedState = PlayerState.Attack;
+    //    //    }
+    //    //    else
+    //    //    {
+
+    //    //        RPC_BroadcastState(PlayerState.Attack);
+    //    //    }
+
+    //    //}
+    //}
+
+    //public bool DashAttackInput()
+    //{
+    //    if (IsWeapon == false)
+    //        return false;
+
+    //    if (inputHandler.IsDashAttackPressed())
+    //    {
+    //        NetAnim.Animator.SetBool("RunAttack", true);
+    //        RPC_BroadcastState(PlayerState.Attack);
+    //        return true;
+    //    }
+
+    //    return false;
+    //}
     public IEnumerator InvulnCoroutine()
     {
         yield return new WaitForSeconds(invulnDuration);
