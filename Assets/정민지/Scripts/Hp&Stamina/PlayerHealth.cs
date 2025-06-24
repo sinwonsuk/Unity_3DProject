@@ -27,9 +27,6 @@ public class PlayerHealth : NetworkBehaviour
             EventBus<HealthChanged>.Raise(new HealthChanged(this, currentHp, maxHp));
     }
 
-    /// <summary>
-    /// 대미지를 적용합니다.
-    /// </summary>
     public void TakeDamage(int dmg)
     {
         // 서버만 실행
@@ -48,9 +45,6 @@ public class PlayerHealth : NetworkBehaviour
             CountAlivePlayers();
     }
 
-    /// <summary>
-    /// 회복 아이템 사용
-    /// </summary>
     public void Heal(int amount)
     {
         if (!HasStateAuthority) return;
@@ -63,9 +57,6 @@ public class PlayerHealth : NetworkBehaviour
             EventBus<HealthChanged>.Raise(new HealthChanged(this, currentHp, maxHp));
     }
 
-    /// <summary>
-    /// 현재 생존자 수 집계 및 이벤트 발행
-    /// </summary>
     public void CountAlivePlayers()
     {
         int alive = 0;

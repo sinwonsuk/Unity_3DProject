@@ -14,6 +14,7 @@ GameObject:
   - component: {fileID: 3893094265313372054}
   - component: {fileID: 2237044375263064630}
   - component: {fileID: 4627850338267578632}
+  - component: {fileID: 4080552011111963695}
   m_Layer: 0
   m_Name: BlackSmith
   m_TagString: Untagged
@@ -127,6 +128,8 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   npcId: 1
   shopUI: {fileID: 0}
+  bigInventoryUI: {fileID: 0}
+  resellButton: {fileID: 0}
 --- !u!54 &4627850338267578632
 Rigidbody:
   m_ObjectHideFlags: 0
@@ -154,6 +157,24 @@ Rigidbody:
   m_Interpolate: 0
   m_Constraints: 0
   m_CollisionDetection: 0
+--- !u!114 &4080552011111963695
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 6299151774026347023}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: -1552182283, guid: e725a070cec140c4caffb81624c8c787, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  SortKey: 1352021669
+  ObjectInterest: 1
+  Flags: 262145
+  NestedObjects: []
+  NetworkedBehaviours: []
+  ForceRemoteRenderTimeframe: 0
 --- !u!1001 &2897417855525123310
 PrefabInstance:
   m_ObjectHideFlags: 0

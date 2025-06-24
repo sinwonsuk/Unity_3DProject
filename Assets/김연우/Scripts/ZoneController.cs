@@ -40,7 +40,7 @@ public class ZoneController : NetworkBehaviour
 
             // 존 위치 및 크기 설정
             _zoneInstance.transform.position = phase.center;
-            _zoneInstance.transform.localScale = Vector3.one * phase.radius * 2f;
+            _zoneInstance.transform.localScale = new Vector3(phase.radius * 2f, _zoneInstance.transform.localScale.y, phase.radius * 2f);
             _zoneCollider.center = Vector3.zero;
             _zoneCollider.radius = phase.radius;
 
@@ -59,12 +59,17 @@ public class ZoneController : NetworkBehaviour
                     float radius = Mathf.Lerp(phase.radius, next.radius, t);
 
                     _zoneInstance.transform.position = center;
-                    _zoneInstance.transform.localScale = Vector3.one * radius * 2f;
+
+                    var currentScale = _zoneInstance.transform.localScale;
+                    _zoneInstance.transform.localScale = new Vector3(radius * 2f, currentScale.y, radius * 2f);
+
                     _zoneCollider.radius = radius;
 
                     shrinkElapsed += Time.deltaTime;
                     yield return null;
                 }
+
+
             }
         }
     }
