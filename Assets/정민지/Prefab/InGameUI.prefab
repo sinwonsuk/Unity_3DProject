@@ -348,7 +348,7 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_text: "\uC804\uCCB4 \uC778\uBCA4\uD1A0\uB9AC : E (\uC544\uC774\uD15C \uC120\uD0DD
+  m_text: "\uC804\uCCB4 \uC778\uBCA4\uD1A0\uB9AC : I (\uC544\uC774\uD15C \uC120\uD0DD
     : \uC88C\uD074\uB9AD)\n\uD569\uC131\uCC3D : C\n\uC870\uD569\uCE78 \uC544\uC774\uD15C
     \uB123\uACE0 \uBE7C\uAE30 : \uC6B0\uD074\uB9AD\n\uC778\uBCA4\uD56B\uBC14 \uB118\uAE30\uAE30
     : Tab (\uC544\uC774\uD15C \uC120\uD0DD : \uB9C8\uC6B0\uC2A4 \uD720)\n\n"
@@ -1017,6 +1017,20 @@ MonoBehaviour:
   recipes:
   - {fileID: 11400000, guid: 4ff9a32011f70d540857f7c6cfb74c9a, type: 2}
   - {fileID: 11400000, guid: d3832cd3186ba9e498dc62d27c5f69d1, type: 2}
+  - {fileID: 11400000, guid: 79993dcac941a944a94d90efb7872d99, type: 2}
+  - {fileID: 11400000, guid: 1f5c70d013230844bb6f8f525dc22a34, type: 2}
+  - {fileID: 11400000, guid: 6672bce0b6516d249bdc247f05383cf8, type: 2}
+  - {fileID: 11400000, guid: 6fec578ccdac420409f3f66278e374ce, type: 2}
+  - {fileID: 11400000, guid: 5f9369159aa197b47bcfef961e1f79bc, type: 2}
+  - {fileID: 11400000, guid: 87fa1535177138944bf5b0e8056af1ed, type: 2}
+  - {fileID: 11400000, guid: 159a4304c1ece884e87be67f1df45c37, type: 2}
+  - {fileID: 11400000, guid: 0e96d3e62ac964446bc3c170f4aadc41, type: 2}
+  - {fileID: 11400000, guid: 44558248a1dbd894eba8c8ed70a6a12f, type: 2}
+  - {fileID: 11400000, guid: 99f74d3ab85fe9142b0443c8b7edd41e, type: 2}
+  - {fileID: 11400000, guid: 6515cffefa43cb848b83e78ce879ab2c, type: 2}
+  - {fileID: 11400000, guid: c0c0e52ee33612e4abf4e48665448c90, type: 2}
+  - {fileID: 11400000, guid: 706e6f1c9dee0944dab75d82f3b9bb6d, type: 2}
+  - {fileID: 11400000, guid: 3af8e5beb50705b41a19142cb4a72546, type: 2}
   centerSlot: {fileID: 4505480278938981607}
 --- !u!1 &3815094287183217617
 GameObject:
