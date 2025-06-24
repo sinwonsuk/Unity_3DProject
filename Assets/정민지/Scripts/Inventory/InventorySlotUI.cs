@@ -16,6 +16,7 @@ public class InventorySlotUI : MonoBehaviour, IPointerClickHandler, IBeginDragHa
     private Transform originalParent;
     private DraggedIcon draggedIcon;
     private InventorySlot slot;
+    private bool wasSelected = false; // 이전 선택 상태
 
 
     public void SetSlot(InventorySlot slot, bool isSelected = false)
@@ -34,7 +35,15 @@ public class InventorySlotUI : MonoBehaviour, IPointerClickHandler, IBeginDragHa
             quantityText.text = slot.quantity > 1 ? slot.quantity.ToString() : "";
         }
 
+        // 선택 여부 갱신
         highlightImage.enabled = isSelected;
+
+        // 선택 상태 변경 감지
+        if (wasSelected != isSelected)
+        {
+            wasSelected = isSelected;
+            OnSelectionChanged(isSelected); // 여기서 원하는 함수 실행
+        }
     }
 
     public void Initialize(BigInventoryUI ownerUI, int slotIndex, DraggedIcon icon)
@@ -80,6 +89,46 @@ public class InventorySlotUI : MonoBehaviour, IPointerClickHandler, IBeginDragHa
         if (draggedSlotUI != null && draggedSlotUI != this)
         {
             bigInventoryUI.SwapSlots(draggedSlotUI.index, this.index);
+        }
+    }
+
+    private void OnSelectionChanged(bool isSelected)
+    {
+        if (isSelected)
+        {
+            Debug.Log($"[{index}] 슬롯이 선택됨: {slot.item?.itemName}");
+
+            if (slot.item == null)
+            {
+                EventBus<WeaponChange>.Raise(new WeaponChange(ItemState.none));
+                return;
+            }
+
+            if (slot.item.weaponType==WeaponType.Sword)
+            {
+                EventBus<WeaponChange>.Raise(new WeaponChange(ItemState.Sword));
+            }
+            else if(slot.item.weaponType==WeaponType.Bow)
+            {
+                EventBus<WeaponChange>.Raise(new WeaponChange(ItemState.Bow));
+            }
+            else if(slot.item.weaponType==WeaponType.Axe)
+            {
+                EventBus<WeaponChange>.Raise(new WeaponChange(ItemState.Harberd));
+            }
+            else if(slot.item.potionType!=PotionType.NONE)
+            {
+                EventBus<WeaponChange>.Raise(new WeaponChange(ItemState.Position));
+            }
+            else if(slot.item.magicType!=MagicType.NONE)
+            {
+                EventBus<WeaponChange>.Raise(new WeaponChange(ItemState.Magic));
+            }
+           
+        }
+        else
+        {
+            Debug.Log($"[{index}] 슬롯 선택 해제");
         }
     }
 }

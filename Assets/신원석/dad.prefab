@@ -4040,8 +4040,12 @@ MonoBehaviour:
   _AttackCount: 0
   _isRoll: 0
   _isAttack: 1
+  _isHit: 1
   _RollCount: 0
+  _HitCount: 0
   _gatherAttack: 0
+  __canBeHit: 1
+  invulnDuration: 0.15
   weapons: {fileID: 0}
   moveSpeed: 5
   rotationSpeed: 500
