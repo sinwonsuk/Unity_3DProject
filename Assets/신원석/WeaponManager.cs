@@ -21,7 +21,13 @@ public class WeaponManager : NetworkBehaviour
 
     [Networked] public NetworkObject currentWeapon { get; set; }
    [Networked] public NetworkObject Arrow { get; set; }
+
+    [Networked] public NetworkObject Magic { get; set; }
+
     private ItemState currentWeaponState;
+
+    [Networked] public ItemState magicState { get; set; }
+
     private NetworkRunner runner;
     
 
@@ -89,7 +95,24 @@ public class WeaponManager : NetworkBehaviour
 
         Arrow = obj;
     }
+    public void CreateMagic(ItemState state, HandSide Dir, PlayerRef owner = default)
+    {
+        magicState = state;
 
+        NetworkPrefabRef prefab = config.GetWeapon(state);
+        Vector3 position = config.GetTransform(state).localPosition;
+        Quaternion rotation = config.GetTransform(state).localRotation;
+        NetworkObject obj = null;
+
+        obj = runner.Spawn(prefab, position, rotation, owner, onBeforeSpawned: (runner, obj) =>
+        {
+            var wno = obj.GetComponent<WeaponNetworkObject>();
+            
+        }
+            );
+
+        Magic = obj;
+    }
 
 
     [Rpc(RpcSources.InputAuthority, RpcTargets.StateAuthority)]
@@ -105,15 +128,12 @@ public class WeaponManager : NetworkBehaviour
         // 호스트만 여기 진입
         CreateArrow(state, isDir, info.Source);
     }
-
-
-    public void AttachWeaponToSocket(/*isDir Dir*/)
+    [Rpc(RpcSources.InputAuthority, RpcTargets.StateAuthority)]
+    public void RPC_RequestMagic(ItemState state, HandSide isDir, RpcInfo info = default)
     {
-        //if (Dir == isDir.Right)
-            currentWeapon.transform.SetParent(rightHandSocket, false);
-        //else
-        //    currentWeapon.transform.SetParent(leftHandSocket, false);
-    }   
+        // 호스트만 여기 진입
+        CreateMagic(state, isDir, info.Source);
+    }
 
     public void RequestEquip(ItemState state, HandSide dir, PlayerRef owner = default)
     {
@@ -128,7 +148,6 @@ public class WeaponManager : NetworkBehaviour
             Equip(state, dir, owner);
         }
     }
-
     public void RequestArrow(ItemState state, HandSide dir, PlayerRef owner = default)
     {
         // (1) 클라이언트일 때만 RPC
@@ -143,13 +162,18 @@ public class WeaponManager : NetworkBehaviour
         }
     }
 
-
-    public GameObject CreateMagic()
+    public void RequestMagic(ItemState state, HandSide dir, PlayerRef owner = default)
     {
-        if (currentWeaponState != ItemState.Magic)
-            return null;
-
-        return null;
+        // (1) 클라이언트일 때만 RPC
+        if (Object.HasInputAuthority && !Object.HasStateAuthority)
+        {
+            RPC_RequestMagic(state, dir);
+        }
+        // (2) 호스트일 때는 곧바로 실행
+        else if (Object.HasStateAuthority)
+        {
+            CreateMagic(state, dir, owner);
+        }
     }
 
     public void Unequip()

@@ -32,10 +32,7 @@ public class BowState : BaseState<PlayerStateMachine.PlayerState>
         playerStateMachine.AnimHandler.SetAttackBool(true);
          gatherAttack = 0;
 
-        var ad = playerStateMachine.WeaponManager.currentWeapon;
-
         rope = playerStateMachine.WeaponManager.currentWeapon.GetComponent<Bow>().Rope.transform;
-
 
         if (playerStateMachine.Object.HasStateAuthority)
         {
@@ -70,30 +67,25 @@ public class BowState : BaseState<PlayerStateMachine.PlayerState>
 
     public override void FixedUpdateState()
     {
-
-
+        if (!playerStateMachine.HasInputAuthority)
+            return;
 
         playerStateMachine.AnimHandler.ChangeBowWeaponState(gatherAttack);
-
-        Vector3 ropePos1 = playerStateMachine.WeaponManager.currentWeapon.GetComponent<Bow>().Rope.transform.position;
-
-        Debug.Log(ropePos1);
 
         if (playerStateMachine.GetInput(out NetworkInputData data))
         {
             Quaternion quaternion = Quaternion.Euler(0, data.CameraRotateY, 0);
-
             playerStateMachine.Rotation(data);
         }
-   
-        if (playerStateMachine.HasInputAuthority && 
-            playerStateMachine.inputHandler.IsRightAttackPressed() &&
-            playerStateMachine.inputHandler.IsAttackPressed() && gatherAttack ==1 
-            && shoot == false && playerStateMachine.cameraManager.isCameraCheck ==true)
+
+
+        if ( playerStateMachine.inputHandler.IsRightAttackPressed() &&
+             playerStateMachine.inputHandler.IsAttackPressed() && gatherAttack ==1 
+             && shoot == false && playerStateMachine.cameraManager.isCameraCheck ==true)
         {
              Ray ray = Camera.main.ScreenPointToRay(Input.mousePosition);
   
-            if (Physics.Raycast(ray, out var hit, 999f, playerStateMachine.LayerMask))
+            if (Physics.Raycast(ray, out var hit, 999f, playerStateMachine.ArrowHitMask))
                 targetPos = hit.point;
             else
             {
@@ -105,7 +97,7 @@ public class BowState : BaseState<PlayerStateMachine.PlayerState>
 
 
 
-            playerStateMachine.SetArrowShoot(targetPos);
+            playerStateMachine.SetShootObject(targetPos,ItemState.Arrow);
 
             playerStateMachine.AnimHandler.ShootBowWeapon();
             shoot = true;
@@ -125,13 +117,12 @@ public class BowState : BaseState<PlayerStateMachine.PlayerState>
             rope.localPosition = new Vector3(ropePosX, rope.localPosition.y, rope.localPosition.z);
             gatherAttack = Mathf.MoveTowards(gatherAttack, 0, playerStateMachine.Runner.DeltaTime * 2.0f);
         }
-
-        if (playerStateMachine.Object.HasInputAuthority && gatherAttack == 0)
+        if (gatherAttack == 0)
         {
-
             playerStateMachine.RPC_BroadcastState(PlayerState.Idle);
             return;
         }
+
     }
 
     public override PlayerStateMachine.PlayerState GetNextState()

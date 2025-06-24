@@ -108,8 +108,8 @@ public class MoveState : BaseState<PlayerStateMachine.PlayerState>
 
     private void TryHandleAttackInput()
     {
-        playerStateMachine.ComboAttackInput();
-        playerStateMachine.DashAttackInput();
+        ComboAttackInput();
+        //playerStateMachine.DashAttackInput();
 
         if (playerStateMachine.cameraManager.isCameraCheck == false)
             return;
@@ -119,14 +119,31 @@ public class MoveState : BaseState<PlayerStateMachine.PlayerState>
             playerStateMachine.RPC_BroadcastState(PlayerStateMachine.PlayerState.BowAttack);
             return;
         }
-        if (playerStateMachine.inputHandler.IsRightAttackPressed() && playerStateMachine.IsWeapon == true && playerStateMachine.AnimHandler.WeaponCount == (int)ItemState.Magic)
+
+        if (playerStateMachine.inputHandler.IsRightAttackPressed() && playerStateMachine.IsWeapon == true && playerStateMachine.AnimHandler.WeaponCount == 4)
         {
             playerStateMachine.RPC_BroadcastState(PlayerStateMachine.PlayerState.Magic);
             return;
         }
 
     }
+    public void ComboAttackInput()
+    {
+        if (playerStateMachine.IsWeapon == false)
+            return;
 
+        if (playerStateMachine.inputHandler.IsAttackPressed() && playerStateMachine.Object.HasInputAuthority && playerStateMachine.AnimHandler.WeaponCount != (int)ItemState.Bow && playerStateMachine.AnimHandler.WeaponCount != 4)
+        {
+            if (playerStateMachine.Object.HasStateAuthority)
+            {
+                playerStateMachine.SyncedState = PlayerState.Attack;
+            }
+            else
+            {
+                playerStateMachine.RPC_BroadcastState(PlayerState.Attack);
+            }
+        }
+    }
     private void UpdateMovementAnimation()
     {
         //if (playerStateMachine.IsProxy == true || playerStateMachine.Runner.IsForward == false)
@@ -134,8 +151,6 @@ public class MoveState : BaseState<PlayerStateMachine.PlayerState>
 
         if (playerStateMachine.GetInput(out NetworkInputData data))
         {
-            Debug.Log("Host SetFloat");
-
             float x = data.moveAxis.x;
             float z = data.moveAxis.z;
 

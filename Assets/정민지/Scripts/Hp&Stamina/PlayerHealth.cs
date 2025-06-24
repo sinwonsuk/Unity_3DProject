@@ -6,52 +6,71 @@ using UnityEngine.UI;
 
 public class PlayerHealth : NetworkBehaviour
 {
-    // ¸ðµç ÀÎ½ºÅÏ½º¸¦ ÃßÀûÇÏ±â À§ÇÑ ¸®½ºÆ®
+    // ï¿½ï¿½ï¿½ ï¿½Î½ï¿½ï¿½Ï½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½Ï±ï¿½ ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½Æ®
     public static readonly List<PlayerHealth> All = new List<PlayerHealth>();
 
     void Awake() => All.Add(this);
     void OnDestroy() => All.Remove(this);
 
-    // ³×Æ®¿öÅ©·Î µ¿±âÈ­ÇÒ Ã¼·Â
+    // ï¿½ï¿½Æ®ï¿½ï¿½Å©ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½È­ï¿½ï¿½ Ã¼ï¿½ï¿½
     [Networked] public int currentHp { get; private set; }
     [SerializeField] private int maxHp;
 
     public override void Spawned()
     {
-        // ¼­¹ö ±ÇÇÑÀÌ ÀÖÀ» ¶§ ÃÊ±â Ã¼·Â ¼³Á¤
+        // ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ ï¿½Ê±ï¿½ Ã¼ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½
         if (HasStateAuthority)
             currentHp = maxHp;
 
-        // ÀÔ·Â ±ÇÇÑÀÌ ÀÖ´Â Å¬¶óÀÌ¾ðÆ®¿¡ UI ÃÊ±âÈ­ ÀÌº¥Æ® ¹ßÇà
+        // ï¿½Ô·ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½Ö´ï¿½ Å¬ï¿½ï¿½ï¿½Ì¾ï¿½Æ®ï¿½ï¿½ UI ï¿½Ê±ï¿½È­ ï¿½Ìºï¿½Æ® ï¿½ï¿½ï¿½ï¿½
         if (Object.HasInputAuthority)
             EventBus<HealthChanged>.Raise(new HealthChanged(this, currentHp, maxHp));
     }
 
     public void TakeDamage(int dmg)
     {
-        // ¼­¹ö¸¸ ½ÇÇà
+        // ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½
         if (!HasStateAuthority) return;
 
         int before = currentHp;
         currentHp = Mathf.Clamp(currentHp - dmg, 0, maxHp);
-        Debug.Log($"[ÇÃ·¹ÀÌ¾î Ã¼·Â] {gameObject.name}: {before} ¡æ {currentHp} (-{dmg})");
+        Debug.Log($"[ï¿½Ã·ï¿½ï¿½Ì¾ï¿½ Ã¼ï¿½ï¿½] {gameObject.name}: {before} ï¿½ï¿½ {currentHp} (-{dmg})");
 
-        // UI ¾÷µ¥ÀÌÆ®
+        // UI ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Æ®
         if (Object.HasInputAuthority)
             EventBus<HealthChanged>.Raise(new HealthChanged(this, currentHp, maxHp));
 
-        // »ç¸Á ½Ã »ýÁ¸ÀÚ ¼ö °è»ê
+        // ï¿½ï¿½ï¿½ ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ ï¿½ï¿½ï¿½
         if (currentHp <= 0)
             CountAlivePlayers();
     }
+    public void TakeDamages(int dmg)
+    {
+        if (!HasStateAuthority) return;
 
+        currentHp = Mathf.Clamp(currentHp - dmg, 0, maxHp);
+
+        Debug.Log($"ï¿½Ã·ï¿½ï¿½Ì¾ï¿½ ï¿½ï¿½ï¿½ï¿½ Ã¼ï¿½ï¿½ : {currentHp}");
+
+        // Å¬ï¿½ï¿½ï¿½Ì¾ï¿½Æ® UI ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Æ®
+        if (Object.HasInputAuthority)
+        {
+            EventBus<HealthChanged>.Raise(new HealthChanged(this, currentHp, maxHp));
+        }
+
+        // ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ ï¿½ï¿½ï¿½
+        if (currentHp <= 0)
+        {
+            CountAlivePlayers(); // ï¿½Ì°ï¿½ HasStateAuthorityï¿½Ï±ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½Ï°ï¿½ È£ï¿½ï¿½ï¿½
+        }
+    }
     public void Heal(int amount)
     {
         if (!HasStateAuthority) return;
 
         int before = currentHp;
         currentHp = Mathf.Clamp(currentHp + amount, 0, maxHp);
-        Debug.Log($"[ÇÃ·¹ÀÌ¾î Ã¼·Â] {gameObject.name}: {before} ¡æ {currentHp} (+{amount})");
+        Debug.Log($"[ï¿½Ã·ï¿½ï¿½Ì¾ï¿½ Ã¼ï¿½ï¿½] {gameObject.name}: {before} ï¿½ï¿½ {currentHp} (+{amount})");
 
         if (Object.HasInputAuthority)
             EventBus<HealthChanged>.Raise(new HealthChanged(this, currentHp, maxHp));

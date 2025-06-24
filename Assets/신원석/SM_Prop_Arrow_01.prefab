@@ -16,7 +16,8 @@ GameObject:
   - component: {fileID: -839716654171969071}
   - component: {fileID: 553125417233770266}
   - component: {fileID: 2673981718304931741}
-  m_Layer: 0
+  - component: {fileID: -2702464351116037834}
+  m_Layer: 12
   m_Name: SM_Prop_Arrow_01
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -33,7 +34,7 @@ Transform:
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
   m_LocalPosition: {x: 0, y: 0, z: 0.674}
-  m_LocalScale: {x: 1, y: 1, z: 1.2}
+  m_LocalScale: {x: 9, y: 9, z: 10.8}
   m_ConstrainProportionsScale: 1
   m_Children: []
   m_Father: {fileID: 0}
@@ -105,6 +106,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   _flying: 0
   _flyDir: {x: 0, y: 0, z: 0}
+  speed: 20
 --- !u!65 &1800835218732158537
 BoxCollider:
   m_ObjectHideFlags: 0
@@ -122,10 +124,10 @@ BoxCollider:
   m_LayerOverridePriority: 0
   m_IsTrigger: 1
   m_ProvidesContacts: 0
-  m_Enabled: 0
+  m_Enabled: 1
   serializedVersion: 3
-  m_Size: {x: 0.060969304, y: 0.08446988, z: 0.8887798}
-  m_Center: {x: 0, y: -0.0011294484, z: -0.16052802}
+  m_Size: {x: 0.033220395, y: 0.08446988, z: 0.09428589}
+  m_Center: {x: 0.0009953132, y: -0.0011294484, z: 0.24085605}
 --- !u!114 &-839716654171969071
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -176,3 +178,30 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 8ee3f6348d1316444a4df6d8c5ff9077, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+--- !u!54 &-2702464351116037834
+Rigidbody:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1381610650362966}
+  serializedVersion: 4
+  m_Mass: 1
+  m_Drag: 0
+  m_AngularDrag: 0.05
+  m_CenterOfMass: {x: 0, y: 0, z: 0}
+  m_InertiaTensor: {x: 1, y: 1, z: 1}
+  m_InertiaRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_IncludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_ExcludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_ImplicitCom: 1
+  m_ImplicitTensor: 1
+  m_UseGravity: 0
+  m_IsKinematic: 1
+  m_Interpolate: 0
+  m_Constraints: 0
+  m_CollisionDetection: 0

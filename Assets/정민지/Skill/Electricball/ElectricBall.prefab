@@ -19651,9 +19651,14 @@ GameObject:
   - component: {fileID: 6568547256506680810}
   - component: {fileID: 459242385315834651}
   - component: {fileID: 3488200526346784215}
+  - component: {fileID: 5122481213751530240}
+  - component: {fileID: -79610558380539524}
+  - component: {fileID: 919596379442508107}
+  - component: {fileID: 809014139255947781}
+  - component: {fileID: -2565989485732924869}
   m_Layer: 0
   m_Name: ElectricBall
-  m_TagString: Untagged
+  m_TagString: Weapon
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -19667,7 +19672,7 @@ Transform:
   m_GameObject: {fileID: 8340070064457950095}
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 2.12, y: 0.962, z: 0.91}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children:

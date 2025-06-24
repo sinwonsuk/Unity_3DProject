@@ -23,11 +23,15 @@ public class IdleState : BaseState<PlayerStateMachine.PlayerState>
 
     public override void FixedUpdateState()
     {
+        if (playerStateMachine.HasInputAuthority == false)
+            return;
+
+
         if (playerStateMachine.cameraManager.isCameraCheck == false)
             return;
 
         if (playerStateMachine.inputHandler.IsAttackPressed() && playerStateMachine.Object.HasInputAuthority &&
-            playerStateMachine.IsWeapon == true && playerStateMachine.AnimHandler.WeaponCount != (int)ItemState.Bow)
+            playerStateMachine.IsWeapon == true && playerStateMachine.AnimHandler.WeaponCount != (int)ItemState.Bow && playerStateMachine.AnimHandler.WeaponCount != 4)
         {
             playerStateMachine.RPC_BroadcastState(PlayerState.Attack);
             return;
@@ -40,7 +44,7 @@ public class IdleState : BaseState<PlayerStateMachine.PlayerState>
         }
 
         else if (playerStateMachine.inputHandler.IsRightAttackPressed() && playerStateMachine.Object.HasInputAuthority &&
-            playerStateMachine.IsWeapon == true && playerStateMachine.AnimHandler.WeaponCount == (int)ItemState.Magic)
+            playerStateMachine.IsWeapon == true && playerStateMachine.AnimHandler.WeaponCount ==4)
         {
             playerStateMachine.RPC_BroadcastState(PlayerState.Magic);
             return;
@@ -54,7 +58,7 @@ public class IdleState : BaseState<PlayerStateMachine.PlayerState>
        
         else if (playerStateMachine.inputHandler.IsCtrlButtonPress() && playerStateMachine.Object.HasInputAuthority)
         {
-            playerStateMachine.playerController.Move(Vector3.zero,5);
+           // playerStateMachine.playerController.Move(Vector3.zero,5);
             playerStateMachine.RPC_BroadcastState(PlayerState.Jump);
             return;
         }
@@ -64,22 +68,51 @@ public class IdleState : BaseState<PlayerStateMachine.PlayerState>
             return;
         }
 
-        if(Input.GetKeyDown(KeyCode.Alpha1))
+        if(playerStateMachine.GetInput(out NetworkInputData data))
         {
-            EventBus<WeaponChange>.Raise(new WeaponChange(ItemState.Sword));
+            if(data.buttons.IsSet(NetworkInputData.NUM_1))
+            {
+                EventBus<WeaponChange>.Raise(new WeaponChange(ItemState.Sword));
+                return;
+            }
+
+            if (data.buttons.IsSet(NetworkInputData.NUM_2))
+            {
+                EventBus<WeaponChange>.Raise(new WeaponChange(ItemState.Harberd));
+                return;
+            }
+
+            if (data.buttons.IsSet(NetworkInputData.NUM_3))
+            {
+                EventBus<WeaponChange>.Raise(new WeaponChange(ItemState.Bow));
+                return;
+            }
+
+
+            if (data.buttons.IsSet(NetworkInputData.NUM_4))
+            {
+                EventBus<WeaponChange>.Raise(new WeaponChange(ItemState.FireMagic));
+                return;
+            }
+
+
+            if (data.buttons.IsSet(NetworkInputData.NUM_5))
+            {
+                EventBus<WeaponChange>.Raise(new WeaponChange(ItemState.IceMagic));
+                return;
+            }
+
+
+            if (data.buttons.IsSet(NetworkInputData.NUM_6))
+            {
+                EventBus<WeaponChange>.Raise(new WeaponChange(ItemState.ElectricMagic));
+                return;
+            }
         }
-        if (Input.GetKeyDown(KeyCode.Alpha2))
-        {
-            EventBus<WeaponChange>.Raise(new WeaponChange(ItemState.Harberd));
-        }
-        if (Input.GetKeyDown(KeyCode.Alpha3))
-        {
-            EventBus<WeaponChange>.Raise(new WeaponChange(ItemState.Bow));
-        }
-        if (Input.GetKeyDown(KeyCode.Alpha4))
-        {
-            EventBus<WeaponChange>.Raise(new WeaponChange(ItemState.Magic));
-        }
+        
+            
+        
+ 
     }
 
     public override PlayerStateMachine.PlayerState GetNextState()

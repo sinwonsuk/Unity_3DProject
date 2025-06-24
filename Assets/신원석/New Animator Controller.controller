@@ -653,32 +653,6 @@ AnimatorStateTransition:
   m_InterruptionSource: 0
   m_OrderedInterruption: 1
   m_CanTransitionToSelf: 1
---- !u!1102 &-6546148021410685814
-AnimatorState:
-  serializedVersion: 6
-  m_ObjectHideFlags: 1
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_Name: Archer_Drawn_Idle
-  m_Speed: 1
-  m_CycleOffset: 0
-  m_Transitions: []
-  m_StateMachineBehaviours: []
-  m_Position: {x: 50, y: 50, z: 0}
-  m_IKOnFeet: 0
-  m_WriteDefaultValues: 1
-  m_Mirror: 0
-  m_SpeedParameterActive: 0
-  m_MirrorParameterActive: 0
-  m_CycleOffsetParameterActive: 0
-  m_TimeParameterActive: 0
-  m_Motion: {fileID: -4158235263104464671, guid: 63cad326af6e3f0488d5ec65724e9ad8, type: 3}
-  m_Tag: 
-  m_SpeedParameter: 
-  m_MirrorParameter: 
-  m_CycleOffsetParameter: 
-  m_TimeParameter: 
 --- !u!1109 &-6431523846603741768
 AnimatorTransition:
   m_ObjectHideFlags: 1
@@ -758,15 +732,16 @@ AnimatorStateMachine:
   - {fileID: 3894380929540677947}
   - {fileID: 577659882326286749}
   - {fileID: -1784656319707774638}
+  - {fileID: 841816929195238834}
   m_EntryTransitions: []
   m_StateMachineTransitions:
-  - first: {fileID: -4820192586534192543}
-    second: []
   - first: {fileID: -5198771327676870898}
     second: []
-  - first: {fileID: -1117422459253340933}
+  - first: {fileID: -4820192586534192543}
     second: []
   - first: {fileID: -3747348036164939946}
+    second: []
+  - first: {fileID: -1117422459253340933}
     second: []
   - first: {fileID: 402507844200493933}
     second: []
@@ -1151,13 +1126,13 @@ AnimatorStateMachine:
   m_AnyStateTransitions: []
   m_EntryTransitions: []
   m_StateMachineTransitions:
+  - first: {fileID: 1043026716308795041}
+    second:
+    - {fileID: -929632031214596364}
   - first: {fileID: 3788455137440006977}
     second:
     - {fileID: -6120425922889712526}
     - {fileID: 7028431435744523750}
-  - first: {fileID: 1043026716308795041}
-    second:
-    - {fileID: -929632031214596364}
   m_StateMachineBehaviours: []
   m_AnyStatePosition: {x: 20, y: 290, z: 0}
   m_EntryPosition: {x: 570, y: -60, z: 0}
@@ -1571,13 +1546,13 @@ AnimatorStateMachine:
   m_AnyStateTransitions: []
   m_EntryTransitions: []
   m_StateMachineTransitions:
+  - first: {fileID: -3870386470649342979}
+    second:
+    - {fileID: -8401499837982038839}
   - first: {fileID: 1857978461474636923}
     second:
     - {fileID: -3927788879119893168}
     - {fileID: 2841322344884886604}
-  - first: {fileID: -3870386470649342979}
-    second:
-    - {fileID: -8401499837982038839}
   m_StateMachineBehaviours: []
   m_AnyStatePosition: {x: 20, y: 310, z: 0}
   m_EntryPosition: {x: 590, y: -110, z: 0}
@@ -2467,13 +2442,13 @@ AnimatorStateMachine:
   m_AnyStateTransitions: []
   m_EntryTransitions: []
   m_StateMachineTransitions:
+  - first: {fileID: -2235318209447119198}
+    second:
+    - {fileID: -8849279840187177157}
   - first: {fileID: 1192349853785305865}
     second:
     - {fileID: -3470977105087945764}
     - {fileID: -8987723853328846067}
-  - first: {fileID: -2235318209447119198}
-    second:
-    - {fileID: -8849279840187177157}
   m_StateMachineBehaviours: []
   m_AnyStatePosition: {x: 20, y: 310, z: 0}
   m_EntryPosition: {x: 330, y: 20, z: 0}
@@ -2881,7 +2856,13 @@ AnimatorController:
     m_DefaultInt: 0
     m_DefaultBool: 0
     m_Controller: {fileID: 9100000}
-  - m_Name: NoWeaponTrigger
+  - m_Name: NoWeaponEquip
+    m_Type: 9
+    m_DefaultFloat: 0
+    m_DefaultInt: 0
+    m_DefaultBool: 0
+    m_Controller: {fileID: 9100000}
+  - m_Name: MagicEquip
     m_Type: 9
     m_DefaultFloat: 0
     m_DefaultInt: 0
@@ -2978,13 +2959,13 @@ AnimatorStateMachine:
   m_AnyStateTransitions: []
   m_EntryTransitions: []
   m_StateMachineTransitions:
+  - first: {fileID: -3277082590821384297}
+    second:
+    - {fileID: -6431523846603741768}
   - first: {fileID: 1254831190045113899}
     second:
     - {fileID: -5646513314581071378}
     - {fileID: -3788146582748588269}
-  - first: {fileID: -3277082590821384297}
-    second:
-    - {fileID: -6431523846603741768}
   m_StateMachineBehaviours: []
   m_AnyStatePosition: {x: 20, y: 310, z: 0}
   m_EntryPosition: {x: 590, y: -110, z: 0}
@@ -3000,7 +2981,7 @@ AnimatorStateTransition:
   m_Name: 
   m_Conditions:
   - m_ConditionMode: 1
-    m_ConditionEvent: NoWeaponTrigger
+    m_ConditionEvent: NoWeaponEquip
     m_EventTreshold: 0
   m_DstStateMachine: {fileID: 0}
   m_DstState: {fileID: 974259367503486070}
@@ -3118,6 +3099,31 @@ AnimatorState:
   m_MirrorParameter: 
   m_CycleOffsetParameter: 
   m_TimeParameter: 
+--- !u!1101 &841816929195238834
+AnimatorStateTransition:
+  m_ObjectHideFlags: 1
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_Name: 
+  m_Conditions:
+  - m_ConditionMode: 1
+    m_ConditionEvent: MagicEquip
+    m_EventTreshold: 0
+  m_DstStateMachine: {fileID: 0}
+  m_DstState: {fileID: 4750532761065513400}
+  m_Solo: 0
+  m_Mute: 0
+  m_IsExit: 0
+  serializedVersion: 3
+  m_TransitionDuration: 0.2
+  m_TransitionOffset: 0
+  m_ExitTime: 0.75
+  m_HasExitTime: 0
+  m_HasFixedDuration: 1
+  m_InterruptionSource: 0
+  m_OrderedInterruption: 1
+  m_CanTransitionToSelf: 1
 --- !u!1101 &896408024252781499
 AnimatorStateTransition:
   m_ObjectHideFlags: 1
@@ -3235,12 +3241,6 @@ AnimatorStateMachine:
   m_PrefabAsset: {fileID: 0}
   m_Name: Combo
   m_ChildStates:
-  - serializedVersion: 1
-    m_State: {fileID: 1833068273203802791}
-    m_Position: {x: 150, y: 280, z: 0}
-  - serializedVersion: 1
-    m_State: {fileID: -6546148021410685814}
-    m_Position: {x: 440, y: 280, z: 0}
   - serializedVersion: 1
     m_State: {fileID: 2493195586996797009}
     m_Position: {x: 730, y: -40, z: 0}
@@ -3425,32 +3425,6 @@ AnimatorStateTransition:
   m_InterruptionSource: 0
   m_OrderedInterruption: 1
   m_CanTransitionToSelf: 1
---- !u!1102 &1833068273203802791
-AnimatorState:
-  serializedVersion: 6
-  m_ObjectHideFlags: 1
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_Name: Archer_Draw_Bow_From_Hip
-  m_Speed: 1
-  m_CycleOffset: 0
-  m_Transitions: []
-  m_StateMachineBehaviours: []
-  m_Position: {x: 50, y: 50, z: 0}
-  m_IKOnFeet: 0
-  m_WriteDefaultValues: 1
-  m_Mirror: 0
-  m_SpeedParameterActive: 0
-  m_MirrorParameterActive: 0
-  m_CycleOffsetParameterActive: 0
-  m_TimeParameterActive: 0
-  m_Motion: {fileID: -4158235263104464671, guid: 6d16dde19897ed84cb508fbf5e4663e1, type: 3}
-  m_Tag: 
-  m_SpeedParameter: 
-  m_MirrorParameter: 
-  m_CycleOffsetParameter: 
-  m_TimeParameter: 
 --- !u!1102 &1850264793215160969
 AnimatorState:
   serializedVersion: 6
