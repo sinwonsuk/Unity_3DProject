@@ -1,6 +1,7 @@
+using Fusion;
 using UnityEngine;
 
-public class ShopNPC : MonoBehaviour
+public class ShopNPC : NetworkBehaviour
 {
     [SerializeField] private string npcId;
     [SerializeField] private ShopUI shopUI;
@@ -9,8 +10,25 @@ public class ShopNPC : MonoBehaviour
     private BigInventoryUI bigInventoryUI;
     private Resell resellButton; // 버튼용 스크립트
 
-    private void Awake()
+    //private void Awake()
+    //{
+    //    bigInventoryUI = ingameUI.GetComponentInChildren<BigInventoryUI>(true);
+    //    resellButton = ingameUI.GetComponentInChildren<Resell>(true);
+    //}
+
+    public override void Spawned()
     {
+        if (Object.HasInputAuthority || Object.HasStateAuthority) // 로컬에서만
+        {
+            GameObject ingameUI = GameObject.Find("IngameUI"); // 씬 안의 오브젝트
+            if (ingameUI != null)
+                LinkUI(ingameUI);
+        }
+    }
+
+    public void LinkUI(GameObject ingameUI)
+    {
+        shopUI = ingameUI.GetComponentInChildren<ShopUI>(true);
         bigInventoryUI = ingameUI.GetComponentInChildren<BigInventoryUI>(true);
         resellButton = ingameUI.GetComponentInChildren<Resell>(true);
     }
