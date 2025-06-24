@@ -119,17 +119,11 @@ NavMeshSettings:
     debug:
       m_Flags: 0
   m_NavMeshData: {fileID: 0}
---- !u!114 &447107946 stripped
-MonoBehaviour:
-  m_CorrespondingSourceObject: {fileID: 4880448135119066925, guid: 893bf5b833239e24db224d1dcdc0f1a5, type: 3}
+--- !u!1 &162279805 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 6801154750796494864, guid: 893bf5b833239e24db224d1dcdc0f1a5, type: 3}
   m_PrefabInstance: {fileID: 1847681676881425048}
   m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 0}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 31cfc9044a2376f4889eada9444093cb, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
 --- !u!1 &472747586
 GameObject:
   m_ObjectHideFlags: 0
@@ -608,7 +602,7 @@ Transform:
   m_Children: []
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!1001 &985882033
+--- !u!1001 &839127161
 PrefabInstance:
   m_ObjectHideFlags: 0
   serializedVersion: 2
@@ -621,24 +615,24 @@ PrefabInstance:
       value: 
       objectReference: {fileID: 1198443614}
     - target: {fileID: 2237044375263064630, guid: b1eb75f3e89a43445bd9e5c8014521c4, type: 3}
-      propertyPath: resellButton
+      propertyPath: ingameUI
       value: 
-      objectReference: {fileID: 1642388043}
-    - target: {fileID: 2237044375263064630, guid: b1eb75f3e89a43445bd9e5c8014521c4, type: 3}
-      propertyPath: bigInventoryUI
-      value: 
-      objectReference: {fileID: 447107946}
+      objectReference: {fileID: 162279805}
+    - target: {fileID: 4080552011111963695, guid: b1eb75f3e89a43445bd9e5c8014521c4, type: 3}
+      propertyPath: SortKey
+      value: 3222722540
+      objectReference: {fileID: 0}
     - target: {fileID: 6299151774026347023, guid: b1eb75f3e89a43445bd9e5c8014521c4, type: 3}
       propertyPath: m_Name
       value: BlackSmith
       objectReference: {fileID: 0}
     - target: {fileID: 9098321323189530758, guid: b1eb75f3e89a43445bd9e5c8014521c4, type: 3}
       propertyPath: m_LocalPosition.x
-      value: 2.44
+      value: 2.22
       objectReference: {fileID: 0}
     - target: {fileID: 9098321323189530758, guid: b1eb75f3e89a43445bd9e5c8014521c4, type: 3}
       propertyPath: m_LocalPosition.y
-      value: -0.09
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 9098321323189530758, guid: b1eb75f3e89a43445bd9e5c8014521c4, type: 3}
       propertyPath: m_LocalPosition.z
@@ -894,6 +888,10 @@ PrefabInstance:
       propertyPath: m_Name
       value: ShopUICanvas
       objectReference: {fileID: 0}
+    - target: {fileID: 5339253927009625634, guid: a4355a3947ab53248abdf209df7ddb2d, type: 3}
+      propertyPath: m_IsActive
+      value: 0
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
@@ -977,17 +975,6 @@ Camera:
   m_CorrespondingSourceObject: {fileID: 2239392370786502328, guid: 46bf3b6f8cf6cce4fb3f32ded8818ac1, type: 3}
   m_PrefabInstance: {fileID: 1588639964}
   m_PrefabAsset: {fileID: 0}
---- !u!114 &1642388043 stripped
-MonoBehaviour:
-  m_CorrespondingSourceObject: {fileID: 4275111969281146918, guid: 893bf5b833239e24db224d1dcdc0f1a5, type: 3}
-  m_PrefabInstance: {fileID: 1847681676881425048}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 0}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 638e99dd2ff851646888c32a3ccc3805, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
 --- !u!1 &1686757557
 GameObject:
   m_ObjectHideFlags: 0
@@ -1175,6 +1162,14 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 4762163573841002610, guid: 893bf5b833239e24db224d1dcdc0f1a5, type: 3}
+      propertyPath: m_IsActive
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 5323298076047844018, guid: 893bf5b833239e24db224d1dcdc0f1a5, type: 3}
+      propertyPath: m_IsActive
+      value: 0
+      objectReference: {fileID: 0}
     - target: {fileID: 6801154750796494864, guid: 893bf5b833239e24db224d1dcdc0f1a5, type: 3}
       propertyPath: m_Name
       value: InGameUI
@@ -1329,7 +1324,7 @@ SceneRoots:
   - {fileID: 1847681676881425048}
   - {fileID: 732456985}
   - {fileID: 1003038989}
-  - {fileID: 985882033}
   - {fileID: 503242549}
   - {fileID: 1198443613}
   - {fileID: 1588639964}
+  - {fileID: 839127161}
