@@ -19651,11 +19651,6 @@ GameObject:
   - component: {fileID: 6568547256506680810}
   - component: {fileID: 459242385315834651}
   - component: {fileID: 3488200526346784215}
-  - component: {fileID: 5122481213751530240}
-  - component: {fileID: -79610558380539524}
-  - component: {fileID: 919596379442508107}
-  - component: {fileID: 809014139255947781}
-  - component: {fileID: -2565989485732924869}
   m_Layer: 0
   m_Name: ElectricBall
   m_TagString: Weapon
