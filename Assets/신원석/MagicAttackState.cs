@@ -40,7 +40,7 @@ public class MagicAttackState : BaseState<PlayerStateMachine.PlayerState>
         {
             Quaternion quaternion = Quaternion.Euler(0, data.CameraRotateY, 0);
 
-            playerStateMachine.playerController.Rotate(quaternion);
+           // playerStateMachine.playerController.Rotate(quaternion);
         }
 
 
@@ -60,7 +60,7 @@ public class MagicAttackState : BaseState<PlayerStateMachine.PlayerState>
                 targetPos = ray.origin + ray.direction * fallbackDist;
             }
             adad = playerStateMachine.WeaponManager.CreateMagic();
-            adad.GetComponent<Arrow>().Shoot(targetPos);
+            //adad.GetComponent<Arrow>().Shoot(targetPos);
 
             //playerStateMachine.AnimHandler.ChangeMagicAttackState(attack);
         }
@@ -89,9 +89,9 @@ public class MagicAttackState : BaseState<PlayerStateMachine.PlayerState>
     public override void OnTriggerEnter(Collider collider) { }
     public override void OnTriggerExit(Collider collider) { }
     public override void OnTriggerStay(Collider collider) { }
-    public override void OnAttackAnimationEnd()
+    public override void OnHitAnimationEvent()
     {
-        playerStateMachine.Combat.OnAnimationEnd();
+        playerStateMachine.Combat.OnAttackAnimationEnd();
     }
 
     Vector3 targetPos;

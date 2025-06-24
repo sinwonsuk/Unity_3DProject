@@ -7,7 +7,7 @@ public class PlayerCombat
 {
     private PlayerStateMachine player;
     private bool nextComboQueued = false;
-
+    private bool nextHitQueued = false;
 
 
     public Action<int,RpcInfo> Rpc_AttackAction;
@@ -24,16 +24,34 @@ public class PlayerCombat
         set => player.AttackCount = value;  // 네트워크 프로퍼티 쓰기
     }
 
-    public void StartAttack()
+    public int HitCount
     {
-        AttackCount = 1;
-        nextComboQueued = false;
-        player.AnimHandler.SetAttackCount(AttackCount);
-        player.AnimHandler.SetAttackBool(true);
+        get => player.HitCount;      // 네트워크 프로퍼티 읽기
+        set => player.HitCount = value;  // 네트워크 프로퍼티 쓰기
     }
 
 
+    public void StartAttack()
+    {
+        AttackCount = 1;
+        nextHitQueued = false;
+        player.AnimHandler.SetAttackCount(AttackCount);
+        player.AnimHandler.SetAttackBool(true);
+    }
+    public void StartHit()
+    {
+        HitCount = 1;
+        nextHitQueued = false;
+        player.AnimHandler.SetHitTrigger();
+        player.AnimHandler.SetHitCount(HitCount);
+        player.AnimHandler.SetHitBool(true);
+    }
 
+    public void TryHitNextCombo()
+    {
+        if (HitCount < 4)
+            nextHitQueued = true;
+    }
 
     public void TryQueueNextCombo()
     {
@@ -41,19 +59,31 @@ public class PlayerCombat
             nextComboQueued = true;
     }
 
-    public void OnAnimationEnd()
+    public void OnAttackAnimationEnd()
     {
         if (nextComboQueued && AttackCount < 4)
         {
             AttackCount++;
             nextComboQueued = false;
             player.SetIsAttackTrue();
+            player.ClearHitSet();
         }
         else
         {   
             player.SetIsAttackFalse();
+            player.ClearHitSet();
         }
       
+    }
+    public void OnHitAnimationEnd()
+    {
+        if (nextHitQueued && HitCount < 4)
+        {
+            HitCount++;
+            nextHitQueued = false;
+            player.SetIsHitTrue();
+            player.ClearHitSet();
+        }
     }
 
 

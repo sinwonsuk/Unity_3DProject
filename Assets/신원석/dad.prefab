@@ -4002,6 +4002,7 @@ MonoBehaviour:
   NetworkedBehaviours:
   - {fileID: 2941126593746530866}
   - {fileID: 1124662853945912148}
+  - {fileID: 789609957218758956}
   ForceRemoteRenderTimeframe: 0
 --- !u!114 &2941126593746530866
 MonoBehaviour:
@@ -4039,7 +4040,12 @@ MonoBehaviour:
   _AttackCount: 0
   _isRoll: 0
   _isAttack: 1
+  _isHit: 1
   _RollCount: 0
+  _HitCount: 0
+  _gatherAttack: 0
+  __canBeHit: 1
+  invulnDuration: 0.2
   weapons: {fileID: 0}
   moveSpeed: 5
   rotationSpeed: 500

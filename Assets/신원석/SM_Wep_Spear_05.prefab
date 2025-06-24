@@ -18,7 +18,7 @@ GameObject:
   - component: {fileID: 97158395867173965}
   m_Layer: 0
   m_Name: SM_Wep_Spear_05
-  m_TagString: Player
+  m_TagString: Weapon
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -106,7 +106,7 @@ MeshCollider:
     serializedVersion: 2
     m_Bits: 0
   m_LayerOverridePriority: 0
-  m_IsTrigger: 0
+  m_IsTrigger: 1
   m_ProvidesContacts: 0
   m_Enabled: 1
   serializedVersion: 5
@@ -125,6 +125,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 13956d8a7005e734ea925da59acb432a, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  _flying: 0
+  _flyDir: {x: 0, y: 0, z: 0}
 --- !u!114 &-8644817002188301263
 MonoBehaviour:
   m_ObjectHideFlags: 0

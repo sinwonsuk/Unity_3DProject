@@ -14,12 +14,10 @@ public class WeaponSwitchState : BaseState<PlayerStateMachine.PlayerState>
     {
         if (playerStateMachine.Object.HasStateAuthority)
         {
-
             PlayerRef me = playerStateMachine.Object.InputAuthority;
-
             playerStateMachine.SetWeapon(true);
             playerStateMachine.WeaponManager.RequestEquip(ItemState.Sword, HandSide.Right, me);
-            
+            playerStateMachine.OnAttackEndEvent();
         }
 
         playerStateMachine.AnimHandler.ChangeWeapon(ItemState.Sword);
@@ -43,7 +41,7 @@ public class WeaponSwitchState : BaseState<PlayerStateMachine.PlayerState>
 
     public override void FixedUpdateState(){ }
 
-    public override void OnAttackAnimationEnd()
+    public override void OnHitAnimationEvent()
     {
 
     }

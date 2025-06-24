@@ -46036,15 +46036,22 @@ AnimationClip:
     floatParameter: 0
     intParameter: 0
     messageOptions: 0
-  - time: 0.4
-    functionName: OnAttackEndEvent
+  - time: 0.3
+    functionName: SetIsAttackFalse
     data: 
     objectReferenceParameter: {fileID: 0}
     floatParameter: 0
     intParameter: 0
     messageOptions: 0
-  - time: 0.45
-    functionName: SetIsAttackFalse
+  - time: 0.31666666
+    functionName: OnAttackStartEvent
+    data: 
+    objectReferenceParameter: {fileID: 0}
+    floatParameter: 0
+    intParameter: 0
+    messageOptions: 0
+  - time: 0.38333333
+    functionName: OnAttackEndEvent
     data: 
     objectReferenceParameter: {fileID: 0}
     floatParameter: 0
