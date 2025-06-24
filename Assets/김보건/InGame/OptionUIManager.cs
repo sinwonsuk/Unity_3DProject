@@ -6,30 +6,48 @@ public class OptionUIManager : MonoBehaviour
     void Start()
     {
         OptionsPanel.SetActive(false);
+        Cursor.lockState = CursorLockMode.Locked;
+        Cursor.visible = false;
     }
 
-    // Update is called once per frame
     void Update()
     {
-        if(Input.GetKeyDown(KeyCode.Escape) && isOptionsActive == false)
+        if (Input.GetKeyDown(KeyCode.Escape) && !isOptionsActive)
         {
-            OptionsPanel.SetActive(true);
-            isOptionsActive = true;
+            OpenOptions();
         }
-        else if (Input.GetKeyDown(KeyCode.Escape) && isOptionsActive == true)
+        else if (Input.GetKeyDown(KeyCode.Escape) && isOptionsActive)
         {
-            OptionsPanel.SetActive(false);
-            isOptionsActive = false;
+            CloseOptions();
         }
     }
 
     public void BackToGame()
     {
-        if(isOptionsActive == true)
+        if (isOptionsActive)
         {
-            OptionsPanel.SetActive(false);
-            isOptionsActive = false;
+            CloseOptions();
         }
+    }
+
+    private void OpenOptions()
+    {
+        OptionsPanel.SetActive(true);
+        isOptionsActive = true;
+
+        // 마우스 포인터 보이게
+        Cursor.lockState = CursorLockMode.None;
+        Cursor.visible = true;
+    }
+
+    private void CloseOptions()
+    {
+        OptionsPanel.SetActive(false);
+        isOptionsActive = false;
+
+        // 마우스 포인터 다시 숨김
+        Cursor.lockState = CursorLockMode.Locked;
+        Cursor.visible = false;
     }
 
 
