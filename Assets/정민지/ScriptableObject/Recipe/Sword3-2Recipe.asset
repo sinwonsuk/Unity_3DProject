@@ -10,10 +10,10 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 16191fbc25926d4489d93d8078d42a1e, type: 3}
-  m_Name: Sword2Recipe
+  m_Name: Sword3-2Recipe
   m_EditorClassIdentifier: 
   ingredients:
-  - {fileID: 11400000, guid: b03db8a9567d26a4fa5f2beb7408f818, type: 2}
-  - {fileID: 11400000, guid: b03db8a9567d26a4fa5f2beb7408f818, type: 2}
-  - {fileID: 11400000, guid: b03db8a9567d26a4fa5f2beb7408f818, type: 2}
-  result: {fileID: 11400000, guid: fc8380ff7e8d0c046a97a4fecd6913fe, type: 2}
+  - {fileID: 11400000, guid: 62de3ea9b53e747419a6a0a411c76025, type: 2}
+  - {fileID: 11400000, guid: 62de3ea9b53e747419a6a0a411c76025, type: 2}
+  - {fileID: 11400000, guid: 62de3ea9b53e747419a6a0a411c76025, type: 2}
+  result: {fileID: 11400000, guid: d206c3aeb2c2c30489ed9454473f7fb4, type: 2}

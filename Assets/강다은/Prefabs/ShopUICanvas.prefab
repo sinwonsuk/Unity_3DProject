@@ -682,7 +682,7 @@ MonoBehaviour:
       m_Calls: []
   m_text: "\uAD6C\uB9E4\uD558\uAE30"
   m_isRightToLeft: 0
-  m_fontAsset: {fileID: 11400000, guid: ebf8c65ae4494934681a3bce59681a5a, type: 2}
+  m_fontAsset: {fileID: 11400000, guid: bc2719c17c7fc934bafcc9890864499a, type: 2}
   m_sharedMaterial: {fileID: -7322762428203977095, guid: ebf8c65ae4494934681a3bce59681a5a, type: 2}
   m_fontSharedMaterials: []
   m_fontMaterial: {fileID: 0}
@@ -748,7 +748,7 @@ MonoBehaviour:
   m_margin: {x: 0, y: 0, z: 0, w: 0}
   m_isUsingLegacyAnimationComponent: 0
   m_isVolumetricText: 0
-  m_hasFontAssetChanged: 0
+  m_hasFontAssetChanged: 1
   m_baseMaterial: {fileID: 0}
   m_maskOffset: {x: 0, y: 0, z: 0, w: 0}
 --- !u!1 &3666593270295961267
@@ -1233,7 +1233,6 @@ MonoBehaviour:
   slotRoot: {fileID: 6521592459720019284}
   slotPrefab: {fileID: -8290236435999207561, guid: 1f32243463366a4489f4f2d615cc3397, type: 3}
   detailPanel: {fileID: 5309142247487558006}
-  detailItemIcon: {fileID: 0}
   detailItemName: {fileID: 2022740601889280866}
   detailItemPrice: {fileID: 4952165756687333221}
   detailItemDescription: {fileID: 9104223612063726071}
@@ -1841,7 +1840,7 @@ MonoBehaviour:
       m_Calls: []
   m_text: "\uC0C1\uC810"
   m_isRightToLeft: 0
-  m_fontAsset: {fileID: 11400000, guid: ebf8c65ae4494934681a3bce59681a5a, type: 2}
+  m_fontAsset: {fileID: 11400000, guid: bc2719c17c7fc934bafcc9890864499a, type: 2}
   m_sharedMaterial: {fileID: -7322762428203977095, guid: ebf8c65ae4494934681a3bce59681a5a, type: 2}
   m_fontSharedMaterials: []
   m_fontMaterial: {fileID: 0}
@@ -1907,7 +1906,7 @@ MonoBehaviour:
   m_margin: {x: 0, y: 0, z: 0, w: 0}
   m_isUsingLegacyAnimationComponent: 0
   m_isVolumetricText: 0
-  m_hasFontAssetChanged: 0
+  m_hasFontAssetChanged: 1
   m_baseMaterial: {fileID: 0}
   m_maskOffset: {x: 0, y: 0, z: 0, w: 0}
 --- !u!1 &7778977837429147687
