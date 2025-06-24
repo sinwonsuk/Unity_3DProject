@@ -1,3 +1,4 @@
+using System.Collections.Generic;
 using Fusion;
 using TMPro;
 using UnityEngine;
@@ -5,72 +6,67 @@ using UnityEngine.UI;
 
 public class PlayerHealth : NetworkBehaviour
 {
+    // 모든 인스턴스를 추적하기 위한 리스트
+    public static readonly List<PlayerHealth> All = new List<PlayerHealth>();
+
+    void Awake() => All.Add(this);
+    void OnDestroy() => All.Remove(this);
+
+    // 네트워크로 동기화할 체력
     [Networked] public int currentHp { get; private set; }
     [SerializeField] private int maxHp;
 
     public override void Spawned()
     {
+        // 서버 권한이 있을 때 초기 체력 설정
         if (HasStateAuthority)
             currentHp = maxHp;
 
+        // 입력 권한이 있는 클라이언트에 UI 초기화 이벤트 발행
         if (Object.HasInputAuthority)
-        {
-            EventBus<HealthChanged>.Raise(new HealthChanged(this, currentHp,maxHp));
-        }
+            EventBus<HealthChanged>.Raise(new HealthChanged(this, currentHp, maxHp));
     }
 
     public void TakeDamage(int dmg)
     {
+        // 서버만 실행
         if (!HasStateAuthority) return;
 
+        int before = currentHp;
         currentHp = Mathf.Clamp(currentHp - dmg, 0, maxHp);
+        Debug.Log($"[플레이어 체력] {gameObject.name}: {before} → {currentHp} (-{dmg})");
 
-        Debug.Log($"플레이어 현재 체력 : {currentHp}");
-
-        // 클라이언트 UI 업데이트
+        // UI 업데이트
         if (Object.HasInputAuthority)
-        {
             EventBus<HealthChanged>.Raise(new HealthChanged(this, currentHp, maxHp));
-        }
 
-        // 서버가 생존자 수 계산
+        // 사망 시 생존자 수 계산
         if (currentHp <= 0)
-        {
-            CountAlivePlayers(); // 이건 HasStateAuthority니까 안전하게 호출됨
-        }
+            CountAlivePlayers();
     }
 
-    public void UseHealingItem(int heal)
+    public void Heal(int amount)
     {
+        if (!HasStateAuthority) return;
 
-        if (!HasStateAuthority) return; //권한을 가지고있지 않으면 리턴
-
-        currentHp = Mathf.Clamp(currentHp + heal, 0, maxHp);
+        int before = currentHp;
+        currentHp = Mathf.Clamp(currentHp + amount, 0, maxHp);
+        Debug.Log($"[플레이어 체력] {gameObject.name}: {before} → {currentHp} (+{amount})");
 
         if (Object.HasInputAuthority)
-        {
             EventBus<HealthChanged>.Raise(new HealthChanged(this, currentHp, maxHp));
-        }
     }
 
     public void CountAlivePlayers()
     {
         int alive = 0;
-        foreach (var player in Runner.ActivePlayers)
+        foreach (var player in All)
         {
-            var obj = Runner.GetPlayerObject(player);
-            if (obj != null && obj.TryGetComponent<PlayerHealth>(out var health))
-            {
-                if (health.currentHp > 0)
-                    alive++;
-            }
+            if (player.currentHp > 0)
+                alive++;
         }
-
-        // 서버만 발행
         if (HasStateAuthority)
-        {
             EventBus<SurvivorPlayerCount>.Raise(new SurvivorPlayerCount(alive));
-        }
     }
 
     public void RequestDamage(int damage)
@@ -82,14 +78,8 @@ public class PlayerHealth : NetworkBehaviour
     }
 
     [Rpc(RpcSources.InputAuthority, RpcTargets.StateAuthority)]
-    public void Rpc_RequestDamage(int damage)
-    {
-        TakeDamage(damage);
-    }
+    public void Rpc_RequestDamage(int damage) => TakeDamage(damage);
 
     [Rpc(RpcSources.InputAuthority, RpcTargets.StateAuthority)]
-    public void Rpc_RequestHeal(int heal)
-    {
-        UseHealingItem(heal);
-    }
+    public void Rpc_RequestHeal(int heal) => Heal(heal);
 }
