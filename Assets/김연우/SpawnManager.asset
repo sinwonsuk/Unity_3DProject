@@ -13,7 +13,7 @@ MonoBehaviour:
   m_Name: SpawnManager
   m_EditorClassIdentifier: 
   spawnPositions:
-  - {x: 93.31, y: 17.31, z: -43.87}
+  - {x: 93.31, y: -17.31, z: -43.87}
   - {x: 107.75, y: -22.79, z: 22.16}
   - {x: 95.61, y: -24.64, z: 75.41}
   - {x: 20.94, y: -24.14, z: 100.06}
