@@ -116,13 +116,13 @@ public class AutoMatchManager : MonoBehaviour, INetworkRunnerCallbacks
         {
             //roomName = cachedSessionList[0].Name;
             //roomName = $"Room_{Random.Range(0, 9999)}";
-            roomName = $"Room_001";
+            roomName = $"Room_002";
             Debug.Log($"기존 방 참가: {roomName}");
         }
         else
         {
             //roomName = $"Room_{Random.Range(0, 9999)}";
-            roomName = $"Room_001";
+            roomName = $"Room_002";
             Debug.Log($"새 방 생성: {roomName}");
         }
 
@@ -161,7 +161,7 @@ public class AutoMatchManager : MonoBehaviour, INetworkRunnerCallbacks
             SessionName = roomName,
             Scene = startScene,         // Host 가 나중에 LoadScene
             SceneManager = sceneManager,
-            PlayerCount = 2
+            PlayerCount = 5
         };
 
         try

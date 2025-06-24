@@ -46,6 +46,7 @@ public class BasicSpawner2 : NetworkBehaviour, INetworkRunnerCallbacks
 
     public override void Spawned()
     {
+        Runner.AddCallbacks(this);
         // 호스트 : 자기 자신 캐릭터 먼저 스폰
         if (Runner.IsServer)
         {
@@ -163,12 +164,12 @@ public class BasicSpawner2 : NetworkBehaviour, INetworkRunnerCallbacks
         data.buttons.Set(NetworkInputData.KEY_L, Input.GetKey(KeyCode.L));
         data.buttons.Set(NetworkInputData.KEY_CTRL, Input.GetKey(KeyCode.LeftControl));
 
-        //data.buttons.Set(NetworkInputData.NUM_1, Input.GetKey(KeyCode.LeftControl));
-        //data.buttons.Set(NetworkInputData.NUM_2, Input.GetKey(KeyCode.LeftControl));
-        //data.buttons.Set(NetworkInputData.NUM_3, Input.GetKey(KeyCode.LeftControl));
-        //data.buttons.Set(NetworkInputData.NUM_4, Input.GetKey(KeyCode.LeftControl));
-        //data.buttons.Set(NetworkInputData.NUM_5, Input.GetKey(KeyCode.LeftControl));
-        //data.buttons.Set(NetworkInputData.NUM_6, Input.GetKey(KeyCode.LeftControl));
+        data.buttons.Set(NetworkInputData.NUM_1, Input.GetKey(KeyCode.Alpha1));
+        data.buttons.Set(NetworkInputData.NUM_2, Input.GetKey(KeyCode.Alpha2));
+        data.buttons.Set(NetworkInputData.NUM_3, Input.GetKey(KeyCode.Alpha3));
+        data.buttons.Set(NetworkInputData.NUM_4, Input.GetKey(KeyCode.Alpha4));
+        data.buttons.Set(NetworkInputData.NUM_5, Input.GetKey(KeyCode.Alpha5));
+        data.buttons.Set(NetworkInputData.NUM_6, Input.GetKey(KeyCode.Alpha6));
 
 
         _mouseButton0 = false;
