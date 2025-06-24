@@ -1031,6 +1031,8 @@ MonoBehaviour:
   - {fileID: 11400000, guid: c0c0e52ee33612e4abf4e48665448c90, type: 2}
   - {fileID: 11400000, guid: 706e6f1c9dee0944dab75d82f3b9bb6d, type: 2}
   - {fileID: 11400000, guid: 3af8e5beb50705b41a19142cb4a72546, type: 2}
+  - {fileID: 11400000, guid: d60c4bb1b7543d34aac0be374503c334, type: 2}
+  - {fileID: 11400000, guid: d2b3282b4418dd145bbdce3902f75fd1, type: 2}
   centerSlot: {fileID: 4505480278938981607}
 --- !u!1 &3815094287183217617
 GameObject:
