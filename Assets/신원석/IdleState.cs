@@ -124,6 +124,7 @@ public class IdleState : BaseState<PlayerStateMachine.PlayerState>
 
     public override void OnTriggerEnter(Collider collider)
     {
+        Debug.Log("fffff");
 
         // 1) 호스트에서만 충돌 처리
         if (!playerStateMachine.Object.HasStateAuthority)

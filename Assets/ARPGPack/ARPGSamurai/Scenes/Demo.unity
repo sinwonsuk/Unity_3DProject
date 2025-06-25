@@ -1067,6 +1067,10 @@ PrefabInstance:
       propertyPath: m_Name
       value: InGameUI (1)
       objectReference: {fileID: 0}
+    - target: {fileID: 6801154750796494864, guid: 893bf5b833239e24db224d1dcdc0f1a5, type: 3}
+      propertyPath: m_IsActive
+      value: 0
+      objectReference: {fileID: 0}
     - target: {fileID: 8471751877324363277, guid: 893bf5b833239e24db224d1dcdc0f1a5, type: 3}
       propertyPath: SortKey
       value: 484600617
@@ -1522,6 +1526,7 @@ GameObject:
   - component: {fileID: 1003960692}
   - component: {fileID: 1003960691}
   - component: {fileID: 1003960690}
+  - component: {fileID: 1003960694}
   m_Layer: 11
   m_Name: Cube
   m_TagString: Object
@@ -1612,12 +1617,24 @@ Transform:
   m_GameObject: {fileID: 1003960689}
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: -3.39, y: 1.39, z: 0}
+  m_LocalPosition: {x: -1.54, y: 1.39, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &1003960694
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1003960689}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: a162498887307b3478c90678dd08f79c, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1 &1369072162
 GameObject:
   m_ObjectHideFlags: 0
