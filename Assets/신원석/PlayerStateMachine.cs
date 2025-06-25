@@ -316,7 +316,7 @@ public class PlayerStateMachine : StageManager<PlayerStateMachine.PlayerState>
         }
         if (State == ItemState.Arrow)
         {
-            arrow = WeaponManager.Magic.GetComponent<ShootObj>();
+            arrow = WeaponManager.Arrow.GetComponent<ShootObj>();
         }
 
         Vector3 dir = targetPos;

@@ -16,8 +16,6 @@ public class AnimationHandler
         this.animator = animator;
         this.playerStateMachine = playerStateMachine;
     }
-   // public int WeaponCount { get; set; }
-
 
     public int WeaponCount
     {

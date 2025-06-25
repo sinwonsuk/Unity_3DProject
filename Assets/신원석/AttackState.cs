@@ -22,7 +22,11 @@ public class AttackState : BaseState<PlayerStateMachine.PlayerState>
     public override void EnterState()
     {
         playerStateMachine.Combat.StartAttack();
-        playerStateMachine.hitSet.Clear();  // 스윙마다 초기화
+        playerStateMachine.hitSet.Clear(); 
+        
+
+
+        // 스윙마다 초기화
        // playerStateMachine.WeaponManager.currentWeapon.GetComponent<MeshCollider>().enabled = true;
     }
     public override void ExitState()
@@ -44,7 +48,7 @@ public class AttackState : BaseState<PlayerStateMachine.PlayerState>
         //       playerStateMachine.AnimHandler.SetAttackCount(playerStateMachine.AttackCount);
 
 
-        if (!playerStateMachine.Object.HasStateAuthority)
+        if (!playerStateMachine.Object.HasStateAuthority && !playerStateMachine.Runner.IsForward)
             return;
 
         playerStateMachine.AnimHandler.SetAttackCount(playerStateMachine.AttackCount);
@@ -79,7 +83,7 @@ public class AttackState : BaseState<PlayerStateMachine.PlayerState>
 
 
 
-            playerStateMachine.action.Invoke();
+        playerStateMachine.action.Invoke();
 
         
 
