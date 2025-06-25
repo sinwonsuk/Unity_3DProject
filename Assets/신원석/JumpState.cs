@@ -27,9 +27,7 @@ public class JumpState : BaseState<PlayerStateMachine.PlayerState>
     {
         playerStateMachine.NetAnim.Animator.SetBool("Jump", true);
 
-        float v0 = Mathf.Sqrt(2f * gravity * jumpHeight);
-
-        playerStateMachine.playerController.Move(Vector3.zero, v0);
+        playerStateMachine.playerController.Move(Vector3.zero, 2f * gravity * jumpHeight);
 
     }
     public override void ExitState()
