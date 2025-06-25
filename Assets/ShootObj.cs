@@ -10,6 +10,8 @@ public class ShootObj : NetworkBehaviour
     [Networked] public bool flying { get; set; }
     [Networked] public Vector3 flyDir { get; set; }
 
+    //[SerializeField]
+    //GameObject material;
  
     [SerializeField] private float speed = 0.0f;
 
