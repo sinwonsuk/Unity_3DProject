@@ -5211,7 +5211,7 @@ MonoBehaviour:
   weapons: {fileID: 11400000, guid: bb10c1def4f7b9d42a86027dc3b35f91, type: 2}
   moveSpeed: 5
   rotationSpeed: 500
-  cameraFollow: {fileID: 6333430755428912889, guid: 7dce397188bc05445b1d1a3151df1764, type: 3}
+  cameraFollow: {fileID: 3130017479326424964}
   rollSpeed: 15
   attackSpeed: 2
   rightHandTransform: {fileID: 1827334682947334435, guid: 7dce397188bc05445b1d1a3151df1764, type: 3}
