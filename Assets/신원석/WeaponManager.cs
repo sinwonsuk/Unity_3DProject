@@ -113,7 +113,24 @@ public class WeaponManager : NetworkBehaviour
 
         Magic = obj;
     }
+    public NetworkObject GetCreateMagic(ItemState state, HandSide Dir, PlayerRef owner = default)
+    {
+        magicState = state;
 
+        NetworkPrefabRef prefab = config.GetWeapon(state);
+        Vector3 position = config.GetTransform(state).localPosition;
+        Quaternion rotation = config.GetTransform(state).localRotation;
+        NetworkObject obj = null;
+
+        obj = runner.Spawn(prefab, position, rotation, owner, onBeforeSpawned: (runner, obj) =>
+        {
+            var wno = obj.GetComponent<WeaponNetworkObject>();
+
+        }
+            );
+
+        return obj;
+    }
 
     [Rpc(RpcSources.InputAuthority, RpcTargets.StateAuthority)]
     public void RPC_RequestEquip(ItemState state, HandSide isDir, RpcInfo info = default)

@@ -16,7 +16,7 @@ public class ShootObj : NetworkBehaviour
     public override void FixedUpdateNetwork()
     {
 
-        if (Object.HasStateAuthority && flying)
+        if (flying)
         {
             transform.position += Runner.DeltaTime * speed * flyDir;
         }
@@ -30,8 +30,6 @@ public class ShootObj : NetworkBehaviour
 
 
 
-
-    // 반드시 호스트에서만 호출
     public void Shoot(Vector3 dir)
     {
         Debug.Log($"발사 위치: {transform.position}");

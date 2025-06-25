@@ -39,6 +39,9 @@ public class PlayerStateMachine : StageManager<PlayerStateMachine.PlayerState>
     [Networked] public int HitCount { get; set; } = 0;
 
     [Networked] public float gatherAttack {get;set;}= 0;
+
+    [Networked] public int WeaponCount { get; set; } = 0;
+
     public NetworkMecanimAnimator NetAnim { get; set; }
 
     public HashSet<NetworkObject> hitSet { get; set; } = new();
@@ -285,32 +288,32 @@ public class PlayerStateMachine : StageManager<PlayerStateMachine.PlayerState>
 
     }
     [Rpc(RpcSources.InputAuthority, RpcTargets.All)]
-    public void RPC_RequestShoot(Vector3 targetPos, ItemState State, RpcInfo info = default)
+    public void RPC_RequestShoot(Vector3 targetPos, ItemState State, NetworkObject magic = null, RpcInfo info = default)
     {
         ShootObj arrow = null;
 
         if (State == ItemState.IceMagic)
         {
-            arrow = WeaponManager.Magic.GetComponent<ShootObj>();
+            arrow = magic.GetComponent<ShootObj>();
         }
         if (State == ItemState.FireMagic)
         {
-            arrow = WeaponManager.Magic.GetComponent<ShootObj>();
+            arrow = magic.GetComponent<ShootObj>();
         }
         if (State == ItemState.ElectricMagic)
         {
-            arrow = WeaponManager.Magic.GetComponent<ShootObj>();
+            arrow = magic.GetComponent<ShootObj>();
         }
         if (State == ItemState.Arrow)
         {
-            arrow = WeaponManager.Arrow.GetComponent<ShootObj>();
+            arrow = magic.GetComponent<ShootObj>();
         }
 
         Vector3 dir = targetPos;
 
         arrow.Shoot(dir);
     }
-    public void SetShootObject(Vector3 targetPos,ItemState State)
+    public void SetShootObject(Vector3 targetPos,ItemState State, NetworkObject magic = null)
     {
         if (Object.HasInputAuthority)
         {
@@ -322,15 +325,15 @@ public class PlayerStateMachine : StageManager<PlayerStateMachine.PlayerState>
 
             if (State == ItemState.IceMagic)
             {
-                arrow = WeaponManager.Magic.GetComponent<ShootObj>();
+                arrow = magic.GetComponent<ShootObj>();
             }
             if (State == ItemState.FireMagic)
             {
-                arrow = WeaponManager.Magic.GetComponent<ShootObj>();
+                arrow = magic.GetComponent<ShootObj>();
             }
             if (State == ItemState.ElectricMagic)
             {
-                arrow = WeaponManager.Magic.GetComponent<ShootObj>();
+                arrow = magic.GetComponent<ShootObj>();
             }
             if (State == ItemState.Arrow)
             {

@@ -30,7 +30,7 @@ public class BowState : BaseState<PlayerStateMachine.PlayerState>
     {
 
         playerStateMachine.AnimHandler.SetAttackBool(true);
-         gatherAttack = 0;
+        gatherAttack = 0;
 
         rope = playerStateMachine.WeaponManager.currentWeapon.GetComponent<Bow>().Rope.transform;
 
@@ -42,7 +42,6 @@ public class BowState : BaseState<PlayerStateMachine.PlayerState>
         }
 
         playerStateMachine.cameraManager.isCameraCheck = false;
-
 
         if (playerStateMachine.Object.HasInputAuthority)
             zoomRoutine = playerStateMachine.StartCoroutine(playerStateMachine.cameraManager.ZoomDistance(1f));
@@ -67,16 +66,15 @@ public class BowState : BaseState<PlayerStateMachine.PlayerState>
 
     public override void FixedUpdateState()
     {
-        if (!playerStateMachine.HasInputAuthority)
+       if (!playerStateMachine.Object.HasInputAuthority && !playerStateMachine.Runner.IsForward)
             return;
+
 
         playerStateMachine.AnimHandler.ChangeBowWeaponState(gatherAttack);
 
         if (playerStateMachine.GetInput(out NetworkInputData data))
-        {
-            Quaternion quaternion = Quaternion.Euler(0, data.CameraRotateY, 0);
             playerStateMachine.Rotation(data);
-        }
+
 
 
         if ( playerStateMachine.inputHandler.IsRightAttackPressed() &&

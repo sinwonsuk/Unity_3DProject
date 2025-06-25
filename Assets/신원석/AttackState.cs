@@ -5,6 +5,7 @@ using Unity.VisualScripting;
 using Unity.VisualScripting.Antlr3.Runtime;
 using UnityEngine;
 using static PlayerStateMachine;
+using static Unity.Collections.Unicode;
 
 
 public class AttackState : BaseState<PlayerStateMachine.PlayerState>
@@ -38,10 +39,16 @@ public class AttackState : BaseState<PlayerStateMachine.PlayerState>
 
     public override void FixedUpdateState() 
     {
-        playerStateMachine.AnimHandler.SetAttackCount(playerStateMachine.AttackCount);
+
+        //if (playerStateMachine.IsProxy == false && playerStateMachine.Runner.IsForward==true && playerStateMachine.Object.HasStateAuthority)
+        //       playerStateMachine.AnimHandler.SetAttackCount(playerStateMachine.AttackCount);
+
 
         if (!playerStateMachine.Object.HasStateAuthority)
             return;
+
+        playerStateMachine.AnimHandler.SetAttackCount(playerStateMachine.AttackCount);
+
 
         NetworkInputData data = playerStateMachine.inputHandler.GetNetworkInputData();
 
