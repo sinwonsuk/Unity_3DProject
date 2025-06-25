@@ -12,20 +12,29 @@ public class ItemSpawner : NetworkBehaviour
         if (Runner.IsServer)
             SpawnItems();
     }
-
     private void SpawnItems()
     {
+        if (itemConfig == null) return;
+
         foreach (var pos in itemConfig.spawnPositions)
         {
-            // 1) 일단 (0,0,0)에 스폰
-            var networkObject = Runner.Spawn(itemPrefab, Vector3.zero, Quaternion.identity);
-
-            // 2) 서버 권한이 있을 때만 네트워크드 변수에 위치 저장
-            if (networkObject.HasStateAuthority)
-            {
-                var netItem = networkObject.GetComponent<NetworkItem>();
-                netItem.SpawnPos = pos;
-            }
+            Runner.Spawn(
+                itemPrefab,
+                Vector3.zero,
+                Quaternion.identity,
+                default,  
+                (runner, netObj) =>
+                {
+                    var netItem = netObj.GetComponent<NetworkItem>();
+                    if (netItem != null)
+                        netItem.SpawnPos = pos;
+                }
+            );
         }
     }
+
+
+
+
+
 }

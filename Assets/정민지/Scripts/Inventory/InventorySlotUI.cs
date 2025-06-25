@@ -101,6 +101,7 @@ public class InventorySlotUI : MonoBehaviour, IPointerClickHandler, IBeginDragHa
             if (slot.item == null)
             {
                 EventBus<WeaponChange>.Raise(new WeaponChange(ItemState.none));
+                Debug.Log("선택된 아이템이 없음");
                 return;
             }
 
