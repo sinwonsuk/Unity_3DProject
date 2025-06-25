@@ -21,13 +21,15 @@ public class JumpState : BaseState<PlayerStateMachine.PlayerState>
     }
 
     private float gravity = 9.81f;
-    private float jumpHeight = 2f;
+
 
     public override void EnterState()
     {
-        playerStateMachine.NetAnim.Animator.SetBool("Jump", true);
+        if (!playerStateMachine.Object.HasStateAuthority)
+            return;
 
-        playerStateMachine.playerController.Move(Vector3.zero, 2f * gravity * jumpHeight);
+        playerStateMachine.NetAnim.Animator.SetBool("Jump", true);
+        playerStateMachine.playerController.Move(playerStateMachine.transform.forward *moveSpeed,gravity);
 
     }
     public override void ExitState()

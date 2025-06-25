@@ -45,8 +45,6 @@ public class PlayerStateMachine : StageManager<PlayerStateMachine.PlayerState>
     public NetworkMecanimAnimator NetAnim { get; set; }
 
     public HashSet<NetworkObject> hitSet { get; set; } = new();
-
-    int a = 0;
     [Networked] public bool _canBeHit { get; set; } = true;
 
     public float invulnDuration = 0.15f;
@@ -479,7 +477,6 @@ public class PlayerStateMachine : StageManager<PlayerStateMachine.PlayerState>
         RPC_ToggleWeaponCollider(false);
 
     }
-
     public IEnumerator InvulnCoroutine()
     {
         yield return new WaitForSeconds(invulnDuration);

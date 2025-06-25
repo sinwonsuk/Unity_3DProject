@@ -1,10 +1,8 @@
 using UnityEngine;
 using UnityEngine.AI;
-using static Unity.Collections.Unicode;
-using static UnityEngine.Rendering.DebugUI;
 using Fusion;
 using static PlayerStateMachine;
-using RPGCharacterAnims;
+
 public class MoveState : BaseState<PlayerStateMachine.PlayerState>
 {
     PlayerStateMachine playerStateMachine;
@@ -20,8 +18,7 @@ public class MoveState : BaseState<PlayerStateMachine.PlayerState>
 
     public override void EnterState()
     {
-        //playerStateMachine.NetAnim.Animator.SetFloat("MoveLeftRight", 0);
-        //playerStateMachine.NetAnim.Animator.SetFloat("MoveForWard", 0);
+
     }
 
     public override void ExitState()
@@ -100,6 +97,9 @@ public class MoveState : BaseState<PlayerStateMachine.PlayerState>
             playerStateMachine.playerController.Move(playerStateMachine.playerController.transform.position, 5);
 
             playerStateMachine.RPC_BroadcastState(PlayerState.Jump);
+
+
+
             return true;
         }
         
@@ -109,7 +109,6 @@ public class MoveState : BaseState<PlayerStateMachine.PlayerState>
     private void TryHandleAttackInput()
     {
         ComboAttackInput();
-        //playerStateMachine.DashAttackInput();
 
         if (playerStateMachine.cameraManager.isCameraCheck == false)
             return;
