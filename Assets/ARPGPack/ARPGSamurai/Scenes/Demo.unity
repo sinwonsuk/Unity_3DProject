@@ -601,6 +601,7 @@ GameObject:
   - component: {fileID: 382696989}
   - component: {fileID: 382696991}
   - component: {fileID: 382696993}
+  - component: {fileID: 382696994}
   m_Layer: 0
   m_Name: cm
   m_TagString: Untagged
@@ -1673,17 +1674,6 @@ Transform:
   m_Children: []
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!114 &1503898636 stripped
-MonoBehaviour:
-  m_CorrespondingSourceObject: {fileID: -7638925243709469451, guid: 7dce397188bc05445b1d1a3151df1764, type: 3}
-  m_PrefabInstance: {fileID: 1765488924}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 0}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 717dc6844d09be94697c869017bbac3d, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
 --- !u!1001 &1618704974
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -2139,7 +2129,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: -1013130676285194114, guid: 7dce397188bc05445b1d1a3151df1764, type: 3}
       propertyPath: 'TriggerHashes.Array.data[8]'
-      value: -2029475806
+      value: 692740747
       objectReference: {fileID: 0}
     - target: {fileID: 838519750768684425, guid: 7dce397188bc05445b1d1a3151df1764, type: 3}
       propertyPath: SortKey

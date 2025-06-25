@@ -66,7 +66,7 @@ public class MagicAttackState : BaseState<PlayerStateMachine.PlayerState>
             isAttackTrigger = true;
             CalculateHitPosition();
 
-            playerStateMachine.SetShootObject(targetPos, playerStateMachine.WeaponManager.magicState);
+            playerStateMachine.SetShootObject(targetPos,playerStateMachine.WeaponManager.magicState, magic);
         }
         else if (right && !isAttackTrigger )
             attack = Mathf.MoveTowards(attack, maxAttack, playerStateMachine.Runner.DeltaTime * speed);
