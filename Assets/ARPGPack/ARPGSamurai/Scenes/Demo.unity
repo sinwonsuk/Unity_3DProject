@@ -1813,7 +1813,7 @@ PrefabInstance:
     m_Modifications:
     - target: {fileID: -1013130676285194114, guid: 7dce397188bc05445b1d1a3151df1764, type: 3}
       propertyPath: StateHashes.Array.size
-      value: 89
+      value: 88
       objectReference: {fileID: 0}
     - target: {fileID: -1013130676285194114, guid: 7dce397188bc05445b1d1a3151df1764, type: 3}
       propertyPath: 'StateHashes.Array.data[12]'
@@ -2089,27 +2089,35 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: -1013130676285194114, guid: 7dce397188bc05445b1d1a3151df1764, type: 3}
       propertyPath: 'StateHashes.Array.data[80]'
-      value: 1227845076
-      objectReference: {fileID: 0}
-    - target: {fileID: -1013130676285194114, guid: 7dce397188bc05445b1d1a3151df1764, type: 3}
-      propertyPath: 'StateHashes.Array.data[81]'
       value: 577758121
       objectReference: {fileID: 0}
     - target: {fileID: -1013130676285194114, guid: 7dce397188bc05445b1d1a3151df1764, type: 3}
-      propertyPath: 'StateHashes.Array.data[82]'
+      propertyPath: 'StateHashes.Array.data[81]'
       value: -2044232678
       objectReference: {fileID: 0}
     - target: {fileID: -1013130676285194114, guid: 7dce397188bc05445b1d1a3151df1764, type: 3}
-      propertyPath: 'StateHashes.Array.data[83]'
+      propertyPath: 'StateHashes.Array.data[82]'
       value: -1150897645
       objectReference: {fileID: 0}
     - target: {fileID: -1013130676285194114, guid: 7dce397188bc05445b1d1a3151df1764, type: 3}
-      propertyPath: 'StateHashes.Array.data[84]'
+      propertyPath: 'StateHashes.Array.data[83]'
       value: 523120032
       objectReference: {fileID: 0}
     - target: {fileID: -1013130676285194114, guid: 7dce397188bc05445b1d1a3151df1764, type: 3}
-      propertyPath: 'StateHashes.Array.data[85]'
+      propertyPath: 'StateHashes.Array.data[84]'
       value: -866024827
+      objectReference: {fileID: 0}
+    - target: {fileID: -1013130676285194114, guid: 7dce397188bc05445b1d1a3151df1764, type: 3}
+      propertyPath: 'StateHashes.Array.data[85]'
+      value: 1747524918
+      objectReference: {fileID: 0}
+    - target: {fileID: -1013130676285194114, guid: 7dce397188bc05445b1d1a3151df1764, type: 3}
+      propertyPath: 'StateHashes.Array.data[86]'
+      value: 1376065318
+      objectReference: {fileID: 0}
+    - target: {fileID: -1013130676285194114, guid: 7dce397188bc05445b1d1a3151df1764, type: 3}
+      propertyPath: 'StateHashes.Array.data[87]'
+      value: -162690923
       objectReference: {fileID: 0}
     - target: {fileID: -1013130676285194114, guid: 7dce397188bc05445b1d1a3151df1764, type: 3}
       propertyPath: 'TriggerHashes.Array.data[3]'
@@ -2451,8 +2459,8 @@ Transform:
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
   m_LocalPosition: {x: 0, y: 0, z: 0}
-  m_LocalScale: {x: 2.0803, y: 2.0803, z: 2.0803}
-  m_ConstrainProportionsScale: 0
+  m_LocalScale: {x: 20.33, y: 20.33, z: 20.33}
+  m_ConstrainProportionsScale: 1
   m_Children: []
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}

@@ -21,6 +21,9 @@ public class RollState : BaseState<PlayerStateMachine.PlayerState>
 
     public override void EnterState()
     {
+        playerStateMachine.isRoll = false;
+
+
         playerStateMachine.NetAnim.Animator.SetTrigger("RollTrigger");
 
         rollDirection = GetDirectionFromCount(playerStateMachine.AnimHandler.RollCount);
@@ -28,22 +31,20 @@ public class RollState : BaseState<PlayerStateMachine.PlayerState>
     }
     public override void ExitState()
     {
-        playerStateMachine.startRoll();
+        //playerStateMachine.startRoll();
         playerStateMachine.NetAnim.Animator.ResetTrigger("RollTrigger");
+        playerStateMachine.BroadcastIdleEvent(PlayerStateMachine.PlayerState.Idle);
+
     }
     public override void FixedUpdateState()
     {
+        if (!playerStateMachine.Object.HasStateAuthority)
+            return;
         if (playerStateMachine.isRoll == true)
             return;
 
-         if (!playerStateMachine.Object.HasStateAuthority && playerStateMachine.Object.HasInputAuthority)
            playerStateMachine.playerController.Move(rollDirection * rollSpeed );
-
-        else if (playerStateMachine.Object.HasStateAuthority)
-            playerStateMachine.playerController.Move(rollDirection * rollSpeed);
-
-
-        playerStateMachine.AnimHandler.ChangeRoll(playerStateMachine.AnimHandler.RollCount);
+           playerStateMachine.AnimHandler.ChangeRoll(playerStateMachine.AnimHandler.RollCount);
 
     }
 

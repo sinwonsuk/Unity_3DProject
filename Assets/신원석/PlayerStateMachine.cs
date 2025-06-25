@@ -220,15 +220,25 @@ public class PlayerStateMachine : StageManager<PlayerStateMachine.PlayerState>
 
     public void WeaponChange(WeaponChange weaponChange)
     {
-        if (Object.HasStateAuthority)
+        if (Object.HasInputAuthority)
         {
             PlayerRef me = Object.InputAuthority;
             SetWeapon(true);
-            WeaponManager.RequestEquip(weaponChange.state, HandSide.Right, me);
-            OnAttackEndEvent();
+            WeaponManager.RequestEquip(weaponChange.state, HandSide.Right, me);          
+            RPC_ChangeWeaponAni(weaponChange.state);
+            BroadcastIdleEvent(PlayerState.Idle);
         }
-        AnimHandler.ChangeWeapon(weaponChange.state);
+
     }
+
+
+    [Rpc(RpcSources.InputAuthority, RpcTargets.StateAuthority)]
+    public void RPC_ChangeWeaponAni(ItemState rollCount, RpcInfo info = default)
+    {
+        AnimHandler.ChangeWeapon((ItemState)rollCount);
+    }
+
+
 
 
     public void MoveAndRotate(NetworkInputData data)
@@ -288,25 +298,25 @@ public class PlayerStateMachine : StageManager<PlayerStateMachine.PlayerState>
 
     }
     [Rpc(RpcSources.InputAuthority, RpcTargets.All)]
-    public void RPC_RequestShoot(Vector3 targetPos, ItemState State, NetworkObject magic = null, RpcInfo info = default)
+    public void RPC_RequestShoot(Vector3 targetPos, ItemState State, RpcInfo info = default)
     {
         ShootObj arrow = null;
 
         if (State == ItemState.IceMagic)
         {
-            arrow = magic.GetComponent<ShootObj>();
+            arrow = WeaponManager.Magic.GetComponent<ShootObj>();
         }
         if (State == ItemState.FireMagic)
         {
-            arrow = magic.GetComponent<ShootObj>();
+            arrow = WeaponManager.Magic.GetComponent<ShootObj>();
         }
         if (State == ItemState.ElectricMagic)
         {
-            arrow = magic.GetComponent<ShootObj>();
+            arrow = WeaponManager.Magic.GetComponent<ShootObj>();
         }
         if (State == ItemState.Arrow)
         {
-            arrow = magic.GetComponent<ShootObj>();
+            arrow = WeaponManager.Magic.GetComponent<ShootObj>();
         }
 
         Vector3 dir = targetPos;
@@ -317,7 +327,7 @@ public class PlayerStateMachine : StageManager<PlayerStateMachine.PlayerState>
     {
         if (Object.HasInputAuthority)
         {
-            RPC_RequestShoot(targetPos, State, magic);
+            RPC_RequestShoot(targetPos, State);
         }
         else if (Object.HasStateAuthority)
         {
@@ -325,15 +335,15 @@ public class PlayerStateMachine : StageManager<PlayerStateMachine.PlayerState>
 
             if (State == ItemState.IceMagic)
             {
-                arrow = magic.GetComponent<ShootObj>();
+                arrow = WeaponManager.Magic.GetComponent<ShootObj>();
             }
             if (State == ItemState.FireMagic)
             {
-                arrow = magic.GetComponent<ShootObj>();
+                arrow = WeaponManager.Magic.GetComponent<ShootObj>();
             }
             if (State == ItemState.ElectricMagic)
             {
-                arrow = magic.GetComponent<ShootObj>();
+                arrow = WeaponManager.Magic.GetComponent<ShootObj>();
             }
             if (State == ItemState.Arrow)
             {

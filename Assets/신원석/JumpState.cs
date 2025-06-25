@@ -39,14 +39,17 @@ public class JumpState : BaseState<PlayerStateMachine.PlayerState>
 
     public override void FixedUpdateState()
     {
+        if (!playerStateMachine.Object.HasStateAuthority)
+            return;
 
-        if (playerStateMachine.playerController.IsGrounded == true && playerStateMachine.HasStateAuthority)
+
+        if (playerStateMachine.playerController.IsGrounded == true)
         {
             playerStateMachine.NetAnim.Animator.SetBool("Jump", false);
             playerStateMachine.SyncedState = PlayerStateMachine.PlayerState.Idle;
             return;
         }
-        else if (playerStateMachine.playerController.IsGrounded ==true && playerStateMachine.HasInputAuthority)
+        else if (playerStateMachine.playerController.IsGrounded ==true)
         {
             playerStateMachine.NetAnim.Animator.SetBool("Jump", false);
             playerStateMachine.RPC_BroadcastState(PlayerStateMachine.PlayerState.Idle);

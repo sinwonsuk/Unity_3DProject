@@ -1,3 +1,4 @@
+using System;
 using UnityEngine;
 
 public struct WeaponChange :IEvent
@@ -9,4 +10,8 @@ public struct WeaponChange :IEvent
         this.state = state;
     }
 
+    public static explicit operator WeaponChange(int v)
+    {
+        throw new NotImplementedException();
+    }
 }

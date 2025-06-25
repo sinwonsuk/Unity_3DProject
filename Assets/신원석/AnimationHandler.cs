@@ -36,9 +36,6 @@ public class AnimationHandler
     }
 
 
-
-
-
     public void ChangeWeapon(ItemState itemState)
     {
         switch (itemState)
@@ -83,9 +80,6 @@ public class AnimationHandler
                 break;
         }
 
-
-
-       // animator.Animator.SetInteger("WeaponCount", (int)itemState);
     }
     public void ChangeRoll(int RollCount)
     {
