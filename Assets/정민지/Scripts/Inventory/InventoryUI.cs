@@ -55,7 +55,7 @@ public class InventoryUI : MonoBehaviour
         }
     }
 
-    void Update()
+    public void NetworkFixedUpdate()
     {
         if (Input.GetKeyDown(KeyCode.I))
         {
