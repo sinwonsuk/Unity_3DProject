@@ -147,6 +147,7 @@ GameObject:
   - component: {fileID: 5507086785328575768}
   - component: {fileID: 3115187701088361058}
   - component: {fileID: 4371114472460355706}
+  - component: {fileID: 2688741575407262313}
   m_Layer: 5
   m_Name: Inventory
   m_TagString: Untagged
@@ -212,6 +213,24 @@ MonoBehaviour:
   basicGold: 2000000
   goldUI: {fileID: 664531233433621385}
   bigInventoryUI: {fileID: 4880448135119066925}
+--- !u!114 &2688741575407262313
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 325540195412419649}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: -1552182283, guid: e725a070cec140c4caffb81624c8c787, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  SortKey: 0
+  ObjectInterest: 1
+  Flags: 262144
+  NestedObjects: []
+  NetworkedBehaviours: []
+  ForceRemoteRenderTimeframe: 0
 --- !u!1 &650468909201946817
 GameObject:
   m_ObjectHideFlags: 0
@@ -1472,7 +1491,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!224 &7702759559748574041
 RectTransform:
   m_ObjectHideFlags: 0
@@ -1683,7 +1702,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!224 &5866005750490012559
 RectTransform:
   m_ObjectHideFlags: 0
