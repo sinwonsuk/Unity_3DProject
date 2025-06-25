@@ -1,4 +1,5 @@
-using Fusion;
+ï»¿using Fusion;
+using System.Collections;
 using TMPro;
 using Unity.VisualScripting;
 using UnityEngine;
@@ -18,8 +19,10 @@ public class InventorySlotUI : NetworkBehaviour, IPointerClickHandler, IBeginDra
     private Transform originalParent;
     private DraggedIcon draggedIcon;
     private InventorySlot slot;
-    private bool wasSelected = false; // ÀÌÀü ¼±ÅÃ »óÅÂ
+    private bool wasSelected = false; // ì´ì „ ì„ íƒ ìƒíƒœ
+    private PlayerWeaponChanged changed;
 
+    Coroutine coroutine;
 
     public void SetSlot(InventorySlot slot, bool isSelected = false)
     {
@@ -37,14 +40,14 @@ public class InventorySlotUI : NetworkBehaviour, IPointerClickHandler, IBeginDra
             quantityText.text = slot.quantity > 1 ? slot.quantity.ToString() : "";
         }
 
-        // ¼±ÅÃ ¿©ºÎ °»½Å
+        // ì„ íƒ ì—¬ë¶€ ê°±ì‹ 
         highlightImage.enabled = isSelected;
 
-        // ¼±ÅÃ »óÅÂ º¯°æ °¨Áö
+        // ì„ íƒ ìƒíƒœ ë³€ê²½ ê°ì§€
         if (wasSelected != isSelected)
         {
             wasSelected = isSelected;
-            OnSelectionChanged(isSelected); // ¿©±â¼­ ¿øÇÏ´Â ÇÔ¼ö ½ÇÇà
+            OnSelectionChanged(isSelected); // ì—¬ê¸°ì„œ ì›í•˜ëŠ” í•¨ìˆ˜ ì‹¤í–‰
         }
     }
 
@@ -53,6 +56,7 @@ public class InventorySlotUI : NetworkBehaviour, IPointerClickHandler, IBeginDra
         bigInventoryUI = ownerUI;
         index = slotIndex;
         draggedIcon = icon;
+        changed =FindLocalPlayerWeaponChanged();
     }
 
     public void OnPointerClick(PointerEventData eventData)
@@ -77,7 +81,7 @@ public class InventorySlotUI : NetworkBehaviour, IPointerClickHandler, IBeginDra
     }
     public void OnDrag(PointerEventData eventData)
     {
-        // µå·¡±× ¾ÆÀÌÄÜÀÌ ÀÚµ¿À¸·Î ¸¶¿ì½º¸¦ µû¶ó°¨ (Update¿¡¼­ Ã³¸®µÊ)
+        // ë“œë˜ê·¸ ì•„ì´ì½˜ì´ ìë™ìœ¼ë¡œ ë§ˆìš°ìŠ¤ë¥¼ ë”°ë¼ê° (Updateì—ì„œ ì²˜ë¦¬ë¨)
     }
 
     public void OnEndDrag(PointerEventData eventData)
@@ -94,70 +98,95 @@ public class InventorySlotUI : NetworkBehaviour, IPointerClickHandler, IBeginDra
         }
     }
 
+    //[Rpc(RpcSources.InputAuthority, RpcTargets.StateAuthority)]
+    //public void RPC_ChangeWeapon(ItemState state, RpcInfo info = default)
+    //{
+    //    EventBus<WeaponChange>.Raise(new WeaponChange(state));
+    //}
 
+    IEnumerator Cor()
+    {
+        while (true)
+        {
+            if (changed == null)
+                changed = FindLocalPlayerWeaponChanged();
+            else
+                yield break;
+
+
+            yield return null;
+
+        }
+    }
 
 
     private void OnSelectionChanged(bool isSelected)
     {
-        PlayerWeaponChanged playerWeapon = FindLocalPlayerWeaponChanged();
+
+        if(coroutine == null)
+            StartCoroutine(Cor());
+
+
+        if (changed == null)
+            return;
 
         if (isSelected)
         {
-            Debug.Log($"[{index}] ½½·ÔÀÌ ¼±ÅÃµÊ: {slot.item?.itemName}");
+            Debug.Log($"[{index}] ìŠ¬ë¡¯ì´ ì„ íƒë¨: {slot.item?.itemName}");
 
             if (slot.item == null)
             {
-                playerWeapon.RPC_ChangeWeapon(ItemState.none);
-                Debug.Log("¼±ÅÃµÈ ¾ÆÀÌÅÛÀÌ ¾øÀ½");
+                //RPC_ChangeWeapon(ItemState.none);
+                Debug.Log("ì„ íƒëœ ì•„ì´í…œì´ ì—†ìŒ");
             }
 
             else if (slot.item.weaponType==WeaponType.Sword)
             {
-                playerWeapon.RPC_ChangeWeapon(ItemState.none);
+                changed.RPC_ChangeWeapon(ItemState.none);
 
             }
             else if(slot.item.weaponType==WeaponType.Bow)
             {
-                playerWeapon.RPC_ChangeWeapon(ItemState.Bow);
+                changed.RPC_ChangeWeapon(ItemState.Bow);
 
             }
             else if(slot.item.weaponType==WeaponType.Axe)
             {
-                playerWeapon.RPC_ChangeWeapon(ItemState.Harberd);
+                changed.RPC_ChangeWeapon(ItemState.Harberd);
 
             }
             else if(slot.item.potionType!=PotionType.NONE)
             {
-                playerWeapon.RPC_ChangeWeapon(ItemState.none);
+               changed.RPC_ChangeWeapon(ItemState.none);
 
             }
             else if(slot.item.magicType==MagicType.Fire)
             {
-                playerWeapon.RPC_ChangeWeapon(ItemState.FireMagic);
+                changed.RPC_ChangeWeapon(ItemState.FireMagic);
  
             }
             else if (slot.item.magicType == MagicType.Ice)
             {
-                playerWeapon.RPC_ChangeWeapon(ItemState.IceMagic);
+                changed.RPC_ChangeWeapon(ItemState.IceMagic);
 
             }
             else if (slot.item.magicType == MagicType.Lightning)
             {
-                playerWeapon.RPC_ChangeWeapon(ItemState.ElectricMagic);
+                changed.RPC_ChangeWeapon(ItemState.ElectricMagic);
 
             }
 
         }
         else
         {
-            Debug.Log($"[{index}] ½½·Ô ¼±ÅÃ ÇØÁ¦");
+            Debug.Log($"[{index}] ìŠ¬ë¡¯ ì„ íƒ í•´ì œ");
         }
     }
 
-    private PlayerWeaponChanged FindLocalPlayerWeaponChanged()
+    public PlayerWeaponChanged FindLocalPlayerWeaponChanged()
     {
         PlayerWeaponChanged[] players = FindObjectsByType<PlayerWeaponChanged>(FindObjectsSortMode.None);
-        // ¾À¿¡ Á¸ÀçÇÏ´Â ¸ğµç PlayerWeaponController Áß ±ÇÇÑ °¡Áø °´Ã¼ ¸®ÅÏ
+        // ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½Ï´ï¿½ ï¿½ï¿½ï¿½ PlayerWeaponController ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½Ã¼ ï¿½ï¿½ï¿½ï¿½
         foreach (var playerWeapon in players)
         {
             if (playerWeapon.Object != null && playerWeapon.Object.HasInputAuthority)
@@ -165,4 +194,5 @@ public class InventorySlotUI : NetworkBehaviour, IPointerClickHandler, IBeginDra
         }
         return null;
     }
+
 }
