@@ -17,9 +17,22 @@ public class ShopNpcSpawn : NetworkBehaviour
 
     private void SpawnNPC()
     {
+        if (shopNpcConfig == null) return;
+
         foreach (var pos in shopNpcConfig.spawnPositions)
         {
-            Runner.Spawn(itemPrefab, pos, Quaternion.identity);
+            Runner.Spawn(
+                itemPrefab,
+                Vector3.zero,
+                Quaternion.identity,
+                default,
+                (runner, netObj) =>
+                {
+                    var netItem = netObj.GetComponent<NetworkNPC>();
+                    if (netItem != null)
+                        netItem.SpawnPos = pos;
+                }
+            );
         }
     }
 }

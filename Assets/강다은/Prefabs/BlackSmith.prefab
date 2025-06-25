@@ -15,6 +15,7 @@ GameObject:
   - component: {fileID: 2237044375263064630}
   - component: {fileID: 4627850338267578632}
   - component: {fileID: 4080552011111963695}
+  - component: {fileID: -2414432583602487860}
   m_Layer: 0
   m_Name: BlackSmith
   m_TagString: Untagged
@@ -128,7 +129,6 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   npcId: 1
   shopUI: {fileID: 4954228619636473244, guid: a4355a3947ab53248abdf209df7ddb2d, type: 3}
-  ingameUI: {fileID: 6801154750796494864, guid: 893bf5b833239e24db224d1dcdc0f1a5, type: 3}
 --- !u!54 &4627850338267578632
 Rigidbody:
   m_ObjectHideFlags: 0
@@ -174,7 +174,21 @@ MonoBehaviour:
   NestedObjects: []
   NetworkedBehaviours:
   - {fileID: 2237044375263064630}
+  - {fileID: -2414432583602487860}
   ForceRemoteRenderTimeframe: 0
+--- !u!114 &-2414432583602487860
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 6299151774026347023}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: e2ce831ca2aedb340b5f0ec502bbc051, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  _SpawnPos: {x: 0, y: 0, z: 0}
 --- !u!1001 &2897417855525123310
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -230,7 +244,7 @@ PrefabInstance:
     - target: {fileID: 95877489957205384, guid: a129c7755e4c7d843b98bfa2af4b3fb2, type: 3}
       propertyPath: m_Controller
       value: 
-      objectReference: {fileID: 0}
+      objectReference: {fileID: 9100000, guid: 1967ee6a20efbff4a999337014dc7fcd, type: 2}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
