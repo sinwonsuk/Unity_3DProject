@@ -24,20 +24,22 @@ public class ItemBox : MonoBehaviour
 
 		if (dist < interactionDistance && Input.GetKeyDown(KeyCode.E))
 		{
-			if (isOpened)
-			{
-                Cursor.lockState = CursorLockMode.Locked;
-                Cursor.visible = true;
-				EventBus<ItemBoxUIClose>.Raise(new ItemBoxUIClose(this.gameObject));
-				isOpened = false;
-			}
-			else
-			{
-                Cursor.lockState = CursorLockMode.Confined;
+            if (isOpened)
+            {
                 Cursor.visible = false;
+                Cursor.lockState = CursorLockMode.Locked;
+
+                EventBus<ItemBoxUIClose>.Raise(new ItemBoxUIClose(this.gameObject));
+                isOpened = false;
+            }
+            else
+            {
+                Cursor.visible = true;
+                Cursor.lockState = CursorLockMode.None;
+
                 OpenBox();
-			}
-		}
+            }
+        }
 
 	}
 	private void OnDisable()
