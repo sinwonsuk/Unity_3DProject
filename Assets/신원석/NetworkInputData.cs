@@ -17,7 +17,11 @@ public struct NetworkInputData : INetworkInput
     public const int NUM_5 = 10;
     public const int NUM_6 = 11;
 
+    public const int KEY_I = 12;
+    public const int KEY_E = 13;
+    public const int KEY_TAB = 14;
 
+    public float mouseScroll;
 
     public float CameraRotateY;
 

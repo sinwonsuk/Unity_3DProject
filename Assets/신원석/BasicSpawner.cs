@@ -123,6 +123,11 @@ public class BasicSpawner : MonoBehaviour, INetworkRunnerCallbacks
         if (Input.GetKey(KeyCode.D))
             data.direction += Vector3.right;
 
+        data.mouseScroll = Input.GetAxis("Mouse ScrollWheel");
+        data.buttons.Set(NetworkInputData.KEY_I, Input.GetKey(KeyCode.I));
+        data.buttons.Set(NetworkInputData.KEY_E, Input.GetKey(KeyCode.E));
+        data.buttons.Set(NetworkInputData.KEY_TAB, Input.GetKey(KeyCode.Tab));
+
         data.CameraRotateY = Camera.main.transform.eulerAngles.y;
 
         // 2) POV 절대값 → 델타로 변환

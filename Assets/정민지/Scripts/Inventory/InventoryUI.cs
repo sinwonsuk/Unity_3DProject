@@ -1,12 +1,20 @@
 using Fusion;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.Windows;
 
 public class InventoryUI : NetworkBehaviour
 {
     public GameObject slotPrefab;
     public Transform slotParent;
+
     public ItemData basicSword;
+    public ItemData basicBow;
+    public ItemData basicHerberd;
+    public ItemData basicFire;
+    public ItemData basicIce;
+    public ItemData basicLightning;
+
     public GameObject bigInventoryPanel;
     public GameObject combi;
     [SerializeField] private BigInventoryUI bigInventoryUI;
@@ -20,12 +28,26 @@ public class InventoryUI : NetworkBehaviour
     private int selectedIndex = 0;
     private bool isActive;
     private bool canSee;
+    private InputHandler inputHandler;
+
+    public override void Spawned()
+    {
+        base.Spawned();
+
+        // 초기화 필수!
+        inputHandler = new InputHandler(this, this.transform);
+    }
 
     private void Start()
     {
         inventory = GetComponent<Inventory>();
         InitSlots();
         inventory.AddItem(basicSword);
+        inventory.AddItem(basicBow);
+        inventory.AddItem(basicHerberd);
+        inventory.AddItem(basicFire);
+        inventory.AddItem(basicIce);
+        inventory.AddItem(basicLightning);
         UpdateUI();
         isActive = bigInventoryPanel.activeSelf;
         canSee = combi.activeSelf;
@@ -58,7 +80,7 @@ public class InventoryUI : NetworkBehaviour
 
     public override void FixedUpdateNetwork()
     {
-        if (Input.GetKeyDown(KeyCode.I))
+        if (inputHandler.IsIPressed())
         {
             if (combi.activeSelf) return;
 
@@ -69,14 +91,14 @@ public class InventoryUI : NetworkBehaviour
             bigInventoryUI.SetSelectedIndexInBigUI(index); // 선택 인덱스 동기화
         }
 
-        if (Input.GetKeyDown(KeyCode.Tab))
+        if (inputHandler.IsTabPressed())
         {
             currentPage = (currentPage + 1) % maxRow;
             selectedIndex = 0;
             UpdateUI();
         }
 
-        if(Input.GetKeyDown(KeyCode.C))
+        if(inputHandler.ChangeCamera())
         {
             canSee = combi.activeSelf;
             isActive = bigInventoryPanel.activeSelf;
@@ -87,14 +109,13 @@ public class InventoryUI : NetworkBehaviour
                 bigInventoryPanel.SetActive(!isActive);
             }
         }
+        int scrollDir = inputHandler.GetScrollDirection();
 
-        if (bigInventoryPanel.activeSelf == false)
+        if (bigInventoryPanel.activeSelf == false && scrollDir != 0)
         {
-            float scroll = Input.GetAxis("Mouse ScrollWheel");
-
-            if (scroll > 0f)
+            if (scrollDir > 0)
                 selectedIndex = (selectedIndex - 1 + rowSize) % rowSize;
-            else if (scroll < 0f)
+            else if (scrollDir < 0)
                 selectedIndex = (selectedIndex + 1) % rowSize;
 
             UpdateUI();
