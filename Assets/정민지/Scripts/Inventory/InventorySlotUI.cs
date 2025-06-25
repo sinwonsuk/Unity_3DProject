@@ -94,58 +94,56 @@ public class InventorySlotUI : NetworkBehaviour, IPointerClickHandler, IBeginDra
         }
     }
 
-    //[Rpc(RpcSources.InputAuthority, RpcTargets.StateAuthority)]
-    //public void RPC_ChangeWeapon(ItemState state, RpcInfo info = default)
-    //{
-    //    EventBus<WeaponChange>.Raise(new WeaponChange(state));
-    //}
+
 
 
     private void OnSelectionChanged(bool isSelected)
     {
+        PlayerWeaponChanged playerWeapon = FindLocalPlayerWeaponChanged();
+
         if (isSelected)
         {
             Debug.Log($"[{index}] 슬롯이 선택됨: {slot.item?.itemName}");
 
             if (slot.item == null)
             {
-                //RPC_ChangeWeapon(ItemState.none);
+                playerWeapon.RPC_ChangeWeapon(ItemState.none);
                 Debug.Log("선택된 아이템이 없음");
             }
 
             else if (slot.item.weaponType==WeaponType.Sword)
             {
-                //RPC_ChangeWeapon(ItemState.none);
+                playerWeapon.RPC_ChangeWeapon(ItemState.none);
 
             }
             else if(slot.item.weaponType==WeaponType.Bow)
             {
-                //RPC_ChangeWeapon(ItemState.Bow);
+                playerWeapon.RPC_ChangeWeapon(ItemState.Bow);
 
             }
             else if(slot.item.weaponType==WeaponType.Axe)
             {
-               // RPC_ChangeWeapon(ItemState.Harberd);
+                playerWeapon.RPC_ChangeWeapon(ItemState.Harberd);
 
             }
             else if(slot.item.potionType!=PotionType.NONE)
             {
-              // RPC_ChangeWeapon(ItemState.none);
+                playerWeapon.RPC_ChangeWeapon(ItemState.none);
 
             }
             else if(slot.item.magicType==MagicType.Fire)
             {
-                // RPC_ChangeWeapon(ItemState.FireMagic);
+                playerWeapon.RPC_ChangeWeapon(ItemState.FireMagic);
  
             }
             else if (slot.item.magicType == MagicType.Ice)
             {
-                // RPC_ChangeWeapon(ItemState.IceMagic);
+                playerWeapon.RPC_ChangeWeapon(ItemState.IceMagic);
 
             }
             else if (slot.item.magicType == MagicType.Lightning)
             {
-                // RPC_ChangeWeapon(ItemState.ElectricMagic);
+                playerWeapon.RPC_ChangeWeapon(ItemState.ElectricMagic);
 
             }
 
@@ -154,5 +152,17 @@ public class InventorySlotUI : NetworkBehaviour, IPointerClickHandler, IBeginDra
         {
             Debug.Log($"[{index}] 슬롯 선택 해제");
         }
+    }
+
+    private PlayerWeaponChanged FindLocalPlayerWeaponChanged()
+    {
+        PlayerWeaponChanged[] players = FindObjectsByType<PlayerWeaponChanged>(FindObjectsSortMode.None);
+        // 씬에 존재하는 모든 PlayerWeaponController 중 권한 가진 객체 리턴
+        foreach (var playerWeapon in players)
+        {
+            if (playerWeapon.Object != null && playerWeapon.Object.HasInputAuthority)
+                return playerWeapon;
+        }
+        return null;
     }
 }
