@@ -1320,6 +1320,7 @@ MonoBehaviour:
   _RollCount: 0
   _HitCount: 0
   _gatherAttack: 0
+  _WeaponCount: 0
   __canBeHit: 1
   invulnDuration: 0.15
   weapons: {fileID: 11400000, guid: bb10c1def4f7b9d42a86027dc3b35f91, type: 2}
@@ -2308,7 +2309,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!4 &125426293490797675
 Transform:
   m_ObjectHideFlags: 0
@@ -2647,7 +2648,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 0
+  m_IsActive: 1
 --- !u!4 &5503674046204485671
 Transform:
   m_ObjectHideFlags: 0
