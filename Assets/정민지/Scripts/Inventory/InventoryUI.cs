@@ -1,7 +1,8 @@
+using Fusion;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class InventoryUI : MonoBehaviour
+public class InventoryUI : NetworkBehaviour
 {
     public GameObject slotPrefab;
     public Transform slotParent;
@@ -55,7 +56,7 @@ public class InventoryUI : MonoBehaviour
         }
     }
 
-    public void NetworkFixedUpdate()
+    public override void FixedUpdateNetwork()
     {
         if (Input.GetKeyDown(KeyCode.I))
         {

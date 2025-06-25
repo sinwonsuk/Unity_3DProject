@@ -44,7 +44,7 @@ public class PlayerStamina : NetworkBehaviour
         }
     }
 
-    public void NetworkFixedUpdate()
+    public override void FixedUpdateNetwork()
     {
         if (!HasStateAuthority) return;
 
