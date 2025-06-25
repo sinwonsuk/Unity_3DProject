@@ -1205,7 +1205,7 @@ GameObject:
   - component: {fileID: -5474727034955590879}
   - component: {fileID: -7638925243709469451}
   - component: {fileID: -8932458653960297740}
-  - component: {fileID: -9084089227592918311}
+  - component: {fileID: 1755135588826954418}
   m_Layer: 6
   m_Name: SM_Chr_Merchant
   m_TagString: Player
@@ -1297,7 +1297,7 @@ MonoBehaviour:
   - {fileID: -3079344771459812112}
   - {fileID: -7638925243709469451}
   - {fileID: -8932458653960297740}
-  - {fileID: -9084089227592918311}
+  - {fileID: 1755135588826954418}
   ForceRemoteRenderTimeframe: 0
 --- !u!114 &4271482361781194061
 MonoBehaviour:
@@ -1435,7 +1435,7 @@ MonoBehaviour:
     StepRequireGroundTarget: 0
     SnapDistance: 0.25
     SnapSpeed: 4
---- !u!114 &-9084089227592918311
+--- !u!114 &1755135588826954418
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}

@@ -1,10 +1,12 @@
+using Fusion;
+using TMPro;
+using Unity.VisualScripting;
 using UnityEngine;
 using UnityEngine.EventSystems;
 using UnityEngine.UI;
-using TMPro;
 using static UnityEngine.UI.GridLayoutGroup;
 
-public class InventorySlotUI : MonoBehaviour, IPointerClickHandler, IBeginDragHandler, IDragHandler, IEndDragHandler, IDropHandler
+public class InventorySlotUI : NetworkBehaviour, IPointerClickHandler, IBeginDragHandler, IDragHandler, IEndDragHandler, IDropHandler
 {
     public Image iconImage;
     public TMP_Text quantityText;
@@ -92,6 +94,13 @@ public class InventorySlotUI : MonoBehaviour, IPointerClickHandler, IBeginDragHa
         }
     }
 
+    //[Rpc(RpcSources.InputAuthority, RpcTargets.StateAuthority)]
+    //public void RPC_ChangeWeapon(ItemState state, RpcInfo info = default)
+    //{
+    //    EventBus<WeaponChange>.Raise(new WeaponChange(state));
+    //}
+
+
     private void OnSelectionChanged(bool isSelected)
     {
         if (isSelected)
@@ -100,38 +109,44 @@ public class InventorySlotUI : MonoBehaviour, IPointerClickHandler, IBeginDragHa
 
             if (slot.item == null)
             {
-                EventBus<WeaponChange>.Raise(new WeaponChange(ItemState.none));
+                //RPC_ChangeWeapon(ItemState.none);
                 Debug.Log("선택된 아이템이 없음");
-                return;
             }
 
-            if (slot.item.weaponType==WeaponType.Sword)
+            else if (slot.item.weaponType==WeaponType.Sword)
             {
-                EventBus<WeaponChange>.Raise(new WeaponChange(ItemState.Sword));
+                //RPC_ChangeWeapon(ItemState.none);
+
             }
             else if(slot.item.weaponType==WeaponType.Bow)
             {
-                EventBus<WeaponChange>.Raise(new WeaponChange(ItemState.Bow));
+                //RPC_ChangeWeapon(ItemState.Bow);
+
             }
             else if(slot.item.weaponType==WeaponType.Axe)
             {
-                EventBus<WeaponChange>.Raise(new WeaponChange(ItemState.Harberd));
+               // RPC_ChangeWeapon(ItemState.Harberd);
+
             }
             else if(slot.item.potionType!=PotionType.NONE)
             {
-                EventBus<WeaponChange>.Raise(new WeaponChange(ItemState.Position));
+              // RPC_ChangeWeapon(ItemState.none);
+
             }
             else if(slot.item.magicType==MagicType.Fire)
             {
-                EventBus<WeaponChange>.Raise(new WeaponChange(ItemState.FireMagic));
+                // RPC_ChangeWeapon(ItemState.FireMagic);
+ 
             }
             else if (slot.item.magicType == MagicType.Ice)
             {
-                EventBus<WeaponChange>.Raise(new WeaponChange(ItemState.IceMagic));
+                // RPC_ChangeWeapon(ItemState.IceMagic);
+
             }
             else if (slot.item.magicType == MagicType.Lightning)
             {
-                EventBus<WeaponChange>.Raise(new WeaponChange(ItemState.ElectricMagic));
+                // RPC_ChangeWeapon(ItemState.ElectricMagic);
+
             }
 
         }

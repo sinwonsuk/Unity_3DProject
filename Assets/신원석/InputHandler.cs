@@ -7,7 +7,7 @@ public class InputHandler
     private NetworkRunner runner;
     private NetworkBehaviour behaviour;
     private Transform transform;
-    [Networked] private TickTimer delay { get; set; }
+
     public InputHandler(NetworkBehaviour behaviour, Transform transform)
     {
         this.behaviour = behaviour;

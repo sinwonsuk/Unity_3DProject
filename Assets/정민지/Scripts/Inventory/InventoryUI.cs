@@ -1,7 +1,6 @@
 using Fusion;
 using System.Collections.Generic;
 using UnityEngine;
-using UnityEngine.Windows;
 
 public class InventoryUI : NetworkBehaviour
 {
@@ -78,10 +77,9 @@ public class InventoryUI : NetworkBehaviour
         }
     }
 
-    public override void FixedUpdateNetwork()
+    public  void Update()
     {
-        if (inputHandler.IsIPressed())
-        {
+
             if (combi.activeSelf) return;
 
             isActive = bigInventoryPanel.activeSelf;
@@ -89,17 +87,15 @@ public class InventoryUI : NetworkBehaviour
 
             int index = currentPage * rowSize + selectedIndex;
             bigInventoryUI.SetSelectedIndexInBigUI(index); // 선택 인덱스 동기화
-        }
+        
 
-        if (inputHandler.IsTabPressed())
-        {
+
             currentPage = (currentPage + 1) % maxRow;
             selectedIndex = 0;
             UpdateUI();
-        }
+        
 
-        if(inputHandler.ChangeCamera())
-        {
+   
             canSee = combi.activeSelf;
             isActive = bigInventoryPanel.activeSelf;
             combi.SetActive(!canSee);
@@ -108,8 +104,8 @@ public class InventoryUI : NetworkBehaviour
             {
                 bigInventoryPanel.SetActive(!isActive);
             }
-        }
-        int scrollDir = inputHandler.GetScrollDirection();
+        
+        float scrollDir = Input.GetAxis("Mouse ScrollWheel");
 
         if (bigInventoryPanel.activeSelf == false && scrollDir != 0)
         {
