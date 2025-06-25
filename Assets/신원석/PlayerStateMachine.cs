@@ -317,7 +317,7 @@ public class PlayerStateMachine : StageManager<PlayerStateMachine.PlayerState>
     {
         if (Object.HasInputAuthority)
         {
-            RPC_RequestShoot(targetPos, State);
+            RPC_RequestShoot(targetPos, State, magic);
         }
         else if (Object.HasStateAuthority)
         {
