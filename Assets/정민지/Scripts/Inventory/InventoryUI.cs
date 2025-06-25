@@ -7,7 +7,14 @@ public class InventoryUI : NetworkBehaviour
 {
     public GameObject slotPrefab;
     public Transform slotParent;
+
     public ItemData basicSword;
+    public ItemData basicBow;
+    public ItemData basicHerberd;
+    public ItemData basicFire;
+    public ItemData basicIce;
+    public ItemData basicLightning;
+
     public GameObject bigInventoryPanel;
     public GameObject combi;
     [SerializeField] private BigInventoryUI bigInventoryUI;
@@ -36,6 +43,11 @@ public class InventoryUI : NetworkBehaviour
         inventory = GetComponent<Inventory>();
         InitSlots();
         inventory.AddItem(basicSword);
+        inventory.AddItem(basicBow);
+        inventory.AddItem(basicHerberd);
+        inventory.AddItem(basicFire);
+        inventory.AddItem(basicIce);
+        inventory.AddItem(basicLightning);
         UpdateUI();
         isActive = bigInventoryPanel.activeSelf;
         canSee = combi.activeSelf;
