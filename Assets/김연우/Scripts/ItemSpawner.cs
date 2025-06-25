@@ -15,17 +15,32 @@ public class ItemSpawner : NetworkBehaviour
 
     private void SpawnItems()
     {
+        if (itemConfig == null)
+        {
+            Debug.LogError("[ItemSpawner] itemConfig가 할당되지 않았습니다!");
+            return;
+        }
+
         foreach (var pos in itemConfig.spawnPositions)
         {
-            // 1) 일단 (0,0,0)에 스폰
-            var networkObject = Runner.Spawn(itemPrefab, Vector3.zero, Quaternion.identity);
-
-            // 2) 서버 권한이 있을 때만 네트워크드 변수에 위치 저장
-            if (networkObject.HasStateAuthority)
+            var netObj = Runner.Spawn(itemPrefab, Vector3.zero, Quaternion.identity);
+            if (netObj == null)
             {
-                var netItem = networkObject.GetComponent<NetworkItem>();
+                Debug.LogError("[ItemSpawner] Runner.Spawn이 null 반환 - Prefab 설정 확인");
+                continue;
+            }
+
+            if (netObj.HasStateAuthority)
+            {
+                var netItem = netObj.GetComponent<NetworkItem>();
+                if (netItem == null)
+                {
+                    Debug.LogError("[ItemSpawner] Prefab에 NetworkItem 컴포넌트가 없습니다!");
+                    continue;
+                }
                 netItem.SpawnPos = pos;
             }
         }
     }
+
 }
