@@ -15,7 +15,7 @@ MonoBehaviour:
   characterPrefabs:
   - characterName: King_Mccully
     prefab:
-      RawGuidValue: f5d35a18c1e83c3428cf2f405b33a998
+      RawGuidValue: a53abe2a90a77ac419dd1387dbb7a9d0
   - characterName: Mage_Evan
     prefab:
       RawGuidValue: f5d35a18c1e83c3428cf2f405b33a998

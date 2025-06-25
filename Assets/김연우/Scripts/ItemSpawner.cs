@@ -12,35 +12,29 @@ public class ItemSpawner : NetworkBehaviour
         if (Runner.IsServer)
             SpawnItems();
     }
-
     private void SpawnItems()
     {
-        if (itemConfig == null)
-        {
-            Debug.LogError("[ItemSpawner] itemConfig가 할당되지 않았습니다!");
-            return;
-        }
+        if (itemConfig == null) return;
 
         foreach (var pos in itemConfig.spawnPositions)
         {
-            var netObj = Runner.Spawn(itemPrefab, Vector3.zero, Quaternion.identity);
-            if (netObj == null)
-            {
-                Debug.LogError("[ItemSpawner] Runner.Spawn이 null 반환 - Prefab 설정 확인");
-                continue;
-            }
-
-            if (netObj.HasStateAuthority)
-            {
-                var netItem = netObj.GetComponent<NetworkItem>();
-                if (netItem == null)
+            Runner.Spawn(
+                itemPrefab,
+                Vector3.zero,
+                Quaternion.identity,
+                default,  
+                (runner, netObj) =>
                 {
-                    Debug.LogError("[ItemSpawner] Prefab에 NetworkItem 컴포넌트가 없습니다!");
-                    continue;
+                    var netItem = netObj.GetComponent<NetworkItem>();
+                    if (netItem != null)
+                        netItem.SpawnPos = pos;
                 }
-                netItem.SpawnPos = pos;
-            }
+            );
         }
     }
+
+
+
+
 
 }
