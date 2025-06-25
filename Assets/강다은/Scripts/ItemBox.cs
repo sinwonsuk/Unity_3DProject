@@ -26,12 +26,14 @@ public class ItemBox : MonoBehaviour
 		{
 			if (isOpened)
 			{
+				Cursor.lockState = CursorLockMode.Confined;
 				EventBus<ItemBoxUIClose>.Raise(new ItemBoxUIClose(this.gameObject));
 				isOpened = false;
 			}
 			else
 			{
-				OpenBox();
+                Cursor.lockState = CursorLockMode.Locked;
+                OpenBox();
 			}
 		}
 
