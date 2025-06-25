@@ -1,6 +1,8 @@
 using Fusion;
+using Unity.VisualScripting;
 using UnityEngine;
 using UnityEngine.AI;
+using static PlayerStateMachine;
 
 public class WeaponSwitchState : BaseState<PlayerStateMachine.PlayerState>
 {
@@ -14,13 +16,25 @@ public class WeaponSwitchState : BaseState<PlayerStateMachine.PlayerState>
     {
         if (playerStateMachine.Object.HasStateAuthority)
         {
-            PlayerRef me = playerStateMachine.Object.InputAuthority;
+
             playerStateMachine.SetWeapon(true);
-            playerStateMachine.WeaponManager.RequestEquip(ItemState.Harberd, HandSide.Right, me);
-            playerStateMachine.BroadcastIdleEvent(PlayerStateMachine.PlayerState.Idle);
+            playerStateMachine.WeaponManager.RequestEquip(playerStateMachine.itemState, HandSide.Right, playerStateMachine.me1);
+            playerStateMachine.AnimHandler.ChangeWeapon(playerStateMachine.itemState);
+            //playerStateMachine.BroadcastIdleEvent(PlayerState.Idle);
+
+
+
+
+
+
+
+            //PlayerRef me = playerStateMachine.Object.InputAuthority;
+            //playerStateMachine.SetWeapon(true);
+            //playerStateMachine.WeaponManager.RequestEquip(ItemState.Harberd, HandSide.Right, me);
+            //playerStateMachine.BroadcastIdleEvent(PlayerStateMachine.PlayerState.Idle);
         }
 
-        playerStateMachine.AnimHandler.ChangeWeapon(ItemState.Harberd);
+        playerStateMachine.AnimHandler.ChangeWeapon(playerStateMachine.itemState);
     }
     public override void ExitState()
     {

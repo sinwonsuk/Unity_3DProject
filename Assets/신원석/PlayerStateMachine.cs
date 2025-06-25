@@ -1,10 +1,11 @@
+﻿using Cinemachine;
 using Fusion;
-using Cinemachine;
-using UnityEngine;
-using System;
 using Fusion.Addons.SimpleKCC;
-using System.Collections.Generic;
+using System;
 using System.Collections;
+using System.Collections.Generic;
+using Unity.VisualScripting;
+using UnityEngine;
 
 
 public enum ItemState
@@ -216,17 +217,39 @@ public class PlayerStateMachine : StageManager<PlayerStateMachine.PlayerState>
         }
     }
 
+    bool adaddd = false;
+    [Networked] public ItemState itemState { get; set; }
+    [Networked] public PlayerRef me1 { get; set; }
+
     public void WeaponChange(WeaponChange weaponChange)
     {
-        if (Object.HasInputAuthority)
-        {
-            PlayerRef me = Object.InputAuthority;
-            SetWeapon(true);
-            WeaponManager.RequestEquip(weaponChange.state, HandSide.Right, me);          
-            RPC_ChangeWeaponAni(weaponChange.state);
-            BroadcastIdleEvent(PlayerState.Idle);
-        }
 
+        Debug.Log("WeaponChange called");
+
+        if (states == null || states.Count == 0)
+            Debug.LogError("StateMachine not initialized yet!");
+
+        // 🔥 현재 이 NetworkObject가 해당 PlayerRef의 것인지 확인
+        if (Object.InputAuthority != weaponChange.inf2)
+            return;
+
+        PlayerRef me = Object.InputAuthority;
+
+        me1 = Object.InputAuthority;
+        itemState = weaponChange.state;
+
+        BroadcastIdleEvent(PlayerState.Switch);
+
+        //if (Object.HasInputAuthority)
+        //{
+        //    ChangeState(PlayerState.Switch);
+        //}
+
+    }
+
+    public void adaddadadaw(ItemState itemState, PlayerRef me)
+    {
+        
     }
 
 
@@ -372,7 +395,6 @@ public class PlayerStateMachine : StageManager<PlayerStateMachine.PlayerState>
 
     public void PlayHitAnimation(int newHitCount)
     {
-
         if(Object.HasStateAuthority)
         {
             RPC_PlayHitAnimation(newHitCount);
@@ -398,7 +420,6 @@ public class PlayerStateMachine : StageManager<PlayerStateMachine.PlayerState>
         {
             IsWeapon = hasWeapon;  
         }
-
     }
 
     public void BroadcastIdleEvent(PlayerState nextStateKey)
@@ -417,9 +438,16 @@ public class PlayerStateMachine : StageManager<PlayerStateMachine.PlayerState>
     {
         if (!_isInitialized) return;
 
-        //Debug.Log(health.currentHp);
+        if ( adaddd == true )
+        {
+ 
 
-        //MoveInput();
+            adaddd = false;
+        }
+
+        var ad =Object.InputAuthority;
+
+    
 
 
         if (Object.HasStateAuthority)
@@ -433,6 +461,8 @@ public class PlayerStateMachine : StageManager<PlayerStateMachine.PlayerState>
 
         if (SyncedState != currentState.StateKey)
         {
+            Debug.Log($"State changed: {currentState.StateKey} -> {SyncedState}");
+
             currentState.ExitState();
             currentState = states[SyncedState];
             currentState.EnterState();

@@ -50,12 +50,19 @@ public class IdleState : BaseState<PlayerStateMachine.PlayerState>
             return;
         }
 
-        else if (playerStateMachine.inputHandler.IsLButtonPress() && playerStateMachine.Object.HasInputAuthority && playerStateMachine.IsWeapon ==false)
+        //else if (playerStateMachine.inputHandler.IsLButtonPress() && playerStateMachine.Object.HasInputAuthority && playerStateMachine.IsWeapon ==false)
+        //{
+        //    playerStateMachine.RPC_BroadcastState(PlayerState.Switch);
+        //    return;
+        //}
+
+        else if (Input.GetKey(KeyCode.K) && playerStateMachine.Object.HasInputAuthority && playerStateMachine.IsWeapon == false)
         {
             playerStateMachine.RPC_BroadcastState(PlayerState.Switch);
             return;
         }
-       
+
+
         else if (playerStateMachine.inputHandler.IsCtrlButtonPress() && playerStateMachine.Object.HasInputAuthority)
         {
            // playerStateMachine.playerController.Move(Vector3.zero,5);
@@ -72,40 +79,40 @@ public class IdleState : BaseState<PlayerStateMachine.PlayerState>
         {
             if(data.buttons.IsSet(NetworkInputData.NUM_1))
             {
-                EventBus<WeaponChange>.Raise(new WeaponChange(ItemState.Sword));
+                //EventBus<WeaponChange>.Raise(new WeaponChange(ItemState.Sword));
                 return;
             }
 
             if (data.buttons.IsSet(NetworkInputData.NUM_2))
             {
-                EventBus<WeaponChange>.Raise(new WeaponChange(ItemState.Harberd));
+               //EventBus<WeaponChange>.Raise(new WeaponChange(ItemState.Harberd));
                 return;
             }
 
             if (data.buttons.IsSet(NetworkInputData.NUM_3))
             {
-                EventBus<WeaponChange>.Raise(new WeaponChange(ItemState.Bow));
+               // EventBus<WeaponChange>.Raise(new WeaponChange(ItemState.Bow));
                 return;
             }
 
 
             if (data.buttons.IsSet(NetworkInputData.NUM_4))
             {
-                EventBus<WeaponChange>.Raise(new WeaponChange(ItemState.FireMagic));
+               // EventBus<WeaponChange>.Raise(new WeaponChange(ItemState.FireMagic));
                 return;
             }
 
 
             if (data.buttons.IsSet(NetworkInputData.NUM_5))
             {
-                EventBus<WeaponChange>.Raise(new WeaponChange(ItemState.IceMagic));
+               //EventBus<WeaponChange>.Raise(new WeaponChange(ItemState.IceMagic));
                 return;
             }
 
 
             if (data.buttons.IsSet(NetworkInputData.NUM_6))
             {
-                EventBus<WeaponChange>.Raise(new WeaponChange(ItemState.ElectricMagic));
+               // EventBus<WeaponChange>.Raise(new WeaponChange(ItemState.ElectricMagic));
                 return;
             }
         }

@@ -59,13 +59,11 @@ public class WeaponManager : NetworkBehaviour
         {
             Side = HandSide.Right;
             currentWeapon = runner.Spawn(prefab, position, rotation, owner);
-
         }
         else if(Dir == HandSide.Left)
         {
             Side = HandSide.Left;
             currentWeapon = runner.Spawn(prefab, position, rotation, owner);
-
         } 
         else
         {

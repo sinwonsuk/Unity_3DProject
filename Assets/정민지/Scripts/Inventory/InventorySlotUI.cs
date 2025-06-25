@@ -142,37 +142,37 @@ public class InventorySlotUI : NetworkBehaviour, IPointerClickHandler, IBeginDra
 
             else if (slot.item.weaponType==WeaponType.Sword)
             {
-                changed.RPC_ChangeWeapon(ItemState.none);
+                changed.ChangeWeapon(ItemState.Sword);
 
             }
             else if(slot.item.weaponType==WeaponType.Bow)
             {
-                changed.RPC_ChangeWeapon(ItemState.Bow);
+                changed.ChangeWeapon(ItemState.Bow);
 
             }
             else if(slot.item.weaponType==WeaponType.Axe)
             {
-                changed.RPC_ChangeWeapon(ItemState.Harberd);
+                changed.ChangeWeapon(ItemState.Harberd);
 
             }
             else if(slot.item.potionType!=PotionType.NONE)
             {
-               changed.RPC_ChangeWeapon(ItemState.none);
+               changed.ChangeWeapon(ItemState.none);
 
             }
             else if(slot.item.magicType==MagicType.Fire)
             {
-                changed.RPC_ChangeWeapon(ItemState.FireMagic);
+                changed.ChangeWeapon(ItemState.FireMagic);
  
             }
             else if (slot.item.magicType == MagicType.Ice)
             {
-                changed.RPC_ChangeWeapon(ItemState.IceMagic);
+                changed.ChangeWeapon(ItemState.IceMagic);
 
             }
             else if (slot.item.magicType == MagicType.Lightning)
             {
-                changed.RPC_ChangeWeapon(ItemState.ElectricMagic);
+                changed.ChangeWeapon(ItemState.ElectricMagic);
 
             }
 
