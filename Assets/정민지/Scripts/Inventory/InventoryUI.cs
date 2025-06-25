@@ -2,7 +2,7 @@ using Fusion;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class InventoryUI : NetworkBehaviour
+public class InventoryUI : MonoBehaviour
 {
     public GameObject slotPrefab;
     public Transform slotParent;
@@ -27,15 +27,6 @@ public class InventoryUI : NetworkBehaviour
     private int selectedIndex = 0;
     private bool isActive;
     private bool canSee;
-    private InputHandler inputHandler;
-
-    public override void Spawned()
-    {
-        base.Spawned();
-
-        // 초기화 필수!
-        inputHandler = new InputHandler(this, this.transform);
-    }
 
     private void Start()
     {
@@ -48,8 +39,8 @@ public class InventoryUI : NetworkBehaviour
         inventory.AddItem(basicIce);
         inventory.AddItem(basicLightning);
         UpdateUI();
-        isActive = bigInventoryPanel.activeSelf;
-        canSee = combi.activeSelf;
+        isActive = false;
+        canSee = false;
     }
 
 
@@ -77,34 +68,47 @@ public class InventoryUI : NetworkBehaviour
         }
     }
 
-    public  void Update()
+    void Update()
     {
 
-            if (combi.activeSelf) return;
-
+        if(!combi.activeSelf && Input.GetKeyDown(KeyCode.I))
+        {
             isActive = bigInventoryPanel.activeSelf;
             bigInventoryPanel.SetActive(!isActive); // 토글 방식
-
+        }
+            
+        if(Input.GetKeyDown(KeyCode.Tab))
+        {
             int index = currentPage * rowSize + selectedIndex;
             bigInventoryUI.SetSelectedIndexInBigUI(index); // 선택 인덱스 동기화
-        
-
 
             currentPage = (currentPage + 1) % maxRow;
             selectedIndex = 0;
             UpdateUI();
-        
+        }
 
-   
-            canSee = combi.activeSelf;
-            isActive = bigInventoryPanel.activeSelf;
-            combi.SetActive(!canSee);
+        if(Input.GetKeyDown(KeyCode.C))
+        {
+            bool wasCombiOpen = combi.activeSelf;
 
-            if (!(isActive&&!canSee))
+            if (!wasCombiOpen)
             {
-                bigInventoryPanel.SetActive(!isActive);
+                // 조합창이 열리는 경우
+                combi.SetActive(true);
+
+                if (!bigInventoryPanel.activeSelf)
+                {
+                    bigInventoryPanel.SetActive(true);
+                }
             }
-        
+            else
+            {
+                // 조합창이 닫히는 경우, 인벤토리도 같이 닫음
+                combi.SetActive(false);
+                bigInventoryPanel.SetActive(false);
+            }
+        }
+            
         float scrollDir = Input.GetAxis("Mouse ScrollWheel");
 
         if (bigInventoryPanel.activeSelf == false && scrollDir != 0)
