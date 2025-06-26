@@ -7,6 +7,8 @@ using System;
 using ExitGames.Client.Photon.StructWrapping;
 using Cinemachine;
 using static Unity.Collections.Unicode;
+using Unity.VisualScripting.Antlr3.Runtime;
+using System.Collections;
 
 /// Host(서버)가 모든 캐릭터를 Spawn 하고, 각 플레이어는 InputAuthority 를 받아서 자신의 캐릭터만 조종
 [RequireComponent(typeof(NetworkObject))]
@@ -177,7 +179,14 @@ public class BasicSpawner2 : NetworkBehaviour, INetworkRunnerCallbacks
         input.Set(data);
     }
     public void OnInputMissing(NetworkRunner runner, PlayerRef player, NetworkInput input) { }
-    public void OnShutdown(NetworkRunner runner, ShutdownReason shutdownReason) { }
+    public void OnShutdown(NetworkRunner runner, ShutdownReason shutdownReason) {
+
+        Debug.Log($"OnShutdown 호출 – Reason = {shutdownReason}");
+        if (shutdownReason == ShutdownReason.HostMigration)
+            Debug.Log(" → HostMigration 으로 종료됨");
+        else
+            Debug.Log(" → 일반 종료됨");
+    }
     public void OnConnectedToServer(NetworkRunner runner) { }
     public void OnDisconnectedFromServer(NetworkRunner runner, NetDisconnectReason reason) { }
     public void OnConnectRequest(NetworkRunner runner, NetworkRunnerCallbackArgs.ConnectRequest request, byte[] token) { }
@@ -185,11 +194,17 @@ public class BasicSpawner2 : NetworkBehaviour, INetworkRunnerCallbacks
     public void OnUserSimulationMessage(NetworkRunner runner, SimulationMessagePtr message) { }
     public void OnSessionListUpdated(NetworkRunner runner, List<SessionInfo> sessionList) { }
     public void OnCustomAuthenticationResponse(NetworkRunner runner, Dictionary<string, object> data) { }
-    public void OnHostMigration(NetworkRunner runner, HostMigrationToken hostMigrationToken) { }
+    public void OnHostMigration(NetworkRunner runner, HostMigrationToken hostMigrationToken) 
+    {
+    }
+
+
+
     public void OnSceneLoadDone(NetworkRunner runner) { }
     public void OnSceneLoadStart(NetworkRunner runner) { }
     public void OnObjectExitAOI(NetworkRunner runner, NetworkObject obj, PlayerRef player) { }
     public void OnObjectEnterAOI(NetworkRunner runner, NetworkObject obj, PlayerRef player) { }
     public void OnReliableDataReceived(NetworkRunner runner, PlayerRef player, ReliableKey key, ArraySegment<byte> data) { }
     public void OnReliableDataProgress(NetworkRunner runner, PlayerRef player, ReliableKey key, float progress) { }
+
 }

@@ -1,3 +1,4 @@
+using Fusion;
 using System.Collections;
 using UnityEngine;
 using UnityEngine.SceneManagement;
@@ -60,12 +61,27 @@ public class OptionUIManager : MonoBehaviour
     private IEnumerator ReturnToTitle()
     {
         var runner = RunnerSingleton.Instance;
-        if (runner != null && runner.IsRunning)
+        if (runner != null && runner.IsRunning && runner.IsServer)
         {
-            Debug.Log("서버 종료 중...");
-            var task = runner.Shutdown(true);
-            while (!task.IsCompleted)
+            Debug.Log("호스트가 나가므로 HostMigration 시작");
+
+                   // 1) 게임 상태(오브젝트 위치 등)를 스냅샷으로 저장
+            var pushTask = runner.PushHostMigrationSnapshot();
+            while (!pushTask.IsCompleted)
                 yield return null;
+            
+                   // 2) HostMigration 플래그(=== true)만 넘겨서 종료
+            var shutdownTask = runner.Shutdown(true);
+            while (!shutdownTask.IsCompleted)
+                yield return null;
+
+            RunnerSingleton.ClearRunner();
+        }
+        else if (runner != null)
+        {
+            // 클라이언트는 그냥 나가기
+            var shutdownTask = runner.Shutdown();
+            while (!shutdownTask.IsCompleted) yield return null;
 
             RunnerSingleton.ClearRunner();
         }

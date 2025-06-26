@@ -96,6 +96,12 @@ public class PlayerHealth : NetworkBehaviour
             TakeDamage(damage);
     }
 
+    public void RestoreHealth(int value)
+    {
+        if (HasStateAuthority)
+            currentHp = Mathf.Clamp(value, 0, maxHp);
+    }
+
     [Rpc(RpcSources.InputAuthority, RpcTargets.StateAuthority)]
     public void Rpc_RequestDamage(int damage) => TakeDamage(damage);
 
