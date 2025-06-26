@@ -29,7 +29,7 @@ public class JumpState : BaseState<PlayerStateMachine.PlayerState>
             return;
 
         playerStateMachine.NetAnim.Animator.SetBool("Jump", true);
-        playerStateMachine.playerController.Move(playerStateMachine.transform.forward *moveSpeed,gravity);
+        playerStateMachine.playerController.Move(default,gravity);
 
     }
     public override void ExitState()

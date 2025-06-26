@@ -1,11 +1,12 @@
-using UnityEngine;
-using UnityEngine.SceneManagement;
+using Cinemachine;
+using ExitGames.Client.Photon.StructWrapping;
 using Fusion;
 using Fusion.Sockets;
-using System.Collections.Generic;
 using System;
-using ExitGames.Client.Photon.StructWrapping;
-using Cinemachine;
+using System.Collections.Generic;
+using UnityEngine;
+using UnityEngine.SceneManagement;
+using static Unity.Collections.Unicode;
 
 public class BasicSpawner : MonoBehaviour, INetworkRunnerCallbacks
 {
@@ -24,7 +25,6 @@ public class BasicSpawner : MonoBehaviour, INetworkRunnerCallbacks
         _runner = gameObject.AddComponent<NetworkRunner>();
         _runner.ProvideInput = true;
         _runner.AddCallbacks(this);
-
         // Create the NetworkSceneInfo from the current scene
         var scene = SceneRef.FromIndex(SceneManager.GetActiveScene().buildIndex);
         var sceneInfo = new NetworkSceneInfo();

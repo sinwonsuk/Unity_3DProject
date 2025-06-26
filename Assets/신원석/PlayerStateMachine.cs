@@ -6,6 +6,7 @@ using System.Collections;
 using System.Collections.Generic;
 using Unity.VisualScripting;
 using UnityEngine;
+using static UnityEngine.UI.GridLayoutGroup;
 
 
 public enum ItemState
@@ -182,6 +183,15 @@ public class PlayerStateMachine : StageManager<PlayerStateMachine.PlayerState>
         health = GetComponent<PlayerHealth>();
 
         action = adad;
+
+        if (Object.HasStateAuthority)
+        {
+            PlayerRef me = Object.InputAuthority;
+            WeaponManager.MaigcInitialize(ItemState.IceMagic, HandSide.Right, me);
+        }
+
+      
+
         _isInitialized = true;
     }
   
@@ -217,7 +227,6 @@ public class PlayerStateMachine : StageManager<PlayerStateMachine.PlayerState>
         }
     }
 
-    bool adaddd = false;
     [Networked] public ItemState itemState { get; set; }
     [Networked] public PlayerRef me1 { get; set; }
 
@@ -229,7 +238,7 @@ public class PlayerStateMachine : StageManager<PlayerStateMachine.PlayerState>
         if (states == null || states.Count == 0)
             Debug.LogError("StateMachine not initialized yet!");
 
-        // 🔥 현재 이 NetworkObject가 해당 PlayerRef의 것인지 확인
+
         if (Object.InputAuthority != weaponChange.inf2)
             return;
 
@@ -239,11 +248,6 @@ public class PlayerStateMachine : StageManager<PlayerStateMachine.PlayerState>
         itemState = weaponChange.state;
 
         BroadcastIdleEvent(PlayerState.Switch);
-
-        //if (Object.HasInputAuthority)
-        //{
-        //    ChangeState(PlayerState.Switch);
-        //}
 
     }
 
@@ -319,7 +323,7 @@ public class PlayerStateMachine : StageManager<PlayerStateMachine.PlayerState>
 
     }
     [Rpc(RpcSources.InputAuthority, RpcTargets.All)]
-    public void RPC_RequestShoot(Vector3 targetPos, ItemState State, RpcInfo info = default)
+    public void RPC_RequestShoot(Vector3 targetPos, ItemState State, NetworkObject magic = null,RpcInfo info = default)
     {
         ShootObj arrow = null;
 
@@ -348,7 +352,7 @@ public class PlayerStateMachine : StageManager<PlayerStateMachine.PlayerState>
     {
         if (Object.HasInputAuthority)
         {
-            RPC_RequestShoot(targetPos, State);
+            RPC_RequestShoot(targetPos, State,magic);
         }
         else if (Object.HasStateAuthority)
         {
@@ -377,7 +381,15 @@ public class PlayerStateMachine : StageManager<PlayerStateMachine.PlayerState>
         }
     }
 
- 
+    [Rpc(RpcSources.InputAuthority, RpcTargets.StateAuthority)]
+    public void RPC_RequestMagic(ItemState state, HandSide Dir, PlayerRef owner = default)
+    {
+        var magic = WeaponManager.GetIceMagicPool();
+
+        WeaponManager.Magic = magic;
+
+    }
+
 
     [Rpc(RpcSources.InputAuthority, RpcTargets.StateAuthority)]
     public void RPC_ClearHitSet()
@@ -437,17 +449,6 @@ public class PlayerStateMachine : StageManager<PlayerStateMachine.PlayerState>
     public override void FixedUpdateNetwork()
     {
         if (!_isInitialized) return;
-
-        if ( adaddd == true )
-        {
- 
-
-            adaddd = false;
-        }
-
-        var ad =Object.InputAuthority;
-
-    
 
 
         if (Object.HasStateAuthority)

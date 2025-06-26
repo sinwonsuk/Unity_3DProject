@@ -1,6 +1,9 @@
+using ExitGames.Client.Photon;
 using Fusion;
+using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UIElements;
+using static Fusion.NetworkRunner;
 using static Unity.Collections.Unicode;
 using static UnityEngine.UI.GridLayoutGroup;
 
@@ -10,17 +13,19 @@ public enum HandSide
     Left,
 }
 
-public class WeaponManager : NetworkBehaviour
+public class WeaponManager : NetworkBehaviour 
 {
     private WeaponsConfig config;
     private Transform rightHandSocket;
     private Transform leftHandSocket;
-   [Networked] public HandSide Side { get; set; }
+
+
+    [Networked] public HandSide Side { get; set; }
 
     [Networked] public HandSide ArrowSide { get; set; }
 
     [Networked] public NetworkObject currentWeapon { get; set; }
-   [Networked] public NetworkObject Arrow { get; set; }
+    [Networked] public NetworkObject Arrow { get; set; }
 
     [Networked] public NetworkObject Magic { get; set; }
 
@@ -29,7 +34,9 @@ public class WeaponManager : NetworkBehaviour
     [Networked] public ItemState magicState { get; set; }
 
     private NetworkRunner runner;
-    
+
+    private Queue<NetworkObject> IceMagics = new Queue<NetworkObject>();
+
 
 
     public void Init(WeaponsConfig config, Transform rightHandSocket, Transform leftHandSocket, NetworkRunner runner, NetworkBehaviour networkBehaviour)
@@ -38,6 +45,41 @@ public class WeaponManager : NetworkBehaviour
         this.rightHandSocket = rightHandSocket;
         this.leftHandSocket = leftHandSocket;
         this.runner = runner;
+    }
+
+    public void MaigcInitialize(ItemState state, HandSide Dir, PlayerRef owner = default)
+    {
+        for (int i = 0; i < 100; i++)
+        {
+            NetworkObject obj = CreateMagics(state, Dir, owner);
+
+            obj.gameObject.SetActive(false);
+
+            IceMagics.Enqueue(obj);
+
+        }
+    }
+    public NetworkObject GetIceMagicPool()
+    {
+        // 디버깅
+        var ad = Object.InputAuthority;
+
+
+        // 뺏기
+        var obj = IceMagics.Dequeue();
+
+        // 만약 풀에 오브젝트가 없다면
+        if (obj == null)
+        {
+            Debug.LogError("Pool에서 오브젝트를 가져올 수 없습니다.");
+            return null;
+        }
+        // 오브젝트를 활성화하고 반환
+        obj.gameObject.SetActive(true);
+
+        IceMagics.Enqueue(obj);
+
+        return obj;
     }
 
 
@@ -111,6 +153,32 @@ public class WeaponManager : NetworkBehaviour
 
         Magic = obj;
     }
+
+
+    public NetworkObject CreateMagics(ItemState state, HandSide Dir, PlayerRef owner = default)
+    {
+        magicState = state;
+
+        NetworkPrefabRef prefab = config.GetWeapon(state);
+        Vector3 position = config.GetTransform(state).localPosition;
+        Quaternion rotation = config.GetTransform(state).localRotation;
+        NetworkObject obj = null;
+
+        obj = runner.Spawn(prefab, position, rotation, owner, onBeforeSpawned: (runner, obj) =>
+        {
+            var wno = obj.GetComponent<WeaponNetworkObject>();
+
+        }
+            );
+
+        return obj;
+    }
+
+
+
+
+
+
     public NetworkObject GetCreateMagic(ItemState state, HandSide Dir, PlayerRef owner = default)
     {
         magicState = state;
