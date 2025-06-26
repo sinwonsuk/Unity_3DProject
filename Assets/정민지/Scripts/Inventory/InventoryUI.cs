@@ -49,22 +49,21 @@ public class InventoryUI : MonoBehaviour
 
     private void SelectFirstWeaponSlot()
     {
-        for (int i = 0; i < inventory.slots.Length; i++)
+        int selectedSlotIndex = currentPage * rowSize + selectedIndex;
+        if (selectedSlotIndex < inventory.slots.Length)
         {
-            var slot = inventory.slots[i];
-            if (!slot.IsEmpty && slot.item!=null)
-            {
-                OnSlotClicked(i);
-                Debug.Log($"게임 시작 시 자동으로 무기 슬롯 {i} 선택됨: {slot.item.itemName}");
-                break;
-            }
+            slotUIs[selectedIndex].SetSlot(inventory.slots[selectedSlotIndex], true);
         }
     }
 
     public void OnSlotClicked(int index)
     {
-        selectedIndex = index;
+        selectedIndex = index % rowSize;
         UpdateUI();
+
+        int uiIndex = selectedIndex;
+        if (uiIndex < slotUIs.Count)
+            slotUIs[uiIndex].ForceSelect();
     }
 
     void InitSlots()
@@ -98,18 +97,25 @@ public class InventoryUI : MonoBehaviour
             isActive = bigInventoryPanel.activeSelf;
             bigInventoryPanel.SetActive(!isActive); // 토글 방식
         }
-            
-        if(Input.GetKeyDown(KeyCode.Tab))
-        {
-            int index = currentPage * rowSize + selectedIndex;
-            bigInventoryUI.SetSelectedIndexInBigUI(index); // 선택 인덱스 동기화
 
+        if (Input.GetKeyDown(KeyCode.Tab))
+        {
+            int prevIndex = currentPage * rowSize + selectedIndex;
             currentPage = (currentPage + 1) % maxRow;
-            selectedIndex = 0;
-            UpdateUI();
+
+            // 같은 열 유지한 채 다음 줄로 이동
+            int newIndex = currentPage * rowSize + (prevIndex % rowSize);
+            selectedIndex = newIndex % rowSize;
+
+            if (newIndex < inventory.slots.Length)
+            {
+                OnSlotClicked(newIndex); //  이것만 해주면 자동 선택 + 무기 변경까지 OK
+                bigInventoryUI.SetSelectedIndexInBigUI(newIndex);
+                Debug.Log($"[TAB] {newIndex}번 슬롯 선택됨: {inventory.slots[newIndex].item?.itemName}");
+            }
         }
 
-        if(Input.GetKeyDown(KeyCode.C))
+        if (Input.GetKeyDown(KeyCode.C))
         {
             bool wasCombiOpen = combi.activeSelf;
 

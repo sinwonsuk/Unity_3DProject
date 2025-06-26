@@ -122,6 +122,12 @@ public class InventorySlotUI : NetworkBehaviour, IPointerClickHandler, IBeginDra
         }
     }
 
+    public void ForceSelect()
+    {
+        OnSelectionChanged(true);
+        highlightImage.enabled = true;
+        wasSelected = true;
+    }
 
     private void OnSelectionChanged(bool isSelected)
     {
