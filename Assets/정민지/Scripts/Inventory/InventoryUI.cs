@@ -31,6 +31,19 @@ public class InventoryUI : MonoBehaviour
     private bool isActive;
     private bool canSee;
 
+    public static InventoryUI Instance { get; private set; }
+
+    private void Awake()
+    {
+        Instance = this;
+    }
+
+    public bool IsInventoryOpen()
+    {
+        return bigInventoryPanel.activeSelf;
+    }
+
+
     private void Start()
     {
         inventory = GetComponent<Inventory>();
@@ -47,7 +60,7 @@ public class InventoryUI : MonoBehaviour
         SelectFirstWeaponSlot();
     }
 
-    private void SelectFirstWeaponSlot()
+    public void SelectFirstWeaponSlot()
     {
         for (int i = 0; i < inventory.slots.Length; i++)
         {
@@ -98,8 +111,23 @@ public class InventoryUI : MonoBehaviour
         }
     }
 
+    public void IsOpenInven()
+    {
+        if (bigInventoryPanel.activeSelf || combi.activeSelf)
+        {
+            Cursor.lockState = CursorLockMode.None;
+            Cursor.visible = true;
+        }
+        else if (!bigInventoryPanel.activeSelf && !combi.activeSelf)
+        {
+            Cursor.lockState = CursorLockMode.Locked;
+            Cursor.visible = false;
+        }
+    }
+
     void Update()
     {
+        //IsOpenInven();
 
         if(!combi.activeSelf && Input.GetKeyDown(KeyCode.I))
         {

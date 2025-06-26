@@ -5,31 +5,31 @@ using System.Linq;
 public class Inventory : MonoBehaviour
 {
 
-    public int slotCount = 15; //�κ��丮 ĭ ����
-    public InventorySlot[] slots; //�κ��丮 ���� ĭ
-    public InventoryUI inventoryUI; //�κ��丮UI
-    private int gold; //���� ������Ʈ�� �޾ƿ��� ���� ��
-    public int basicGold; //�⺻���� �����ϴ� ��
-    public GoldUI goldUI; //��� UI
-    public BigInventoryUI bigInventoryUI; //�κ��丮 ��ü ȭ��
+    public int slotCount = 15;
+    public InventorySlot[] slots; 
+    public InventoryUI inventoryUI; 
+    private int gold; 
+    public int basicGold; 
+    public GoldUI goldUI; 
+    public BigInventoryUI bigInventoryUI; 
     [SerializeField] private ItemManager itemManager;
 
 
     private void Awake()
     {
        
-        slots = new InventorySlot[slotCount]; //ĭ ������ �´� �κ��丮 ���� �迭 ����
+        slots = new InventorySlot[slotCount]; 
 
-        for (int i = 0; i < slotCount; i++) //���� �迭�� ���Ե� �ֱ�
+        for (int i = 0; i < slotCount; i++) 
             slots[i] = new InventorySlot();
 
-        gold = basicGold; //�� �⺻ ����
-        EventBus<Gold>.Raise(new Gold(basicGold)); //�⺻���� ������ �� ���ֱ�
+        gold = basicGold;
+        EventBus<Gold>.Raise(new Gold(basicGold));
 
     }
 
 
-    //��UI ����
+
     private void OnEnable()
     {
         EventBus<Gold>.OnEvent += UpdateGold;
@@ -37,7 +37,7 @@ public class Inventory : MonoBehaviour
         EventBus<RequestItemToInventory>.OnEvent += GetItem;
     }
 
-    //��UI ���� ����
+
     private void OnDisable()
     {
         EventBus<Gold>.OnEvent -= UpdateGold;
@@ -45,7 +45,7 @@ public class Inventory : MonoBehaviour
         EventBus<RequestItemToInventory>.OnEvent -= GetItem;
     }
 
-    //�� �ǽð� ������Ʈ
+
     private void UpdateGold(Gold _gold)
     {
         gold = _gold.currentGold;
@@ -70,24 +70,24 @@ public class Inventory : MonoBehaviour
         bigInventoryUI?.UpdateUI();
     }
 
-    //������ �߰�
+    
     public void AddItem(ItemData item)
     {
         if (item.itemType == ItemType.Potion)
         {
-            // �̹� ���� ������ ������ ������ ����
+            
             foreach (var slot in slots)
             {
                 if (!slot.IsEmpty && slot.item == item)
                 {
                     slot.quantity++;
                     UpdateAllInventoryUI();
-                    Debug.Log($"���� ���� ����: {item.itemName}, ���� ����: {slot.quantity}");
+                    Debug.Log($"아이템 추가: {item.itemName}, 아이템 추가 개수: {slot.quantity}");
                     return;
                 }
             }
 
-            // ���� ���� ������ �� ���� �ִ��� üũ �� �߰�
+            
             bool hasEmptySlot = slots.Any(slot => slot.IsEmpty);
             if (!hasEmptySlot) return;
 
@@ -98,14 +98,14 @@ public class Inventory : MonoBehaviour
                     slot.item = item;
                     slot.quantity = 1;
                     UpdateAllInventoryUI();
-                    Debug.Log($"�� ���Կ� ���� �߰�: {item.itemName}");
+                    Debug.Log($"아이템 추가: {item.itemName}");
                     return;
                 }
             }
         }
         else
         {
-            // ������ �ƴ� ���� ������ �� ���� �ʿ�
+            
             bool hasEmptySlot = slots.Any(slot => slot.IsEmpty);
             if (!hasEmptySlot) return;
 
@@ -116,16 +116,16 @@ public class Inventory : MonoBehaviour
                     slot.item = item;
                     slot.quantity = 1;
                     UpdateAllInventoryUI();
-                    Debug.Log($"�� ���Կ� ������ �߰�: {item.itemName}");
+                    Debug.Log($"아이템 추가: {item.itemName}");
                     return;
                 }
             }
         }
 
-        Debug.Log("������ �߰� ����");
+        Debug.Log("아이템 추가 실패");
     }
 
-    //������ ����
+    
     public void SellItem(ItemData item)
     {
         for (int i = 0; i < slots.Length; i++)

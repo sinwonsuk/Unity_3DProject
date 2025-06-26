@@ -1,3 +1,4 @@
+using ExitGames.Client.Photon.StructWrapping;
 using Fusion;
 using UnityEngine;
 using static Unity.Collections.Unicode;
@@ -38,8 +39,6 @@ public class InputHandler
 
 
 
-
-
     // 방향 계산 및 처리
     public void TryGetMoveDirection(out Vector3 moveDir, out Quaternion planarRotation)
     {
@@ -59,12 +58,18 @@ public class InputHandler
     public bool IsRightAttackPressed()
     {
         if (behaviour.GetInput(out NetworkInputData data))
-        {      
-            return data.buttons.IsSet(NetworkInputData.MOUSEBUTTON1);
+        {
+            //if(!InventoryUI.Instance.bigInventoryPanel.activeSelf)
+            //{
+                return data.buttons.IsSet(NetworkInputData.MOUSEBUTTON1);
+            //}
+            
         }
 
         return false;
     }
+
+
 
     public bool IsLButtonPress()
     {
@@ -103,6 +108,7 @@ public class InputHandler
         behaviour.GetInput(out NetworkInputData data);
 
         return data;
+
     }
 
     public bool IsAttackPressed()
@@ -139,18 +145,6 @@ public class InputHandler
         return 0; // 스크롤 없음
     }
 
-    //I Key
-    public bool IsIPressed()
-    {
-        if (behaviour.GetInput(out NetworkInputData data))
-        {
-            if (data.buttons.IsSet(NetworkInputData.KEY_I))
-            {
-                return true;
-            }
-        }
-        return false;
-    }
 
     //E Key
     public bool IsEPressed()
@@ -165,18 +159,6 @@ public class InputHandler
         return false;
     }
 
-    //Tab Key
-    public bool IsTabPressed()
-    {
-        if (behaviour.GetInput(out NetworkInputData data))
-        {
-            if (data.buttons.IsSet(NetworkInputData.KEY_TAB))
-            {
-                return true;
-            }
-        }
-        return false;
-    }
 
     // 카메라 전환 
     public bool ChangeCamera()
