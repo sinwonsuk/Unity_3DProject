@@ -18,6 +18,8 @@ public class InventoryUI : MonoBehaviour
     public GameObject bigInventoryPanel;
     public GameObject combi;
     [SerializeField] private BigInventoryUI bigInventoryUI;
+    [SerializeField] private float scrollCooldown = 0.2f; // 휠 입력 간 최소 간격 (초)
+    [SerializeField] private float lastScrollTime = 0f;
 
     public int rowSize = 5;
     public int maxRow = 3;
@@ -131,7 +133,7 @@ public class InventoryUI : MonoBehaviour
             
         float scrollDir = Input.GetAxis("Mouse ScrollWheel");
 
-        if (bigInventoryPanel.activeSelf == false && scrollDir != 0)
+        if (bigInventoryPanel.activeSelf == false && scrollDir != 0 && Time.time - lastScrollTime >= scrollCooldown)
         {
             if (scrollDir > 0)
                 selectedIndex = (selectedIndex - 1 + rowSize) % rowSize;
@@ -139,6 +141,7 @@ public class InventoryUI : MonoBehaviour
                 selectedIndex = (selectedIndex + 1) % rowSize;
 
             UpdateUI();
+            lastScrollTime = Time.time;
         }
     }
 
