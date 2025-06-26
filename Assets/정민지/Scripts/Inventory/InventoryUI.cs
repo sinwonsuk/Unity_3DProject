@@ -1,5 +1,6 @@
 using Fusion;
 using System.Collections.Generic;
+using System.Linq;
 using UnityEngine;
 
 public class InventoryUI : MonoBehaviour
@@ -41,9 +42,28 @@ public class InventoryUI : MonoBehaviour
         UpdateUI();
         isActive = false;
         canSee = false;
+        SelectFirstWeaponSlot();
     }
 
+    private void SelectFirstWeaponSlot()
+    {
+        for (int i = 0; i < inventory.slots.Length; i++)
+        {
+            var slot = inventory.slots[i];
+            if (!slot.IsEmpty && slot.item!=null)
+            {
+                OnSlotClicked(i);
+                Debug.Log($"게임 시작 시 자동으로 무기 슬롯 {i} 선택됨: {slot.item.itemName}");
+                break;
+            }
+        }
+    }
 
+    public void OnSlotClicked(int index)
+    {
+        selectedIndex = index;
+        UpdateUI();
+    }
 
     void InitSlots()
     {
