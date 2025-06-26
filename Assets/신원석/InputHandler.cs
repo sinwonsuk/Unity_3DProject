@@ -131,19 +131,6 @@ public class InputHandler
         return false;
     }
 
-    //마우스휠
-    public int GetScrollDirection()
-    {
-        if (behaviour.GetInput(out NetworkInputData data))
-        {
-            if (data.mouseScroll > 0.01f)
-                return 1;  // 위로 스크롤
-            else if (data.mouseScroll < -0.01f)
-                return -1; // 아래로 스크롤
-        }
-
-        return 0; // 스크롤 없음
-    }
 
 
     //E Key
