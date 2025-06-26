@@ -49,21 +49,30 @@ public class InventoryUI : MonoBehaviour
 
     private void SelectFirstWeaponSlot()
     {
-        int selectedSlotIndex = currentPage * rowSize + selectedIndex;
-        if (selectedSlotIndex < inventory.slots.Length)
+        for (int i = 0; i < inventory.slots.Length; i++)
         {
-            slotUIs[selectedIndex].SetSlot(inventory.slots[selectedSlotIndex], true);
+            var slot = inventory.slots[i];
+            if (!slot.IsEmpty && slot.item != null)
+            {
+                OnSlotClicked(i);
+                Debug.Log($"게임 시작 시 자동으로 무기 슬롯 {i} 선택됨: {slot.item.itemName}");
+                break;
+            }
         }
     }
 
     public void OnSlotClicked(int index)
     {
-        selectedIndex = index % rowSize;
+        int page = index / rowSize;
+        int slotInRow = index % rowSize;
+
+        currentPage = page;
+        selectedIndex = slotInRow;
+
         UpdateUI();
 
-        int uiIndex = selectedIndex;
-        if (uiIndex < slotUIs.Count)
-            slotUIs[uiIndex].ForceSelect();
+        if (slotInRow < slotUIs.Count)
+            slotUIs[slotInRow].ForceSelect();
     }
 
     void InitSlots()
