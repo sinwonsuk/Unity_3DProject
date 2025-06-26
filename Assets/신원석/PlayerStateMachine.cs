@@ -233,16 +233,8 @@ public class PlayerStateMachine : StageManager<PlayerStateMachine.PlayerState>
     public void WeaponChange(WeaponChange weaponChange)
     {
 
-        Debug.Log("WeaponChange called");
-
-        if (states == null || states.Count == 0)
-            Debug.LogError("StateMachine not initialized yet!");
-
-
         if (Object.InputAuthority != weaponChange.inf2)
             return;
-
-        PlayerRef me = Object.InputAuthority;
 
         me1 = Object.InputAuthority;
         itemState = weaponChange.state;
@@ -322,10 +314,12 @@ public class PlayerStateMachine : StageManager<PlayerStateMachine.PlayerState>
         AnimHandler.SetAttackBool(false);
 
     }
-    [Rpc(RpcSources.InputAuthority, RpcTargets.All)]
+    [Rpc(RpcSources.InputAuthority, RpcTargets.StateAuthority)]
     public void RPC_RequestShoot(Vector3 targetPos, ItemState State, NetworkObject magic = null,RpcInfo info = default)
     {
         ShootObj arrow = null;
+
+        var ad =Object.InputAuthority;
 
         if (State == ItemState.IceMagic)
         {

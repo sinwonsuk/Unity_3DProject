@@ -11,8 +11,8 @@ public class ShootObj : NetworkBehaviour
     [Networked] public bool flying { get; set; }
     [Networked] public Vector3 flyDir { get; set; }
 
-    Transform originalParent;
-    Vector3 originalLocalPosition;
+                Transform originalParent { get; set; }
+    [Networked] Vector3 originalLocalPosition { get; set; }
     Quaternion originalLocalRotation;
 
     //[SerializeField]
@@ -22,8 +22,13 @@ public class ShootObj : NetworkBehaviour
 
     public override void FixedUpdateNetwork()
     {
+        if(flying ==true)
+        {
+            transform.SetParent(null, true);
+        }
 
-        if (flying)
+
+        if (flying && Object.HasStateAuthority)
         {
             transform.position += Runner.DeltaTime * speed * flyDir;
         }
@@ -47,29 +52,25 @@ public class ShootObj : NetworkBehaviour
             return;
         }
 
-        originalParent = transform.parent;
-
-
-
-
-        originalLocalPosition = transform.localPosition;
-        originalLocalRotation = transform.localRotation;
-
-        Debug.Log($"발사 위치: {transform.position}");
-
-        flying = true;   // ← 이 순간 flying과 flyDir 둘 다 네트워크로 복제
-
-       
-        flyDir = (dir - transform.position).normalized;
-
-        transform.SetParent(null, true);
-        // 로컬에서 즉시 보이도록
-        transform.forward = flyDir;
-        //Destroy(gameObject, 10f);
-
         if (HasStateAuthority)
-            StartCoroutine(ReturnToPoolAfter(10f));
+        {
+            originalParent = transform.parent;
+            originalLocalPosition = transform.localPosition;
+            originalLocalRotation = transform.localRotation;
 
+            Debug.Log($"발사 위치: {transform.position}");
+
+            flying = true;   // ← 이 순간 flying과 flyDir 둘 다 네트워크로 복제
+
+
+            flyDir = (dir - transform.position).normalized;
+
+            transform.SetParent(null, true);
+
+            transform.forward = flyDir;
+
+            StartCoroutine(ReturnToPoolAfter(10f));
+        }      
     }
 
     private IEnumerator ReturnToPoolAfter(float seconds)
