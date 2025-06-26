@@ -22,9 +22,9 @@ public class MagicAttackState : BaseState<PlayerStateMachine.PlayerState>
 
         if (playerStateMachine.Object.HasStateAuthority)
         {
-            PlayerRef me = playerStateMachine.Object.InputAuthority;
-            playerStateMachine.WeaponManager.RequestMagic(playerStateMachine.WeaponManager.magicState, HandSide.Right, me);
-            magic = playerStateMachine.WeaponManager.Magic;
+            //PlayerRef me = playerStateMachine.Object.InputAuthority;
+            //playerStateMachine.WeaponManager.RequestMagic(playerStateMachine.WeaponManager.magicState, HandSide.Right, me);
+            //magic = playerStateMachine.WeaponManager.Magic;
         }
 
 
@@ -63,8 +63,11 @@ public class MagicAttackState : BaseState<PlayerStateMachine.PlayerState>
 
         if(left && right && attack >= maxAttack  && playerStateMachine.cameraManager.isCameraCheck == true)
         {
-            isAttackTrigger = true;
+            //isAttackTrigger = true;
             CalculateHitPosition();
+
+
+            playerStateMachine.RPC_RequestMagic(playerStateMachine.WeaponManager.magicState, HandSide.Right);
 
             playerStateMachine.SetShootObject(targetPos,playerStateMachine.WeaponManager.magicState, magic);
         }
@@ -116,7 +119,7 @@ public class MagicAttackState : BaseState<PlayerStateMachine.PlayerState>
     Coroutine zoomRoutine;
     PlayerStateMachine playerStateMachine;
     PlayerRef me;
-    NetworkObject magic;
+    NetworkObject magic { get; set; }
 }
 
 
@@ -216,7 +219,7 @@ public class MagicAttackState : BaseState<PlayerStateMachine.PlayerState>
 //            }
 //            playerStateMachine.AnimHandler.ChangeMagicAttackState(attack);
 
-            
+
 //            return;
 //        }
 
