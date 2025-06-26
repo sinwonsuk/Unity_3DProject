@@ -65,12 +65,18 @@ public class OptionUIManager : MonoBehaviour
         {
             Debug.Log("호스트가 나가므로 HostMigration 시작");
 
-                   // 1) 게임 상태(오브젝트 위치 등)를 스냅샷으로 저장
+            // 1) 내 캐릭터 수동 제거 (중요!)
+            if (BasicSpawner2.Instance != null)
+            {
+                BasicSpawner2.Instance.DespawnSelf();
+            }
+
+            // 2) 스냅샷 저장
             var pushTask = runner.PushHostMigrationSnapshot();
             while (!pushTask.IsCompleted)
                 yield return null;
-            
-                   // 2) HostMigration 플래그(=== true)만 넘겨서 종료
+
+            // 3) Runner 종료
             var shutdownTask = runner.Shutdown(true);
             while (!shutdownTask.IsCompleted)
                 yield return null;
@@ -79,12 +85,13 @@ public class OptionUIManager : MonoBehaviour
         }
         else if (runner != null)
         {
-            // 클라이언트는 그냥 나가기
+            // 클라이언트는 그냥 종료
             var shutdownTask = runner.Shutdown();
             while (!shutdownTask.IsCompleted) yield return null;
 
             RunnerSingleton.ClearRunner();
         }
+
 
         // 타이틀 씬 인덱스 또는 이름으로 이동
         SceneManager.LoadScene("TitleScene"); // 또는 SceneManager.LoadScene(0);
