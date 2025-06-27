@@ -235,7 +235,7 @@ public class BasicSpawner2 : NetworkBehaviour, INetworkRunnerCallbacks
         data.buttons.Set(NetworkInputData.NUM_4, Input.GetKey(KeyCode.Alpha4));
         data.buttons.Set(NetworkInputData.NUM_5, Input.GetKey(KeyCode.Alpha5));
         data.buttons.Set(NetworkInputData.NUM_6, Input.GetKey(KeyCode.Alpha6));
-
+        data.buttons.Set(NetworkInputData.KEY_E, Input.GetKey(KeyCode.E));
 
         _mouseButton0 = false;
         _mouseButton1 = false;
