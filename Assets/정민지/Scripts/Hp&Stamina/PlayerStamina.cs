@@ -14,6 +14,18 @@ public class PlayerStamina : NetworkBehaviour
     [SerializeField] private int maxStamina = 100;
     [SerializeField] private float recoveryTimer;
     public bool IsStamania { get; set; } = false;
+    private bool imRunning = false;
+    private float timer = 0f;
+
+    private void OnEnable()
+    {
+        EventBus<isRunning>.OnEvent += OnOffRunning;
+    }
+
+    private void OnDisable()
+    {
+        EventBus<isRunning>.OnEvent -= OnOffRunning;
+    }
     public override void Spawned()
     {
         if (Object.HasInputAuthority)
@@ -23,12 +35,21 @@ public class PlayerStamina : NetworkBehaviour
         }
     }
 
+    private void OnOffRunning(isRunning evt)
+    {
+        imRunning = evt.imRunning;
+    }
+
+
     public void UseStamina(float amount)
     {
-        if (!Object.HasInputAuthority) return;
+        if (!Object.HasInputAuthority || currentStamina <= 0f) return;
 
+        float before = currentStamina;
         currentStamina = Mathf.Clamp(currentStamina - amount, 0, maxStamina);
-        EventBus<StaminaChanged>.Raise(new StaminaChanged(this, currentStamina, maxStamina));
+
+        if (before != currentStamina)
+            EventBus<StaminaChanged>.Raise(new StaminaChanged(this, currentStamina, maxStamina));
     }
 
     public void HealStamina(int amount)
@@ -49,10 +70,31 @@ public class PlayerStamina : NetworkBehaviour
 
             if (recoveryTimer >= 1f)
             {
-                currentStamina++;
-                EventBus<StaminaChanged>.Raise(new StaminaChanged(this, currentStamina, maxStamina));
+                float before = currentStamina;
+                currentStamina = Mathf.Clamp(currentStamina + 1, 0, maxStamina);
+
+                if (before != currentStamina)
+                {
+                    EventBus<StaminaChanged>.Raise(new StaminaChanged(this, currentStamina, maxStamina));
+                }
+
                 recoveryTimer = 0f;
             }
+        }
+
+        if (imRunning && currentStamina > 0)
+        {
+            timer += Time.deltaTime;
+
+            if (timer >= 0.1f)
+            {
+                timer = 0f;
+                UseStamina(1f);
+            }
+        }
+        else
+        {
+            timer = 0f;
         }
     }
 }

@@ -10,6 +10,7 @@ public class MoveState : BaseState<PlayerStateMachine.PlayerState>
 
     [SerializeField] float rotationSpeed = 500f;
 
+
     float moveX = 0.0f;
     float moveZ = 0.0f;
 
@@ -157,7 +158,7 @@ public class MoveState : BaseState<PlayerStateMachine.PlayerState>
 
             playerStateMachine.moveZ = data.moveAxis.z;
 
-            // 2) ÀÌÀü smoothX ¡æ targetX·Î ÃµÃµÈ÷ ÀÌµ¿
+            // 2) ï¿½ï¿½ï¿½ï¿½ smoothX ï¿½ï¿½ targetXï¿½ï¿½ ÃµÃµï¿½ï¿½ ï¿½Ìµï¿½
             playerStateMachine.moveX = Mathf.MoveTowards(
                 playerStateMachine.moveX,
                 targetX,
@@ -170,9 +171,11 @@ public class MoveState : BaseState<PlayerStateMachine.PlayerState>
 
             if (playerStateMachine.inputHandler.IsShiftButtonPress() && playerStateMachine.moveZ > 0f /*&& playerStateMachine.Stamina.currentStamina >= 0.0f*/)
             {
-                playerStateMachine.moveZ = Mathf.Lerp(0f, 2f, playerStateMachine.moveZ); // °á°ú: 0 ~ 2
+                playerStateMachine.moveZ = Mathf.Lerp(0f, 2f, playerStateMachine.moveZ); // ï¿½ï¿½ï¿½: 0 ~ 2
                 playerStateMachine.MoveSpeed = 10.0f;
-                playerStateMachine.Stamina.UseStamina(playerStateMachine.Runner.DeltaTime * 10.0f);
+                //playerStateMachine.Stamina.UseStamina(playerStateMachine.Runner.DeltaTime * 10.0f);
+                EventBus<isRunning>.Raise(new isRunning(true));
+
                 playerStateMachine.Stamina.IsStamania = true;
             }
             else
@@ -190,4 +193,6 @@ public class MoveState : BaseState<PlayerStateMachine.PlayerState>
     {
 
     }
+
+   
 }
