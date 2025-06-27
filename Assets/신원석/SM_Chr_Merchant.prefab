@@ -1354,6 +1354,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 8280acb8c09cdb84ea2cb4cd44e0484d, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  _CurrentMagicId:
+    Raw: 0
   _Side: 0
   _ArrowSide: 0
   _currentWeapon: {fileID: 0}
@@ -1420,10 +1422,10 @@ MonoBehaviour:
     Radius: 0.35
     Height: 1.8
     Extent: 0.035
-    ColliderLayer: 0
+    ColliderLayer: 6
     CollisionLayerMask:
       serializedVersion: 2
-      m_Bits: 1
+      m_Bits: 3136
     ProxyInterpolationMode: 0
     MaxPenetrationSteps: 8
     CCDRadiusMultiplier: 0.75

@@ -1,88 +1,105 @@
 using UnityEngine;
+using System.Collections;
 using System.Collections.Generic;
+using Fusion;
 
-public class ItemBox : MonoBehaviour
-{ 
-	private void OnEnable()
-	{
-		EventBus<ItemBoxUIClose>.OnEvent += OnUIClose;
-	}
+public class ItemBox : NetworkBehaviour
+{
+    [Header("Visual & Settings")]
+    [SerializeField] private GameObject visual;
+    [SerializeField] private float interactionDistance = 3f;
+    [SerializeField] private List<ItemData> possibleItems;
 
-	private void Start()
-	{
-		player = GameObject.FindWithTag("Player")?.transform;
+    private Transform player;
+    private bool isOpened = false;
+    private List<ItemData> selectedItems;
 
-		// 상자 열기 전에 아이템 2개 랜덤 추출
-		selectedItems = GetRandomItems(2);
-	}
+    private void OnEnable()
+    {
+        EventBus<ItemBoxUIClose>.OnEvent += OnUIClose;
+    }
 
-	private void Update()
-	{
-		if (player == null) return;
-
-		float dist = Vector3.Distance(transform.position, player.position);
-
-		if (dist < interactionDistance && Input.GetKeyDown(KeyCode.E))
-		{
-            if (isOpened)
+    private IEnumerator Start()
+    {
+        // 로컬 플레이어가 HasInputAuthority인 네트워크 오브젝트를 찾을 때까지 대기
+        while (player == null)
+        {
+            foreach (var go in GameObject.FindGameObjectsWithTag("Player"))
             {
-                Cursor.visible = false;
-                Cursor.lockState = CursorLockMode.Locked;
-
-                EventBus<ItemBoxUIClose>.Raise(new ItemBoxUIClose(this.gameObject));
-                isOpened = false;
+                var netObj = go.GetComponent<NetworkObject>();
+                if (netObj != null && netObj.HasInputAuthority)
+                {
+                    player = go.transform;
+                    break;
+                }
             }
-            else
-            {
-                Cursor.visible = true;
-                Cursor.lockState = CursorLockMode.None;
-
-                OpenBox();
-            }
+            yield return null;
         }
 
-	}
-	private void OnDisable()
-	{
-		EventBus<ItemBoxUIClose>.OnEvent -= OnUIClose;
-	}
+        selectedItems = GetRandomItems(2);
+    }
 
-	private void OpenBox()
-	{
-		isOpened = true;
+    private void Update()
+    {
+        if (player == null) return;
 
-		EventBus<ItemBoxOpened>.Raise(new ItemBoxOpened(selectedItems, this.gameObject));
+        if (Vector3.Distance(transform.position, player.position) > interactionDistance)
+            return;
 
-	}
+        if (Input.GetKeyDown(KeyCode.E))
+        {
+            if (isOpened) CloseBox();
+            else OpenBox();
+        }
+    }
 
-	private void OnUIClose(ItemBoxUIClose evt)
-	{
-		if (evt.targetBox == this.gameObject)
-		{
-			Debug.Log("[ItemBox] UI 닫힘 감지 후 상자 제거");
-			Destroy(gameObject);
-		}
-	}
+    private void OnDisable()
+    {
+        EventBus<ItemBoxUIClose>.OnEvent -= OnUIClose;
+    }
 
-	private List<ItemData> GetRandomItems(int count)
-	{
-		List<ItemData> result = new();
-		List<ItemData> pool = new(possibleItems);
+    private void OpenBox()
+    {
+        isOpened = true;
+        Cursor.visible = true;
+        Cursor.lockState = CursorLockMode.None;
+        EventBus<ItemBoxOpened>.Raise(new ItemBoxOpened(selectedItems, gameObject));
+    }
 
-		for (int i = 0; i < count && pool.Count > 0; i++)
-		{
-			int idx = Random.Range(0, pool.Count);
-			result.Add(pool[idx]);
-			pool.RemoveAt(idx);
-		}
-		return result;
-	}
+    private void CloseBox()
+    {
+        isOpened = false;
+        Cursor.visible = false;
+        Cursor.lockState = CursorLockMode.Locked;
+        RPC_RequestDespawn();
 
-	[SerializeField] private GameObject visual;
-	[SerializeField] private float interactionDistance = 3f;
-	[SerializeField] private List<ItemData> possibleItems; // 여기서 랜덤하게 2개 선택
-	//[SerializeField] private GameObject itemBoxUIPanel;
-	private bool isOpened = false;
-	private Transform player;
-	private List<ItemData> selectedItems;
+        // 2) UI 닫힘 이벤트
+        EventBus<ItemBoxUIClose>.Raise(new ItemBoxUIClose(gameObject));
+    }
+
+    // 서버(StateAuthority)에서 실행되어 네트워크 오브젝트를 제거
+    [Rpc(RpcSources.All, RpcTargets.StateAuthority)]
+    private void RPC_RequestDespawn()
+    {
+        // 서버(StateAuthority)에서만 실행됩니다
+        Runner.Despawn(Object);
+    }
+
+    private void OnUIClose(ItemBoxUIClose evt)
+    {
+        // 만약 직접 로컬에서 Destroy 해야 할 다른 게임오브젝트가 있으면 여기서 처리
+    }
+
+    private List<ItemData> GetRandomItems(int count)
+    {
+        var pool = new List<ItemData>(possibleItems);
+        var result = new List<ItemData>();
+        for (int i = 0; i < count && pool.Count > 0; i++)
+        {
+            int idx = Random.Range(0, pool.Count);
+            result.Add(pool[idx]);
+            pool.RemoveAt(idx);
+        }
+        return result;
+    }
 }

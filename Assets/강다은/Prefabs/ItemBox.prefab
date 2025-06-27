@@ -16,9 +16,9 @@ GameObject:
   - component: {fileID: 7424829131134691368}
   - component: {fileID: 9029847947791581656}
   - component: {fileID: 3435511656077448186}
-  m_Layer: 0
+  m_Layer: 13
   m_Name: ItemBox
-  m_TagString: Untagged
+  m_TagString: ItemBox
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -181,6 +181,7 @@ MonoBehaviour:
   Flags: 262145
   NestedObjects: []
   NetworkedBehaviours:
+  - {fileID: 7424829131134691368}
   - {fileID: 3435511656077448186}
   ForceRemoteRenderTimeframe: 0
 --- !u!114 &3435511656077448186

@@ -11,7 +11,7 @@ GameObject:
   - component: {fileID: 6316551092504110242}
   - component: {fileID: 2886515537308332946}
   - component: {fileID: 7457642444193043251}
-  m_Layer: 0
+  m_Layer: 11
   m_Name: Fire002
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -4856,7 +4856,7 @@ GameObject:
   - component: {fileID: 5847884166507965746}
   - component: {fileID: 4645457557644204197}
   - component: {fileID: 6421059212655601273}
-  m_Layer: 0
+  m_Layer: 11
   m_Name: Fire002 (1)
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -9701,7 +9701,7 @@ GameObject:
   - component: {fileID: 1206456034144530801}
   - component: {fileID: 6962884303068283800}
   - component: {fileID: 1860735512786192229}
-  m_Layer: 0
+  m_Layer: 11
   m_Name: Star001
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -14580,7 +14580,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 6922078806183276847}
-  m_Layer: 0
+  m_Layer: 11
   m_Name: GameObject
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -14622,10 +14622,10 @@ GameObject:
   - component: {fileID: -4948031666783999535}
   - component: {fileID: 282543538662143868}
   - component: {fileID: 5774794680092833770}
-  - component: {fileID: -555753400902237214}
-  m_Layer: 0
+  - component: {fileID: 4795728392243858197}
+  m_Layer: 11
   m_Name: FireBall
-  m_TagString: Weapon
+  m_TagString: Maigc
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -14639,7 +14639,7 @@ Transform:
   m_GameObject: {fileID: 7741497369113804292}
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalPosition: {x: -0.184, y: -0.077, z: 0}
   m_LocalScale: {x: 0.99999994, y: 0.99999994, z: 0.99999994}
   m_ConstrainProportionsScale: 1
   m_Children:
@@ -19513,6 +19513,9 @@ MonoBehaviour:
   speed: 10
   _Side: 0
   itemState: 0
+  hitLayers:
+    serializedVersion: 2
+    m_Bits: 1088
   particles:
   - {fileID: 4645457557644204197}
   - {fileID: 2886515537308332946}
@@ -19521,8 +19524,8 @@ MonoBehaviour:
   - {fileID: 5694408489362420583}
   renderers:
   - {fileID: 6533694454599705840}
---- !u!64 &-555753400902237214
-MeshCollider:
+--- !u!135 &4795728392243858197
+SphereCollider:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
@@ -19539,10 +19542,9 @@ MeshCollider:
   m_IsTrigger: 1
   m_ProvidesContacts: 0
   m_Enabled: 1
-  serializedVersion: 5
-  m_Convex: 1
-  m_CookingOptions: 30
-  m_Mesh: {fileID: 0}
+  serializedVersion: 3
+  m_Radius: 0.25716078
+  m_Center: {x: 0, y: 0.052115, z: 0}
 --- !u!1 &8438282682240566595
 GameObject:
   m_ObjectHideFlags: 0
@@ -19554,7 +19556,7 @@ GameObject:
   - component: {fileID: 4118450474881129306}
   - component: {fileID: 5694408489362420583}
   - component: {fileID: 5345375784715209248}
-  m_Layer: 0
+  m_Layer: 11
   m_Name: Light002
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -24515,7 +24517,7 @@ GameObject:
   - component: {fileID: 4253465038782306176}
   - component: {fileID: 1060476378200144711}
   - component: {fileID: 3960443371235985034}
-  m_Layer: 0
+  m_Layer: 11
   m_Name: Light001
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -29360,8 +29362,7 @@ GameObject:
   - component: {fileID: 6811794173035095694}
   - component: {fileID: 6455621230474952679}
   - component: {fileID: 6533694454599705840}
-  - component: {fileID: 2551351431744711121}
-  m_Layer: 0
+  m_Layer: 11
   m_Name: Sphere
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -29436,24 +29437,3 @@ MeshRenderer:
   m_SortingLayer: 0
   m_SortingOrder: 0
   m_AdditionalVertexStreams: {fileID: 0}
---- !u!135 &2551351431744711121
-SphereCollider:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 9062189090600905058}
-  m_Material: {fileID: 0}
-  m_IncludeLayers:
-    serializedVersion: 2
-    m_Bits: 0
-  m_ExcludeLayers:
-    serializedVersion: 2
-    m_Bits: 0
-  m_LayerOverridePriority: 0
-  m_IsTrigger: 0
-  m_ProvidesContacts: 0
-  m_Enabled: 0
-  serializedVersion: 3
-  m_Radius: 0.5
-  m_Center: {x: 0, y: 0, z: 0}
