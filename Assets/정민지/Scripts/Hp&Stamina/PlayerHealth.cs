@@ -6,13 +6,13 @@ using UnityEngine.UI;
 
 public class PlayerHealth : NetworkBehaviour
 {
-    // ��� �ν��Ͻ��� �����ϱ� ���� ����Ʈ
+
     public static readonly List<PlayerHealth> All = new List<PlayerHealth>();
 
     void Awake() => All.Add(this);
     void OnDestroy() => All.Remove(this);
 
-    // ��Ʈ��ũ�� ����ȭ�� ü��
+
     [Networked] public int currentHp { get; private set; }
     [SerializeField] private int maxHp;
 
@@ -44,29 +44,31 @@ public class PlayerHealth : NetworkBehaviour
 
     public override void Spawned()
     {
-        // ���� ������ ���� �� �ʱ� ü�� ����
+
         if (HasStateAuthority)
             currentHp = maxHp;
 
-        // �Է� ������ �ִ� Ŭ���̾�Ʈ�� UI �ʱ�ȭ �̺�Ʈ ����
+
         if (Object.HasInputAuthority)
             EventBus<HealthChanged>.Raise(new HealthChanged(this, currentHp, maxHp));
+
+
     }
+
+
 
     public void TakeDamage(int dmg)
     {
-        // ������ ����
+        
         if (!HasStateAuthority) return;
 
         int before = currentHp;
         currentHp = Mathf.Clamp(currentHp - dmg, 0, maxHp);
-        Debug.Log($"[�÷��̾� ü��] {gameObject.name}: {before} �� {currentHp} (-{dmg})");
+        Debug.Log($"{gameObject.name}: {before} > {currentHp} (-{dmg})");
 
-        // UI ������Ʈ
         if (Object.HasInputAuthority)
             EventBus<HealthChanged>.Raise(new HealthChanged(this, currentHp, maxHp));
 
-        // ��� �� ������ �� ���
         if (currentHp <= 0)
             CountAlivePlayers();
     }
@@ -76,9 +78,8 @@ public class PlayerHealth : NetworkBehaviour
 
         currentHp = Mathf.Clamp(currentHp - dmg, 0, maxHp);
 
-        Debug.Log($"�÷��̾� ���� ü�� : {currentHp}");
+        Debug.Log($"현재 체력: {currentHp}");
 
-        // Ŭ���̾�Ʈ UI ������Ʈ
         if (Object.HasInputAuthority)
         {
             EventBus<HealthChanged>.Raise(new HealthChanged(this, currentHp, maxHp));
@@ -87,7 +88,7 @@ public class PlayerHealth : NetworkBehaviour
         // ������ ������ �� ���
         if (currentHp <= 0)
         {
-            CountAlivePlayers(); // �̰� HasStateAuthority�ϱ� �����ϰ� ȣ���
+            CountAlivePlayers(); 
         }
     }
     public void Heal(int amount)
@@ -96,7 +97,7 @@ public class PlayerHealth : NetworkBehaviour
 
         int before = currentHp;
         currentHp = Mathf.Clamp(currentHp + amount, 0, maxHp);
-        Debug.Log($"[�÷��̾� ü��] {gameObject.name}: {before} �� {currentHp} (+{amount})");
+        Debug.Log($"{gameObject.name}: {before} > {currentHp} (+{amount})");
 
         if (Object.HasInputAuthority)
             EventBus<HealthChanged>.Raise(new HealthChanged(this, currentHp, maxHp));

@@ -197,6 +197,8 @@ MonoBehaviour:
   bigInventoryPanel: {fileID: 4762163573841002610}
   combi: {fileID: 3682312640515073675}
   bigInventoryUI: {fileID: 4880448135119066925}
+  scrollCooldown: 0.3
+  lastScrollTime: 0
   rowSize: 5
   maxRow: 3
 --- !u!114 &4371114472460355706

@@ -1,52 +1,40 @@
 using Fusion;
-using TMPro;
 using UnityEngine;
-using UnityEngine.UI;
 
 public class PlayerStamina : NetworkBehaviour
 {
-    [Networked] public int currentStamina { get; private set; }
-    [SerializeField] private int maxStamina;
+    private int currentStamina;
+    [SerializeField] private int maxStamina = 100;
     [SerializeField] private float recoveryTimer;
 
     public override void Spawned()
     {
-        if (HasStateAuthority)
+        if (Object.HasInputAuthority)
+        {
             currentStamina = maxStamina;
-
-        if (Object.HasInputAuthority)
-        {
             EventBus<StaminaChanged>.Raise(new StaminaChanged(this, currentStamina, maxStamina));
         }
     }
 
-    public void UseStamina(int stamina)
+    public void UseStamina(int amount)
     {
-        if (!HasStateAuthority) return;
+        if (!Object.HasInputAuthority) return;
 
-        currentStamina = Mathf.Clamp(currentStamina - stamina, 0, maxStamina);
-
-        if (Object.HasInputAuthority)
-        {
-            EventBus<StaminaChanged>.Raise(new StaminaChanged(this, currentStamina, maxStamina));
-        }
+        currentStamina = Mathf.Clamp(currentStamina - amount, 0, maxStamina);
+        EventBus<StaminaChanged>.Raise(new StaminaChanged(this, currentStamina, maxStamina));
     }
 
-    public void UseStaminaHealingItem(int stamina)
+    public void HealStamina(int amount)
     {
-        if (!HasStateAuthority) return;
+        if (!Object.HasInputAuthority) return;
 
-        currentStamina = Mathf.Clamp(currentStamina + stamina, 0, maxStamina);
-
-        if (Object.HasInputAuthority)
-        {
-            EventBus<StaminaChanged>.Raise(new StaminaChanged(this, currentStamina, maxStamina));
-        }
+        currentStamina = Mathf.Clamp(currentStamina + amount, 0, maxStamina);
+        EventBus<StaminaChanged>.Raise(new StaminaChanged(this, currentStamina, maxStamina));
     }
 
-    public override void FixedUpdateNetwork()
+    private void Update()
     {
-        if (!HasStateAuthority) return;
+        if (!Object.HasInputAuthority) return;
 
         if (currentStamina < maxStamina)
         {
@@ -55,24 +43,9 @@ public class PlayerStamina : NetworkBehaviour
             if (recoveryTimer >= 1f)
             {
                 currentStamina++;
-                if (Object.HasInputAuthority)
-                {
-                    EventBus<StaminaChanged>.Raise(new StaminaChanged(this, currentStamina, maxStamina));
-                }
+                EventBus<StaminaChanged>.Raise(new StaminaChanged(this, currentStamina, maxStamina));
                 recoveryTimer = 0f;
             }
         }
-    }
-
-    [Rpc(RpcSources.InputAuthority, RpcTargets.StateAuthority)]
-    public void Rpc_RequestUseStamina(int stamina)
-    {
-        UseStamina(stamina);
-    }
-
-    [Rpc(RpcSources.InputAuthority, RpcTargets.StateAuthority)]
-    public void Rpc_RequestHealStamina(int stamina)
-    {
-        UseStaminaHealingItem(stamina);
     }
 }

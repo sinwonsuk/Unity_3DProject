@@ -18,6 +18,8 @@ public class BigInventoryUI : MonoBehaviour
 
     public int selectedIndex = -1;
 
+
+
     void Start()
     {
         InitSlots();
