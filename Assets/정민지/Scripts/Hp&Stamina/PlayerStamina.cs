@@ -42,8 +42,14 @@ public class PlayerStamina : NetworkBehaviour
 
             if (recoveryTimer >= 1f)
             {
-                currentStamina++;
-                EventBus<StaminaChanged>.Raise(new StaminaChanged(this, currentStamina, maxStamina));
+                float before = currentStamina;
+                currentStamina = Mathf.Clamp(currentStamina + 1, 0, maxStamina);
+
+                if (before != currentStamina)
+                {
+                    EventBus<StaminaChanged>.Raise(new StaminaChanged(this, currentStamina, maxStamina));
+                }
+
                 recoveryTimer = 0f;
             }
         }

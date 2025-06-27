@@ -4,25 +4,32 @@ using UnityEngine.UI;
 
 public class StaminaUI : MonoBehaviour
 {
+    private float lastStaminaValue = -1f;
+
     [SerializeField] private Image staminaFill;
     [SerializeField] private TMP_Text staminaText;
 
     private void OnEnable()
     {
-        EventBus<StaminaChanged>.OnEvent += UpdateStamina;
+        EventBus<StaminaChanged>.OnEvent += OnStaminaChanged;
     }
 
     private void OnDisable()
     {
-        EventBus<StaminaChanged>.OnEvent -= UpdateStamina;
+        EventBus<StaminaChanged>.OnEvent -= OnStaminaChanged;
     }
 
-    private void UpdateStamina(StaminaChanged evt)
+    public void OnStaminaChanged(StaminaChanged e)
     {
-        if(!evt._playerInfo.Object.HasInputAuthority) return;
+        float normalized = (float)e.currentStamina / e.maxStamina;
 
-        staminaFill.fillAmount = (float)evt.currentStamina / evt.maxStamina;
-        staminaText.text = ($"{evt.currentStamina} / {evt.maxStamina}");
-        Debug.Log("스테미나 게이지 갱신");
+        if (Mathf.Abs(normalized - lastStaminaValue) > 0.001f)
+        {
+            staminaFill.fillAmount = normalized;
+            lastStaminaValue = normalized;
+
+            // 스태미나 수치 텍스트 표시
+            staminaText.text = $"{e.currentStamina:0}/{e.maxStamina}";
+        }
     }
 }
