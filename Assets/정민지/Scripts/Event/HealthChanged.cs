@@ -1,13 +1,13 @@
 using Fusion;
 using UnityEngine;
 
-public class HealthChanged : IEvent
+public struct HealthChanged : IEvent
 {
     public int currentHp;
     public int maxHp;
-    public NetworkBehaviour playerInfo;
+    public PlayerHealth playerInfo;
 
-    public HealthChanged(NetworkBehaviour player, int hp,int max)
+    public HealthChanged(PlayerHealth player, int hp, int max)
     {
         playerInfo = player;
         currentHp = hp;

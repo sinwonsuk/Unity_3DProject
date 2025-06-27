@@ -50,17 +50,18 @@ public class BigInventoryUI : MonoBehaviour
 
     public void OnSlotClicked(int index)
     {
-        if (selectedIndex == index)
-        {
-            selectedIndex = -1;
-        }
-        else
-        {
-            selectedIndex = index;
-        }
+        if (selectedIndex >= 0 && selectedIndex < slotUIs.Count)
+            slotUIs[selectedIndex].SetSlot(slots[selectedIndex], false); // 이전 선택 해제
 
-        UpdateUI();
-        inventoryOnoff.SetSelectedIndex(selectedIndex); // 작은 인벤토리 UI에도 반영
+        if (selectedIndex == index)
+            selectedIndex = -1;
+        else
+            selectedIndex = index;
+
+        if (selectedIndex >= 0)
+            slotUIs[selectedIndex].SetSlot(slots[selectedIndex], true); // 새로 선택
+
+        inventoryOnoff.SetSelectedIndex(selectedIndex);
     }
 
 
