@@ -117,13 +117,13 @@ public class AutoMatchManager : MonoBehaviour, INetworkRunnerCallbacks
         {
             //roomName = cachedSessionList[0].Name;
             //roomName = $"Room_{Random.Range(0, 9999)}";
-            roomName = $"Room_0012";
+            roomName = $"Room_0023";
             Debug.Log($"기존 방 참가: {roomName}");
         }
         else
         {
             //roomName = $"Room_{Random.Range(0, 9999)}";
-            roomName = $"Room_0012";
+            roomName = $"Room_0023";
             Debug.Log($"새 방 생성: {roomName}");
         }
 
@@ -162,7 +162,7 @@ public class AutoMatchManager : MonoBehaviour, INetworkRunnerCallbacks
             SessionName = roomName,
             Scene = startScene,         // Host 가 나중에 LoadScene
             SceneManager = sceneManager,
-            PlayerCount = 2
+            PlayerCount = 3
 
         };
 
@@ -189,7 +189,7 @@ public class AutoMatchManager : MonoBehaviour, INetworkRunnerCallbacks
     {
         Debug.Log($"플레이어 입장: {player}. 현재 인원: {runner.ActivePlayers.Count()}");
 
-        if (runner.IsServer && runner.ActivePlayers.Count() == 2)
+        if (runner.IsServer && runner.ActivePlayers.Count() == 3)
         {
             Debug.Log("인게임 씬으로 이동 시작");
 

@@ -18,13 +18,24 @@ public class SurvivorManager : NetworkBehaviour
         if (!HasStateAuthority) return;
 
         int alive = 0;
+
+        PlayerHealth lastSurvivor = null;
+
         foreach (var player in PlayerHealth.All)
         {
             if (player.currentHp > 0)
+            {
                 alive++;
+                lastSurvivor = player;
+            }
         }
 
         RpcBroadcastSurvivorCount(alive);
+
+        if (alive == 1 && lastSurvivor != null)
+        {
+            SurvivorResultManager.Instance?.DistributeResult(lastSurvivor);
+        }
     }
 
     [Rpc(RpcSources.StateAuthority, RpcTargets.All)]

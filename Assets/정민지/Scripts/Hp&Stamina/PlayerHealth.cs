@@ -165,4 +165,17 @@ public class PlayerHealth : NetworkBehaviour
 
     [Rpc(RpcSources.InputAuthority, RpcTargets.StateAuthority)]
     public void Rpc_RequestHeal(int heal) => Heal(heal);
+
+
+    [Rpc(RpcSources.StateAuthority, RpcTargets.InputAuthority)]
+    public void RPC_ShowWinUI()
+    {
+        EventBus<SurvivorWin>.Raise(new SurvivorWin());
+    }
+
+    [Rpc(RpcSources.StateAuthority, RpcTargets.InputAuthority)]
+    public void RPC_ShowLoseUI()
+    {
+        EventBus<SurvivorLose>.Raise(new SurvivorLose());
+    }
 }
