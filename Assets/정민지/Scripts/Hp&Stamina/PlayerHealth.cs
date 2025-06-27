@@ -14,7 +14,7 @@ public class PlayerHealth : NetworkBehaviour
 
 
     [Networked] public int currentHp { get; private set; }
-    [SerializeField] private int maxHp;
+    [SerializeField] private int maxHp=100;
     private int lastSentHp = -1;
 
     void Update()
@@ -83,7 +83,10 @@ public class PlayerHealth : NetworkBehaviour
         //    EventBus<HealthChanged>.Raise(new HealthChanged(this, currentHp, maxHp));
 
         if (currentHp <= 0)
-            CountAlivePlayers();
+        {
+            SurvivorManager.Instance?.UpdateSurvivorCount();
+        }
+           // CountAlivePlayers();
     }
     public void TakeDamages(int dmg)
     {
