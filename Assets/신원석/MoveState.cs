@@ -40,6 +40,9 @@ public class MoveState : BaseState<PlayerStateMachine.PlayerState>
 
     public override void FixedUpdateState()
     {
+        if(playerStateMachine.HasInputAuthority == false)
+            return;
+
         TryHandleRollInput();
         TryHandleJumpInput();
         TryHandleAttackInput();
