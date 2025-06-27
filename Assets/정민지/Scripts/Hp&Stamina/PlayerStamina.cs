@@ -3,10 +3,17 @@ using UnityEngine;
 
 public class PlayerStamina : NetworkBehaviour
 {
-    private int currentStamina;
+    public float currentStamina { get; set; }
+
+    public float AttackStaminaCost { get; set; } = 10f;
+
+    public float MagicStaminaCost { get; set; } = 10f;
+
+    public float ArrowStaminaCost { get; set; } = 10f;
+
     [SerializeField] private int maxStamina = 100;
     [SerializeField] private float recoveryTimer;
-
+    public bool IsStamania { get; set; } = false;
     public override void Spawned()
     {
         if (Object.HasInputAuthority)
@@ -16,7 +23,7 @@ public class PlayerStamina : NetworkBehaviour
         }
     }
 
-    public void UseStamina(int amount)
+    public void UseStamina(float amount)
     {
         if (!Object.HasInputAuthority) return;
 
@@ -36,7 +43,7 @@ public class PlayerStamina : NetworkBehaviour
     {
         if (!Object.HasInputAuthority) return;
 
-        if (currentStamina < maxStamina)
+        if (currentStamina < maxStamina && IsStamania ==false)
         {
             recoveryTimer += Time.deltaTime;
 

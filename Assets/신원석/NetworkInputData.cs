@@ -19,6 +19,8 @@ public struct NetworkInputData : INetworkInput
 
     public const int KEY_E = 13;
 
+    public const int Shift_L = 14;
+
     public float CameraRotateY;
 
     public Vector2 LookRotationDelta;

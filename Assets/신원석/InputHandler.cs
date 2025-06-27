@@ -81,6 +81,16 @@ public class InputHandler
         return false;
     }
 
+    public bool IsShiftButtonPress()
+    {
+        if (behaviour.GetInput(out NetworkInputData data))
+        {
+            return data.buttons.IsSet(NetworkInputData.Shift_L);
+        }
+
+        return false;
+    }
+
     public bool IsCtrlButtonPress()
     {
         if (behaviour.GetInput(out NetworkInputData data))
