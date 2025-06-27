@@ -5,8 +5,11 @@ public class SoundManager : MonoBehaviour
 {
 	public enum sfx
 	{
-
-	}
+		itemUpgrade,
+		itemDrop,
+		buyItem,
+        subtractGold,
+    }
 	public enum bgm
 	{
 
