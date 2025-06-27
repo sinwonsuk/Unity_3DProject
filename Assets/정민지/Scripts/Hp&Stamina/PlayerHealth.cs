@@ -65,6 +65,7 @@ public class PlayerHealth : NetworkBehaviour
         if (Object.HasInputAuthority)
             EventBus<HealthChanged>.Raise(new HealthChanged(this, currentHp, maxHp));
 
+        SurvivorManager.Instance?.UpdateSurvivorCount();
 
     }
 
