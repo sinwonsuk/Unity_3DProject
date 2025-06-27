@@ -1,7 +1,8 @@
+using Fusion;
 using UnityEngine;
 using UnityEngine.AI;
-using Fusion;
 using static PlayerStateMachine;
+using static Unity.Collections.Unicode;
 
 public class MoveState : BaseState<PlayerStateMachine.PlayerState>
 {
@@ -25,11 +26,11 @@ public class MoveState : BaseState<PlayerStateMachine.PlayerState>
 
     public override void ExitState()
     {
-        playerStateMachine.NetAnim.Animator.SetFloat("MoveLeftRight", 0);
-        playerStateMachine.NetAnim.Animator.SetFloat("MoveForWard", 0);
+        //playerStateMachine.NetAnim.Animator.SetFloat("MoveLeftRight", 0);
+        //playerStateMachine.NetAnim.Animator.SetFloat("MoveForWard", 0);
 
-        playerStateMachine.moveX = 0.0f;
-        playerStateMachine.moveZ = 0.0f;
+        //playerStateMachine.moveX = 0.0f;
+        //playerStateMachine.moveZ = 0.0f;
 
         playerStateMachine.MoveSpeed = 5.0f;
     }
@@ -40,9 +41,6 @@ public class MoveState : BaseState<PlayerStateMachine.PlayerState>
 
     public override void FixedUpdateState()
     {
-        if(playerStateMachine.HasInputAuthority == false)
-            return;
-
         TryHandleRollInput();
         TryHandleJumpInput();
         TryHandleAttackInput();
@@ -60,7 +58,7 @@ public class MoveState : BaseState<PlayerStateMachine.PlayerState>
         {
             if (playerStateMachine.Object.HasInputAuthority)
             {
-                playerStateMachine.RPC_BroadcastState(PlayerState.Idle);
+                playerStateMachine.BroadcastIdleEvent(PlayerState.Idle);
                 return;
             }
         }
@@ -88,7 +86,7 @@ public class MoveState : BaseState<PlayerStateMachine.PlayerState>
         }         
         else
         {
-            playerStateMachine.RPC_BroadcastState(PlayerState.Roll);
+            playerStateMachine.BroadcastIdleEvent(PlayerState.Roll);
             playerStateMachine.RPC_SetRollCount((int)dir);
         }
           
@@ -103,7 +101,7 @@ public class MoveState : BaseState<PlayerStateMachine.PlayerState>
 
             playerStateMachine.playerController.Move(playerStateMachine.playerController.transform.position, 5);
 
-            playerStateMachine.RPC_BroadcastState(PlayerState.Jump);
+            playerStateMachine.BroadcastIdleEvent(PlayerState.Jump);
 
             return true;
         }
@@ -144,7 +142,7 @@ public class MoveState : BaseState<PlayerStateMachine.PlayerState>
             }
             else
             {
-                playerStateMachine.RPC_BroadcastState(PlayerState.Attack);
+                playerStateMachine.BroadcastIdleEvent(PlayerState.Attack);
             }
         }
     }
@@ -153,8 +151,20 @@ public class MoveState : BaseState<PlayerStateMachine.PlayerState>
 
         if (playerStateMachine.GetInput(out NetworkInputData data))
         {
-            playerStateMachine.moveX = data.moveAxis.x;
+
+            float targetX = data.moveAxis.x;
+            float targetZ = data.moveAxis.z;
+
             playerStateMachine.moveZ = data.moveAxis.z;
+
+            // 2) 이전 smoothX → targetX로 천천히 이동
+            playerStateMachine.moveX = Mathf.MoveTowards(
+                playerStateMachine.moveX,
+                targetX,
+                playerStateMachine.Runner.DeltaTime * 5.0f
+            );
+
+
 
             Mathf.MoveTowards(playerStateMachine.moveZ, 0f, playerStateMachine.Runner.DeltaTime * 5.0f);
 
@@ -169,9 +179,10 @@ public class MoveState : BaseState<PlayerStateMachine.PlayerState>
             {
                 playerStateMachine.MoveSpeed = 5.0f;
                 playerStateMachine.Stamina.IsStamania = false;
-            }         
-            //playerStateMachine.NetAnim.Animator.SetFloat("MoveLeftRight", playerStateMachine.moveX);
-            //playerStateMachine.NetAnim.Animator.SetFloat("MoveForWard", playerStateMachine.moveZ);
+            }    
+            
+            playerStateMachine.NetAnim.Animator.SetFloat("MoveLeftRight", playerStateMachine.moveX);
+            playerStateMachine.NetAnim.Animator.SetFloat("MoveForWard", playerStateMachine.moveZ);
         }
     }
 

@@ -21,9 +21,9 @@ public class Arrow : NetworkBehaviour
         boxCollider = GetComponent<BoxCollider>();
     }
 
-
     public override void FixedUpdateNetwork()
     {
+
 
         if (!Object.HasStateAuthority)
             return;
@@ -71,30 +71,30 @@ public class Arrow : NetworkBehaviour
         }
     }
 
-    public void OnTriggerEnter(Collider collider)
-    {
+    //public void OnTriggerEnter(Collider collider)
+    //{
 
 
-        // 1) 호스트에서만 충돌 처리
-        if (!Object.HasStateAuthority)
-            return;
+    //    // 1) 호스트에서만 충돌 처리
+    //    if (!Object.HasStateAuthority)
+    //        return;
 
-        int playerLayer = LayerMask.NameToLayer("Player");
-        int groundLayer = LayerMask.NameToLayer("Ground");
+    //    int playerLayer = LayerMask.NameToLayer("Player");
+    //    int groundLayer = LayerMask.NameToLayer("Ground");
 
-        // 2) 충돌한 오브젝트의 레이어가 다르면 무시
-        if (collider.gameObject.layer == playerLayer)
-        {
-            PlayerHealth UI = collider.transform.parent.GetComponent<PlayerHealth>();
+    //    // 2) 충돌한 오브젝트의 레이어가 다르면 무시
+    //    if (collider.gameObject.layer == playerLayer)
+    //    {
+    //        PlayerHealth UI = collider.transform.parent.GetComponent<PlayerHealth>();
 
-            if (UI != null)
-            {
-                Debug.Log("충돌 감지!2");
-                UI.TakeDamages(20);
-            }
-        }
+    //        if (UI != null)
+    //        {
+    //            Debug.Log("충돌 감지!2");
+    //            UI.TakeDamages(20);
+    //        }
+    //    }
 
-    }
+    //}
 
     public void MagicShoot(Vector3 dir)
     {
