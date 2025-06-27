@@ -5,7 +5,8 @@ public class SoundManager : MonoBehaviour
 {
 	public enum sfx
 	{
-
+		itemUpgrade,
+		itemDrop,
 	}
 	public enum bgm
 	{

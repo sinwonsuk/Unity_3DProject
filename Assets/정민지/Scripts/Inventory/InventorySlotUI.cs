@@ -89,6 +89,7 @@ public class InventorySlotUI : NetworkBehaviour, IPointerClickHandler, IBeginDra
 
     public void OnEndDrag(PointerEventData eventData)
     {
+        SoundManager.GetInstance().SfxPlay(SoundManager.sfx.itemDrop, false);
         draggedIcon.gameObject.SetActive(false);
     }
 
