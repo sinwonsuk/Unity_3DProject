@@ -1316,24 +1316,16 @@ PrefabInstance:
     m_TransformParent: {fileID: 0}
     m_Modifications:
     - target: {fileID: 1534792774576660730, guid: b0fd1fb5876e26d4a937dcea09dbb15d, type: 3}
-      propertyPath: lengthInSec
-      value: 0.25
-      objectReference: {fileID: 0}
-    - target: {fileID: 1534792774576660730, guid: b0fd1fb5876e26d4a937dcea09dbb15d, type: 3}
-      propertyPath: InitialModule.gravityModifier.scalar
-      value: 4
+      propertyPath: looping
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 2329005914816859028, guid: b0fd1fb5876e26d4a937dcea09dbb15d, type: 3}
       propertyPath: m_Name
       value: BloodPong
       objectReference: {fileID: 0}
     - target: {fileID: 2444427459523908331, guid: b0fd1fb5876e26d4a937dcea09dbb15d, type: 3}
-      propertyPath: lengthInSec
-      value: 0.25
-      objectReference: {fileID: 0}
-    - target: {fileID: 2444427459523908331, guid: b0fd1fb5876e26d4a937dcea09dbb15d, type: 3}
-      propertyPath: InitialModule.gravityModifier.scalar
-      value: 4
+      propertyPath: looping
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 3581143853069242507, guid: b0fd1fb5876e26d4a937dcea09dbb15d, type: 3}
       propertyPath: m_LocalPosition.x
@@ -1345,7 +1337,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 3581143853069242507, guid: b0fd1fb5876e26d4a937dcea09dbb15d, type: 3}
       propertyPath: m_LocalPosition.z
-      value: -3.01
+      value: -2.7
       objectReference: {fileID: 0}
     - target: {fileID: 3581143853069242507, guid: b0fd1fb5876e26d4a937dcea09dbb15d, type: 3}
       propertyPath: m_LocalRotation.w
@@ -1376,40 +1368,16 @@ PrefabInstance:
       value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 5081905598695375917, guid: b0fd1fb5876e26d4a937dcea09dbb15d, type: 3}
-      propertyPath: lengthInSec
-      value: 0.25
-      objectReference: {fileID: 0}
-    - target: {fileID: 5081905598695375917, guid: b0fd1fb5876e26d4a937dcea09dbb15d, type: 3}
-      propertyPath: InitialModule.startColor.maxColor.b
-      value: 0.040148675
-      objectReference: {fileID: 0}
-    - target: {fileID: 5081905598695375917, guid: b0fd1fb5876e26d4a937dcea09dbb15d, type: 3}
-      propertyPath: InitialModule.startColor.maxColor.g
-      value: 0.040148675
-      objectReference: {fileID: 0}
-    - target: {fileID: 5081905598695375917, guid: b0fd1fb5876e26d4a937dcea09dbb15d, type: 3}
-      propertyPath: InitialModule.startColor.maxColor.r
-      value: 0.44025147
-      objectReference: {fileID: 0}
-    - target: {fileID: 5081905598695375917, guid: b0fd1fb5876e26d4a937dcea09dbb15d, type: 3}
-      propertyPath: InitialModule.gravityModifier.scalar
-      value: 4
+      propertyPath: looping
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 6694667929155065214, guid: b0fd1fb5876e26d4a937dcea09dbb15d, type: 3}
-      propertyPath: lengthInSec
-      value: 0.25
-      objectReference: {fileID: 0}
-    - target: {fileID: 6694667929155065214, guid: b0fd1fb5876e26d4a937dcea09dbb15d, type: 3}
-      propertyPath: InitialModule.gravityModifier.scalar
-      value: 4
+      propertyPath: looping
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 7343588257839907477, guid: b0fd1fb5876e26d4a937dcea09dbb15d, type: 3}
-      propertyPath: lengthInSec
-      value: 0.25
-      objectReference: {fileID: 0}
-    - target: {fileID: 7343588257839907477, guid: b0fd1fb5876e26d4a937dcea09dbb15d, type: 3}
-      propertyPath: InitialModule.gravityModifier.scalar
-      value: 4
+      propertyPath: looping
+      value: 0
       objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []

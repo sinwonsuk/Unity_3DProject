@@ -31,17 +31,17 @@ public class InventoryUI : MonoBehaviour
     private bool isActive;
     private bool canSee;
 
-    public static InventoryUI Instance { get; private set; }
+    //public static InventoryUI Instance { get; private set; }
 
-    private void Awake()
-    {
-        Instance = this;
-    }
+    //private void Awake()
+    //{
+    //    Instance = this;
+    //}
 
-    public bool IsInventoryOpen()
-    {
-        return bigInventoryPanel.activeSelf;
-    }
+    //public bool IsInventoryOpen()
+    //{
+    //    return bigInventoryPanel.activeSelf;
+    //}
 
 
     private void Start()

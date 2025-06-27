@@ -6,7 +6,7 @@ using UnityEngine.UI;
 
 public class PlayerHealth : NetworkBehaviour
 {
-    // ��� �ν��Ͻ��� �����ϱ� ���� ����Ʈ
+
     public static readonly List<PlayerHealth> All = new List<PlayerHealth>();
 
     void Awake() => All.Add(this);
@@ -26,14 +26,10 @@ public class PlayerHealth : NetworkBehaviour
         if (Object.HasInputAuthority)
             EventBus<HealthChanged>.Raise(new HealthChanged(this, currentHp, maxHp));
 
-        InventoryUI.Instance.SelectFirstWeaponSlot();
 
     }
 
-    //public override void FixedUpdateNetwork()
-    //{
-    //    InventoryUI.Instance.IsOpenInven();
-    //}
+
 
     public void TakeDamage(int dmg)
     {
@@ -42,7 +38,7 @@ public class PlayerHealth : NetworkBehaviour
 
         int before = currentHp;
         currentHp = Mathf.Clamp(currentHp - dmg, 0, maxHp);
-        Debug.Log($"[�÷��̾� ü��] {gameObject.name}: {before} �� {currentHp} (-{dmg})");
+        Debug.Log($"{gameObject.name}: {before} > {currentHp} (-{dmg})");
 
         if (Object.HasInputAuthority)
             EventBus<HealthChanged>.Raise(new HealthChanged(this, currentHp, maxHp));
@@ -56,9 +52,8 @@ public class PlayerHealth : NetworkBehaviour
 
         currentHp = Mathf.Clamp(currentHp - dmg, 0, maxHp);
 
-        Debug.Log($"�÷��̾� ���� ü�� : {currentHp}");
+        Debug.Log($"현재 체력: {currentHp}");
 
-        // Ŭ���̾�Ʈ UI ������Ʈ
         if (Object.HasInputAuthority)
         {
             EventBus<HealthChanged>.Raise(new HealthChanged(this, currentHp, maxHp));
@@ -67,7 +62,7 @@ public class PlayerHealth : NetworkBehaviour
         // ������ ������ �� ���
         if (currentHp <= 0)
         {
-            CountAlivePlayers(); // �̰� HasStateAuthority�ϱ� �����ϰ� ȣ���
+            CountAlivePlayers(); 
         }
     }
     public void Heal(int amount)
@@ -76,7 +71,7 @@ public class PlayerHealth : NetworkBehaviour
 
         int before = currentHp;
         currentHp = Mathf.Clamp(currentHp + amount, 0, maxHp);
-        Debug.Log($"[�÷��̾� ü��] {gameObject.name}: {before} �� {currentHp} (+{amount})");
+        Debug.Log($"{gameObject.name}: {before} > {currentHp} (+{amount})");
 
         if (Object.HasInputAuthority)
             EventBus<HealthChanged>.Raise(new HealthChanged(this, currentHp, maxHp));
