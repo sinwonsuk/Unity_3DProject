@@ -117,13 +117,13 @@ public class AutoMatchManager : MonoBehaviour, INetworkRunnerCallbacks
         {
             //roomName = cachedSessionList[0].Name;
             //roomName = $"Room_{Random.Range(0, 9999)}";
-            roomName = $"Room_0010";
+            roomName = $"Room_0012";
             Debug.Log($"기존 방 참가: {roomName}");
         }
         else
         {
             //roomName = $"Room_{Random.Range(0, 9999)}";
-            roomName = $"Room_0010";
+            roomName = $"Room_0012";
             Debug.Log($"새 방 생성: {roomName}");
         }
 
