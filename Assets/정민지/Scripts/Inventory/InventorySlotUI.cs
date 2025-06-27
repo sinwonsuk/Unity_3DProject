@@ -2,6 +2,7 @@
 using System.Collections;
 using TMPro;
 using Unity.VisualScripting;
+using Unity.VisualScripting.Antlr3.Runtime.Misc;
 using UnityEngine;
 using UnityEngine.EventSystems;
 using UnityEngine.UI;
@@ -58,6 +59,8 @@ public class InventorySlotUI : NetworkBehaviour, IPointerClickHandler, IBeginDra
         draggedIcon = icon;
         changed =FindLocalPlayerWeaponChanged();
     }
+
+
 
     public void OnPointerClick(PointerEventData eventData)
     {
@@ -119,6 +122,12 @@ public class InventorySlotUI : NetworkBehaviour, IPointerClickHandler, IBeginDra
         }
     }
 
+    public void ForceSelect()
+    {
+        OnSelectionChanged(true);
+        highlightImage.enabled = true;
+        wasSelected = true;
+    }
 
     private void OnSelectionChanged(bool isSelected)
     {
@@ -186,7 +195,7 @@ public class InventorySlotUI : NetworkBehaviour, IPointerClickHandler, IBeginDra
     public PlayerWeaponChanged FindLocalPlayerWeaponChanged()
     {
         PlayerWeaponChanged[] players = FindObjectsByType<PlayerWeaponChanged>(FindObjectsSortMode.None);
-        // ���� �����ϴ� ��� PlayerWeaponController �� ���� ���� ��ü ����
+
         foreach (var playerWeapon in players)
         {
             if (playerWeapon.Object != null && playerWeapon.Object.HasInputAuthority)

@@ -7,6 +7,9 @@ using System;
 using ExitGames.Client.Photon.StructWrapping;
 using Cinemachine;
 using static Unity.Collections.Unicode;
+using Unity.VisualScripting.Antlr3.Runtime;
+using System.Collections;
+using Unity.VisualScripting;
 
 /// Host(서버)가 모든 캐릭터를 Spawn 하고, 각 플레이어는 InputAuthority 를 받아서 자신의 캐릭터만 조종
 [RequireComponent(typeof(NetworkObject))]
@@ -29,11 +32,39 @@ public class BasicSpawner2 : NetworkBehaviour, INetworkRunnerCallbacks
 
     // 중복 스폰 방지
     private readonly Dictionary<PlayerRef, NetworkObject> _spawned = new();
+    private readonly HashSet<PlayerRef> _alreadySpawned = new();
+    public static BasicSpawner2 Instance;
+
+    private bool _spawnDone = false;
+
+    private void OnEnable()
+    {
+        Instance = this;
+    }
+
+    private void OnDisable()
+    {
+        if (Instance == this)
+            Instance = null;
+    }
+
+    public void DespawnSelf()
+    {
+        var myRef = Runner.LocalPlayer;
+
+        if (_spawned.TryGetValue(myRef, out var obj))
+        {
+            Debug.Log($"[DespawnSelf] 내 캐릭터 오브젝트 Despawn 처리");
+            Runner.Despawn(obj);
+            _spawned.Remove(myRef);
+        }
+    }
 
     private void Awake()
     {
+    //    _needResume = false;
         _pov = cam.GetCinemachineComponent<CinemachinePOV>();
-        // 초기값 캡처
+        // 초기값
         _prevYaw = _pov.m_HorizontalAxis.Value;
         _prevPitch = _pov.m_VerticalAxis.Value;
     }
@@ -46,26 +77,37 @@ public class BasicSpawner2 : NetworkBehaviour, INetworkRunnerCallbacks
 
     public override void Spawned()
     {
+
         Runner.AddCallbacks(this);
-        // 호스트 : 자기 자신 캐릭터 먼저 스폰
+
+        if (_spawnDone)
+        {
+            Debug.Log("이미 TrySpawn 완료됨 ");
+            return;
+        }
+
+        if (_alreadySpawned.Contains(Runner.LocalPlayer))
+        {
+            Debug.Log("TrySpawn 이력 있음");
+            _spawnDone = true;
+            return;
+        }
+
         if (Runner.IsServer)
         {
             TrySpawn(Runner.LocalPlayer, GetMyCharacterName());
         }
-        // 클라이언트 : 선택한 캐릭터를 서버에게 요청
         else
         {
             string myName = GetMyCharacterName();
-            Debug.Log($"[Client] 선택 캐릭터 = {myName}");
-
             if (!string.IsNullOrEmpty(myName))
-                RPC_RequestSpawn(Runner.LocalPlayer, myName); // PlayerRef 전달
-            else
-                Debug.LogWarning("[Client] 캐릭터 이름이 비어 있어 Spawn 요청을 건너뜀");
+                RPC_RequestSpawn(Runner.LocalPlayer, myName);
         }
+
+        _spawnDone = true; // 
     }
 
-    /// 모든 클라이언트(RpcSources.All)가 호출 가능, 서버(StateAuthority)가 처리
+    /// 모든 클라이언트(RpcSources.All)가 호출 가능, 서버가 처리
     [Rpc(sources: RpcSources.All, targets: RpcTargets.StateAuthority)]
     private void RPC_RequestSpawn(PlayerRef sender, string characterName)
     {
@@ -75,7 +117,30 @@ public class BasicSpawner2 : NetworkBehaviour, INetworkRunnerCallbacks
 
     private void TrySpawn(PlayerRef target, string characterName)
     {
-        if (_spawned.ContainsKey(target)) return; // 이미 생성 됐으면 건너뜀
+        //if (_spawned.ContainsKey(target)) return; // 이미 생성 됐으면 건너뜀
+
+        //var prefabRef = FindPrefab(characterName);
+        //if (prefabRef == NetworkPrefabRef.Empty)
+        //{
+        //    Debug.LogError($"{characterName} 프리팹을 찾지 못함");
+        //    return;
+        //}
+
+        //Vector3 pos = spawnManager.GetNextSpawnPosition();
+        //var obj = Runner.Spawn(prefabRef, pos, Quaternion.identity, target);
+        //_spawned[target] = obj;
+        //Debug.Log($"스폰 완료 ▶ {characterName} (Player {target.PlayerId})");
+        if (_alreadySpawned.Contains(target))
+        {
+            Debug.LogWarning($"[TrySpawn] Player {target.PlayerId}는 이미 스폰된 적 있음 – 스폰 생략");
+            return;
+        }
+
+        if (_spawned.ContainsKey(target))
+        {
+            Debug.LogWarning($"[TrySpawn] Player {target.PlayerId}는 이미 스폰되어 있음 – 중복 방지");
+            return;
+        }
 
         var prefabRef = FindPrefab(characterName);
         if (prefabRef == NetworkPrefabRef.Empty)
@@ -87,7 +152,7 @@ public class BasicSpawner2 : NetworkBehaviour, INetworkRunnerCallbacks
         Vector3 pos = spawnManager.GetNextSpawnPosition();
         var obj = Runner.Spawn(prefabRef, pos, Quaternion.identity, target);
         _spawned[target] = obj;
-        Debug.Log($"스폰 완료 ▶ {characterName} (Player {target.PlayerId})");
+        _alreadySpawned.Add(target); // 스폰 이력 기록
     }
 
     private NetworkPrefabRef FindPrefab(string name)
@@ -177,7 +242,14 @@ public class BasicSpawner2 : NetworkBehaviour, INetworkRunnerCallbacks
         input.Set(data);
     }
     public void OnInputMissing(NetworkRunner runner, PlayerRef player, NetworkInput input) { }
-    public void OnShutdown(NetworkRunner runner, ShutdownReason shutdownReason) { }
+    public void OnShutdown(NetworkRunner runner, ShutdownReason shutdownReason) {
+
+        Debug.Log($"OnShutdown 호출 – Reason = {shutdownReason}");
+        if (shutdownReason == ShutdownReason.HostMigration)
+            Debug.Log(" → HostMigration 으로 종료됨");
+        else
+            Debug.Log(" → 일반 종료됨");
+    }
     public void OnConnectedToServer(NetworkRunner runner) { }
     public void OnDisconnectedFromServer(NetworkRunner runner, NetDisconnectReason reason) { }
     public void OnConnectRequest(NetworkRunner runner, NetworkRunnerCallbackArgs.ConnectRequest request, byte[] token) { }
@@ -185,11 +257,19 @@ public class BasicSpawner2 : NetworkBehaviour, INetworkRunnerCallbacks
     public void OnUserSimulationMessage(NetworkRunner runner, SimulationMessagePtr message) { }
     public void OnSessionListUpdated(NetworkRunner runner, List<SessionInfo> sessionList) { }
     public void OnCustomAuthenticationResponse(NetworkRunner runner, Dictionary<string, object> data) { }
-    public void OnHostMigration(NetworkRunner runner, HostMigrationToken hostMigrationToken) { }
-    public void OnSceneLoadDone(NetworkRunner runner) { }
+    public async void OnHostMigration(NetworkRunner runner, HostMigrationToken token)
+    {
+
+    }
+
+
+    public void OnSceneLoadDone(NetworkRunner runner) {
+
+    }
     public void OnSceneLoadStart(NetworkRunner runner) { }
     public void OnObjectExitAOI(NetworkRunner runner, NetworkObject obj, PlayerRef player) { }
     public void OnObjectEnterAOI(NetworkRunner runner, NetworkObject obj, PlayerRef player) { }
     public void OnReliableDataReceived(NetworkRunner runner, PlayerRef player, ReliableKey key, ArraySegment<byte> data) { }
     public void OnReliableDataProgress(NetworkRunner runner, PlayerRef player, ReliableKey key, float progress) { }
+
 }

@@ -1,3 +1,4 @@
+using Fusion;
 using System.Collections;
 using UnityEngine;
 using UnityEngine.SceneManagement;
@@ -60,18 +61,24 @@ public class OptionUIManager : MonoBehaviour
     private IEnumerator ReturnToTitle()
     {
         var runner = RunnerSingleton.Instance;
+
         if (runner != null && runner.IsRunning)
         {
-            Debug.Log("서버 종료 중...");
-            var task = runner.Shutdown(true);
-            while (!task.IsCompleted)
+            // 내 캐릭터 제거
+            if (BasicSpawner2.Instance != null)
+            {
+                BasicSpawner2.Instance.DespawnSelf();
+            }
+
+            var shutdownTask = runner.Shutdown();
+            while (!shutdownTask.IsCompleted)
                 yield return null;
 
             RunnerSingleton.ClearRunner();
         }
 
-        // 타이틀 씬 인덱스 또는 이름으로 이동
-        SceneManager.LoadScene("TitleScene"); // 또는 SceneManager.LoadScene(0);
+        // 타이틀 씬으로 이동
+        SceneManager.LoadScene("TitleScene");
     }
 
 

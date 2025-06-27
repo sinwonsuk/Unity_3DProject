@@ -1,5 +1,6 @@
 using Fusion;
 using System.Collections.Generic;
+using System.Linq;
 using UnityEngine;
 
 public class InventoryUI : MonoBehaviour
@@ -17,6 +18,8 @@ public class InventoryUI : MonoBehaviour
     public GameObject bigInventoryPanel;
     public GameObject combi;
     [SerializeField] private BigInventoryUI bigInventoryUI;
+    [SerializeField] private float scrollCooldown = 0.2f; // 휠 입력 간 최소 간격 (초)
+    [SerializeField] private float lastScrollTime = 0f;
 
     public int rowSize = 5;
     public int maxRow = 3;
@@ -27,6 +30,19 @@ public class InventoryUI : MonoBehaviour
     private int selectedIndex = 0;
     private bool isActive;
     private bool canSee;
+
+    //public static InventoryUI Instance { get; private set; }
+
+    //private void Awake()
+    //{
+    //    Instance = this;
+    //}
+
+    //public bool IsInventoryOpen()
+    //{
+    //    return bigInventoryPanel.activeSelf;
+    //}
+
 
     private void Start()
     {
@@ -41,9 +57,36 @@ public class InventoryUI : MonoBehaviour
         UpdateUI();
         isActive = false;
         canSee = false;
+        SelectFirstWeaponSlot();
     }
 
+    public void SelectFirstWeaponSlot()
+    {
+        for (int i = 0; i < inventory.slots.Length; i++)
+        {
+            var slot = inventory.slots[i];
+            if (!slot.IsEmpty && slot.item != null)
+            {
+                OnSlotClicked(i);
+                Debug.Log($"게임 시작 시 자동으로 무기 슬롯 {i} 선택됨: {slot.item.itemName}");
+                break;
+            }
+        }
+    }
 
+    public void OnSlotClicked(int index)
+    {
+        int page = index / rowSize;
+        int slotInRow = index % rowSize;
+
+        currentPage = page;
+        selectedIndex = slotInRow;
+
+        UpdateUI();
+
+        if (slotInRow < slotUIs.Count)
+            slotUIs[slotInRow].ForceSelect();
+    }
 
     void InitSlots()
     {
@@ -68,26 +111,48 @@ public class InventoryUI : MonoBehaviour
         }
     }
 
+    public void IsOpenInven()
+    {
+        if (bigInventoryPanel.activeSelf || combi.activeSelf)
+        {
+            Cursor.lockState = CursorLockMode.None;
+            Cursor.visible = true;
+        }
+        else if (!bigInventoryPanel.activeSelf && !combi.activeSelf)
+        {
+            Cursor.lockState = CursorLockMode.Locked;
+            Cursor.visible = false;
+        }
+    }
+
     void Update()
     {
+        //IsOpenInven();
 
         if(!combi.activeSelf && Input.GetKeyDown(KeyCode.I))
         {
             isActive = bigInventoryPanel.activeSelf;
             bigInventoryPanel.SetActive(!isActive); // 토글 방식
         }
-            
-        if(Input.GetKeyDown(KeyCode.Tab))
-        {
-            int index = currentPage * rowSize + selectedIndex;
-            bigInventoryUI.SetSelectedIndexInBigUI(index); // 선택 인덱스 동기화
 
+        if (Input.GetKeyDown(KeyCode.Tab))
+        {
+            int prevIndex = currentPage * rowSize + selectedIndex;
             currentPage = (currentPage + 1) % maxRow;
-            selectedIndex = 0;
-            UpdateUI();
+
+            // 같은 열 유지한 채 다음 줄로 이동
+            int newIndex = currentPage * rowSize + (prevIndex % rowSize);
+            selectedIndex = newIndex % rowSize;
+
+            if (newIndex < inventory.slots.Length)
+            {
+                OnSlotClicked(newIndex); //  이것만 해주면 자동 선택 + 무기 변경까지 OK
+                bigInventoryUI.SetSelectedIndexInBigUI(newIndex);
+                Debug.Log($"[TAB] {newIndex}번 슬롯 선택됨: {inventory.slots[newIndex].item?.itemName}");
+            }
         }
 
-        if(Input.GetKeyDown(KeyCode.C))
+        if (Input.GetKeyDown(KeyCode.C))
         {
             bool wasCombiOpen = combi.activeSelf;
 
@@ -111,7 +176,7 @@ public class InventoryUI : MonoBehaviour
             
         float scrollDir = Input.GetAxis("Mouse ScrollWheel");
 
-        if (bigInventoryPanel.activeSelf == false && scrollDir != 0)
+        if (bigInventoryPanel.activeSelf == false && scrollDir != 0 && Time.time - lastScrollTime >= scrollCooldown)
         {
             if (scrollDir > 0)
                 selectedIndex = (selectedIndex - 1 + rowSize) % rowSize;
@@ -119,6 +184,7 @@ public class InventoryUI : MonoBehaviour
                 selectedIndex = (selectedIndex + 1) % rowSize;
 
             UpdateUI();
+            lastScrollTime = Time.time;
         }
     }
 
