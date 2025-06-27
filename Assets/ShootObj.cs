@@ -5,8 +5,8 @@ using System.Collections.Generic;
 public class ShootObj : NetworkBehaviour
 {
     [Networked] public bool isVisible { get; set; }
-    [Networked] public bool flying { get; private set; }
-    [Networked] public Vector3 flyDir { get; private set; }
+    [Networked] public bool flying { get; set; }
+    [Networked] public Vector3 flyDir { get;  set; }
     [Networked] TickTimer poolTimer { get; set; }
     private Transform originalParent;
     [Networked] private Vector3 originalLocalPosition { get; set; }
@@ -25,9 +25,6 @@ public class ShootObj : NetworkBehaviour
     public override void Spawned()
     {
  
-        isVisible = false;
-
-
         foreach (var r in renderers)
             if (r != null) r.enabled = isVisible;
 
@@ -51,22 +48,22 @@ public class ShootObj : NetworkBehaviour
     public override void FixedUpdateNetwork()
     {
 
-        foreach (var r in renderers)
-            if (r != null) r.enabled = isVisible;
+        //foreach (var r in renderers)
+        //    if (r != null) r.enabled = isVisible;
 
-        foreach (var p in particles)
-        {
-            if (p == null) continue;
-            if (isVisible)
-            {
-                if (!p.isPlaying) p.Play(true);
-            }
-            else
-            {
-                if (p.isPlaying) p.Stop(true, ParticleSystemStopBehavior.StopEmittingAndClear);
-                p.Clear(true);
-            }
-        }
+        //foreach (var p in particles)
+        //{
+        //    if (p == null) continue;
+        //    if (isVisible)
+        //    {
+        //        if (!p.isPlaying) p.Play(true);
+        //    }
+        //    else
+        //    {
+        //        if (p.isPlaying) p.Stop(true, ParticleSystemStopBehavior.StopEmittingAndClear);
+        //        p.Clear(true);
+        //    }
+        //}
 
         if (flying)
         {
@@ -105,6 +102,8 @@ public class ShootObj : NetworkBehaviour
             isVisible = true;
             poolTimer = TickTimer.CreateFromSeconds(Runner, 10f);
         }
+
+        isVisible = true;
         transform.SetParent(null, true);
         transform.forward = flyDir;
     }
@@ -135,6 +134,29 @@ public class ShootObj : NetworkBehaviour
                 originalLocalPosition = transform.localPosition;
                 originalLocalRotation = transform.localRotation;
                 return;
+            }
+        }
+    }
+
+    public override void Render()
+    {
+        base.Render();
+
+        // 네트워크로 동기화된 isVisible 을 읽어서 매 프레임 비주얼 업데이트
+        foreach (var r in renderers)
+            if (r != null) r.enabled = isVisible;
+
+        foreach (var p in particles)
+        {
+            if (p == null) continue;
+            if (isVisible)
+            {
+                if (!p.isPlaying) p.Play(true);
+            }
+            else
+            {
+                if (p.isPlaying) p.Stop(true, ParticleSystemStopBehavior.StopEmittingAndClear);
+                p.Clear(true);
             }
         }
     }

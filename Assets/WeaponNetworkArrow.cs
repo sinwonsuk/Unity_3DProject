@@ -12,6 +12,12 @@ public class WeaponNetworkArrow : NetworkBehaviour
         AttachToOwner(Object.InputAuthority);
     }
 
+
+
+
+
+
+
     public void AttachToOwner(PlayerRef ownerRef)
     {
 
