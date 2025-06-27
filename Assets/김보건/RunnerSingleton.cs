@@ -19,6 +19,19 @@ public class RunnerSingleton : MonoBehaviour
 
         DontDestroyOnLoad(gameObject); // 씬 전환 유지
     }
+    public static void ReplaceInstance(NetworkRunner newRunner)
+    {
+        if (Instance != null && Instance != newRunner)
+        {
+            Instance = newRunner;
+        }
+    }
+    public static NetworkRunner GetRunnerPrefab()
+    {
+        // RunnerSingleton 오브젝트는 씬에 하나뿐이므로 찾아서 반환
+        var singleton = FindFirstObjectByType<RunnerSingleton>();
+        return singleton != null ? singleton.runnerPrefab : null;
+    }
 
     private void CreateAndAssignRunner()
     {
