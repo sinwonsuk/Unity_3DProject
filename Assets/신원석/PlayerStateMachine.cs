@@ -186,8 +186,6 @@ public class PlayerStateMachine : StageManager<PlayerStateMachine.PlayerState>
             WeaponManager.MagicInitialize(HandSide.Right, me);
         }
 
-      
-
         _isInitialized = true;
     }
   
