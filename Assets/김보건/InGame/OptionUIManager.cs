@@ -23,6 +23,17 @@ public class OptionUIManager : MonoBehaviour
         {
             CloseOptions();
         }
+
+        if(combi.activeSelf||biginventory.activeSelf)
+        {
+            Cursor.lockState = CursorLockMode.None;
+            Cursor.visible = true;
+        }
+        else if(!combi.activeSelf&&!biginventory.activeSelf&&!isOptionsActive)
+        {
+            Cursor.lockState = CursorLockMode.Locked;
+            Cursor.visible = false;
+        }
     }
 
     public void BackToGame()
@@ -85,4 +96,6 @@ public class OptionUIManager : MonoBehaviour
 
     public GameObject OptionsPanel;
     private bool isOptionsActive = false;
+    [SerializeField] private GameObject biginventory;
+    [SerializeField] private GameObject combi;
 }

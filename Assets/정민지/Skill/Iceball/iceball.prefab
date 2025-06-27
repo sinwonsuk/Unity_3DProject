@@ -11,7 +11,7 @@ GameObject:
   - component: {fileID: 225214294958738244}
   - component: {fileID: 1779957204228691494}
   - component: {fileID: 732021352096105120}
-  m_Layer: 0
+  m_Layer: 11
   m_Name: Fire002
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -4859,10 +4859,10 @@ GameObject:
   - component: {fileID: -1164307996208348729}
   - component: {fileID: 7292829469150548151}
   - component: {fileID: -7355798596216973607}
-  - component: {fileID: -6150531316827032321}
-  m_Layer: 0
+  - component: {fileID: 8589663070198276628}
+  m_Layer: 11
   m_Name: iceball
-  m_TagString: Weapon
+  m_TagString: Maigc
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -9754,6 +9754,9 @@ MonoBehaviour:
   speed: 10
   _Side: 0
   itemState: 0
+  hitLayers:
+    serializedVersion: 2
+    m_Bits: 1088
   particles:
   - {fileID: 1779957204228691494}
   - {fileID: 1860579176297557250}
@@ -9761,8 +9764,8 @@ MonoBehaviour:
   - {fileID: 2893911812490952730}
   renderers:
   - {fileID: 3105533988102656424}
---- !u!64 &-6150531316827032321
-MeshCollider:
+--- !u!135 &8589663070198276628
+SphereCollider:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
@@ -9779,10 +9782,9 @@ MeshCollider:
   m_IsTrigger: 1
   m_ProvidesContacts: 0
   m_Enabled: 1
-  serializedVersion: 5
-  m_Convex: 1
-  m_CookingOptions: 30
-  m_Mesh: {fileID: 0}
+  serializedVersion: 3
+  m_Radius: 0.27
+  m_Center: {x: 0, y: 0, z: 0}
 --- !u!1 &1459016661159935997
 GameObject:
   m_ObjectHideFlags: 0
@@ -9794,7 +9796,7 @@ GameObject:
   - component: {fileID: 8252876864168043126}
   - component: {fileID: 2893911812490952730}
   - component: {fileID: 5201819005531675825}
-  m_Layer: 0
+  m_Layer: 11
   m_Name: Light002
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -14755,7 +14757,7 @@ GameObject:
   - component: {fileID: 5088065643877388111}
   - component: {fileID: 1860579176297557250}
   - component: {fileID: 759122389941326819}
-  m_Layer: 0
+  m_Layer: 11
   m_Name: Star001
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -19636,7 +19638,7 @@ GameObject:
   - component: {fileID: 7055089578958242242}
   - component: {fileID: 656335503526658214}
   - component: {fileID: 1862033499806942387}
-  m_Layer: 0
+  m_Layer: 11
   m_Name: Light001 (1)
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -24481,8 +24483,7 @@ GameObject:
   - component: {fileID: 5319929017278042142}
   - component: {fileID: 3641680562141238184}
   - component: {fileID: 3105533988102656424}
-  - component: {fileID: 3061931990120115928}
-  m_Layer: 0
+  m_Layer: 11
   m_Name: Sphere
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -24498,7 +24499,7 @@ Transform:
   m_GameObject: {fileID: 6571890963361202991}
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalPosition: {x: 0, y: 0, z: 0.039}
   m_LocalScale: {x: 0.5, y: 0.5, z: 0.5}
   m_ConstrainProportionsScale: 0
   m_Children: []
@@ -24557,24 +24558,3 @@ MeshRenderer:
   m_SortingLayer: 0
   m_SortingOrder: 0
   m_AdditionalVertexStreams: {fileID: 0}
---- !u!135 &3061931990120115928
-SphereCollider:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 6571890963361202991}
-  m_Material: {fileID: 0}
-  m_IncludeLayers:
-    serializedVersion: 2
-    m_Bits: 0
-  m_ExcludeLayers:
-    serializedVersion: 2
-    m_Bits: 0
-  m_LayerOverridePriority: 0
-  m_IsTrigger: 0
-  m_ProvidesContacts: 0
-  m_Enabled: 0
-  serializedVersion: 3
-  m_Radius: 0.5
-  m_Center: {x: 0, y: 0, z: 0}
