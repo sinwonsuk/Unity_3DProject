@@ -64,7 +64,7 @@ public class BasicSpawner2 : NetworkBehaviour, INetworkRunnerCallbacks
     {
     //    _needResume = false;
         _pov = cam.GetCinemachineComponent<CinemachinePOV>();
-        // 초기값 캡처
+        // 초기값
         _prevYaw = _pov.m_HorizontalAxis.Value;
         _prevPitch = _pov.m_VerticalAxis.Value;
     }
@@ -80,24 +80,15 @@ public class BasicSpawner2 : NetworkBehaviour, INetworkRunnerCallbacks
 
         Runner.AddCallbacks(this);
 
-        // 1회만 실행되도록 전역 플래그 검사
         if (_spawnDone)
         {
-            Debug.Log("[Spawned] 이미 TrySpawn 완료됨 – 스킵");
-            return;
-        }
-
-        // HostMigration 복원된 경우도 TrySpawn 금지
-        if (_spawned.ContainsKey(Runner.LocalPlayer))
-        {
-            Debug.Log("[Spawned] 이미 복원된 오브젝트 존재 – TrySpawn 생략");
-            _spawnDone = true;  // 복원된 것도 "스폰 완료"로 간주
+            Debug.Log("이미 TrySpawn 완료됨 ");
             return;
         }
 
         if (_alreadySpawned.Contains(Runner.LocalPlayer))
         {
-            Debug.Log("[Spawned] TrySpawn 이력 있음 – 스킵");
+            Debug.Log("TrySpawn 이력 있음");
             _spawnDone = true;
             return;
         }
@@ -116,7 +107,7 @@ public class BasicSpawner2 : NetworkBehaviour, INetworkRunnerCallbacks
         _spawnDone = true; // 
     }
 
-    /// 모든 클라이언트(RpcSources.All)가 호출 가능, 서버(StateAuthority)가 처리
+    /// 모든 클라이언트(RpcSources.All)가 호출 가능, 서버가 처리
     [Rpc(sources: RpcSources.All, targets: RpcTargets.StateAuthority)]
     private void RPC_RequestSpawn(PlayerRef sender, string characterName)
     {

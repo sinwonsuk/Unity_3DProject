@@ -1339,6 +1339,7 @@ MonoBehaviour:
     serializedVersion: 2
     m_Bits: 512
   _IsWeapon: 0
+  _itemState: 0
 --- !u!114 &-1013130676285194114
 MonoBehaviour:
   m_ObjectHideFlags: 0

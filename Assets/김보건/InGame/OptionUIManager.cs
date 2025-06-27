@@ -61,40 +61,24 @@ public class OptionUIManager : MonoBehaviour
     private IEnumerator ReturnToTitle()
     {
         var runner = RunnerSingleton.Instance;
-        if (runner != null && runner.IsRunning && runner.IsServer)
-        {
-            Debug.Log("호스트가 나가므로 HostMigration 시작");
 
-            // 1) 내 캐릭터 수동 제거 (중요!)
+        if (runner != null && runner.IsRunning)
+        {
+            // 내 캐릭터 제거
             if (BasicSpawner2.Instance != null)
             {
                 BasicSpawner2.Instance.DespawnSelf();
             }
 
-            // 2) 스냅샷 저장
-            var pushTask = runner.PushHostMigrationSnapshot();
-            while (!pushTask.IsCompleted)
-                yield return null;
-
-            // 3) Runner 종료
-            var shutdownTask = runner.Shutdown(true);
+            var shutdownTask = runner.Shutdown();
             while (!shutdownTask.IsCompleted)
                 yield return null;
 
             RunnerSingleton.ClearRunner();
         }
-        else if (runner != null)
-        {
-            // 클라이언트는 그냥 종료
-            var shutdownTask = runner.Shutdown();
-            while (!shutdownTask.IsCompleted) yield return null;
 
-            RunnerSingleton.ClearRunner();
-        }
-
-
-        // 타이틀 씬 인덱스 또는 이름으로 이동
-        SceneManager.LoadScene("TitleScene"); // 또는 SceneManager.LoadScene(0);
+        // 타이틀 씬으로 이동
+        SceneManager.LoadScene("TitleScene");
     }
 
 
