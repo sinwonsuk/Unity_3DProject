@@ -29,22 +29,26 @@ public class ShootObj : NetworkBehaviour
     public override void Spawned()
     {
  
-        foreach (var r in renderers)
-            if (r != null) r.enabled = isVisible;
+        isVisible = false;
 
-        foreach (var p in particles)
-        {
-            if (p == null) continue;
-            if (isVisible)
-            {
-                if (!p.isPlaying) p.Play(true);
-            }
-            else
-            {
-                if (p.isPlaying) p.Stop(true, ParticleSystemStopBehavior.StopEmittingAndClear);
-                p.Clear(true);
-            }
-        }
+
+        //foreach (var r in renderers)
+        //    if (r != null) r.enabled = isVisible;
+
+        //foreach (var p in particles)
+        //{
+        //    if (p == null) continue;
+        //    if (isVisible)
+        //    {
+        //        if (!p.isPlaying) p.Play(true);
+        //    }
+        //    else
+        //    {
+        //        if (p.isPlaying) p.Stop(true, ParticleSystemStopBehavior.StopEmittingAndClear);
+        //        p.Clear(true);
+        //    }
+        //}
+
 
         AttachToOwner(Object.InputAuthority);
     }

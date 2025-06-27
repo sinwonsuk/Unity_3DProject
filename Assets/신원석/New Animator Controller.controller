@@ -779,13 +779,13 @@ AnimatorStateMachine:
   m_StateMachineTransitions:
   - first: {fileID: -5198771327676870898}
     second: []
-  - first: {fileID: -1117422459253340933}
-    second: []
-  - first: {fileID: -4820192586534192543}
-    second: []
   - first: {fileID: -3747348036164939946}
     second: []
+  - first: {fileID: -1117422459253340933}
+    second: []
   - first: {fileID: 402507844200493933}
+    second: []
+  - first: {fileID: -4820192586534192543}
     second: []
   m_StateMachineBehaviours: []
   m_AnyStatePosition: {x: 960, y: 80, z: 0}
@@ -1399,7 +1399,7 @@ AnimatorState:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_Name: ARPG_Samurai_Attack_Combo4
-  m_Speed: 1
+  m_Speed: 0.5
   m_CycleOffset: 0
   m_Transitions:
   - {fileID: 741613995120601867}
@@ -1501,7 +1501,7 @@ AnimatorState:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_Name: ARPG_Samurai_Attack_Combo3
-  m_Speed: 1
+  m_Speed: 0.5
   m_CycleOffset: 0
   m_Transitions:
   - {fileID: 5329620423030318760}
@@ -2481,7 +2481,7 @@ AnimatorState:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_Name: ARPG_Samurai_Attack_Combo1
-  m_Speed: 1
+  m_Speed: 0.5
   m_CycleOffset: 0
   m_Transitions:
   - {fileID: 3055913720685924633}
@@ -2562,7 +2562,7 @@ AnimatorState:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_Name: ARPG_Halberd_Attack_Combo4
-  m_Speed: 1
+  m_Speed: 0.7
   m_CycleOffset: 0
   m_Transitions:
   - {fileID: -6322049529056424753}
@@ -2912,12 +2912,12 @@ AnimatorStateMachine:
   m_AnyStateTransitions: []
   m_EntryTransitions: []
   m_StateMachineTransitions:
-  - first: {fileID: 2701240608895101190}
-    second:
-    - {fileID: -3509212690263100079}
   - first: {fileID: 1254831190045113899}
     second:
     - {fileID: -5646513314581071378}
+  - first: {fileID: 2701240608895101190}
+    second:
+    - {fileID: -3509212690263100079}
   m_StateMachineBehaviours: []
   m_AnyStatePosition: {x: 40, y: 10, z: 0}
   m_EntryPosition: {x: 590, y: -110, z: 0}
@@ -3380,7 +3380,7 @@ AnimatorState:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_Name: ARPG_Halberd_Attack_Combo2
-  m_Speed: 1
+  m_Speed: 0.7
   m_CycleOffset: 0
   m_Transitions:
   - {fileID: 2500370035707802641}
@@ -3464,7 +3464,7 @@ AnimatorState:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_Name: ARPG_Halberd_Attack_Combo3
-  m_Speed: 1
+  m_Speed: 0.7
   m_CycleOffset: 0
   m_Transitions:
   - {fileID: -9013262013487608567}
@@ -3892,7 +3892,7 @@ AnimatorState:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_Name: ARPG_Halberd_Attack_Combo1
-  m_Speed: 1
+  m_Speed: 0.7
   m_CycleOffset: 0
   m_Transitions:
   - {fileID: -3396309932506805447}
@@ -4445,7 +4445,7 @@ AnimatorState:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_Name: ARPG_Samurai_Attack_Combo2
-  m_Speed: 1
+  m_Speed: 0.5
   m_CycleOffset: 0
   m_Transitions:
   - {fileID: -8042639157048132525}

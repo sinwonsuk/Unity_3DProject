@@ -283,7 +283,7 @@ MonoBehaviour:
   m_Script: {fileID: -1552182283, guid: e725a070cec140c4caffb81624c8c787, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  SortKey: 3622882392
+  SortKey: 530344389
   ObjectInterest: 1
   Flags: 262145
   NestedObjects: []
@@ -625,11 +625,12 @@ MonoBehaviour:
   m_Script: {fileID: -1552182283, guid: e725a070cec140c4caffb81624c8c787, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  SortKey: 2257484899
+  SortKey: 3459914192
   ObjectInterest: 1
   Flags: 262145
   NestedObjects: []
-  NetworkedBehaviours: []
+  NetworkedBehaviours:
+  - {fileID: 356965069724306249}
   ForceRemoteRenderTimeframe: 0
 --- !u!114 &356965069724306249
 MonoBehaviour:
@@ -807,7 +808,7 @@ MonoBehaviour:
   m_Script: {fileID: -1552182283, guid: e725a070cec140c4caffb81624c8c787, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  SortKey: 22673778
+  SortKey: 1225103071
   ObjectInterest: 1
   Flags: 262145
   NestedObjects: []

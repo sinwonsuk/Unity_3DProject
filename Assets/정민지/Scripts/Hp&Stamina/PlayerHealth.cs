@@ -14,7 +14,8 @@ public class PlayerHealth : NetworkBehaviour
 
 
     [Networked] public int currentHp { get; private set; }
-    [SerializeField] private int maxHp;
+    [SerializeField] private int maxHp=100;
+    private int lastSentHp = -1;
 
     void Update()
     {
@@ -25,6 +26,19 @@ public class PlayerHealth : NetworkBehaviour
 
             // 자살 요청 RPC
             RPC_RequestSuicide();
+        }
+    }
+
+    public override void FixedUpdateNetwork()
+    {
+        // 본인의 캐릭터라면
+        if (Object.InputAuthority == Runner.LocalPlayer)
+        {
+            if (lastSentHp != currentHp)
+            {
+                lastSentHp = currentHp;
+                EventBus<HealthChanged>.Raise(new HealthChanged(this, currentHp, maxHp));
+            }
         }
     }
 
@@ -65,11 +79,14 @@ public class PlayerHealth : NetworkBehaviour
         currentHp = Mathf.Clamp(currentHp - dmg, 0, maxHp);
         Debug.Log($"{gameObject.name}: {before} > {currentHp} (-{dmg})");
 
-        if (Object.HasInputAuthority)
-            EventBus<HealthChanged>.Raise(new HealthChanged(this, currentHp, maxHp));
+        //if (Object.InputAuthority == Runner.LocalPlayer)
+        //    EventBus<HealthChanged>.Raise(new HealthChanged(this, currentHp, maxHp));
 
         if (currentHp <= 0)
-            CountAlivePlayers();
+        {
+            SurvivorManager.Instance?.UpdateSurvivorCount();
+        }
+           // CountAlivePlayers();
     }
     public void TakeDamages(int dmg)
     {
