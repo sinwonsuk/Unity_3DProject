@@ -2,12 +2,14 @@ using UnityEngine;
 using UnityEngine.AI;
 using Fusion;
 using static PlayerStateMachine;
+using System.Collections;
 
 public class MoveState : BaseState<PlayerStateMachine.PlayerState>
 {
     PlayerStateMachine playerStateMachine;
 
     [SerializeField] float rotationSpeed = 500f;
+
 
     float moveX = 0.0f;
     float moveZ = 0.0f;
@@ -162,13 +164,16 @@ public class MoveState : BaseState<PlayerStateMachine.PlayerState>
             {
                 playerStateMachine.moveZ = Mathf.Lerp(0f, 2f, playerStateMachine.moveZ); // °á°ú: 0 ~ 2
                 playerStateMachine.MoveSpeed = 10.0f;
-                playerStateMachine.Stamina.UseStamina(playerStateMachine.Runner.DeltaTime * 10.0f);
+                //playerStateMachine.Stamina.UseStamina(playerStateMachine.Runner.DeltaTime * 10.0f);
+                EventBus<isRunning>.Raise(new isRunning(true));
+
                 playerStateMachine.Stamina.IsStamania = true;
             }
             else
             {
                 playerStateMachine.MoveSpeed = 5.0f;
                 playerStateMachine.Stamina.IsStamania = false;
+                EventBus<isRunning>.Raise(new isRunning(false));
             }         
             //playerStateMachine.NetAnim.Animator.SetFloat("MoveLeftRight", playerStateMachine.moveX);
             //playerStateMachine.NetAnim.Animator.SetFloat("MoveForWard", playerStateMachine.moveZ);
@@ -179,4 +184,6 @@ public class MoveState : BaseState<PlayerStateMachine.PlayerState>
     {
 
     }
+
+   
 }

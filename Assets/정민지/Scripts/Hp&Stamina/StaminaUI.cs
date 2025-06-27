@@ -9,15 +9,7 @@ public class StaminaUI : MonoBehaviour
     [SerializeField] private Image staminaFill;
     [SerializeField] private TMP_Text staminaText;
 
-    private void OnEnable()
-    {
-        EventBus<StaminaChanged>.OnEvent += OnStaminaChanged;
-    }
 
-    private void OnDisable()
-    {
-        EventBus<StaminaChanged>.OnEvent -= OnStaminaChanged;
-    }
 
     public void OnStaminaChanged(StaminaChanged e)
     {
@@ -32,4 +24,5 @@ public class StaminaUI : MonoBehaviour
             staminaText.text = $"{e.currentStamina:0}/{e.maxStamina}";
         }
     }
+
 }
