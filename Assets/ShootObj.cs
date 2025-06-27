@@ -16,9 +16,13 @@ public class ShootObj : NetworkBehaviour
     [Networked] public HandSide Side { get; set; }
     [SerializeField] ItemState itemState;
 
+    [SerializeField] private LayerMask hitLayers;
+
     [Header("풀/비활성화 제어")]
     [SerializeField] private ParticleSystem[] particles;
     [SerializeField] private Renderer[] renderers;
+
+    [Networked] float time { get; set; }
 
     const string PlayerTag = "Player";
 
@@ -48,42 +52,57 @@ public class ShootObj : NetworkBehaviour
     public override void FixedUpdateNetwork()
     {
 
-        //foreach (var r in renderers)
-        //    if (r != null) r.enabled = isVisible;
-
-        //foreach (var p in particles)
-        //{
-        //    if (p == null) continue;
-        //    if (isVisible)
-        //    {
-        //        if (!p.isPlaying) p.Play(true);
-        //    }
-        //    else
-        //    {
-        //        if (p.isPlaying) p.Stop(true, ParticleSystemStopBehavior.StopEmittingAndClear);
-        //        p.Clear(true);
-        //    }
-        //}
+        if (!Object.HasStateAuthority)
+            return;
 
         if (flying)
         {
+            // 1) 현재 위치와 이번 틱 이동 벡터 계산
+            Vector3 origin = transform.position;
+            Vector3 displacement = flyDir * speed * Runner.DeltaTime;
+            float distance = displacement.magnitude;
 
-            if (transform.parent != null)
-                transform.SetParent(null, true);
-
-            transform.position += Runner.DeltaTime * speed * flyDir;
-
-            if (poolTimer.Expired(Runner) && Object.HasStateAuthority)
+            // 2) 레이캐스트로 충돌 체크
+            if (Physics.Raycast(origin, flyDir, out RaycastHit hit, distance, hitLayers, QueryTriggerInteraction.Ignore))
             {
-                flying = false;
-                poolTimer = TickTimer.None;  
-                isVisible = false; 
-            }
-        }
+ 
+                // (b) 충돌 대상에 따라 처리
+                int layer = hit.collider.gameObject.layer;
+                int playerLayer = LayerMask.NameToLayer("Player");
+                int groundLayer = LayerMask.NameToLayer("Ground");
 
+                if (layer == playerLayer)
+                {
+                    var ui = hit.collider.transform.parent.GetComponent<PlayerHealth>();
+                    if (ui != null)
+                        ui.TakeDamages(20);
+                }
+
+                // (c) 땅에 닿거나 플레이어에 맞으면 멈추기
+                flying = false;
+                poolTimer = TickTimer.None;
+                isVisible = false;
+            }
+            else
+            {
+                // 3) 빗나갔으면 그냥 이동
+                transform.position += displacement;
+
+                // 4) 풀 복귀 타이밍 체크
+                if (poolTimer.Expired(Runner))
+                {
+                    flying = false;
+                    poolTimer = TickTimer.None;
+                    isVisible = false;
+                }
+            }
+
+            // 5) 디버그용 레이 시각화
+            Debug.DrawRay(origin, flyDir * distance, Color.cyan, 1f);
+        }
         else
         {
-            // 부모 복귀
+            // 부모 복귀 로직 (변경 없음)
             if (transform.parent != originalParent)
             {
                 transform.SetParent(originalParent, false);
@@ -107,7 +126,34 @@ public class ShootObj : NetworkBehaviour
         transform.SetParent(null, true);
         transform.forward = flyDir;
     }
+    public void OnTriggerEnter(Collider collider)
+    {
 
+        //// 1) 호스트에서만 충돌 처리
+        //if (!Object.HasStateAuthority)
+        //    return;
+
+        //int playerLayer = LayerMask.NameToLayer("Player");
+        //int groundLayer = LayerMask.NameToLayer("Ground");
+
+        //// 2) 충돌한 오브젝트의 레이어가 다르면 무시
+        //if (collider.gameObject.layer == playerLayer)
+        //{
+        //    PlayerHealth UI = collider.transform.parent.GetComponent<PlayerHealth>();
+
+        //    if (UI != null)
+        //    {
+        //        Debug.Log("충돌 감지!2");
+        //        UI.TakeDamages(20);
+        //    }
+        //}
+
+        //if (collider.gameObject.layer == groundLayer)
+        //{
+        //    flying = false;       
+        //}
+
+    }
     public void AttachToOwner(PlayerRef ownerRef)
     {
         var players = GameObject.FindGameObjectsWithTag(PlayerTag);
@@ -130,7 +176,7 @@ public class ShootObj : NetworkBehaviour
 
                 transform.SetParent(socket, worldPositionStays: false);
 
-                originalParent = transform.parent;
+                originalParent = socket;
                 originalLocalPosition = transform.localPosition;
                 originalLocalRotation = transform.localRotation;
                 return;

@@ -272,7 +272,6 @@ public class PlayerStateMachine : StageManager<PlayerStateMachine.PlayerState>
         playerController.SetLookRotation(0, smoothedYaw);
     }
 
-
     [Rpc(RpcSources.InputAuthority, RpcTargets.StateAuthority)]
     public void RPC_BroadcastState(PlayerState next, RpcInfo info = default)
     {

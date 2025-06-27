@@ -3,9 +3,6 @@ using Fusion;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UIElements;
-using static Fusion.NetworkRunner;
-using static Unity.Collections.Unicode;
-using static UnityEngine.UI.GridLayoutGroup;
 
 public enum HandSide
 {
@@ -49,21 +46,21 @@ public class WeaponManager : NetworkBehaviour
 
     public void MagicInitialize(HandSide dir, PlayerRef owner)
     {
-        for (int i = 0; i < 100; i++)
+        for (int i = 0; i < 50; i++)
         {
             var obj = CreateMagics(ItemState.IceMagic, dir, owner);
             IceMagics.Enqueue(obj);
             //RPC_DeactivateMagic(obj.Id);
         }
 
-        for (int i = 0; i < 100; i++)
+        for (int i = 0; i < 50; i++)
         {
             var obj = CreateMagics(ItemState.FireMagic, dir, owner);
             FireMagics.Enqueue(obj);
            // RPC_DeactivateMagic(obj.Id);
         }
 
-        for (int i = 0; i < 100; i++)
+        for (int i = 0; i < 50; i++)
         {
             var obj = CreateMagics(ItemState.ElectricMagic, dir, owner);
             ElectricMagics.Enqueue(obj);

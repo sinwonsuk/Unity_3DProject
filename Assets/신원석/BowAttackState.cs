@@ -76,7 +76,6 @@ public class BowState : BaseState<PlayerStateMachine.PlayerState>
             playerStateMachine.Rotation(data);
 
 
-
         if ( playerStateMachine.inputHandler.IsRightAttackPressed() &&
              playerStateMachine.inputHandler.IsAttackPressed() && gatherAttack ==1 
              && shoot == false && playerStateMachine.cameraManager.isCameraCheck ==true)
@@ -90,7 +89,6 @@ public class BowState : BaseState<PlayerStateMachine.PlayerState>
                 float fallbackDist = 50f;
                 targetPos = ray.origin + ray.direction * fallbackDist;
             }
-
 
             playerStateMachine.SetShootArrowObject(targetPos,ItemState.Arrow);
 
@@ -114,7 +112,7 @@ public class BowState : BaseState<PlayerStateMachine.PlayerState>
         }
         if (gatherAttack == 0)
         {
-            //playerStateMachine.Runner.Despawn(arrow);
+            playerStateMachine.Runner.Despawn(arrow);
             playerStateMachine.BroadcastIdleEvent(PlayerState.Idle);
             return;
         }

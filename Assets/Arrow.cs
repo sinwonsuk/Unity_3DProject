@@ -1,10 +1,9 @@
 using Fusion;
-using static Unity.Collections.Unicode;
-using UnityEngine;
-using Unity.VisualScripting;
-using static UnityEngine.UI.Image;
 using System.Collections;
 using System.Collections.Generic;
+using Unity.VisualScripting;
+using UnityEngine;
+
 
 public class Arrow : NetworkBehaviour
 {
@@ -15,6 +14,8 @@ public class Arrow : NetworkBehaviour
 
     BoxCollider boxCollider;
 
+    [SerializeField] private LayerMask hitLayers;
+
     private void Start()
     {
         boxCollider = GetComponent<BoxCollider>();
@@ -23,9 +24,36 @@ public class Arrow : NetworkBehaviour
 
     public override void FixedUpdateNetwork()
     {
+
+        if (!Object.HasStateAuthority)
+            return;
+
+        Vector3 origin = transform.position;
+        Vector3 displacement = flyDir * speed * Runner.DeltaTime;
+        float distance = displacement.magnitude;
+
+        if (Physics.Raycast(origin, flyDir, out RaycastHit hit, distance, hitLayers, QueryTriggerInteraction.Ignore))
+        {
+
+            // (b) 충돌 대상에 따라 처리
+            int layer = hit.collider.gameObject.layer;
+            int playerLayer = LayerMask.NameToLayer("Player");
+            int groundLayer = LayerMask.NameToLayer("Ground");
+
+            if (layer == playerLayer)
+            {
+                var ui = hit.collider.transform.parent.GetComponent<PlayerHealth>();
+                if (ui != null)
+                    ui.TakeDamages(20);
+            }
+
+            // (c) 땅에 닿거나 플레이어에 맞으면 멈추기
+            flying = false;
+            Destroy(gameObject);
+        }
+
         if (flying)
         {
-            // 호스트·클라이언트 모두 이 라인에서 같이 이동
             transform.position += Runner.DeltaTime * speed * flyDir;
         }
     }
@@ -38,8 +66,7 @@ public class Arrow : NetworkBehaviour
             // detachment
             if (transform.parent != null)
             {
-                boxCollider.enabled = true;
-                transform.SetParent(null, true);
+                transform.SetParent(null, true);               
             }
         }
     }
@@ -67,10 +94,6 @@ public class Arrow : NetworkBehaviour
             }
         }
 
-        if (collider.gameObject.layer == groundLayer)
-        {
-            flying = false;
-        }
     }
 
     public void MagicShoot(Vector3 dir)
@@ -85,7 +108,6 @@ public class Arrow : NetworkBehaviour
         boxCollider.enabled = true;
         gameObject.SetActive(true);
         transform.SetParent(null, true);
-        transform.forward = flyDir;
     }
 
     public void ArrowShoot(Vector3 dir)
