@@ -1,89 +1,142 @@
-using Fusion;
-using static Unity.Collections.Unicode;
+ï»¿using Fusion;
 using UnityEngine;
-using Unity.VisualScripting;
-using static UnityEngine.UI.Image;
-using System.Collections;
+using System.Collections.Generic;
 
 public class ShootObj : NetworkBehaviour
 {
-    // ³×Æ®¿öÅ© º¹Á¦ÇÒ ÇÁ·ÎÆÛÆ¼µé
-    [Networked] public bool flying { get; set; }
-    [Networked] public Vector3 flyDir { get; set; }
+    [Networked] public bool isVisible { get; set; }
+    [Networked] public bool flying { get; private set; }
+    [Networked] public Vector3 flyDir { get; private set; }
+    [Networked] TickTimer poolTimer { get; set; }
+    private Transform originalParent;
+    [Networked] private Vector3 originalLocalPosition { get; set; }
+    [Networked] private Quaternion originalLocalRotation { get; set; }
 
-                Transform originalParent { get; set; }
-    [Networked] Vector3 originalLocalPosition { get; set; }
-    Quaternion originalLocalRotation;
+    [SerializeField] private float speed = 10f;
+    [Networked] public HandSide Side { get; set; }
+    [SerializeField] ItemState itemState;
 
-    //[SerializeField]
-    //GameObject material;
+    [Header("í’€/ë¹„í™œì„±í™” ì œì–´")]
+    [SerializeField] private ParticleSystem[] particles;
+    [SerializeField] private Renderer[] renderers;
 
-    [SerializeField] private float speed = 0.0f;
+    const string PlayerTag = "Player";
+
+    public override void Spawned()
+    {
+ 
+        isVisible = false;
+
+
+        //foreach (var r in renderers)
+        //    if (r != null) r.enabled = isVisible;
+
+        //foreach (var p in particles)
+        //{
+        //    if (p == null) continue;
+        //    if (isVisible)
+        //    {
+        //        if (!p.isPlaying) p.Play(true);
+        //    }
+        //    else
+        //    {
+        //        if (p.isPlaying) p.Stop(true, ParticleSystemStopBehavior.StopEmittingAndClear);
+        //        p.Clear(true);
+        //    }
+        //}
+
+
+        AttachToOwner(Object.InputAuthority);
+    }
 
     public override void FixedUpdateNetwork()
     {
-        if(flying ==true)
+
+        foreach (var r in renderers)
+            if (r != null) r.enabled = isVisible;
+
+        foreach (var p in particles)
         {
-            transform.SetParent(null, true);
+            if (p == null) continue;
+            if (isVisible)
+            {
+                if (!p.isPlaying) p.Play(true);
+            }
+            else
+            {
+                if (p.isPlaying) p.Stop(true, ParticleSystemStopBehavior.StopEmittingAndClear);
+                p.Clear(true);
+            }
         }
 
-
-        if (flying && Object.HasStateAuthority)
+        if (flying)
         {
+
+            if (transform.parent != null)
+                transform.SetParent(null, true);
+
             transform.position += Runner.DeltaTime * speed * flyDir;
+
+            if (poolTimer.Expired(Runner) && Object.HasStateAuthority)
+            {
+                flying = false;
+                poolTimer = TickTimer.None;  
+                isVisible = false; 
+            }
         }
 
-    }
-
-    private void OnTriggerEnter(Collider other)
-    {
-        flying = false;
-    }
-
-
-
-    public void Shoot(Vector3 dir)
-    {
-        // ¿ø·¡ À§Ä¡¿Í È¸Àü°ªÀ» ÀúÀå
-
-        if ((transform.parent == null))
+        else
         {
-            Debug.Log("ºÎ¸ð¾øÀ½");
-            return;
+            // ë¶€ëª¨ ë³µê·€
+            if (transform.parent != originalParent)
+            {
+                transform.SetParent(originalParent, false);
+                transform.localPosition = originalLocalPosition;
+                transform.localRotation = originalLocalRotation;
+            }
         }
+    }
 
-        if (HasStateAuthority)
+    public void ArrowShoot(Vector3 dir)
+    {
+        if (Object.HasStateAuthority)
         {
-            originalParent = transform.parent;
-            originalLocalPosition = transform.localPosition;
-            originalLocalRotation = transform.localRotation;
-
-            Debug.Log($"¹ß»ç À§Ä¡: {transform.position}");
-
-            flying = true;   // ¡ç ÀÌ ¼ø°£ flying°ú flyDir µÑ ´Ù ³×Æ®¿öÅ©·Î º¹Á¦
-
-
+            flying = true;
             flyDir = (dir - transform.position).normalized;
-
-            transform.SetParent(null, true);
-
-            transform.forward = flyDir;
-
-            StartCoroutine(ReturnToPoolAfter(10f));
-        }      
+            isVisible = true;
+            poolTimer = TickTimer.CreateFromSeconds(Runner, 10f);
+        }
+        transform.SetParent(null, true);
+        transform.forward = flyDir;
     }
 
-    private IEnumerator ReturnToPoolAfter(float seconds)
+    public void AttachToOwner(PlayerRef ownerRef)
     {
-        yield return new WaitForSeconds(seconds);
+        var players = GameObject.FindGameObjectsWithTag(PlayerTag);
+        foreach (var go in players)
+        {
+            var psm = go.GetComponent<PlayerStateMachine>();
+            if (psm != null && psm.Object.InputAuthority == ownerRef)
+            {
+                Transform socket = (Side == HandSide.Right)
+                    ? psm.RightHandTransform
+                    : psm.LeftHandTransform;
 
-        // ÀÌµ¿ ÁßÁö
-        flying = false;
+                var charController = psm.GetComponent<CharacterController>();
+                var weaponMeshCollider = GetComponentInChildren<MeshCollider>();
 
-        // ¿ø·¡ À§Ä¡·Î º¹±Í
-        transform.SetParent(originalParent);
-        transform.localPosition = originalLocalPosition;
-        transform.localRotation = originalLocalRotation;
-        gameObject.SetActive(false);
+                if (charController != null && weaponMeshCollider != null)
+                {
+                    Physics.IgnoreCollision(charController, weaponMeshCollider, true);
+                }
+
+                transform.SetParent(socket, worldPositionStays: false);
+
+                originalParent = transform.parent;
+                originalLocalPosition = transform.localPosition;
+                originalLocalRotation = transform.localRotation;
+                return;
+            }
+        }
     }
 }

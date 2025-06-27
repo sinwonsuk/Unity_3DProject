@@ -14621,7 +14621,7 @@ GameObject:
   - component: {fileID: 8723454125003758688}
   - component: {fileID: -4948031666783999535}
   - component: {fileID: 282543538662143868}
-  - component: {fileID: 5774794680092833770}
+  - component: {fileID: 299746182114097456}
   - component: {fileID: -555753400902237214}
   m_Layer: 0
   m_Name: FireBall
@@ -19470,13 +19470,13 @@ MonoBehaviour:
   m_Script: {fileID: -1552182283, guid: e725a070cec140c4caffb81624c8c787, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  SortKey: 444333992
+  SortKey: 4025739938
   ObjectInterest: 1
   Flags: 262145
   NestedObjects: []
   NetworkedBehaviours:
   - {fileID: 282543538662143868}
-  - {fileID: 5774794680092833770}
+  - {fileID: 299746182114097456}
   ForceRemoteRenderTimeframe: 0
 --- !u!114 &282543538662143868
 MonoBehaviour:
@@ -19495,7 +19495,7 @@ MonoBehaviour:
   SyncParent: 1
   _autoAOIOverride: 1
   DisableSharedModeInterpolation: 0
---- !u!114 &5774794680092833770
+--- !u!114 &299746182114097456
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -19504,23 +19504,11 @@ MonoBehaviour:
   m_GameObject: {fileID: 7741497369113804292}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 13956d8a7005e734ea925da59acb432a, type: 3}
+  m_Script: {fileID: 11500000, guid: 091ce8006b5afb941ac94a89a6610d6e, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  _isVisible: 0
-  _flying: 0
-  _flyDir: {x: 0, y: 0, z: 0}
-  speed: 10
   _Side: 0
-  itemState: 0
-  particles:
-  - {fileID: 4645457557644204197}
-  - {fileID: 2886515537308332946}
-  - {fileID: 6962884303068283800}
-  - {fileID: 1060476378200144711}
-  - {fileID: 5694408489362420583}
-  renderers:
-  - {fileID: 6533694454599705840}
+  _ArrowSide: 0
 --- !u!64 &-555753400902237214
 MeshCollider:
   m_ObjectHideFlags: 0

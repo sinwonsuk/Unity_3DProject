@@ -4,10 +4,7 @@ using Fusion.Addons.SimpleKCC;
 using System;
 using System.Collections;
 using System.Collections.Generic;
-using Unity.VisualScripting;
 using UnityEngine;
-using static UnityEngine.UI.GridLayoutGroup;
-
 
 public enum ItemState
 {
@@ -24,8 +21,6 @@ public enum ItemState
     IceBall,
     ElectricBall,
 }
-
-
 public class PlayerStateMachine : StageManager<PlayerStateMachine.PlayerState>
 {
     [Networked] public PlayerState SyncedState { get; set; }
@@ -44,6 +39,7 @@ public class PlayerStateMachine : StageManager<PlayerStateMachine.PlayerState>
 
     [Networked] public int WeaponCount { get; set; } = 0;
 
+    [Networked] public TickTimer fireTimer { get; set; }
     public NetworkMecanimAnimator NetAnim { get; set; }
 
     public HashSet<NetworkObject> hitSet { get; set; } = new();
@@ -187,7 +183,7 @@ public class PlayerStateMachine : StageManager<PlayerStateMachine.PlayerState>
         if (Object.HasStateAuthority)
         {
             PlayerRef me = Object.InputAuthority;
-            WeaponManager.MaigcInitialize(ItemState.IceMagic, HandSide.Right, me);
+            WeaponManager.MagicInitialize(HandSide.Right, me);
         }
 
       
@@ -242,12 +238,6 @@ public class PlayerStateMachine : StageManager<PlayerStateMachine.PlayerState>
         BroadcastIdleEvent(PlayerState.Switch);
 
     }
-
-    public void adaddadadaw(ItemState itemState, PlayerRef me)
-    {
-        
-    }
-
 
     [Rpc(RpcSources.InputAuthority, RpcTargets.StateAuthority)]
     public void RPC_ChangeWeaponAni(ItemState rollCount, RpcInfo info = default)
@@ -314,75 +304,76 @@ public class PlayerStateMachine : StageManager<PlayerStateMachine.PlayerState>
         AnimHandler.SetAttackBool(false);
 
     }
+
+
+    // 1) 클라 → 호스트: 매직 풀에서 하나 꺼내 달라고 요청
     [Rpc(RpcSources.InputAuthority, RpcTargets.StateAuthority)]
-    public void RPC_RequestShoot(Vector3 targetPos, ItemState State, NetworkObject magic = null,RpcInfo info = default)
+    public void RPC_RequestMagic(ItemState state, HandSide dir, RpcInfo info = default)
     {
-        ShootObj arrow = null;
+        NetworkObject magic = null;
 
-        var ad =Object.InputAuthority;
-
-        if (State == ItemState.IceMagic)
+        if (ItemState.IceMagic == state)
         {
-            arrow = WeaponManager.Magic.GetComponent<ShootObj>();
+            magic = WeaponManager.GetIceMagicPool();
         }
-        if (State == ItemState.FireMagic)
+        if (ItemState.FireMagic == state)
         {
-            arrow = WeaponManager.Magic.GetComponent<ShootObj>();
+            magic = WeaponManager.GetFireMagicPool();
         }
-        if (State == ItemState.ElectricMagic)
+        if (ItemState.ElectricMagic == state)
         {
-            arrow = WeaponManager.Magic.GetComponent<ShootObj>();
-        }
-        if (State == ItemState.Arrow)
-        {
-            arrow = WeaponManager.Arrow.GetComponent<ShootObj>();
+            magic = WeaponManager.GetElectricMagicPool();
         }
 
-        Vector3 dir = targetPos;
-
-        arrow.Shoot(dir);
+        WeaponManager.CurrentMagicId = magic.Id;   // ID 저장                                                        
+        RPC_ConfirmMagic(magic.Id);
     }
-    public void SetShootObject(Vector3 targetPos,ItemState State, NetworkObject magic = null)
+
+    // 2) 호스트 → 클라: (옵션) 누구에게 어떤 오브젝트인지 알려주고 싶을 때
+    [Rpc(RpcSources.StateAuthority, RpcTargets.InputAuthority)]
+    void RPC_ConfirmMagic(NetworkId magicId, RpcInfo info = default)
+    {
+        // 이 RPC 는 요청을 보낸 클라이언트 쪽에서 실행됨
+        WeaponManager.CurrentMagicId = magicId;
+    }
+
+    // 3) 클라 → 호스트: 이제 발사할 때
+    public void SetShootMagicObject(Vector3 targetPos, ItemState state)
     {
         if (Object.HasInputAuthority)
         {
-            RPC_RequestShoot(targetPos, State,magic);
-        }
-        else if (Object.HasStateAuthority)
-        {
-            ShootObj arrow = null;
-
-            if (State == ItemState.IceMagic)
-            {
-                arrow = WeaponManager.Magic.GetComponent<ShootObj>();
-            }
-            if (State == ItemState.FireMagic)
-            {
-                arrow = WeaponManager.Magic.GetComponent<ShootObj>();
-            }
-            if (State == ItemState.ElectricMagic)
-            {
-                arrow = WeaponManager.Magic.GetComponent<ShootObj>();
-            }
-            if (State == ItemState.Arrow)
-            {
-                arrow = WeaponManager.Arrow.GetComponent<ShootObj>();
-            }
-                
-            Vector3 dir = targetPos;
-
-            arrow.Shoot(dir);
+            // magicId 는 WeaponManager.CurrentMagicId 에 저장돼 있다고 가정
+            RPC_RequestShoot(targetPos, state, WeaponManager.CurrentMagicId);
         }
     }
-
-    [Rpc(RpcSources.InputAuthority, RpcTargets.StateAuthority)]
-    public void RPC_RequestMagic(ItemState state, HandSide Dir, PlayerRef owner = default)
+    public void SetShootArrowObject(Vector3 targetPos, ItemState state)
     {
-        var magic = WeaponManager.GetIceMagicPool();
-
-        WeaponManager.Magic = magic;
-
+        if (Object.HasInputAuthority)
+        {
+            RPC_RequestShoot(targetPos, state, WeaponManager.Arrow.Id);
+        }
     }
+
+    // 4) 클라 → 호스트: 실제 발사 처리
+    [Rpc(RpcSources.InputAuthority, RpcTargets.StateAuthority)]
+    void RPC_RequestShoot(Vector3 targetPos, ItemState state, NetworkId magicId, RpcInfo info = default)
+    {
+        // StateAuthority(호스트)에서 실행
+        var netObj = Runner.FindObject(magicId);
+        if (netObj == null) return;
+
+        if(ItemState.Arrow == state)
+        {
+            var shot = netObj.GetComponent<Arrow>();
+            shot.ArrowShoot(targetPos);
+        }
+        else
+        {
+            var shot = netObj.GetComponent<ShootObj>();
+            shot.ArrowShoot(targetPos);
+        }
+    }
+
 
 
     [Rpc(RpcSources.InputAuthority, RpcTargets.StateAuthority)]
@@ -390,8 +381,6 @@ public class PlayerStateMachine : StageManager<PlayerStateMachine.PlayerState>
     {
         hitSet.Clear();
     }
-
-
 
     [Rpc(RpcSources.StateAuthority, RpcTargets.All)]
     public void RPC_PlayHitAnimation(int newHitCount)

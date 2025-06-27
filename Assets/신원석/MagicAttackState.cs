@@ -3,7 +3,8 @@ using System.Collections;
 using System.Collections.Generic;
 using Unity.Mathematics;
 using UnityEngine;
-using static Unity.Collections.Unicode;
+
+
 
 
 public class MagicAttackState : BaseState<PlayerStateMachine.PlayerState>
@@ -45,12 +46,25 @@ public class MagicAttackState : BaseState<PlayerStateMachine.PlayerState>
             zoomRoutine = playerStateMachine.StartCoroutine(playerStateMachine.cameraManager.ZoomDistance(2f));
         }
 
+        if (fireRoutine != null)
+        {
+            playerStateMachine.StopCoroutine(fireRoutine);
+            fireRoutine = null;
+        }
+        attackCooldown = 0.0f;
     }
 
     public override void FixedUpdateState()
     {
+        if (playerStateMachine.fireTimer.Expired(playerStateMachine.Runner))
+        {
+            playerStateMachine.SetShootMagicObject(targetPos, playerStateMachine.WeaponManager.magicState);
+            // 발사 이펙트 등 로컬 연출(원하면)
 
-        if (!playerStateMachine.Object.HasInputAuthority && !playerStateMachine.Runner.IsForward)
+            playerStateMachine.fireTimer = TickTimer.None;
+        }
+
+        if (!playerStateMachine.Runner.IsForward)
             return;
 
         if (playerStateMachine.GetInput(out NetworkInputData data))
@@ -61,20 +75,45 @@ public class MagicAttackState : BaseState<PlayerStateMachine.PlayerState>
         bool right = playerStateMachine.inputHandler.IsRightAttackPressed();
 
 
-        if(left && right && attack >= maxAttack  && playerStateMachine.cameraManager.isCameraCheck == true)
+
+        if (left && right && attack >= maxAttack && playerStateMachine.cameraManager.isCameraCheck == true && isAttackTrigger ==false)
         {
-            //isAttackTrigger = true;
+            // 발사 위치 계산
             CalculateHitPosition();
 
-
+            // RPC로 서버 발사 요청
             playerStateMachine.RPC_RequestMagic(playerStateMachine.WeaponManager.magicState, HandSide.Right);
 
-            playerStateMachine.SetShootObject(targetPos,playerStateMachine.WeaponManager.magicState, magic);
+            // 쿨타임 시작
+            playerStateMachine.fireTimer = TickTimer.CreateFromSeconds(playerStateMachine.Runner, fireDelay);
+
+
+            attackCooldown = 0.2f;
+
+            isAttackTrigger = true;
+
+
+
+
+
         }
-        else if (right && !isAttackTrigger )
+        if (right)
             attack = Mathf.MoveTowards(attack, maxAttack, playerStateMachine.Runner.DeltaTime * speed);
         else
             attack = Mathf.MoveTowards(attack, 0f, playerStateMachine.Runner.DeltaTime * speed);
+
+
+        if (isAttackTrigger == true)
+            attackCooldown -= playerStateMachine.Runner.DeltaTime;
+
+        if(isAttackTrigger == true && attackCooldown <=0)
+        {
+            playerStateMachine.SetShootMagicObject(targetPos, playerStateMachine.WeaponManager.magicState);
+            attackCooldown = 0.2f;
+            isAttackTrigger = false;
+        }
+
+
 
 
         // (발사 후) Idle 전환
@@ -83,7 +122,19 @@ public class MagicAttackState : BaseState<PlayerStateMachine.PlayerState>
 
     }
 
+    // 딜레이 후 발사 실행
+    private IEnumerator DelayedFire()
+    {
+        playerStateMachine.RPC_RequestMagic(playerStateMachine.WeaponManager.magicState, HandSide.Right);
+        yield return new WaitForSeconds(fireDelay);
+        fireRoutine = null;  // 코루틴 완료 표시
 
+        // 서버에 RPC 요청하여 발사 처리
+        if (playerStateMachine.Object.HasInputAuthority)
+        {           
+            playerStateMachine.SetShootMagicObject(targetPos, playerStateMachine.WeaponManager.magicState);
+        }
+    }
     public override PlayerStateMachine.PlayerState GetNextState()
     {
         return PlayerStateMachine.PlayerState.Magic;
@@ -111,6 +162,8 @@ public class MagicAttackState : BaseState<PlayerStateMachine.PlayerState>
         playerStateMachine.Combat.OnAttackAnimationEnd();
     }
 
+    float attackCooldown;
+    private Coroutine fireRoutine;
     Vector3 targetPos;
     float attack = 0;
     float speed = 1;
@@ -120,6 +173,7 @@ public class MagicAttackState : BaseState<PlayerStateMachine.PlayerState>
     PlayerStateMachine playerStateMachine;
     PlayerRef me;
     NetworkObject magic { get; set; }
+    private float fireDelay = 0.2f;
 }
 
 

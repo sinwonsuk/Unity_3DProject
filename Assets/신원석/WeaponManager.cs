@@ -19,7 +19,7 @@ public class WeaponManager : NetworkBehaviour
     private Transform rightHandSocket;
     private Transform leftHandSocket;
 
-
+    [Networked] public NetworkId CurrentMagicId { get; set; }
     [Networked] public HandSide Side { get; set; }
 
     [Networked] public HandSide ArrowSide { get; set; }
@@ -36,8 +36,8 @@ public class WeaponManager : NetworkBehaviour
     private NetworkRunner runner;
 
     private Queue<NetworkObject> IceMagics = new Queue<NetworkObject>();
-
-
+    private Queue<NetworkObject> FireMagics = new Queue<NetworkObject>();
+    private Queue<NetworkObject> ElectricMagics = new Queue<NetworkObject>();
 
     public void Init(WeaponsConfig config, Transform rightHandSocket, Transform leftHandSocket, NetworkRunner runner, NetworkBehaviour networkBehaviour)
     {
@@ -47,24 +47,54 @@ public class WeaponManager : NetworkBehaviour
         this.runner = runner;
     }
 
-    public void MaigcInitialize(ItemState state, HandSide Dir, PlayerRef owner = default)
+    public void MagicInitialize(HandSide dir, PlayerRef owner)
     {
         for (int i = 0; i < 100; i++)
         {
-            NetworkObject obj = CreateMagics(state, Dir, owner);
-
-            obj.gameObject.SetActive(false);
-
+            var obj = CreateMagics(ItemState.IceMagic, dir, owner);
             IceMagics.Enqueue(obj);
+            //RPC_DeactivateMagic(obj.Id);
+        }
 
+        for (int i = 0; i < 100; i++)
+        {
+            var obj = CreateMagics(ItemState.FireMagic, dir, owner);
+            FireMagics.Enqueue(obj);
+           // RPC_DeactivateMagic(obj.Id);
+        }
+
+        for (int i = 0; i < 100; i++)
+        {
+            var obj = CreateMagics(ItemState.ElectricMagic, dir, owner);
+            ElectricMagics.Enqueue(obj);
+            //RPC_DeactivateMagic(obj.Id);
+        }
+
+    }
+
+    [Rpc(RpcSources.StateAuthority, RpcTargets.All)]
+    public void RPC_ActivateMagic(NetworkId id, RpcInfo info = default)
+    {
+        var networkObject = Runner.FindObject(id); 
+        if (networkObject != null)
+        {
+            networkObject.gameObject.SetActive(true);
         }
     }
+
+    [Rpc(RpcSources.StateAuthority, RpcTargets.All)]
+    public void RPC_DeactivateMagic(NetworkId id, RpcInfo info = default)
+    {
+        var networkObject = Runner.FindObject(id); 
+        if (networkObject != null)
+        {
+            networkObject.gameObject.SetActive(false);
+        }
+    }
+
+
     public NetworkObject GetIceMagicPool()
     {
-        // 디버깅
-        var ad = Object.InputAuthority;
-
-
         // 뺏기
         var obj = IceMagics.Dequeue();
 
@@ -76,12 +106,44 @@ public class WeaponManager : NetworkBehaviour
         }
         // 오브젝트를 활성화하고 반환
         obj.gameObject.SetActive(true);
-
         IceMagics.Enqueue(obj);
-
+        RPC_ActivateMagic(obj.Id);
         return obj;
     }
+    public NetworkObject GetFireMagicPool()
+    {
+        // 뺏기
+        var obj = FireMagics.Dequeue();
 
+        // 만약 풀에 오브젝트가 없다면
+        if (obj == null)
+        {
+            Debug.LogError("Pool에서 오브젝트를 가져올 수 없습니다.");
+            return null;
+        }
+        // 오브젝트를 활성화하고 반환
+        obj.gameObject.SetActive(true);
+        FireMagics.Enqueue(obj);
+        RPC_ActivateMagic(obj.Id);
+        return obj;
+    }
+    public NetworkObject GetElectricMagicPool()
+    {
+        // 뺏기
+        var obj = ElectricMagics.Dequeue();
+
+        // 만약 풀에 오브젝트가 없다면
+        if (obj == null)
+        {
+            Debug.LogError("Pool에서 오브젝트를 가져올 수 없습니다.");
+            return null;
+        }
+        // 오브젝트를 활성화하고 반환
+        obj.gameObject.SetActive(true);
+        ElectricMagics.Enqueue(obj);
+        RPC_ActivateMagic(obj.Id);
+        return obj;
+    }
 
     public void Equip(ItemState state,HandSide Dir, PlayerRef owner = default)
     {
@@ -112,7 +174,7 @@ public class WeaponManager : NetworkBehaviour
             Debug.LogWarning("무기 없음");
         }
 
-        //RPC_AttachWeaponToSocket(Dir);
+        RPC_ActivateMagic(currentWeapon.Id);
 
         currentWeaponState = state;
     }
@@ -147,7 +209,7 @@ public class WeaponManager : NetworkBehaviour
         obj = runner.Spawn(prefab, position, rotation, owner, onBeforeSpawned: (runner, obj) =>
         {
             var wno = obj.GetComponent<WeaponNetworkObject>();
-            
+            obj.transform.SetParent(rightHandSocket, false);
         }
             );
 
@@ -166,8 +228,8 @@ public class WeaponManager : NetworkBehaviour
 
         obj = runner.Spawn(prefab, position, rotation, owner, onBeforeSpawned: (runner, obj) =>
         {
-            var wno = obj.GetComponent<WeaponNetworkObject>();
-
+            obj.gameObject.SetActive(false);
+            obj.gameObject.transform.SetParent(rightHandSocket, false);
         }
             );
 
