@@ -91,11 +91,8 @@ public class BowState : BaseState<PlayerStateMachine.PlayerState>
                 targetPos = ray.origin + ray.direction * fallbackDist;
             }
 
-            Vector3 ropePos = playerStateMachine.WeaponManager.currentWeapon.GetComponent<Bow>().Rope.transform.position;
 
-
-
-            playerStateMachine.SetShootObject(targetPos,ItemState.Arrow);
+            playerStateMachine.SetShootArrowObject(targetPos,ItemState.Arrow);
 
             playerStateMachine.AnimHandler.ShootBowWeapon();
             shoot = true;
@@ -117,6 +114,7 @@ public class BowState : BaseState<PlayerStateMachine.PlayerState>
         }
         if (gatherAttack == 0)
         {
+            //playerStateMachine.Runner.Despawn(arrow);
             playerStateMachine.RPC_BroadcastState(PlayerState.Idle);
             return;
         }

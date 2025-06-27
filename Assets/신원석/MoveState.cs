@@ -115,13 +115,13 @@ public class MoveState : BaseState<PlayerStateMachine.PlayerState>
 
         if (playerStateMachine.inputHandler.IsRightAttackPressed() && playerStateMachine.IsWeapon ==true && playerStateMachine.AnimHandler.WeaponCount == (int)ItemState.Bow)
         {
-            playerStateMachine.RPC_BroadcastState(PlayerStateMachine.PlayerState.BowAttack);
+            playerStateMachine.BroadcastIdleEvent(PlayerStateMachine.PlayerState.BowAttack);
             return;
         }
 
         if (playerStateMachine.inputHandler.IsRightAttackPressed() && playerStateMachine.IsWeapon == true && playerStateMachine.AnimHandler.WeaponCount == 4)
         {
-            playerStateMachine.RPC_BroadcastState(PlayerStateMachine.PlayerState.Magic);
+            playerStateMachine.BroadcastIdleEvent(PlayerStateMachine.PlayerState.Magic);
             return;
         }
 

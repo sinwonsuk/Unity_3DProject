@@ -69,6 +69,21 @@ public class AnimationHandler
                 playerStateMachine.WeaponManager.magicState = ItemState.ElectricMagic;
                 animator.Animator.SetTrigger("MagicEquip");
                 break;
+            case ItemState.FireBall:
+                WeaponCount = 4;
+                playerStateMachine.WeaponManager.magicState = ItemState.FireMagic;
+                animator.Animator.SetTrigger("MagicEquip");
+                break;
+            case ItemState.IceBall:
+                WeaponCount = 4;
+                playerStateMachine.WeaponManager.magicState = ItemState.IceMagic;
+                animator.Animator.SetTrigger("MagicEquip");
+                break;
+            case ItemState.ElectricBall:
+                WeaponCount = 4;
+                playerStateMachine.WeaponManager.magicState = ItemState.ElectricMagic;
+                animator.Animator.SetTrigger("MagicEquip");
+                break;
 
             case ItemState.Position:
                 break;

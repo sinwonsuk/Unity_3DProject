@@ -172,17 +172,17 @@ public class InventorySlotUI : NetworkBehaviour, IPointerClickHandler, IBeginDra
             }
             else if(slot.item.magicType==MagicType.Fire)
             {
-                changed.ChangeWeapon(ItemState.FireMagic);
+                changed.ChangeWeapon(ItemState.FireBall);
  
             }
             else if (slot.item.magicType == MagicType.Ice)
             {
-                changed.ChangeWeapon(ItemState.IceMagic);
+                changed.ChangeWeapon(ItemState.IceBall);
 
             }
             else if (slot.item.magicType == MagicType.Lightning)
             {
-                changed.ChangeWeapon(ItemState.ElectricMagic);
+                changed.ChangeWeapon(ItemState.ElectricBall);
 
             }
 

@@ -14622,7 +14622,6 @@ GameObject:
   - component: {fileID: -4948031666783999535}
   - component: {fileID: 282543538662143868}
   - component: {fileID: 5774794680092833770}
-  - component: {fileID: 299746182114097456}
   - component: {fileID: -555753400902237214}
   m_Layer: 0
   m_Name: FireBall
@@ -14641,7 +14640,7 @@ Transform:
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
   m_LocalPosition: {x: 0, y: 0, z: 0}
-  m_LocalScale: {x: 11.58, y: 11.58, z: 11.58}
+  m_LocalScale: {x: 0.99999994, y: 0.99999994, z: 0.99999994}
   m_ConstrainProportionsScale: 1
   m_Children:
   - {fileID: 6922078806183276847}
@@ -19478,7 +19477,6 @@ MonoBehaviour:
   NetworkedBehaviours:
   - {fileID: 282543538662143868}
   - {fileID: 5774794680092833770}
-  - {fileID: 299746182114097456}
   ForceRemoteRenderTimeframe: 0
 --- !u!114 &282543538662143868
 MonoBehaviour:
@@ -19494,7 +19492,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   _stateAuthorityChangeErrorCorrectionDelta: 0
   SyncScale: 0
-  SyncParent: 0
+  SyncParent: 1
   _autoAOIOverride: 1
   DisableSharedModeInterpolation: 0
 --- !u!114 &5774794680092833770
@@ -19509,23 +19507,20 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 13956d8a7005e734ea925da59acb432a, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  _isVisible: 0
   _flying: 0
   _flyDir: {x: 0, y: 0, z: 0}
   speed: 10
---- !u!114 &299746182114097456
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 7741497369113804292}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 091ce8006b5afb941ac94a89a6610d6e, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
   _Side: 0
-  _ArrowSide: 0
+  itemState: 0
+  particles:
+  - {fileID: 4645457557644204197}
+  - {fileID: 2886515537308332946}
+  - {fileID: 6962884303068283800}
+  - {fileID: 1060476378200144711}
+  - {fileID: 5694408489362420583}
+  renderers:
+  - {fileID: 6533694454599705840}
 --- !u!64 &-555753400902237214
 MeshCollider:
   m_ObjectHideFlags: 0

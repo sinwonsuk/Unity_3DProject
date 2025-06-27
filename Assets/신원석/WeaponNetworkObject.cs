@@ -14,16 +14,11 @@ public class WeaponNetworkObject : NetworkBehaviour
 
     public Action action;
 
-    public Transform Hand { get; set; }
-
     public override void Spawned()
     {
-       
+        gameObject.SetActive(false);
 
         AttachToOwner(Object.InputAuthority);
-
-
-        var weaponCols = GetComponentsInChildren<Collider>();
 
     }
 
@@ -58,10 +53,5 @@ public class WeaponNetworkObject : NetworkBehaviour
                 return;
             }
         }
-
-        // 1) 스폰된 자기 자신(Weapon) 콜라이더
-
-
-
     }
 }

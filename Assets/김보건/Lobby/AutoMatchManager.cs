@@ -7,6 +7,7 @@ using System.Linq;
 using UnityEngine.SceneManagement;
 using System.Collections;
 using static Unity.Collections.Unicode;
+using Unity.VisualScripting.Antlr3.Runtime;
 
 public class AutoMatchManager : MonoBehaviour, INetworkRunnerCallbacks
 {
@@ -116,13 +117,13 @@ public class AutoMatchManager : MonoBehaviour, INetworkRunnerCallbacks
         {
             //roomName = cachedSessionList[0].Name;
             //roomName = $"Room_{Random.Range(0, 9999)}";
-            roomName = $"Room_002";
+            roomName = $"Room_0010";
             Debug.Log($"기존 방 참가: {roomName}");
         }
         else
         {
             //roomName = $"Room_{Random.Range(0, 9999)}";
-            roomName = $"Room_002";
+            roomName = $"Room_0010";
             Debug.Log($"새 방 생성: {roomName}");
         }
 
@@ -161,7 +162,8 @@ public class AutoMatchManager : MonoBehaviour, INetworkRunnerCallbacks
             SessionName = roomName,
             Scene = startScene,         // Host 가 나중에 LoadScene
             SceneManager = sceneManager,
-            PlayerCount = 4
+            PlayerCount = 2
+
         };
 
         try
@@ -187,7 +189,7 @@ public class AutoMatchManager : MonoBehaviour, INetworkRunnerCallbacks
     {
         Debug.Log($"플레이어 입장: {player}. 현재 인원: {runner.ActivePlayers.Count()}");
 
-        if (runner.IsServer && runner.ActivePlayers.Count() == 4)
+        if (runner.IsServer && runner.ActivePlayers.Count() == 2)
         {
             Debug.Log("인게임 씬으로 이동 시작");
 
@@ -294,6 +296,10 @@ public class AutoMatchManager : MonoBehaviour, INetworkRunnerCallbacks
     public void OnConnectRequest(NetworkRunner runner, NetworkRunnerCallbackArgs.ConnectRequest request, byte[] token) { }
     public void OnReliableDataReceived(NetworkRunner runner, PlayerRef player, ReliableKey key, System.ArraySegment<byte> data) { }
     public void OnReliableDataProgress(NetworkRunner runner, PlayerRef player, ReliableKey key, float progress) { }
+
+    private void OnMigrationResume(NetworkRunner runnerB)
+    {
+    }
 
     private NetworkRunner runner;
     public MatchTimerUI matchTimerUI;

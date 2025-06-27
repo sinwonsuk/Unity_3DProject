@@ -19654,7 +19654,6 @@ GameObject:
   - component: {fileID: -4151247349314687995}
   - component: {fileID: -7826839209778132163}
   - component: {fileID: -6159262714173664895}
-  - component: {fileID: 7203850604456839905}
   - component: {fileID: 8818230105295170018}
   m_Layer: 0
   m_Name: ElectricBall
@@ -24515,7 +24514,6 @@ MonoBehaviour:
   NetworkedBehaviours:
   - {fileID: -7826839209778132163}
   - {fileID: -6159262714173664895}
-  - {fileID: 7203850604456839905}
   ForceRemoteRenderTimeframe: 0
 --- !u!114 &-7826839209778132163
 MonoBehaviour:
@@ -24531,7 +24529,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   _stateAuthorityChangeErrorCorrectionDelta: 0
   SyncScale: 0
-  SyncParent: 0
+  SyncParent: 1
   _autoAOIOverride: 1
   DisableSharedModeInterpolation: 0
 --- !u!114 &-6159262714173664895
@@ -24546,23 +24544,18 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 13956d8a7005e734ea925da59acb432a, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  _isVisible: 0
   _flying: 0
   _flyDir: {x: 0, y: 0, z: 0}
-  speed: 0
---- !u!114 &7203850604456839905
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 8340070064457950095}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 091ce8006b5afb941ac94a89a6610d6e, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
+  speed: 30
   _Side: 0
-  _ArrowSide: 0
+  itemState: 0
+  particles:
+  - {fileID: 4204640348986829725}
+  - {fileID: 7551382023709333121}
+  - {fileID: 2966726936786695377}
+  renderers:
+  - {fileID: 4090321368065178306}
 --- !u!64 &8818230105295170018
 MeshCollider:
   m_ObjectHideFlags: 0
@@ -24658,6 +24651,11 @@ PrefabInstance:
     m_AddedGameObjects: []
     m_AddedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 68101499d07aced4aa0ded4acb624942, type: 3}
+--- !u!198 &2966726936786695377 stripped
+ParticleSystem:
+  m_CorrespondingSourceObject: {fileID: 7373644630128741146, guid: 68101499d07aced4aa0ded4acb624942, type: 3}
+  m_PrefabInstance: {fileID: 5728469700183769035}
+  m_PrefabAsset: {fileID: 0}
 --- !u!4 &8778439245061918924 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: 3939764759394070279, guid: 68101499d07aced4aa0ded4acb624942, type: 3}

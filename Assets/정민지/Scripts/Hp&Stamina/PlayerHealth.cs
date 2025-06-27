@@ -16,6 +16,31 @@ public class PlayerHealth : NetworkBehaviour
     [Networked] public int currentHp { get; private set; }
     [SerializeField] private int maxHp;
 
+    void Update()
+    {
+        if (Object.HasInputAuthority && Input.GetKeyDown(KeyCode.P))
+        {
+            // 로컬에서 관전 카메라 생성 (RPC X)
+            SpectatorManager.EnterSpectatorMode(transform.position, transform.rotation);
+
+            // 자살 요청 RPC
+            RPC_RequestSuicide();
+        }
+    }
+
+    //서버에게 HP 0 요청 
+    [Rpc(RpcSources.InputAuthority, RpcTargets.StateAuthority)]
+    void RPC_RequestSuicide() => ApplyFatalDamage();
+
+    //서버 전용 HP 처리, Despawn
+    void ApplyFatalDamage()
+    {
+        if (!HasStateAuthority) return;
+
+        currentHp = 0;
+        Runner.Despawn(Object);           // 캐릭터 제거
+    }
+
     public override void Spawned()
     {
 
@@ -93,8 +118,14 @@ public class PlayerHealth : NetworkBehaviour
     {
         if (Object.HasInputAuthority)
             Rpc_RequestDamage(damage);
-        else if(Object.HasStateAuthority)
+        else if (Object.HasStateAuthority)
             TakeDamage(damage);
+    }
+
+    public void RestoreHealth(int value)
+    {
+        if (HasStateAuthority)
+            currentHp = Mathf.Clamp(value, 0, maxHp);
     }
 
     [Rpc(RpcSources.InputAuthority, RpcTargets.StateAuthority)]
