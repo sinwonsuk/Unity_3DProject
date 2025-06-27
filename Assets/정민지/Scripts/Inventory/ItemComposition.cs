@@ -24,6 +24,7 @@ public class ItemComposition : MonoBehaviour
         {
             if(slot.cItem==null)
             {
+                SoundManager.GetInstance().SfxPlay(SoundManager.sfx.itemDrop, false);
                 slot.cItem = newItem.item;
                 slot.cImage.sprite = newItem.item.itemIcon;
                 break;
@@ -61,6 +62,7 @@ public class ItemComposition : MonoBehaviour
 
                 if (centerSlot != null)
                 {
+                    SoundManager.GetInstance().SfxPlay(SoundManager.sfx.itemUpgrade, false);
                     centerSlot.cItem = recipe.result;
                     centerSlot.cImage.sprite = recipe.result.itemIcon;
                 }

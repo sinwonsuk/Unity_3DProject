@@ -29,6 +29,8 @@ public class InventorySlotUI : NetworkBehaviour, IPointerClickHandler, IBeginDra
     {
         this.slot = slot;
 
+        Debug.Log($"[SetSlot] {index}번 슬롯 - 선택됨: {isSelected}, 이전 상태: {wasSelected}");
+
         if (slot.IsEmpty)
         {
             iconImage.enabled = false;
@@ -47,6 +49,7 @@ public class InventorySlotUI : NetworkBehaviour, IPointerClickHandler, IBeginDra
         // 선택 상태 변경 감지
         if (wasSelected != isSelected)
         {
+            Debug.Log($"[SetSlot] 선택 상태 변경 감지 -> OnSelectionChanged 호출");
             wasSelected = isSelected;
             OnSelectionChanged(isSelected); // 여기서 원하는 함수 실행
         }
@@ -89,6 +92,7 @@ public class InventorySlotUI : NetworkBehaviour, IPointerClickHandler, IBeginDra
 
     public void OnEndDrag(PointerEventData eventData)
     {
+        SoundManager.GetInstance().SfxPlay(SoundManager.sfx.itemDrop, false);
         draggedIcon.gameObject.SetActive(false);
     }
 
@@ -109,12 +113,17 @@ public class InventorySlotUI : NetworkBehaviour, IPointerClickHandler, IBeginDra
 
     IEnumerator Cor()
     {
+        Debug.Log("플레이어 찾는 코루틴 시작");
         while (true)
         {
             if (changed == null)
                 changed = FindLocalPlayerWeaponChanged();
             else
+            {
+                Debug.Log("플레이어를 찾았음. 코루틴 종료");
                 yield break;
+            }
+                
 
 
             yield return null;

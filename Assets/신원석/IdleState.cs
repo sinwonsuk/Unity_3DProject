@@ -73,53 +73,7 @@ public class IdleState : BaseState<PlayerStateMachine.PlayerState>
         {
             playerStateMachine.RPC_BroadcastState(PlayerState.Move);
             return;
-        }
-
-        if(playerStateMachine.GetInput(out NetworkInputData data))
-        {
-            if(data.buttons.IsSet(NetworkInputData.NUM_1))
-            {
-                //EventBus<WeaponChange>.Raise(new WeaponChange(ItemState.Sword));
-                return;
-            }
-
-            if (data.buttons.IsSet(NetworkInputData.NUM_2))
-            {
-               //EventBus<WeaponChange>.Raise(new WeaponChange(ItemState.Harberd));
-                return;
-            }
-
-            if (data.buttons.IsSet(NetworkInputData.NUM_3))
-            {
-               // EventBus<WeaponChange>.Raise(new WeaponChange(ItemState.Bow));
-                return;
-            }
-
-
-            if (data.buttons.IsSet(NetworkInputData.NUM_4))
-            {
-               // EventBus<WeaponChange>.Raise(new WeaponChange(ItemState.FireMagic));
-                return;
-            }
-
-
-            if (data.buttons.IsSet(NetworkInputData.NUM_5))
-            {
-               //EventBus<WeaponChange>.Raise(new WeaponChange(ItemState.IceMagic));
-                return;
-            }
-
-
-            if (data.buttons.IsSet(NetworkInputData.NUM_6))
-            {
-               // EventBus<WeaponChange>.Raise(new WeaponChange(ItemState.ElectricMagic));
-                return;
-            }
-        }
-        
-            
-        
- 
+        } 
     }
 
     public override PlayerStateMachine.PlayerState GetNextState()
@@ -131,7 +85,7 @@ public class IdleState : BaseState<PlayerStateMachine.PlayerState>
 
     public override void OnTriggerEnter(Collider collider)
     {
-        Debug.Log("fffff");
+
 
         // 1) 호스트에서만 충돌 처리
         if (!playerStateMachine.Object.HasStateAuthority)
