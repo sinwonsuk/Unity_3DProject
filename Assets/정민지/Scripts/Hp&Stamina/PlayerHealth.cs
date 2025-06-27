@@ -83,7 +83,10 @@ public class PlayerHealth : NetworkBehaviour
         //    EventBus<HealthChanged>.Raise(new HealthChanged(this, currentHp, maxHp));
 
         if (currentHp <= 0)
-            CountAlivePlayers();
+        {
+            SurvivorManager.Instance?.UpdateSurvivorCount();
+        }
+           // CountAlivePlayers();
     }
     public void TakeDamages(int dmg)
     {
