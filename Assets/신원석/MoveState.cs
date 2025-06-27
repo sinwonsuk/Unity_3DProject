@@ -182,6 +182,7 @@ public class MoveState : BaseState<PlayerStateMachine.PlayerState>
             {
                 playerStateMachine.MoveSpeed = 5.0f;
                 playerStateMachine.Stamina.IsStamania = false;
+                EventBus<isRunning>.Raise(new isRunning(false));
             }    
             
             playerStateMachine.NetAnim.Animator.SetFloat("MoveLeftRight", playerStateMachine.moveX);
