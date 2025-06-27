@@ -144,8 +144,10 @@ public class MagicAttackState : BaseState<PlayerStateMachine.PlayerState>
         Ray ray = Camera.main.ScreenPointToRay(Input.mousePosition);
 
 
+
         if (Physics.Raycast(ray, out var hit, 999f, playerStateMachine.ArrowHitMask))
         {
+            Debug.DrawLine(ray.origin, hit.point, Color.red, 10f);
             targetPos = hit.point;
         }
         else
