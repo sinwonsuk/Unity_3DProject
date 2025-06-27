@@ -20,9 +20,8 @@ public class PlayerHealth : NetworkBehaviour
     {
         if (Object.HasInputAuthority && Input.GetKeyDown(KeyCode.P))
         {
-            // 먼저 로컬에서 관전 카메라 생성 (RPC X)
-            SpectatorCameraController.Spawn(transform.position + Vector3.up * 1.6f,
-                                            transform.rotation);
+            // 로컬에서 관전 카메라 생성 (RPC X)
+            SpectatorManager.EnterSpectatorMode(transform.position, transform.rotation);
 
             // 자살 요청 RPC
             RPC_RequestSuicide();
