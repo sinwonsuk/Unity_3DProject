@@ -37,15 +37,20 @@ public class PlayerStateMachine : StageManager<PlayerStateMachine.PlayerState>
 
     [Networked] public float gatherAttack {get;set;}= 0;
 
-    [Networked] public int WeaponCount { get; set; } = 0;
-
     [Networked] public TickTimer fireTimer { get; set; }
+
+
+    [Networked] public float moveX { get; set;} = 0.0f;
+
+    [Networked] public float moveZ { get; set; } = 0.0f;
+
     public NetworkMecanimAnimator NetAnim { get; set; }
 
     public HashSet<NetworkObject> hitSet { get; set; } = new();
     [Networked] public bool _canBeHit { get; set; } = true;
 
     public float invulnDuration = 0.15f;
+
 
     public enum PlayerState
     {
@@ -62,7 +67,6 @@ public class PlayerStateMachine : StageManager<PlayerStateMachine.PlayerState>
     public Action action;
 
     public WeaponsConfig weapons;
-    public ItemState Item { get; set; } = ItemState.none;
 
     private Animator animator;
     public PlayerCombat Combat { get; private set; }
@@ -74,9 +78,10 @@ public class PlayerStateMachine : StageManager<PlayerStateMachine.PlayerState>
 
     public PlayerHealth health { get; set; }
 
+    public PlayerStamina Stamina { get; set; }
 
     [SerializeField]
-    float moveSpeed = 5.0f;
+    float moveSpeed = 10.0f;
     [SerializeField]
     float rotationSpeed = 2.0f;
     [SerializeField]
@@ -91,6 +96,13 @@ public class PlayerStateMachine : StageManager<PlayerStateMachine.PlayerState>
     Transform leftHandTransform;
     [SerializeField]
     LayerMask arrowHitMask;
+
+
+    public float MoveSpeed
+    {
+        get => moveSpeed;
+        set => moveSpeed = value;
+    }
 
     public float AttackSpeed
     {
@@ -125,12 +137,6 @@ public class PlayerStateMachine : StageManager<PlayerStateMachine.PlayerState>
    
     public SimpleKCC playerController {  get; private set; }
    
-    public Vector3 rootMotionDelta { get; set; }
-    public Quaternion rootMotionRotation { get; set; }
-
-
-    public bool nextAttackQueued { get; set; } = false;
- 
     bool _isInitialized = false;
 
     public int Hp { get; set; }
@@ -177,7 +183,7 @@ public class PlayerStateMachine : StageManager<PlayerStateMachine.PlayerState>
         WeaponManager.Init(weapons, rightHandTransform, leftHandTransform, Runner, this);
         cameraManager = new CameraManager(Cam);
         health = GetComponent<PlayerHealth>();
-
+        Stamina = GetComponent<PlayerStamina>();
         action = adad;
 
         if (Object.HasStateAuthority)
@@ -242,9 +248,6 @@ public class PlayerStateMachine : StageManager<PlayerStateMachine.PlayerState>
     {
         AnimHandler.ChangeWeapon((ItemState)rollCount);
     }
-
-
-
 
     public void MoveAndRotate(NetworkInputData data)
     {
@@ -393,7 +396,6 @@ public class PlayerStateMachine : StageManager<PlayerStateMachine.PlayerState>
         }
     }
 
-
     public void ClearHitSet()
     {
         if (Object.HasInputAuthority)
@@ -494,6 +496,11 @@ public class PlayerStateMachine : StageManager<PlayerStateMachine.PlayerState>
         _canBeHit = true;
     }
 
+    public override void Render()
+    {
+        NetAnim.Animator.SetFloat("MoveLeftRight", moveX);
+        NetAnim.Animator.SetFloat("MoveForWard", moveZ);
+    }
     public void StopRoll() => isRoll = true;
     public void startRoll() => isRoll = false;
     public void SetIsAttackTrue() => isAttack = true;

@@ -63,6 +63,7 @@ public class PlayerCombat
     {
         if (nextComboQueued && AttackCount < 4)
         {
+            player.Stamina.UseStamina(player.Stamina.AttackStaminaCost);
             AttackCount++;
             nextComboQueued = false;
             player.SetIsAttackTrue();
@@ -79,6 +80,7 @@ public class PlayerCombat
     {
         if (nextHitQueued && HitCount < 4)
         {
+            
             HitCount++;
             nextHitQueued = false;
             player.SetIsHitTrue();

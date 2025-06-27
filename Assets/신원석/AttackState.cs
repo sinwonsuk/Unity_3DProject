@@ -22,12 +22,10 @@ public class AttackState : BaseState<PlayerStateMachine.PlayerState>
     public override void EnterState()
     {
         playerStateMachine.Combat.StartAttack();
-        playerStateMachine.hitSet.Clear(); 
-        
+        playerStateMachine.hitSet.Clear();
+        playerStateMachine.Stamina.UseStamina(playerStateMachine.Stamina.AttackStaminaCost);
+        playerStateMachine.Stamina.IsStamania = true;
 
-
-        // 스윙마다 초기화
-       // playerStateMachine.WeaponManager.currentWeapon.GetComponent<MeshCollider>().enabled = true;
     }
     public override void ExitState()
     {
@@ -37,16 +35,12 @@ public class AttackState : BaseState<PlayerStateMachine.PlayerState>
             playerStateMachine.NetAnim.Animator.SetBool("RunAttack", false);
             playerStateMachine.NetAnim.Animator.SetBool("Attack", false);
         }
-
+        playerStateMachine.Stamina.IsStamania = false;
         time = 0.0f;
     }
 
     public override void FixedUpdateState() 
     {
-
-        //if (playerStateMachine.IsProxy == false && playerStateMachine.Runner.IsForward==true && playerStateMachine.Object.HasStateAuthority)
-        //       playerStateMachine.AnimHandler.SetAttackCount(playerStateMachine.AttackCount);
-
 
         if (!playerStateMachine.Object.HasStateAuthority && !playerStateMachine.Runner.IsForward)
             return;
@@ -59,7 +53,7 @@ public class AttackState : BaseState<PlayerStateMachine.PlayerState>
         float yaw = data.CameraRotateY;
         Quaternion planarRotation = Quaternion.Euler(0, yaw, 0);
 
-        //playerStateMachine.playerController.Rotate(planarRotation);
+        playerStateMachine.Rotation(data);
 
         if(playerStateMachine.isAttack == true)
         {
@@ -68,28 +62,16 @@ public class AttackState : BaseState<PlayerStateMachine.PlayerState>
             if (time < 0.1f)
                 return;
 
-            if (playerStateMachine.inputHandler.IsAttackPressed())
+            if (playerStateMachine.inputHandler.IsAttackPressed() && playerStateMachine.Stamina.currentStamina >= 0.0f)
             {
-                  playerStateMachine.Combat.TryQueueNextCombo();
-
+                
+                playerStateMachine.Combat.TryQueueNextCombo();
                 time = 0.0f;
             }
 
         }
-        if (playerStateMachine.isAttack == false)
-        {
-            int a = 0;
-        }
-
-
-
-        playerStateMachine.action.Invoke();
-
-        
-
+        playerStateMachine.action.Invoke();      
         AttackMove();
-
-        //playerStateMachine.AnimHandler.SetAttackBool(true);
     }
 
 
