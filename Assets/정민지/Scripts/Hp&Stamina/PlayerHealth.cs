@@ -16,6 +16,9 @@ public class PlayerHealth : NetworkBehaviour
     [Networked] public int currentHp { get; private set; }
     [SerializeField] private int maxHp=100;
     private int lastSentHp = -1;
+    private bool canWin=false;
+    [SerializeField] private int imReady=0;
+    private float readyTimer;
 
     void Update()
     {
@@ -40,6 +43,19 @@ public class PlayerHealth : NetworkBehaviour
                 EventBus<HealthChanged>.Raise(new HealthChanged(this, currentHp, maxHp));
             }
         }
+
+        if(HasStateAuthority)
+        {
+            if (readyTimer < imReady)
+            {
+                readyTimer += Runner.DeltaTime;
+            }
+            else if (!canWin)
+            {
+                SurvivorManager.Instance?.UpdateSurvivorCount();
+                canWin = true;
+            }
+        }  
     }
 
     //서버에게 HP 0 요청 
@@ -65,11 +81,9 @@ public class PlayerHealth : NetworkBehaviour
         if (Object.HasInputAuthority)
             EventBus<HealthChanged>.Raise(new HealthChanged(this, currentHp, maxHp));
 
-        SurvivorManager.Instance?.UpdateSurvivorCount();
-
     }
 
-
+   
 
     public void TakeDamage(int dmg)
     {

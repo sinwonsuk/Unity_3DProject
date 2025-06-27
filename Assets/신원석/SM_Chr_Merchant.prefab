@@ -1403,6 +1403,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   _currentHp: 0
   maxHp: 100
+  imReady: 5
 --- !u!114 &-8932458653960297740
 MonoBehaviour:
   m_ObjectHideFlags: 0
