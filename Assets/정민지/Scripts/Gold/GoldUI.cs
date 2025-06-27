@@ -47,12 +47,14 @@ public class GoldUI : MonoBehaviour
 
         if (showGold < totalPrice) return;
 
+        SoundManager.GetInstance().SfxPlay(SoundManager.sfx.buyItem, false);
         showGold -= totalPrice;
         EventBus<Gold>.Raise(new Gold(showGold));
     }
 
     public void SubtractGold(GetGold use)
     {
+        SoundManager.GetInstance().SfxPlay(SoundManager.sfx.subtractGold, false);
         showGold += use.getGold/10;
         EventBus<Gold>.Raise(new Gold(showGold));
     }

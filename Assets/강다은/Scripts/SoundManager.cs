@@ -7,7 +7,9 @@ public class SoundManager : MonoBehaviour
 	{
 		itemUpgrade,
 		itemDrop,
-	}
+		buyItem,
+        subtractGold,
+    }
 	public enum bgm
 	{
 
