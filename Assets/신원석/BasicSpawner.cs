@@ -96,6 +96,8 @@ public class BasicSpawner : MonoBehaviour, INetworkRunnerCallbacks
         // �ʱⰪ ĸó
         _prevYaw = _pov.m_HorizontalAxis.Value;
         _prevPitch = _pov.m_VerticalAxis.Value;
+        QualitySettings.vSyncCount = 0;
+        Application.targetFrameRate = 60;
     }
 
     private void Update()
@@ -150,6 +152,7 @@ public class BasicSpawner : MonoBehaviour, INetworkRunnerCallbacks
         data.buttons.Set(NetworkInputData.MOUSEBUTTON0, Input.GetMouseButton(0));
         data.buttons.Set(NetworkInputData.KEY_L, Input.GetKey(KeyCode.L));
         data.buttons.Set(NetworkInputData.KEY_CTRL, Input.GetKey(KeyCode.LeftControl));
+        data.buttons.Set(NetworkInputData.Shift_L, Input.GetKey(KeyCode.LeftShift));
 
         data.buttons.Set(NetworkInputData.NUM_1, Input.GetKey(KeyCode.Alpha1));
         data.buttons.Set(NetworkInputData.NUM_2, Input.GetKey(KeyCode.Alpha2));

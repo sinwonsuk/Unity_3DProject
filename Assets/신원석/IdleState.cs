@@ -108,7 +108,6 @@ public class IdleState : BaseState<PlayerStateMachine.PlayerState>
 
         //playerStateMachine.BroadcastIdleEvent(PlayerState.Hit);
 
-
     }
 
     public override void OnTriggerExit(Collider collider) { }

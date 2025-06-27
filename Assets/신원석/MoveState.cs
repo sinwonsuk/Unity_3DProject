@@ -8,7 +8,9 @@ public class MoveState : BaseState<PlayerStateMachine.PlayerState>
     PlayerStateMachine playerStateMachine;
 
     [SerializeField] float rotationSpeed = 500f;
-    float moveSpeed = 2.0f;
+
+    float moveX = 0.0f;
+    float moveZ = 0.0f;
 
     public MoveState(PlayerStateMachine.PlayerState key, PlayerStateMachine playerStateMachine)
         : base(key)
@@ -23,11 +25,13 @@ public class MoveState : BaseState<PlayerStateMachine.PlayerState>
 
     public override void ExitState()
     {
- 
         playerStateMachine.NetAnim.Animator.SetFloat("MoveLeftRight", 0);
         playerStateMachine.NetAnim.Animator.SetFloat("MoveForWard", 0);
 
-        moveSpeed = 2.0f;
+        playerStateMachine.moveX = 0.0f;
+        playerStateMachine.moveZ = 0.0f;
+
+        playerStateMachine.MoveSpeed = 5.0f;
     }
     public void Move()
     {
@@ -36,6 +40,9 @@ public class MoveState : BaseState<PlayerStateMachine.PlayerState>
 
     public override void FixedUpdateState()
     {
+        if(playerStateMachine.HasInputAuthority == false)
+            return;
+
         TryHandleRollInput();
         TryHandleJumpInput();
         TryHandleAttackInput();
@@ -98,8 +105,6 @@ public class MoveState : BaseState<PlayerStateMachine.PlayerState>
 
             playerStateMachine.RPC_BroadcastState(PlayerState.Jump);
 
-
-
             return true;
         }
         
@@ -145,25 +150,28 @@ public class MoveState : BaseState<PlayerStateMachine.PlayerState>
     }
     private void UpdateMovementAnimation()
     {
-        //if (playerStateMachine.IsProxy == true || playerStateMachine.Runner.IsForward == false)
-        //    return;
 
         if (playerStateMachine.GetInput(out NetworkInputData data))
         {
-            float x = data.moveAxis.x;
-            float z = data.moveAxis.z;
+            playerStateMachine.moveX = data.moveAxis.x;
+            playerStateMachine.moveZ = data.moveAxis.z;
 
-            if (Input.GetKey(KeyCode.LeftShift) && z > 0f)
+            Mathf.MoveTowards(playerStateMachine.moveZ, 0f, playerStateMachine.Runner.DeltaTime * 5.0f);
+
+            if (playerStateMachine.inputHandler.IsShiftButtonPress() && playerStateMachine.moveZ > 0f /*&& playerStateMachine.Stamina.currentStamina >= 0.0f*/)
             {
-                z = Mathf.Lerp(0f, 2f, z); // 결과: 0 ~ 2
-                moveSpeed = 4.0f;
+                playerStateMachine.moveZ = Mathf.Lerp(0f, 2f, playerStateMachine.moveZ); // 결과: 0 ~ 2
+                playerStateMachine.MoveSpeed = 10.0f;
+                playerStateMachine.Stamina.UseStamina(playerStateMachine.Runner.DeltaTime * 10.0f);
+                playerStateMachine.Stamina.IsStamania = true;
             }
             else
             {
-                moveSpeed = 2.0f;   
+                playerStateMachine.MoveSpeed = 5.0f;
+                playerStateMachine.Stamina.IsStamania = false;
             }         
-            playerStateMachine.NetAnim.Animator.SetFloat("MoveLeftRight", x);
-            playerStateMachine.NetAnim.Animator.SetFloat("MoveForWard", z);
+            //playerStateMachine.NetAnim.Animator.SetFloat("MoveLeftRight", playerStateMachine.moveX);
+            //playerStateMachine.NetAnim.Animator.SetFloat("MoveForWard", playerStateMachine.moveZ);
         }
     }
 
