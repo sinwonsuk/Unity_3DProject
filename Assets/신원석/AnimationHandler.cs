@@ -125,6 +125,11 @@ public class AnimationHandler
     {
         animator.Animator.SetBool("Attack", value);
     }
+    public void SetPoitionBool(bool value)
+    {
+        animator.Animator.SetBool("Potion", value);
+    }
+
     public void SetHitBool(bool value)
     {
         animator.Animator.SetBool("Hit", value);

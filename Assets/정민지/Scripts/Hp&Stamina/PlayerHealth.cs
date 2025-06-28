@@ -104,9 +104,6 @@ public class PlayerHealth : NetworkBehaviour
             EventBus<HealthChanged>.Raise(new HealthChanged(this, currentHp, maxHp));
 
     }
-
-   
-
     public void TakeDamage(int dmg)
     {
 
