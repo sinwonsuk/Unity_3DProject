@@ -13,8 +13,8 @@ public class DeathState : BaseState<PlayerStateMachine.PlayerState>
 
     public override void EnterState()
     {
-        if (!playerStateMachine.Object.HasStateAuthority)
-            return;
+        //if (!playerStateMachine.Object.HasStateAuthority)
+         //   return;
 
         playerStateMachine.AnimHandler.ChangeDeathState();
         playerStateMachine.playerController.Collider.enabled = false;

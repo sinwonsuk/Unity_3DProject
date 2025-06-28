@@ -1,9 +1,13 @@
 using Fusion;
+using System.Collections;
 using UnityEngine;
 
 public class SurvivorManager : NetworkBehaviour
 {
     public static SurvivorManager Instance { get; private set; }
+
+    private float gameStartTime;
+    private bool canEvaluateResult = false;
 
     public override void Spawned()
     {
@@ -11,6 +15,19 @@ public class SurvivorManager : NetworkBehaviour
             Instance = this;
         else
             Destroy(gameObject);
+
+        if (HasStateAuthority)
+        {
+            gameStartTime = Time.time;
+            StartCoroutine(EnableResultEvaluationAfterDelay(20f));
+        }
+    }
+
+    private IEnumerator EnableResultEvaluationAfterDelay(float delay)
+    {
+        yield return new WaitForSeconds(delay);
+        canEvaluateResult = true;
+        Debug.Log("[SurvivorManager] 승패 판단 시작됨 (20초 경과)");
     }
 
     public void UpdateSurvivorCount()
@@ -31,6 +48,9 @@ public class SurvivorManager : NetworkBehaviour
         }
 
         RpcBroadcastSurvivorCount(alive);
+
+        if (!canEvaluateResult)
+            return; // 20초 전엔 판단 안 함
 
         if (alive == 1 && lastSurvivor != null)
         {
