@@ -4,6 +4,7 @@ using Fusion.Addons.SimpleKCC;
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using System.Drawing;
 using UnityEngine;
 
 public enum ItemState
@@ -25,7 +26,7 @@ public class PlayerStateMachine : StageManager<PlayerStateMachine.PlayerState>
 {
     [Networked] public PlayerState SyncedState { get; set; }
     [Networked] public bool comboAnimEnded { get; set; } = false;
-
+    //[Networked] public NetworkDictionary<PlayerRef, bool> hitMap { get; }
     [Networked] public int AttackCount { get; set; } = 0;
     [Networked] public bool isRoll { get; set; } = false;
     [Networked] public bool isAttack { get; set; } = true;
@@ -63,6 +64,7 @@ public class PlayerStateMachine : StageManager<PlayerStateMachine.PlayerState>
         BowAttack,
         Magic,
         Hit,
+        Death,
     }
     public Action action;
 
@@ -95,6 +97,8 @@ public class PlayerStateMachine : StageManager<PlayerStateMachine.PlayerState>
     [SerializeField]
     Transform leftHandTransform;
     [SerializeField]
+    Transform hitTransform;
+    [SerializeField]
     LayerMask arrowHitMask;
 
 
@@ -108,6 +112,11 @@ public class PlayerStateMachine : StageManager<PlayerStateMachine.PlayerState>
     {
         get => attackSpeed;
         set => attackSpeed = value;
+    }
+    public Transform HitTransform
+    {
+        get => hitTransform;
+        set => hitTransform = value;
     }
     public Transform RightHandTransform
     {
@@ -159,6 +168,8 @@ public class PlayerStateMachine : StageManager<PlayerStateMachine.PlayerState>
         states[PlayerState.Jump] = new JumpState(PlayerState.Jump, this);
         states[PlayerState.Magic] = new MagicAttackState(PlayerState.Magic, animator, this);
         states[PlayerState.Hit] = new HitState(PlayerState.Hit, this);
+        states[PlayerState.Death] = new DeathState(PlayerState.Death, this);
+
 
         if (Object.HasStateAuthority)
             SyncedState = PlayerState.Idle;
@@ -209,7 +220,6 @@ public class PlayerStateMachine : StageManager<PlayerStateMachine.PlayerState>
         {
             if (!Object.HasStateAuthority) return;
             comboAnimEnded = true;
-
         }
     }
     public void MoveInput()
@@ -246,6 +256,12 @@ public class PlayerStateMachine : StageManager<PlayerStateMachine.PlayerState>
 
     public void MoveAndRotate(NetworkInputData data)
     {
+        if(SyncedState == PlayerState.Death)
+        {
+            return;
+        }
+
+
         Vector3 moveInput = data.direction.normalized;
         Quaternion planarRot = Quaternion.Euler(0, data.CameraRotateY, 0);
         Vector3 moveDir = planarRot * moveInput;
@@ -427,9 +443,14 @@ public class PlayerStateMachine : StageManager<PlayerStateMachine.PlayerState>
     {
         if (!_isInitialized) return;
 
+        if(health.currentHp <= 0)
+        {
+            BroadcastIdleEvent(PlayerState.Death);
+        }
+
         MoveAndRotate(inputHandler.GetNetworkInputData());
 
-
+       
         if (Object.HasStateAuthority)
         {
             var next = currentState.GetNextState();
@@ -456,13 +477,13 @@ public class PlayerStateMachine : StageManager<PlayerStateMachine.PlayerState>
     {
         if (currentState is BaseState<PlayerState> attackState && comboAnimEnded == true)
         {
-            attackState.OnHitAnimationEvent();
+            attackState.OnAnimationEvent();
             comboAnimEnded = false;
         }
 
     }
 
-    [Rpc(RpcSources.StateAuthority, RpcTargets.All)]
+    [Rpc(RpcSources.StateAuthority, RpcTargets.StateAuthority)]
     public void RPC_PlayHit()
     {
         NetAnim.Animator.SetTrigger("HitTrigger");
@@ -480,7 +501,15 @@ public class PlayerStateMachine : StageManager<PlayerStateMachine.PlayerState>
         if (!Object.HasStateAuthority) return;    
         RPC_ToggleWeaponCollider(true);
     }
+    void OnDrawGizmos()
+    {
+        // 플레이어가 히트 상태일 때만 그리려면
+        // var psm = GetComponent<PlayerStateMachine>();
+        // if (psm.CurrentState != PlayerStateMachine.PlayerState.Hit) return;
 
+      
+        Gizmos.DrawWireSphere(HitTransform.position, 0.7f);
+    }
     public void OnAttackEndEvent()
     {
         if (!Object.HasStateAuthority) return;   

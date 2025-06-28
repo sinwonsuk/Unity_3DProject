@@ -190,7 +190,7 @@ public class MoveState : BaseState<PlayerStateMachine.PlayerState>
         }
     }
 
-    public override void OnHitAnimationEvent()
+    public override void OnAnimationEvent()
     {
 
     }

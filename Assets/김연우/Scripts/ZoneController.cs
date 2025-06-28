@@ -1,13 +1,13 @@
-using System.Collections;
+ï»¿using System.Collections;
 using UnityEngine;
 using Fusion;
 
 public class ZoneController : NetworkBehaviour
 {
-    [Header("Á¸ ÆäÀÌÁî ¼³Á¤")]
+    [Header("ì¡´ í˜ì´ì¦ˆ ì„¤ì •")]
     [SerializeField] private ZoneConfig zoneConfig;
 
-    [Header("³×Æ®¿öÅ© Á¸ ÇÁ¸®ÆÕ")]
+    [Header("ë„¤íŠ¸ì›Œí¬ ì¡´ í”„ë¦¬íŒ¹")]
     [SerializeField] private NetworkPrefabRef zonePrefab;
 
     private GameObject _zoneInstance;
@@ -19,13 +19,13 @@ public class ZoneController : NetworkBehaviour
         if (!Runner.IsServer)
             return;
 
-        // Á¸ ¿ÀºêÁ§Æ® »ı¼º
+        // ì¡´ ì˜¤ë¸Œì íŠ¸ ìƒì„±
         var netObj = Runner.Spawn(zonePrefab, Vector3.zero, Quaternion.identity);
         _zoneInstance = netObj.gameObject;
         _zoneCollider = _zoneInstance.GetComponent<SphereCollider>() ?? _zoneInstance.AddComponent<SphereCollider>();
         _zoneCollider.isTrigger = true;
 
-        // ÆäÀÌÁî ·ÎÁ÷ ¹× µ¥¹ÌÁö Æ½ ½ÃÀÛ
+        // í˜ì´ì¦ˆ ë¡œì§ ë° ë°ë¯¸ì§€ í‹± ì‹œì‘
         StartCoroutine(ManageZone());
         StartCoroutine(DamageTicker());
     }
@@ -38,16 +38,16 @@ public class ZoneController : NetworkBehaviour
             _currentPhaseIndex = i;
             var phase = phases[i];
 
-            // Á¸ À§Ä¡ ¹× Å©±â ¼³Á¤
+            // ì¡´ ìœ„ì¹˜ ë° í¬ê¸° ì„¤ì •
             _zoneInstance.transform.position = phase.center;
             _zoneInstance.transform.localScale = new Vector3(phase.radius * 2f, _zoneInstance.transform.localScale.y, phase.radius * 2f);
             _zoneCollider.center = Vector3.zero;
             _zoneCollider.radius = phase.radius;
 
-            // ´ë±â ±¸°£
+            // ëŒ€ê¸° êµ¬ê°„
             yield return new WaitForSeconds(phase.waitDuration);
 
-            // ¼öÃà ±¸°£
+            // ìˆ˜ì¶• êµ¬ê°„
             if (i < phases.Count - 1)
             {
                 var next = phases[i + 1];
@@ -75,7 +75,7 @@ public class ZoneController : NetworkBehaviour
     }
 
     /// <summary>
-    /// 1ÃÊ °£°İÀ¸·Î ÇöÀç ÆäÀÌÁî DPS Àû¿ë
+    /// 1ì´ˆ ê°„ê²©ìœ¼ë¡œ í˜„ì¬ í˜ì´ì¦ˆ DPS ì ìš©
     /// </summary>
     private IEnumerator DamageTicker()
     {

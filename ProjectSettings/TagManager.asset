@@ -12,6 +12,7 @@ TagManager:
   - Bow
   - Arrow
   - Maigc
+  - ItemBox
   layers:
   - Default
   - TransparentFX
@@ -26,7 +27,7 @@ TagManager:
   - Ground
   - Shoot
   - Arrow
-  - 
+  - Weapon
   - 
   - 
   - 

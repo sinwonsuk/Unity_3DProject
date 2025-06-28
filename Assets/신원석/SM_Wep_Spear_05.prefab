@@ -15,7 +15,7 @@ GameObject:
   - component: {fileID: -8644817002188301263}
   - component: {fileID: -750918881425395713}
   - component: {fileID: 97158395867173965}
-  m_Layer: 0
+  m_Layer: 13
   m_Name: SM_Wep_Spear_05
   m_TagString: Weapon
   m_Icon: {fileID: 0}
