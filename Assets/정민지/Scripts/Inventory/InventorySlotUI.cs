@@ -141,7 +141,7 @@ public class InventorySlotUI : NetworkBehaviour, IPointerClickHandler, IBeginDra
     private void OnSelectionChanged(bool isSelected)
     {
 
-        if(coroutine == null)
+        if (coroutine == null)
             StartCoroutine(Cor());
 
 
@@ -158,29 +158,32 @@ public class InventorySlotUI : NetworkBehaviour, IPointerClickHandler, IBeginDra
                 Debug.Log("선택된 아이템이 없음");
             }
 
-            else if (slot.item.weaponType==WeaponType.Sword)
+            else if (slot.item.weaponType == WeaponType.Sword)
             {
-                changed.ChangeWeapon(ItemState.Sword,3);
+                changed.ChangeWeapon(ItemState.Sword, 3);
 
             }
-            else if(slot.item.weaponType==WeaponType.Bow)
+            else if (slot.item.weaponType == WeaponType.Bow)
             {
                 changed.ChangeWeapon(ItemState.Bow, 3);
 
             }
-            else if(slot.item.weaponType==WeaponType.Axe)
+            else if (slot.item.weaponType == WeaponType.Axe)
             {
                 changed.ChangeWeapon(ItemState.Harberd, 1);
+
             }
-            //else if(slot.item.potionType!=PotionType.Heal)
-            //{
-            //   changed.ChangeWeapon(ItemState.HpPotion, 1);
-            //}
-            else if (slot.item.potionType != PotionType.Stamina)
+            else if (slot.item.potionType == PotionType.Heal)
+            {
+                changed.ChangeWeapon(ItemState.HpPotion, 1);
+                EventBus<SendSlot>.Raise(new SendSlot(slot));
+            }
+            else if (slot.item.potionType == PotionType.Stamina)
             {
                 changed.ChangeWeapon(ItemState.StaminaPotion, 1);
+                EventBus<SendSlot>.Raise(new SendSlot(slot));
             }
-            else if(slot.item.magicType==MagicType.Fire)
+            else if (slot.item.magicType == MagicType.Fire)
             {
                 changed.ChangeWeapon(ItemState.FireBall, 1);
             }
@@ -195,10 +198,11 @@ public class InventorySlotUI : NetworkBehaviour, IPointerClickHandler, IBeginDra
 
             }
 
-        }
-        else
-        {
-            Debug.Log($"[{index}] 슬롯 선택 해제");
+
+            else
+            {
+                Debug.Log($"[{index}] 슬롯 선택 해제");
+            }
         }
     }
 

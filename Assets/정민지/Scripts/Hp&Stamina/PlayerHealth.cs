@@ -17,6 +17,7 @@ public class PlayerHealth : NetworkBehaviour
     [Networked] public int currentHp { get; private set; }
     [Networked] public bool isDead { get; private set; }
 
+    [SerializeField] private GameObject deadPrefab;
     [SerializeField] private int maxHp=100;
     private int lastSentHp = -1;
     private bool canWin=false;
@@ -45,6 +46,7 @@ public class PlayerHealth : NetworkBehaviour
                 isSpectator = true;
                 SpectatorManager.EnterSpectatorMode(transform.position, transform.rotation);
                 RPC_RequestSuicide();
+                Instantiate(deadPrefab);
             }
 
         }
@@ -66,11 +68,11 @@ public class PlayerHealth : NetworkBehaviour
         {
             if (readyTimer < imReady)
             {
+                SurvivorManager.Instance?.UpdateSurvivorCount();
                 readyTimer += Runner.DeltaTime;
             }
             else if (!canWin)
             {
-                SurvivorManager.Instance?.UpdateSurvivorCount();
                 canWin = true;
             }
         }  
@@ -83,10 +85,11 @@ public class PlayerHealth : NetworkBehaviour
     //서버 전용 HP 처리, Despawn
     void ApplyFatalDamage()
     {
-        if (!HasStateAuthority) return;
+        if (!HasStateAuthority || isDead) return;
 
         //Runner.Despawn(Object);           // 캐릭터 제거
         isDead = true;                           // ① 모든 클라로 복제
+        SurvivorManager.Instance?.UpdateSurvivorCount();
         RPC_DisableCharacter();
     }
 
@@ -103,20 +106,27 @@ public class PlayerHealth : NetworkBehaviour
     }
     public void TakeDamage(int dmg)
     {
-        
+
         if (!HasStateAuthority) return;
 
-        int before = currentHp;
         currentHp = Mathf.Clamp(currentHp - dmg, 0, maxHp);
-        Debug.Log($"{gameObject.name}: {before} > {currentHp} (-{dmg})");
+        Debug.Log($"{gameObject.name} 체력 감소: {currentHp}");
 
-
-        if (currentHp <= 0)
+        if (currentHp <= 0 && !isDead)
         {
+            isDead = true; // 명확히 죽었음을 표시
             SurvivorManager.Instance?.UpdateSurvivorCount();
-        }
 
+            // 시각적 처리
+            RPC_DisableCharacter();
+        }
     }
+
+    public void DelayedSurvivorUpdate()
+    {
+        SurvivorManager.Instance?.UpdateSurvivorCount();
+    }
+
     public void TakeDamages(int dmg)
     {
         if (!HasStateAuthority) return;
