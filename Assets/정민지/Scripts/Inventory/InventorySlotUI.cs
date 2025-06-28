@@ -160,41 +160,41 @@ public class InventorySlotUI : NetworkBehaviour, IPointerClickHandler, IBeginDra
 
             else if (slot.item.weaponType == WeaponType.Sword)
             {
-                changed.ChangeWeapon(ItemState.Sword, 3);
+                changed.ChangeWeapon(ItemState.Sword, slot.item.itemGrade);
 
             }
             else if (slot.item.weaponType == WeaponType.Bow)
             {
-                changed.ChangeWeapon(ItemState.Bow, 3);
+                changed.ChangeWeapon(ItemState.Bow, slot.item.itemGrade);
 
             }
             else if (slot.item.weaponType == WeaponType.Axe)
             {
-                changed.ChangeWeapon(ItemState.Harberd, 1);
+                changed.ChangeWeapon(ItemState.Harberd, slot.item.itemGrade);
 
             }
             else if (slot.item.potionType == PotionType.Heal)
             {
-                changed.ChangeWeapon(ItemState.HpPotion, 1);
+                changed.ChangeWeapon(ItemState.HpPotion, slot.item.itemGrade);
                 EventBus<SendSlot>.Raise(new SendSlot(slot));
             }
             else if (slot.item.potionType == PotionType.Stamina)
             {
-                changed.ChangeWeapon(ItemState.StaminaPotion, 1);
+                changed.ChangeWeapon(ItemState.StaminaPotion, slot.item.itemGrade);
                 EventBus<SendSlot>.Raise(new SendSlot(slot));
             }
             else if (slot.item.magicType == MagicType.Fire)
             {
-                changed.ChangeWeapon(ItemState.FireBall, 1);
+                changed.ChangeWeapon(ItemState.FireBall, slot.item.itemGrade);
             }
             else if (slot.item.magicType == MagicType.Ice)
             {
-                changed.ChangeWeapon(ItemState.IceBall, 2);
+                changed.ChangeWeapon(ItemState.IceBall, slot.item.itemGrade);
 
             }
             else if (slot.item.magicType == MagicType.Lightning)
             {
-                changed.ChangeWeapon(ItemState.ElectricBall, 3);
+                changed.ChangeWeapon(ItemState.ElectricBall, slot.item.itemGrade);
 
             }
 
