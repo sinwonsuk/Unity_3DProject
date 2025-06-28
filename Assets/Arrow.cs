@@ -44,7 +44,7 @@ public class Arrow : NetworkBehaviour
             {
                 var ui = hit.collider.transform.parent.GetComponent<PlayerHealth>();
                 if (ui != null)
-                    ui.TakeDamages(attackDamage);
+                    ui.TakeDamage(attackDamage);
             }
 
             // (c) 땅에 닿거나 플레이어에 맞으면 멈추기

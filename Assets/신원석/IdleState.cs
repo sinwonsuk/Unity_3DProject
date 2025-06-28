@@ -36,6 +36,7 @@ public class IdleState : BaseState<PlayerStateMachine.PlayerState>
         float jumpCcost = playerStateMachine.JumpStaminaCost;
         int weaponCount = playerStateMachine.AnimHandler.WeaponCount;
         bool hasWeapon = playerStateMachine.IsWeapon;
+        PotionState poition  = playerStateMachine.WeaponManager.potionState;
 
         var input = playerStateMachine.inputHandler;
 
@@ -61,12 +62,19 @@ public class IdleState : BaseState<PlayerStateMachine.PlayerState>
             return;
         }
 
+        if (input.IsAttackPressed() && (poition == PotionState.HpPotion || poition == PotionState.StaminaPotion))
+        {
+            playerStateMachine.BroadcastIdleEvent(PlayerState.Portion);
+            return;
+        }
         // 5) 점프 입력
         if (input.IsCtrlButtonPress() && currentStamina > jumpCcost)
         {
             playerStateMachine.BroadcastIdleEvent(PlayerState.Jump);
             return;
         }
+
+     
 
         // 6) 이동 입력
         if (input.IsMove())
@@ -94,9 +102,17 @@ public class IdleState : BaseState<PlayerStateMachine.PlayerState>
         if (weaponNetObj == null || !collider.CompareTag("Weapon"))
             return;
 
+        if(collider.CompareTag("Weapon") && collider.CompareTag("Arrow") && collider.CompareTag("Magic"))
+        {
+            int a = 0;
+        }
+
         // 3) Weapon의 입력 권한자가 이 플레이어와 같다면 스킵
         if (weaponNetObj.InputAuthority == playerStateMachine.Object.InputAuthority)
             return;
+
+
+
 
         // 4) 진짜 타격 처리
         Debug.Log("충돌 감지!2");
