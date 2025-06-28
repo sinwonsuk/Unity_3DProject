@@ -5,7 +5,7 @@ public class SurvivorManager : NetworkBehaviour
 {
     public static SurvivorManager Instance { get; private set; }
 
-    void Awake()
+    public override void Spawned()
     {
         if (Instance == null)
             Instance = this;
@@ -23,7 +23,7 @@ public class SurvivorManager : NetworkBehaviour
 
         foreach (var player in PlayerHealth.All)
         {
-            if (player.currentHp > 0)
+            if (player.currentHp > 0 || !player.isDead)
             {
                 alive++;
                 lastSurvivor = player;
@@ -41,6 +41,7 @@ public class SurvivorManager : NetworkBehaviour
     [Rpc(RpcSources.StateAuthority, RpcTargets.All)]
     void RpcBroadcastSurvivorCount(int count)
     {
+        Debug.Log($"[SurvivorManager] Received survivor count: {count}");
         EventBus<SurvivorPlayerCount>.Raise(new SurvivorPlayerCount(count));
     }
 }
