@@ -1,6 +1,5 @@
 using UnityEngine;
 using Fusion;
-using static UnityEngine.UI.GridLayoutGroup;
 
 public class DeathState : BaseState<PlayerStateMachine.PlayerState>
 {

@@ -59,6 +59,8 @@ public class HitState : BaseState<PlayerStateMachine.PlayerState>
         //    playerStateMachine.HitCount = Mathf.Min(playerStateMachine.HitCount + 1, 4);
         //    playerStateMachine.PlayHitAnimation(playerStateMachine.HitCount);
         //}
+
+        playerStateMachine.action.Invoke();
     }
 
     public override PlayerStateMachine.PlayerState GetNextState()
@@ -80,21 +82,15 @@ public class HitState : BaseState<PlayerStateMachine.PlayerState>
         if (weaponNetObj.InputAuthority == playerStateMachine.Object.InputAuthority)
             return;
 
-        //if (!_hitSet.Add(weaponNetObj.InputAuthority))
-        //    return;
-
-        playerStateMachine.HitCount = Mathf.Min(playerStateMachine.HitCount + 1, 4);
-        playerStateMachine.PlayHitAnimation(playerStateMachine.HitCount);
-        playerStateMachine.health.RequestDamage(1);
-
-
-
+        playerStateMachine.AnimHandler.SetHitTrigger();
+        playerStateMachine.AnimHandler.SetHitBool(true);
+        playerStateMachine.health.RequestDamage(20);
     }
     public override void OnTriggerExit(Collider collider) { }
     public override void OnTriggerStay(Collider collider) { }
     public override void OnAnimationEvent()
     {
-        //_hitSet.Clear();
+        playerStateMachine.hitMap.Clear();
     }
 
 

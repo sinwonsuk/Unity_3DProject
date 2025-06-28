@@ -61,13 +61,17 @@ public class PlayerCombat
 
     public void OnAttackAnimationEnd()
     {
+        if (player.HasStateAuthority)
+            player.hitMap.Clear();
+
+
         if (nextComboQueued && AttackCount < 4)
         {
             player.Stamina.UseStamina(player.Stamina.AttackStaminaCost);
             AttackCount++;
             nextComboQueued = false;
             player.SetIsAttackTrue();
-            player.ClearHitSet();
+            player.ClearHitSet();           
         }
         else
         {   

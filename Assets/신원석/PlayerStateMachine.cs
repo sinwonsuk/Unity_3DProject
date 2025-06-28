@@ -26,7 +26,8 @@ public class PlayerStateMachine : StageManager<PlayerStateMachine.PlayerState>
 {
     [Networked] public PlayerState SyncedState { get; set; }
     [Networked] public bool comboAnimEnded { get; set; } = false;
-    //[Networked] public NetworkDictionary<PlayerRef, bool> hitMap { get; }
+
+    [Networked] public NetworkDictionary<PlayerRef, bool> hitMap { get; }
     [Networked] public int AttackCount { get; set; } = 0;
     [Networked] public bool isRoll { get; set; } = false;
     [Networked] public bool isAttack { get; set; } = true;
@@ -52,6 +53,7 @@ public class PlayerStateMachine : StageManager<PlayerStateMachine.PlayerState>
 
     public float invulnDuration = 0.15f;
 
+    private bool isDeath = false;
 
     public enum PlayerState
     {
@@ -443,9 +445,14 @@ public class PlayerStateMachine : StageManager<PlayerStateMachine.PlayerState>
     {
         if (!_isInitialized) return;
 
-        if(health.currentHp <= 0)
+        if(health.currentHp <= 0 && isDeath ==false)
         {
             BroadcastIdleEvent(PlayerState.Death);
+            currentState.ExitState();
+            currentState = states[PlayerState.Death];
+            currentState.EnterState();
+            isDeath = true;
+            return;
         }
 
         MoveAndRotate(inputHandler.GetNetworkInputData());
@@ -462,8 +469,6 @@ public class PlayerStateMachine : StageManager<PlayerStateMachine.PlayerState>
 
         if (SyncedState != currentState.StateKey)
         {
-            Debug.Log($"State changed: {currentState.StateKey} -> {SyncedState}");
-
             currentState.ExitState();
             currentState = states[SyncedState];
             currentState.EnterState();
