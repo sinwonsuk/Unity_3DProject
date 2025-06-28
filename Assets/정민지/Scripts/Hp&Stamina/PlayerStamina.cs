@@ -17,7 +17,6 @@ public class PlayerStamina : NetworkBehaviour
     private bool imRunning = false;
     private float timer = 0f;
     private float skillTimer;
-    private bool canUseSkill=true;
     private bool isRecovering = false;
 
     [SerializeField] private int staminaCoolTime;
@@ -96,7 +95,7 @@ public class PlayerStamina : NetworkBehaviour
             {
                 recoveryTimer = 0f;
                 float before = currentStamina;
-                currentStamina = Mathf.Clamp(currentStamina + 1, 0, maxStamina);
+                currentStamina = Mathf.Clamp(currentStamina + 10, 0, maxStamina);
 
                 if (before != currentStamina)
                 {

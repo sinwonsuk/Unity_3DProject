@@ -24528,7 +24528,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   _stateAuthorityChangeErrorCorrectionDelta: 0
-  SyncScale: 0
+  SyncScale: 1
   SyncParent: 1
   _autoAOIOverride: 1
   DisableSharedModeInterpolation: 0
@@ -24559,6 +24559,8 @@ MonoBehaviour:
   - {fileID: 2966726936786695377}
   renderers:
   - {fileID: 4090321368065178306}
+  attackDamage: 2
+  infoConfig: {fileID: 11400000, guid: a14a7a9d128befa47a4887b95cc7be6a, type: 2}
 --- !u!135 &3895896376309258823
 SphereCollider:
   m_ObjectHideFlags: 0

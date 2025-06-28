@@ -10,6 +10,15 @@ public enum HandSide
     Left,
 }
 
+public enum ItemClass
+{
+    None,
+    One,
+    Two,
+    Three,
+}
+
+
 public class WeaponManager : NetworkBehaviour 
 {
     private WeaponsConfig config;
@@ -26,15 +35,16 @@ public class WeaponManager : NetworkBehaviour
 
     [Networked] public NetworkObject Magic { get; set; }
 
-    private ItemState currentWeaponState;
-
     [Networked] public ItemState magicState { get; set; }
+
+    [Networked] public PotionState potionState { get; set; }
 
     private NetworkRunner runner;
 
     private Queue<NetworkObject> IceMagics = new Queue<NetworkObject>();
     private Queue<NetworkObject> FireMagics = new Queue<NetworkObject>();
     private Queue<NetworkObject> ElectricMagics = new Queue<NetworkObject>();
+    private ItemState currentWeaponState;
 
     public void Init(WeaponsConfig config, Transform rightHandSocket, Transform leftHandSocket, NetworkRunner runner, NetworkBehaviour networkBehaviour)
     {
@@ -43,7 +53,13 @@ public class WeaponManager : NetworkBehaviour
         this.leftHandSocket = leftHandSocket;
         this.runner = runner;
     }
-
+    public void ChangeWeaponClass()
+    {
+        //if (currentWeapon != null)
+        //{
+        //    var weaponNetworkObject = currentWeapon.GetComponent<WeaponNetworkObject>();
+        //}
+    }
     public void MagicInitialize(HandSide dir, PlayerRef owner)
     {
         for (int i = 0; i < 50; i++)
@@ -142,7 +158,7 @@ public class WeaponManager : NetworkBehaviour
         return obj;
     }
 
-    public void Equip(ItemState state,HandSide Dir, PlayerRef owner = default)
+    public void Equip(ItemState state,HandSide Dir, ItemClass itemClass, PlayerRef owner = default)
     {
 
         // (1) 이미 무기가 있으면 Despawn
@@ -159,12 +175,20 @@ public class WeaponManager : NetworkBehaviour
         if (Dir == HandSide.Right)
         {
             Side = HandSide.Right;
-            currentWeapon = runner.Spawn(prefab, position, rotation, owner);
+            currentWeapon = runner.Spawn(prefab, position, rotation, owner, onBeforeSpawned: (runner, obj) =>
+            {
+                var wno = obj.GetComponent<WeaponNetworkObject>();
+                wno.ItemClass = itemClass;
+            });
         }
         else if(Dir == HandSide.Left)
         {
             Side = HandSide.Left;
-            currentWeapon = runner.Spawn(prefab, position, rotation, owner);
+            currentWeapon = runner.Spawn(prefab, position, rotation, onBeforeSpawned: (runner, obj) =>
+            {
+                var wno = obj.GetComponent<WeaponNetworkObject>();
+                wno.ItemClass = itemClass;
+            });
         } 
         else
         {
@@ -258,10 +282,10 @@ public class WeaponManager : NetworkBehaviour
     }
 
     [Rpc(RpcSources.InputAuthority, RpcTargets.StateAuthority)]
-    public void RPC_RequestEquip(ItemState state, HandSide isDir, RpcInfo info = default)
+    public void RPC_RequestEquip(ItemState state, HandSide isDir,ItemClass itemClass, RpcInfo info = default)
     {
         // 호스트만 여기 진입
-        Equip(state, isDir, info.Source);
+        Equip(state, isDir, itemClass,info.Source);
     }
 
     [Rpc(RpcSources.InputAuthority, RpcTargets.StateAuthority)]
@@ -277,17 +301,17 @@ public class WeaponManager : NetworkBehaviour
         CreateMagic(state, isDir, info.Source);
     }
 
-    public void RequestEquip(ItemState state, HandSide dir, PlayerRef owner = default)
+    public void RequestEquip(ItemState state, HandSide dir, ItemClass itemClass, PlayerRef owner = default)
     {
         // (1) 클라이언트일 때만 RPC
         if (Object.HasInputAuthority && !Object.HasStateAuthority)
         {
-            RPC_RequestEquip(state, dir);
+            RPC_RequestEquip(state, dir, itemClass);
         }
         // (2) 호스트일 때는 곧바로 실행
         else if (Object.HasStateAuthority)
         {
-            Equip(state, dir, owner);
+            Equip(state, dir, itemClass, owner);
         }
     }
     public void RequestArrow(ItemState state, HandSide dir, PlayerRef owner = default)

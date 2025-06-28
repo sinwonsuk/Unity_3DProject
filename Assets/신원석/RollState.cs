@@ -23,6 +23,7 @@ public class RollState : BaseState<PlayerStateMachine.PlayerState>
     {
         playerStateMachine.isRoll = false;
 
+        playerStateMachine.Stamina.UseStamina(playerStateMachine.RollStaminaCost);
 
         playerStateMachine.NetAnim.Animator.SetTrigger("RollTrigger");
 

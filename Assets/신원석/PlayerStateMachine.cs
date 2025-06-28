@@ -7,6 +7,7 @@ using System.Collections.Generic;
 using System.Drawing;
 using UnityEngine;
 
+
 public enum ItemState
 {
     none,
@@ -16,12 +17,20 @@ public enum ItemState
     FireMagic,
     IceMagic,
     ElectricMagic,
-    Position,
     Arrow,
     FireBall,
     IceBall,
     ElectricBall,
+    HpPotion,
+    StaminaPotion,
 }
+
+public enum PotionState
+{
+    HpPotion,
+    StaminaPotion,
+}
+
 public class PlayerStateMachine : StageManager<PlayerStateMachine.PlayerState>
 {
     [Networked] public PlayerState SyncedState { get; set; }
@@ -31,25 +40,22 @@ public class PlayerStateMachine : StageManager<PlayerStateMachine.PlayerState>
     [Networked] public int AttackCount { get; set; } = 0;
     [Networked] public bool isRoll { get; set; } = false;
     [Networked] public bool isAttack { get; set; } = true;
-
     [Networked] public bool isHit { get; set; } = true;
     [Networked] public int RollCount { get; set; } = 0;
-
     [Networked] public int HitCount { get; set; } = 0;
-
-    [Networked] public float gatherAttack {get;set;}= 0;
-
     [Networked] public TickTimer fireTimer { get; set; }
-
-
     [Networked] public float moveX { get; set;} = 0.0f;
-
     [Networked] public float moveZ { get; set; } = 0.0f;
+    public float RollStaminaCost { get; set; } = 25f;
+    public float JumpStaminaCost { get; set; } = 10.0f;
+    [Networked] public float AttackStaminaCost { get; set; }
+    [Networked] public float AttackCost { get; set; }
+    public float MaxSpeed { get; set; } = 10.0f;
+    public float CurrentSpeed { get; set; } = 5.0f;
 
     public NetworkMecanimAnimator NetAnim { get; set; }
 
     public HashSet<NetworkObject> hitSet { get; set; } = new();
-    [Networked] public bool _canBeHit { get; set; } = true;
 
     public float invulnDuration = 0.15f;
 
@@ -67,6 +73,7 @@ public class PlayerStateMachine : StageManager<PlayerStateMachine.PlayerState>
         Magic,
         Hit,
         Death,
+        Portion,
     }
     public Action action;
 
@@ -115,11 +122,6 @@ public class PlayerStateMachine : StageManager<PlayerStateMachine.PlayerState>
         get => attackSpeed;
         set => attackSpeed = value;
     }
-    public Transform HitTransform
-    {
-        get => hitTransform;
-        set => hitTransform = value;
-    }
     public Transform RightHandTransform
     {
         get => rightHandTransform;
@@ -150,8 +152,6 @@ public class PlayerStateMachine : StageManager<PlayerStateMachine.PlayerState>
    
     bool _isInitialized = false;
 
-    public int Hp { get; set; }
-
     public override void Spawned()
     {
         NetAnim = GetComponent<NetworkMecanimAnimator>();
@@ -171,7 +171,7 @@ public class PlayerStateMachine : StageManager<PlayerStateMachine.PlayerState>
         states[PlayerState.Magic] = new MagicAttackState(PlayerState.Magic, animator, this);
         states[PlayerState.Hit] = new HitState(PlayerState.Hit, this);
         states[PlayerState.Death] = new DeathState(PlayerState.Death, this);
-
+        states[PlayerState.Portion] = new PortionState(PlayerState.Portion, this);
 
         if (Object.HasStateAuthority)
             SyncedState = PlayerState.Idle;
@@ -186,7 +186,6 @@ public class PlayerStateMachine : StageManager<PlayerStateMachine.PlayerState>
             Cam = camObj.GetComponent<CinemachineVirtualCamera>();
             Cam.Follow = cameraFollow;
             Cam.LookAt = cameraFollow;
-
         }
 
         inputHandler = new InputHandler(this, CameraFollow);
@@ -235,7 +234,9 @@ public class PlayerStateMachine : StageManager<PlayerStateMachine.PlayerState>
     }
 
     [Networked] public ItemState itemState { get; set; }
-    [Networked] public PlayerRef me1 { get; set; }
+    [Networked] public PlayerRef owner { get; set; }
+
+    [Networked] public ItemClass ItemClass { get; set; }
 
     public void WeaponChange(WeaponChange weaponChange)
     {
@@ -243,9 +244,9 @@ public class PlayerStateMachine : StageManager<PlayerStateMachine.PlayerState>
         if (Object.InputAuthority != weaponChange.inf2)
             return;
 
-        me1 = Object.InputAuthority;
+        owner = Object.InputAuthority;
         itemState = weaponChange.state;
-
+        ItemClass = (ItemClass)weaponChange.num;
         BroadcastIdleEvent(PlayerState.Switch);
 
     }
@@ -381,9 +382,9 @@ public class PlayerStateMachine : StageManager<PlayerStateMachine.PlayerState>
             shot.ArrowShoot(targetPos);
         }
         else
-        {
+        {            
             var shot = netObj.GetComponent<ShootObj>();
-            shot.ArrowShoot(targetPos);
+            shot.ArrowShoot(targetPos,ItemClass);
         }
     }
 
@@ -488,13 +489,6 @@ public class PlayerStateMachine : StageManager<PlayerStateMachine.PlayerState>
 
     }
 
-    [Rpc(RpcSources.StateAuthority, RpcTargets.StateAuthority)]
-    public void RPC_PlayHit()
-    {
-        NetAnim.Animator.SetTrigger("HitTrigger");
-        SyncedState = PlayerState.Hit;
-    }
-
     [Rpc(RpcSources.StateAuthority, RpcTargets.All)]
     void RPC_ToggleWeaponCollider(bool enable)
     {
@@ -506,32 +500,14 @@ public class PlayerStateMachine : StageManager<PlayerStateMachine.PlayerState>
         if (!Object.HasStateAuthority) return;    
         RPC_ToggleWeaponCollider(true);
     }
-    void OnDrawGizmos()
-    {
-        // 플레이어가 히트 상태일 때만 그리려면
-        // var psm = GetComponent<PlayerStateMachine>();
-        // if (psm.CurrentState != PlayerStateMachine.PlayerState.Hit) return;
 
-      
-        Gizmos.DrawWireSphere(HitTransform.position, 0.7f);
-    }
     public void OnAttackEndEvent()
     {
         if (!Object.HasStateAuthority) return;   
         RPC_ToggleWeaponCollider(false);
 
     }
-    public IEnumerator InvulnCoroutine()
-    {
-        yield return new WaitForSeconds(invulnDuration);
-        _canBeHit = true;
-    }
 
-    //public override void Render()
-    //{
-    //    NetAnim.Animator.SetFloat("MoveLeftRight", moveX);
-    //    NetAnim.Animator.SetFloat("MoveForWard", moveZ);
-    //}
     public void StopRoll() => isRoll = true;
     public void startRoll() => isRoll = false;
     public void SetIsAttackTrue() => isAttack = true;

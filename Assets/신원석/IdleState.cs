@@ -19,61 +19,61 @@ public class IdleState : BaseState<PlayerStateMachine.PlayerState>
         playerStateMachine.NetAnim.Animator.SetBool("Hit", false);
     }
     public override void ExitState() => Debug.Log("Exit Idle");
-  
+
 
     public override void FixedUpdateState()
     {
-        if (playerStateMachine.HasInputAuthority == false)
+        // 1) 입력 권한, 카메라 활성 여부 체크
+        if (!playerStateMachine.HasInputAuthority ||
+            !playerStateMachine.cameraManager.isCameraCheck)
+        {
             return;
+        }
 
+        // 2) 스태미너 및 무기 보유 여부 체크
+        float currentStamina = playerStateMachine.Stamina.currentStamina;
+        float cost = playerStateMachine.AttackStaminaCost;
+        float jumpCcost = playerStateMachine.JumpStaminaCost;
+        int weaponCount = playerStateMachine.AnimHandler.WeaponCount;
+        bool hasWeapon = playerStateMachine.IsWeapon;
 
-        if (playerStateMachine.cameraManager.isCameraCheck == false)
-            return;
+        var input = playerStateMachine.inputHandler;
 
-        if (playerStateMachine.inputHandler.IsAttackPressed() && playerStateMachine.Object.HasInputAuthority &&
-            playerStateMachine.IsWeapon == true && playerStateMachine.AnimHandler.WeaponCount != (int)ItemState.Bow && playerStateMachine.AnimHandler.WeaponCount != 4)
+        // 3) 공격 입력 처리
+        if (input.IsAttackPressed() &&
+            weaponCount != (int)ItemState.Bow &&
+            weaponCount != (int)ItemState.FireMagic &&
+            currentStamina > cost &&
+            hasWeapon == true)
         {
             playerStateMachine.BroadcastIdleEvent(PlayerState.Attack);
             return;
         }
-        else if (playerStateMachine.inputHandler.IsRightAttackPressed() && playerStateMachine.Object.HasInputAuthority &&
-            playerStateMachine.IsWeapon == true && playerStateMachine.AnimHandler.WeaponCount == (int)ItemState.Bow)
+
+        // 4) 활·마법 공격 구분
+        if (input.IsRightAttackPressed() && currentStamina > cost && hasWeapon ==true)
         {
-            playerStateMachine.BroadcastIdleEvent(PlayerState.BowAttack);
+            if (weaponCount == (int)ItemState.Bow )
+                playerStateMachine.BroadcastIdleEvent(PlayerState.BowAttack);
+            else if (weaponCount == (int)ItemState.FireMagic)
+                playerStateMachine.BroadcastIdleEvent(PlayerState.Magic);
+
             return;
         }
 
-        else if (playerStateMachine.inputHandler.IsRightAttackPressed() && playerStateMachine.Object.HasInputAuthority &&
-            playerStateMachine.IsWeapon == true && playerStateMachine.AnimHandler.WeaponCount ==4)
+        // 5) 점프 입력
+        if (input.IsCtrlButtonPress() && currentStamina > jumpCcost)
         {
-            playerStateMachine.BroadcastIdleEvent(PlayerState.Magic);
-            return;
-        }
-
-        //else if (playerStateMachine.inputHandler.IsLButtonPress() && playerStateMachine.Object.HasInputAuthority && playerStateMachine.IsWeapon ==false)
-        //{
-        //    playerStateMachine.RPC_BroadcastState(PlayerState.Switch);
-        //    return;
-        //}
-
-        else if (Input.GetKey(KeyCode.K) && playerStateMachine.Object.HasInputAuthority && playerStateMachine.IsWeapon == false)
-        {
-            playerStateMachine.BroadcastIdleEvent(PlayerState.Switch);
-            return;
-        }
-
-
-        else if (playerStateMachine.inputHandler.IsCtrlButtonPress() && playerStateMachine.Object.HasInputAuthority)
-        {
-           // playerStateMachine.playerController.Move(Vector3.zero,5);
             playerStateMachine.BroadcastIdleEvent(PlayerState.Jump);
             return;
         }
-        else if (playerStateMachine.inputHandler.IsMove() && playerStateMachine.Object.HasInputAuthority)
+
+        // 6) 이동 입력
+        if (input.IsMove())
         {
             playerStateMachine.BroadcastIdleEvent(PlayerState.Move);
             return;
-        } 
+        }
     }
 
     public override PlayerStateMachine.PlayerState GetNextState()
@@ -85,8 +85,6 @@ public class IdleState : BaseState<PlayerStateMachine.PlayerState>
 
     public override void OnTriggerEnter(Collider collider)
     {
-
-
         // 1) 호스트에서만 충돌 처리
         if (!playerStateMachine.Object.HasStateAuthority)
             return;
@@ -102,9 +100,6 @@ public class IdleState : BaseState<PlayerStateMachine.PlayerState>
 
         // 4) 진짜 타격 처리
         Debug.Log("충돌 감지!2");
-
-        //playerStateMachine.health.RequestDamage(10);
-        //playerStateMachine.RPC_PlayHit();
 
         playerStateMachine.BroadcastIdleEvent(PlayerState.Hit);
 

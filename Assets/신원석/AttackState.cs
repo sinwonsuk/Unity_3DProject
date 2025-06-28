@@ -13,7 +13,7 @@ public class AttackState : BaseState<PlayerStateMachine.PlayerState>
     PlayerStateMachine playerStateMachine;
 
     float time;
-
+    float stamina;
     public AttackState(PlayerStateMachine.PlayerState key, PlayerStateMachine stateMachine ) : base(key)
     {
         this.playerStateMachine = stateMachine;
@@ -23,7 +23,6 @@ public class AttackState : BaseState<PlayerStateMachine.PlayerState>
     {
         playerStateMachine.Combat.StartAttack();
         playerStateMachine.hitSet.Clear();
-        playerStateMachine.Stamina.UseStamina(playerStateMachine.Stamina.AttackStaminaCost);
         playerStateMachine.Stamina.IsStamania = true;
 
     }
@@ -63,8 +62,7 @@ public class AttackState : BaseState<PlayerStateMachine.PlayerState>
                 return;
 
             if (playerStateMachine.inputHandler.IsAttackPressed() && playerStateMachine.Stamina.currentStamina >= 0.0f)
-            {
-                
+            {                
                 playerStateMachine.Combat.TryQueueNextCombo();
                 time = 0.0f;
             }

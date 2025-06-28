@@ -6,18 +6,18 @@ public class PlayerWeaponChanged : NetworkBehaviour
     string tagName = "Player";
 
     [Rpc(RpcSources.InputAuthority, RpcTargets.StateAuthority)]
-    public void RPC_ChangeWeapon(ItemState state, RpcInfo info = default)
+    public void RPC_ChangeWeapon(ItemState state,int num, RpcInfo info = default)
     {
         var target = FindPlayerByInputAuthority(info.Source);
         if (target != null)
         {
             PlayerRef adad = Object.InputAuthority;
 
-            target.ApplyWeaponChange(state, info, adad);
+            target.ApplyWeaponChange(state, info, adad, num);
         }
     }
 
-    public void ChangeWeapon(ItemState state)
+    public void ChangeWeapon(ItemState state,int num)
     {
         if (Object.HasStateAuthority)
         {
@@ -30,11 +30,11 @@ public class PlayerWeaponChanged : NetworkBehaviour
                 return;
             }
 
-            ApplyWeaponChange(state, default, inputAuthority);
+            ApplyWeaponChange(state, default, inputAuthority,num);
         }
         else if (Object.HasInputAuthority)
         {
-            RPC_ChangeWeapon(state);
+            RPC_ChangeWeapon(state, num);
         }
     }
 
@@ -64,8 +64,8 @@ public class PlayerWeaponChanged : NetworkBehaviour
         return null;
     }
 
-    public void ApplyWeaponChange(ItemState state, RpcInfo info, PlayerRef info2)
+    public void ApplyWeaponChange(ItemState state, RpcInfo info, PlayerRef info2,int num)
     {
-        EventBus<WeaponChange>.Raise(new WeaponChange(state,info, info2));
+        EventBus<WeaponChange>.Raise(new WeaponChange(state,info, info2,num));
     }
 }
