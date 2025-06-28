@@ -169,11 +169,11 @@ public class MoveState : BaseState<PlayerStateMachine.PlayerState>
 
             Mathf.MoveTowards(playerStateMachine.moveZ, 0f, playerStateMachine.Runner.DeltaTime * 5.0f);
 
-            if (playerStateMachine.inputHandler.IsShiftButtonPress() && playerStateMachine.moveZ > 0f /*&& playerStateMachine.Stamina.currentStamina >= 0.0f*/)
+            if (playerStateMachine.inputHandler.IsShiftButtonPress() && playerStateMachine.moveZ > 0f && playerStateMachine.Stamina.currentStamina > 1.0f)
             {
                 playerStateMachine.moveZ = Mathf.Lerp(0f, 2f, playerStateMachine.moveZ); // ���: 0 ~ 2
                 playerStateMachine.MoveSpeed = 10.0f;
-                //playerStateMachine.Stamina.UseStamina(playerStateMachine.Runner.DeltaTime * 10.0f);
+
                 EventBus<isRunning>.Raise(new isRunning(true));
 
                 playerStateMachine.Stamina.IsStamania = true;

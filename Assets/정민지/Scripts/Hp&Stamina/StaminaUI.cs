@@ -10,7 +10,14 @@ public class StaminaUI : MonoBehaviour
     [SerializeField] private TMP_Text staminaText;
 
 
-
+    private void OnEnable()
+    {
+        EventBus<StaminaChanged>.OnEvent += OnStaminaChanged;
+    }
+    private void OnDisable()
+    {
+        EventBus<StaminaChanged>.OnEvent -= OnStaminaChanged;
+    }
     public void OnStaminaChanged(StaminaChanged e)
     {
         float normalized = (float)e.currentStamina / e.maxStamina;

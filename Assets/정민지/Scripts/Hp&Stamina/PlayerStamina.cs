@@ -64,7 +64,27 @@ public class PlayerStamina : NetworkBehaviour
     {
         if (!Object.HasInputAuthority) return;
 
-        if (currentStamina < maxStamina && IsStamania ==false)
+
+        if (imRunning && currentStamina > 0)
+        {
+            timer += Time.deltaTime;
+
+            if (timer >= 0.1f)
+            {
+                timer = 0f;
+                UseStamina(1f);
+            }
+        }
+        else
+        {
+            timer = 0f;
+        }
+
+
+        if (IsStamania == true)      
+            return;
+
+        if (currentStamina < maxStamina)
         {
             recoveryTimer += Time.deltaTime;
 
@@ -82,19 +102,5 @@ public class PlayerStamina : NetworkBehaviour
             }
         }
 
-        if (imRunning && currentStamina > 0)
-        {
-            timer += Time.deltaTime;
-
-            if (timer >= 0.1f)
-            {
-                timer = 0f;
-                UseStamina(1f);
-            }
-        }
-        else
-        {
-            timer = 0f;
-        }
     }
 }
