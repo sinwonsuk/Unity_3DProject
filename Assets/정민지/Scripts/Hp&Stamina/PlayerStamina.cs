@@ -3,7 +3,7 @@ using UnityEngine;
 
 public class PlayerStamina : NetworkBehaviour
 {
-    [Networked] public float currentStamina { get; set; }
+    public float currentStamina { get; set; }
 
     public float AttackStaminaCost { get; set; } = 10f;
 

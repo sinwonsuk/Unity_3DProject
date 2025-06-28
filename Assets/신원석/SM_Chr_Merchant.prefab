@@ -1370,6 +1370,7 @@ MonoBehaviour:
   _Arrow: {fileID: 0}
   _Magic: {fileID: 0}
   _magicState: 0
+  _potionState: 0
 --- !u!54 &-5474727034955590879
 Rigidbody:
   m_ObjectHideFlags: 0
@@ -1411,6 +1412,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   _currentHp: 0
   _isDead: 0
+  deadPrefab: {fileID: 5531890120269121868, guid: c8f18673ea4dc504ea93a296d8489e55, type: 3}
   maxHp: 100
   imReady: 5
 --- !u!114 &-8932458653960297740
@@ -1474,6 +1476,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 640c10a6b7f7d88449ba5375240b3946, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  _currentStamina: 0
   maxStamina: 100
   recoveryTimer: 0
   staminaCoolTime: 1
