@@ -102,7 +102,7 @@ public class ShootObj : NetworkBehaviour
                 {
                     var ui = hit.collider.transform.parent.GetComponent<PlayerHealth>();
                     if (ui != null)
-                        ui.TakeDamages(infoConfig.Attack);
+                        ui.TakeDamage(infoConfig.Attack);
                 }
 
                 // (c) 땅에 닿거나 플레이어에 맞으면 멈추기

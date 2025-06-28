@@ -8,20 +8,32 @@ public class PortionState : BaseState<PlayerStateMachine.PlayerState>
 
     public PortionState(PlayerStateMachine.PlayerState key, PlayerStateMachine stateMachine) : base(key)
     {
-        this.playerStateMachine = stateMachine;
+
+       
+
     }
 
     public override void EnterState()
     {
+
         if (!playerStateMachine.Object.HasStateAuthority)
             return;
 
+        if (playerStateMachine.WeaponManager.potionState == PotionState.HpPotion)
+        {
+            playerStateMachine.health.Heal(30);
+        }
+        if (playerStateMachine.WeaponManager.potionState == PotionState.StaminaPotion)
+        {
+            playerStateMachine.Stamina.HealStamina(50);
+        }
 
+        playerStateMachine.AnimHandler.SetPoitionBool(true);
     }
     public override void ExitState()
     {
-
-
+        playerStateMachine.WeaponManager.potionState = PotionState.none;
+        playerStateMachine.AnimHandler.SetPoitionBool(false);
     }
 
     public override void FixedUpdateState()

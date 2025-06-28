@@ -171,12 +171,11 @@ public class InventorySlotUI : NetworkBehaviour, IPointerClickHandler, IBeginDra
             else if(slot.item.weaponType==WeaponType.Axe)
             {
                 changed.ChangeWeapon(ItemState.Harberd, 1);
-
             }
-            else if(slot.item.potionType!=PotionType.Heal)
-            {
-               changed.ChangeWeapon(ItemState.HpPotion, 1);
-            }
+            //else if(slot.item.potionType!=PotionType.Heal)
+            //{
+            //   changed.ChangeWeapon(ItemState.HpPotion, 1);
+            //}
             else if (slot.item.potionType != PotionType.Stamina)
             {
                 changed.ChangeWeapon(ItemState.StaminaPotion, 1);

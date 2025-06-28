@@ -27,6 +27,7 @@ public enum ItemState
 
 public enum PotionState
 {
+    none,
     HpPotion,
     StaminaPotion,
 }
