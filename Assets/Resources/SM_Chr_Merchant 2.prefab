@@ -1315,16 +1315,18 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   _SyncedState: 0
   _comboAnimEnded: 0
+  _hitMap:
+    _items: []
   _AttackCount: 0
   _isRoll: 0
   _isAttack: 1
   _isHit: 1
   _RollCount: 0
   _HitCount: 0
-  _gatherAttack: 0
   _moveX: 0
   _moveZ: 0
-  __canBeHit: 1
+  _AttackStaminaCost: 0
+  _AttackCost: 0
   invulnDuration: 0.15
   weapons: {fileID: 11400000, guid: bb10c1def4f7b9d42a86027dc3b35f91, type: 2}
   moveSpeed: 5
@@ -1334,6 +1336,7 @@ MonoBehaviour:
   attackSpeed: 2
   rightHandTransform: {fileID: 1827334682947334435}
   leftHandTransform: {fileID: 8548521808931949514}
+  hitTransform: {fileID: 0}
   arrowHitMask:
     serializedVersion: 2
     m_Bits: 3136
@@ -1343,6 +1346,7 @@ MonoBehaviour:
     m_Bits: 512
   _IsWeapon: 0
   _itemState: 0
+  _ItemClass: 0
 --- !u!114 &-1013130676285194114
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -1358,9 +1362,9 @@ MonoBehaviour:
   Animator: {fileID: 7347605875457031395}
   ApplyTiming: 2
   SyncSettings: 127
-  StateHashes: 000000002da0f5ead4390fac089a4d5485a8327a8555caeba6e5c94d70aef7331b8e14dc1aab361c49175e6450130c0704edde5e5536a4f5bebcd7c7ef67ad6c288cd0b07957aa1b8b19b42edac2ce85917b71824bbb133d6b119efa5203dbb5aa12228cb0df68d3236ae627a27f3e78e54d875fdcc41a82958341e296919b8dff03502f10b55e5670dab3676384ee4e0fbf9b57e5a0820db5ee92ce5ff18b9423de95b9c9c18ce3804bf1276a54e87de388358f6043dbf388a8b80b708ef91bd187d0b5312eb78070f5471e013ee56906dcabfd8de6ca8d247de092b8761a0d16c2213e72410774bce8c4f08a18fce46d549c7cc55fd1f93b0fed1a5ff9e986f791eaad0cfd58f1458ab33737ad1fb95407f86b0496c9dc540308c33163d4a8d713ecfb49eed280610228f41d9c598c4e8a67c2763f1ec7177df3ca655913f2a9e36f221a7c278613b266bba02d2e1f858261cc361d29682617055295884df6
-  TriggerHashes: 000000001b8274fc2b1228987d3aa7e02500d390bad385b10fa4101e086e87fe8b624a2948b7267c
-  TotalWords: 12
+  StateHashes: 000000002da0f5ead4390fac8555caeba6e5c94d2afa8626a8b5caa3caec1397b2521bf670aef7331b8e14dc1aab361c49175e64089a4d5450130c0704edde5e5536a4f5bebcd7c7ef67ad6c288cd0b07957aa1b8b19b42edac2ce85917b71824bbb133d6b119efa5203dbb5aa12228cb0df68d3236ae627a27f3e78e54d875fdcc41a82958341e296919b8dff03502f10b55e5670dab3676384ee4e0fbf9b57e5a0820db5ee92ce5ff18b9423de95b9c9c18ce3804bf1276a54e87de388358f6043dbf388a8b80b708ef91bd187d0b5312eb78070f5471e013ee56906dcabfd8de6ca8d247de092b8761a0d16c2213e72410774bce8c4f08a18fce46d549c7cc55fd1f93b0fed1a5ff9e986f791eaad0cfd58f1458ab33737ad1fb95407f86b0496c9dc540308c33163d4a8d713ecfb49eed280610228f41d9c598c4e8a67c2763f1ec7177df3ca655913f2858261cc361d2968
+  TriggerHashes: 000000001b8274fc2b1228987d3aa7e02500d390bad385b10fa4101e086e87fe8b624a2948b7267cbcdfedb1d2b94a7a
+  TotalWords: 13
 --- !u!114 &-3079344771459812112
 MonoBehaviour:
   m_ObjectHideFlags: 0

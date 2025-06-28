@@ -14,6 +14,8 @@ public class JumpState : BaseState<PlayerStateMachine.PlayerState>
 
     public JumpState(PlayerStateMachine.PlayerState key,PlayerStateMachine playerStateMachine) : base(key)
     {
+
+      
         this.playerStateMachine = playerStateMachine;
         groundMask = playerStateMachine.groundMask;
         groundCheck = playerStateMachine.groundCheck;
@@ -28,6 +30,10 @@ public class JumpState : BaseState<PlayerStateMachine.PlayerState>
         if (!playerStateMachine.Object.HasStateAuthority)
             return;
 
+        float currentStamina = playerStateMachine.Stamina.currentStamina;
+        float jumpCcost = playerStateMachine.JumpStaminaCost;
+
+        playerStateMachine.Stamina.UseStamina(jumpCcost);
         playerStateMachine.NetAnim.Animator.SetBool("Jump", true);
         playerStateMachine.playerController.Move(default,gravity);
 

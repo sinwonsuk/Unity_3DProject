@@ -76,9 +76,13 @@ public class BowState : BaseState<PlayerStateMachine.PlayerState>
             playerStateMachine.Rotation(data);
 
 
+        float attackStamina = playerStateMachine.AttackStaminaCost;
+        float CutrrentStanmina = playerStateMachine.Stamina.currentStamina;
+
+
         if ( playerStateMachine.inputHandler.IsRightAttackPressed() &&
              playerStateMachine.inputHandler.IsAttackPressed() && gatherAttack ==1 
-             && shoot == false && playerStateMachine.cameraManager.isCameraCheck ==true)
+             && shoot == false && playerStateMachine.cameraManager.isCameraCheck ==true && attackStamina < CutrrentStanmina)
         {
              Ray ray = Camera.main.ScreenPointToRay(Input.mousePosition);
   
@@ -89,6 +93,8 @@ public class BowState : BaseState<PlayerStateMachine.PlayerState>
                 float fallbackDist = 50f;
                 targetPos = ray.origin + ray.direction * fallbackDist;
             }
+
+            playerStateMachine.Stamina.UseStamina(attackStamina);
 
             playerStateMachine.SetShootArrowObject(targetPos,ItemState.Arrow);
 

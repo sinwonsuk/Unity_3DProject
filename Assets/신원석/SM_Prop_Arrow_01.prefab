@@ -126,7 +126,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   _stateAuthorityChangeErrorCorrectionDelta: 0
-  SyncScale: 0
+  SyncScale: 1
   SyncParent: 1
   _autoAOIOverride: 1
   DisableSharedModeInterpolation: 0
@@ -204,7 +204,8 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   _flying: 0
   _flyDir: {x: 0, y: 0, z: 0}
-  speed: 10
+  speed: 30
   hitLayers:
     serializedVersion: 2
     m_Bits: 1088
+  attackDamage: 20

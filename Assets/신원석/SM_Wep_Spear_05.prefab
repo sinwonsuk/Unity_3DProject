@@ -125,7 +125,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   _stateAuthorityChangeErrorCorrectionDelta: 0
-  SyncScale: 0
+  SyncScale: 1
   SyncParent: 0
   _autoAOIOverride: 1
   DisableSharedModeInterpolation: 0
@@ -163,3 +163,5 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   _Side: 0
   _ArrowSide: 0
+  weaponInfoConfig: {fileID: 11400000, guid: 9ba05dbfbc374b5449e4c6b7e4c8fcbf, type: 2}
+  _ItemClass: 1

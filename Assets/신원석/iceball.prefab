@@ -9772,6 +9772,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   _Side: 0
   _ArrowSide: 0
+  weaponInfoConfig: {fileID: 11400000, guid: 838a515a1e28e924bbb24153f3e21f3e, type: 2}
 --- !u!1 &1459016661159935997
 GameObject:
   m_ObjectHideFlags: 0

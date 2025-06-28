@@ -1,6 +1,7 @@
-using UnityEngine;
 using Fusion;
 using System;
+using UnityEngine;
+using UnityEngine.UIElements;
 
 
 
@@ -14,12 +15,33 @@ public class WeaponNetworkObject : NetworkBehaviour
 
     public Action action;
 
+    public WeaponInfoConfig weaponInfoConfig;
+
+    [Networked] public ItemClass ItemClass { get; set; } = ItemClass.One;
+
     public override void Spawned()
     {
         gameObject.SetActive(false);
+      
+        switch (ItemClass)
+        {
+            case ItemClass.None:
+                transform.localScale = Vector3.zero;
+                break;
+            case ItemClass.One:
+                transform.localScale = weaponInfoConfig.ScaleOne;
+                break;
+            case ItemClass.Two:
+                transform.localScale = weaponInfoConfig.ScaleTwo;
+                break;
+            case ItemClass.Three:
+                transform.localScale = weaponInfoConfig.ScaleThree;
+                break;
+            default:
+                break;
+        }
 
         AttachToOwner(Object.InputAuthority);
-
     }
 
     public void AttachToOwner(PlayerRef ownerRef)

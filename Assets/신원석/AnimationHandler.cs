@@ -84,15 +84,19 @@ public class AnimationHandler
                 playerStateMachine.WeaponManager.magicState = ItemState.ElectricMagic;
                 animator.Animator.SetTrigger("MagicEquip");
                 break;
-
-            case ItemState.Position:
-                break;
-            case ItemState.Arrow:
-                break;
+            case ItemState.HpPotion:
+                WeaponCount = 5;
+                playerStateMachine.WeaponManager.potionState = PotionState.HpPotion;
+                animator.Animator.SetTrigger("PotionEquip");
+                break; // 추가된 break 문  
+            case ItemState.StaminaPotion:
+                WeaponCount = 5;
+                playerStateMachine.WeaponManager.potionState = PotionState.StaminaPotion;
+                animator.Animator.SetTrigger("PotionEquip");
+                break; // 추가된 break 문  
             default:
                 break;
         }
-
     }
     public void ChangeRoll(int RollCount)
     {

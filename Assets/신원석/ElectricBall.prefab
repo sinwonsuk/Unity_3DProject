@@ -24546,6 +24546,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   _Side: 0
   _ArrowSide: 0
+  weaponInfoConfig: {fileID: 11400000, guid: c088a3455fab04f4291f0071af4e0144, type: 2}
 --- !u!64 &8818230105295170018
 MeshCollider:
   m_ObjectHideFlags: 0

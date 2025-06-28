@@ -16,11 +16,21 @@ public class WeaponSwitchState : BaseState<PlayerStateMachine.PlayerState>
     {
         if (playerStateMachine.Object.HasStateAuthority)
         {
+            ItemClass itemClass = playerStateMachine.ItemClass;
+            ItemState itemState = playerStateMachine.itemState;
+
 
 
             playerStateMachine.SetWeapon(true);
-            playerStateMachine.WeaponManager.RequestEquip(playerStateMachine.itemState, HandSide.Right, playerStateMachine.me1);
-            playerStateMachine.AnimHandler.ChangeWeapon(playerStateMachine.itemState);
+            playerStateMachine.WeaponManager.RequestEquip(itemState, HandSide.Right, itemClass, playerStateMachine.owner);
+            playerStateMachine.WeaponManager.ChangeWeaponClass();
+
+
+            playerStateMachine.AnimHandler.ChangeWeapon(itemState);
+
+
+            playerStateMachine.AttackStaminaCost = playerStateMachine.WeaponManager.currentWeapon.GetComponent<WeaponNetworkObject>().weaponInfoConfig.Stamina;
+            playerStateMachine.AttackCost = playerStateMachine.WeaponManager.currentWeapon.GetComponent<WeaponNetworkObject>().weaponInfoConfig.Attack;
 
         }
 

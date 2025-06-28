@@ -15,7 +15,7 @@ public class Arrow : NetworkBehaviour
     BoxCollider boxCollider;
 
     [SerializeField] private LayerMask hitLayers;
-
+    [SerializeField] private int attackDamage;
     private void Start()
     {
         boxCollider = GetComponent<BoxCollider>();
@@ -44,7 +44,7 @@ public class Arrow : NetworkBehaviour
             {
                 var ui = hit.collider.transform.parent.GetComponent<PlayerHealth>();
                 if (ui != null)
-                    ui.TakeDamages(20);
+                    ui.TakeDamages(attackDamage);
             }
 
             // (c) 땅에 닿거나 플레이어에 맞으면 멈추기

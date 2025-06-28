@@ -22,10 +22,15 @@ public class ShootObj : NetworkBehaviour
     [SerializeField] private ParticleSystem[] particles;
     [SerializeField] private Renderer[] renderers;
 
+    [SerializeField] private int attackDamage;
     [Networked] float time { get; set; }
+
+    [Networked] ItemClass state { get; set; }
+
 
     const string PlayerTag = "Player";
 
+    public WeaponInfoConfig infoConfig;
     public override void Spawned()
     {
  
@@ -61,6 +66,24 @@ public class ShootObj : NetworkBehaviour
 
         if (flying)
         {
+            switch (state)
+            {
+                case ItemClass.None:
+                    break;
+                case ItemClass.One:
+                    transform.localScale = infoConfig.ScaleOne;
+                    break;
+                case ItemClass.Two:
+                    transform.localScale = infoConfig.ScaleTwo;
+                    break;
+                case ItemClass.Three:
+                    transform.localScale = infoConfig.ScaleThree;
+                    break;
+                default:
+                    break;
+            }
+
+
             // 1) 현재 위치와 이번 틱 이동 벡터 계산
             Vector3 origin = transform.position;
             Vector3 displacement = flyDir * speed * Runner.DeltaTime;
@@ -79,7 +102,7 @@ public class ShootObj : NetworkBehaviour
                 {
                     var ui = hit.collider.transform.parent.GetComponent<PlayerHealth>();
                     if (ui != null)
-                        ui.TakeDamages(20);
+                        ui.TakeDamages(infoConfig.Attack);
                 }
 
                 // (c) 땅에 닿거나 플레이어에 맞으면 멈추기
@@ -116,7 +139,7 @@ public class ShootObj : NetworkBehaviour
         }
     }
 
-    public void ArrowShoot(Vector3 dir)
+    public void ArrowShoot(Vector3 dir,ItemClass itemClass)
     {
         if (Object.HasStateAuthority)
         {
@@ -129,33 +152,15 @@ public class ShootObj : NetworkBehaviour
         isVisible = true;
         transform.SetParent(null, true);
         transform.forward = flyDir;
+
+
+        state = itemClass;
+
+ 
+
     }
     public void OnTriggerEnter(Collider collider)
     {
-
-        //// 1) 호스트에서만 충돌 처리
-        //if (!Object.HasStateAuthority)
-        //    return;
-
-        //int playerLayer = LayerMask.NameToLayer("Player");
-        //int groundLayer = LayerMask.NameToLayer("Ground");
-
-        //// 2) 충돌한 오브젝트의 레이어가 다르면 무시
-        //if (collider.gameObject.layer == playerLayer)
-        //{
-        //    PlayerHealth UI = collider.transform.parent.GetComponent<PlayerHealth>();
-
-        //    if (UI != null)
-        //    {
-        //        Debug.Log("충돌 감지!2");
-        //        UI.TakeDamages(20);
-        //    }
-        //}
-
-        //if (collider.gameObject.layer == groundLayer)
-        //{
-        //    flying = false;       
-        //}
 
     }
     public void AttachToOwner(PlayerRef ownerRef)
