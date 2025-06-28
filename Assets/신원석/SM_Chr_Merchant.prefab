@@ -1472,6 +1472,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   maxStamina: 100
   recoveryTimer: 0
+  staminaCoolTime: 3
 --- !u!114 &7058144935205930080
 MonoBehaviour:
   m_ObjectHideFlags: 0
