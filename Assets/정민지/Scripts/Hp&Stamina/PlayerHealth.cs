@@ -17,6 +17,7 @@ public class PlayerHealth : NetworkBehaviour
     [Networked] public int currentHp { get; private set; }
     [Networked] public bool isDead { get; private set; }
 
+    [SerializeField] private GameObject deadPrefab;
     [SerializeField] private int maxHp=100;
     private int lastSentHp = -1;
     private bool canWin=false;
@@ -45,6 +46,7 @@ public class PlayerHealth : NetworkBehaviour
                 isSpectator = true;
                 SpectatorManager.EnterSpectatorMode(transform.position, transform.rotation);
                 RPC_RequestSuicide();
+                Instantiate(deadPrefab);
             }
 
         }
