@@ -41,10 +41,6 @@ MonoBehaviour:
     weaponPrefab:
       RawGuidValue: 67c60fa84a9c4854c8d4a1c85873e21d
     transform: {fileID: 4789443884669178, guid: 67c60fa84a9c4854c8d4a1c85873e21d, type: 3}
-  - itemState: 11
-    weaponPrefab:
-      RawGuidValue: 1a128b4b8dc88e84e8dbb2246b73072c
-    transform: {fileID: 6568547256506680810, guid: 1a128b4b8dc88e84e8dbb2246b73072c, type: 3}
   - itemState: 9
     weaponPrefab:
       RawGuidValue: a5bd6af672cbe1c49852e6e098049eb6
@@ -57,7 +53,11 @@ MonoBehaviour:
     weaponPrefab:
       RawGuidValue: 069170fa0cb8fd541aa1426b84bef75d
     transform: {fileID: 1225549109877417896, guid: 069170fa0cb8fd541aa1426b84bef75d, type: 3}
-  - itemState: 10
+  - itemState: 11
     weaponPrefab:
-      RawGuidValue: 069170fa0cb8fd541aa1426b84bef75d
-    transform: {fileID: 1225549109877417896, guid: 069170fa0cb8fd541aa1426b84bef75d, type: 3}
+      RawGuidValue: 1fec9108441ba384bb03b8b6240abd2c
+    transform: {fileID: 4877822799543800, guid: 1fec9108441ba384bb03b8b6240abd2c, type: 3}
+  - itemState: 12
+    weaponPrefab:
+      RawGuidValue: 5716ceb0f65c3314e9134e68d167bcf6
+    transform: {fileID: 4085509898235460, guid: 5716ceb0f65c3314e9134e68d167bcf6, type: 3}
