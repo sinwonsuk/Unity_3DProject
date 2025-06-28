@@ -1,37 +1,52 @@
-using Fusion;
 using UnityEngine;
+using Fusion;
+using static UnityEngine.UI.GridLayoutGroup;
 
-public class WeaponNetworkMagic : NetworkBehaviour
+public class DeathState : BaseState<PlayerStateMachine.PlayerState>
 {
+    PlayerStateMachine playerStateMachine;
 
-    const string PlayerTag = "Player";
 
-    public Transform RopeTransform { get; set; }
-    public override void Spawned()
+    public DeathState(PlayerStateMachine.PlayerState key, PlayerStateMachine stateMachine) : base(key)
     {
-        AttachToOwner(Object.InputAuthority);
+        this.playerStateMachine = stateMachine;
     }
 
-    public void AttachToOwner(PlayerRef ownerRef)
+    public override void EnterState()
     {
+        if (!playerStateMachine.Object.HasStateAuthority)
+            return;
 
-        var players = GameObject.FindGameObjectsWithTag(PlayerTag);
-        foreach (var go in players)
-        {
-            var psm = go.GetComponent<PlayerStateMachine>();
-            var weapon = go.GetComponent<WeaponManager>();
-            // 이 플레이어가 weapon.InputAuthority와 같다면
-            if (psm != null && psm.Object.InputAuthority == ownerRef)
-            {
-                var magoc = psm.GetComponent<PlayerStateMachine>()
-                           .WeaponManager
-                           .currentWeapon
-                           .GetComponent<Bow>();
-     
-                return;
-            }
-        }
+        playerStateMachine.AnimHandler.ChangeDeathState();
+        playerStateMachine.playerController.Collider.enabled = false;
+    }
+    public override void ExitState()
+    {
 
 
     }
+
+    public override void FixedUpdateState()
+    {
+
+    }
+
+    public override PlayerStateMachine.PlayerState GetNextState()
+    {
+        return PlayerStateMachine.PlayerState.Death;
+    }
+
+    public override void OnTriggerEnter(Collider collider)
+    {
+
+
+    }
+    public override void OnTriggerExit(Collider collider) { }
+    public override void OnTriggerStay(Collider collider) { }
+    public override void OnAnimationEvent()
+    {
+        
+    }
+
+
 }

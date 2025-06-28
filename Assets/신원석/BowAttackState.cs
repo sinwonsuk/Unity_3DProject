@@ -133,7 +133,7 @@ public class BowState : BaseState<PlayerStateMachine.PlayerState>
 
     
 
-    public override void OnHitAnimationEvent()
+    public override void OnAnimationEvent()
     {
         //stateMachine.Combat.OnAnimationEnd();
     }

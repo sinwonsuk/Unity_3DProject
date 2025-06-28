@@ -159,7 +159,7 @@ public class MagicAttackState : BaseState<PlayerStateMachine.PlayerState>
     public override void OnTriggerEnter(Collider collider) { }
     public override void OnTriggerExit(Collider collider) { }
     public override void OnTriggerStay(Collider collider) { }
-    public override void OnHitAnimationEvent()
+    public override void OnAnimationEvent()
     {
         playerStateMachine.Combat.OnAttackAnimationEnd();
     }

@@ -103,16 +103,16 @@ public class IdleState : BaseState<PlayerStateMachine.PlayerState>
         // 4) 진짜 타격 처리
         Debug.Log("충돌 감지!2");
 
-        playerStateMachine.health.TakeDamage(10);
-        playerStateMachine.RPC_PlayHit();
+        //playerStateMachine.health.RequestDamage(10);
+        //playerStateMachine.RPC_PlayHit();
 
-        //playerStateMachine.BroadcastIdleEvent(PlayerState.Hit);
+        playerStateMachine.BroadcastIdleEvent(PlayerState.Hit);
 
     }
 
     public override void OnTriggerExit(Collider collider) { }
     public override void OnTriggerStay(Collider collider) { }
-    public override void OnHitAnimationEvent()
+    public override void OnAnimationEvent()
     {
 
     }

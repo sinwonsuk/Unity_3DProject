@@ -25,7 +25,7 @@ public class AttackState : BaseState<PlayerStateMachine.PlayerState>
         playerStateMachine.hitSet.Clear();
         playerStateMachine.Stamina.UseStamina(playerStateMachine.Stamina.AttackStaminaCost);
         playerStateMachine.Stamina.IsStamania = true;
-
+        playerStateMachine.WeaponManager.currentWeapon.gameObject.GetComponent<MeshCollider>().enabled = true;
     }
     public override void ExitState()
     {
@@ -36,6 +36,7 @@ public class AttackState : BaseState<PlayerStateMachine.PlayerState>
             playerStateMachine.NetAnim.Animator.SetBool("Attack", false);
         }
         playerStateMachine.Stamina.IsStamania = false;
+        playerStateMachine.WeaponManager.currentWeapon.gameObject.GetComponent<MeshCollider>().enabled = false;
         time = 0.0f;
     }
 
@@ -117,7 +118,7 @@ public class AttackState : BaseState<PlayerStateMachine.PlayerState>
     }
     public override void OnTriggerExit(Collider collider) { }
     public override void OnTriggerStay(Collider collider) { }
-    public override void OnHitAnimationEvent()
+    public override void OnAnimationEvent()
     {
         playerStateMachine.Combat.OnAttackAnimationEnd();
     }

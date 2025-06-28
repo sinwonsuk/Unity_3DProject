@@ -45,7 +45,7 @@ public class WeaponSwitchState : BaseState<PlayerStateMachine.PlayerState>
 
     public override void FixedUpdateState(){ }
 
-    public override void OnHitAnimationEvent()
+    public override void OnAnimationEvent()
     {
 
     }

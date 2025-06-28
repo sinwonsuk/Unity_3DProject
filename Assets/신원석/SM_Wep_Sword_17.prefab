@@ -15,7 +15,8 @@ GameObject:
   - component: {fileID: 6885371773107301538}
   - component: {fileID: 1533888254977482441}
   - component: {fileID: 1883090517951477276}
-  m_Layer: 0
+  - component: {fileID: -3240109472330111664}
+  m_Layer: 13
   m_Name: SM_Wep_Sword_17
   m_TagString: Weapon
   m_Icon: {fileID: 0}
@@ -163,3 +164,30 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   _Side: 0
   _ArrowSide: 0
+--- !u!54 &-3240109472330111664
+Rigidbody:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 6625035787644139224}
+  serializedVersion: 4
+  m_Mass: 0.0000001
+  m_Drag: 0
+  m_AngularDrag: 0
+  m_CenterOfMass: {x: 0, y: 0, z: 0}
+  m_InertiaTensor: {x: 1, y: 1, z: 1}
+  m_InertiaRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_IncludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_ExcludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_ImplicitCom: 1
+  m_ImplicitTensor: 1
+  m_UseGravity: 0
+  m_IsKinematic: 1
+  m_Interpolate: 0
+  m_Constraints: 0
+  m_CollisionDetection: 2
