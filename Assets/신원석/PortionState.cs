@@ -27,7 +27,7 @@ public class PortionState : BaseState<PlayerStateMachine.PlayerState>
         {
             playerStateMachine.Stamina.HealStamina(50);
         }
-
+        playerStateMachine.slot.quantity -= 1;
         playerStateMachine.AnimHandler.SetPoitionBool(true);
     }
     public override void ExitState()

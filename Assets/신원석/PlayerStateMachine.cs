@@ -152,7 +152,7 @@ public class PlayerStateMachine : StageManager<PlayerStateMachine.PlayerState>
     public SimpleKCC playerController {  get; private set; }
    
     bool _isInitialized = false;
-
+    public InventorySlot slot { get; set; }
     public override void Spawned()
     {
         NetAnim = GetComponent<NetworkMecanimAnimator>();
@@ -211,6 +211,8 @@ public class PlayerStateMachine : StageManager<PlayerStateMachine.PlayerState>
     private void OnEnable()
     {
         EventBus<WeaponChange>.OnEvent += WeaponChange;
+
+        EventBus<SendSlot>.OnEvent += InvenSlotHandle;
     }
     private void OnDisable()
     {
@@ -232,6 +234,11 @@ public class PlayerStateMachine : StageManager<PlayerStateMachine.PlayerState>
                //MoveAndRotate(inputHandler.GetNetworkInputData());
 
         }
+    }
+
+    public void InvenSlotHandle(SendSlot sendSlot)
+    {
+        slot = sendSlot.potion;
     }
 
     [Networked] public ItemState itemState { get; set; }
