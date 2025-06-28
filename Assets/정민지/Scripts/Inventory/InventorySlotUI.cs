@@ -176,10 +176,12 @@ public class InventorySlotUI : NetworkBehaviour, IPointerClickHandler, IBeginDra
             else if(slot.item.potionType==PotionType.Heal)
             {
                changed.ChangeWeapon(ItemState.HpPotion, 1);
+               EventBus<SendSlot>.Raise(new SendSlot(slot));
             }
             else if (slot.item.potionType == PotionType.Stamina)
             {
                 changed.ChangeWeapon(ItemState.StaminaPotion, 1);
+                EventBus<SendSlot>.Raise(new SendSlot(slot));
             }
             else if(slot.item.magicType==MagicType.Fire)
             {
