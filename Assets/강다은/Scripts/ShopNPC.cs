@@ -42,7 +42,8 @@ public class ShopNPC : NetworkBehaviour
             shopUI.OpenShop(npcId);
             bigInventoryUI.OpenOrClose(true);
             resellButton.OpenOrCloseResellButton(true);
-        }
+            SoundManager.GetInstance().SfxPlay(SoundManager.sfx.StoreOpen, false);
+		}
     }
 
     private void OnTriggerExit(Collider other)
@@ -52,6 +53,7 @@ public class ShopNPC : NetworkBehaviour
             shopUI.Hide();
             bigInventoryUI.OpenOrClose(false);
             resellButton.OpenOrCloseResellButton(false);
-        }
+            SoundManager.GetInstance().SfxPlay(SoundManager.sfx.StoreClose, false);
+		}
     }
 }

@@ -298,8 +298,16 @@ PrefabInstance:
       value: 10
       objectReference: {fileID: 0}
     - target: {fileID: 512839860134147877, guid: a152c3df5963f3a41a45bcf7263b16b9, type: 3}
+      propertyPath: bgmVolume
+      value: 90
+      objectReference: {fileID: 0}
+    - target: {fileID: 512839860134147877, guid: a152c3df5963f3a41a45bcf7263b16b9, type: 3}
+      propertyPath: sfxVolume
+      value: 90
+      objectReference: {fileID: 0}
+    - target: {fileID: 512839860134147877, guid: a152c3df5963f3a41a45bcf7263b16b9, type: 3}
       propertyPath: sfxClips.Array.size
-      value: 4
+      value: 7
       objectReference: {fileID: 0}
     - target: {fileID: 512839860134147877, guid: a152c3df5963f3a41a45bcf7263b16b9, type: 3}
       propertyPath: 'sfxClips.Array.data[0]'
@@ -317,6 +325,18 @@ PrefabInstance:
       propertyPath: 'sfxClips.Array.data[3]'
       value: 
       objectReference: {fileID: 8300000, guid: a68ddd20a011b5b4da1893404a2f2b44, type: 3}
+    - target: {fileID: 512839860134147877, guid: a152c3df5963f3a41a45bcf7263b16b9, type: 3}
+      propertyPath: 'sfxClips.Array.data[4]'
+      value: 
+      objectReference: {fileID: 8300000, guid: 6d4271eb5e28dd64dad058b926beb916, type: 3}
+    - target: {fileID: 512839860134147877, guid: a152c3df5963f3a41a45bcf7263b16b9, type: 3}
+      propertyPath: 'sfxClips.Array.data[5]'
+      value: 
+      objectReference: {fileID: 8300000, guid: a4e88f23a1b3b714e9b98f1a7ef4ea60, type: 3}
+    - target: {fileID: 512839860134147877, guid: a152c3df5963f3a41a45bcf7263b16b9, type: 3}
+      propertyPath: 'sfxClips.Array.data[6]'
+      value: 
+      objectReference: {fileID: 8300000, guid: 149a239e41a1dba42a7a3bd02dd58335, type: 3}
     - target: {fileID: 4632407439459655981, guid: a152c3df5963f3a41a45bcf7263b16b9, type: 3}
       propertyPath: m_Name
       value: SoundManager

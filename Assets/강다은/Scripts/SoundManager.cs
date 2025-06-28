@@ -9,7 +9,10 @@ public class SoundManager : MonoBehaviour
 		itemDrop,
 		buyItem,
         subtractGold,
-    }
+		BuyComp,
+		StoreOpen,
+		StoreClose,
+	}
 	public enum bgm
 	{
 
