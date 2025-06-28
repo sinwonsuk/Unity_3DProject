@@ -194,6 +194,8 @@ MonoBehaviour:
   basicFire: {fileID: 11400000, guid: 269a4ddb0a0227a4285ccfb9e4d093eb, type: 2}
   basicIce: {fileID: 11400000, guid: 85990286ca87e774eafd47889d80e7b6, type: 2}
   basicLightning: {fileID: 11400000, guid: 3f8acf4686c33174db4b9de6f9f283b6, type: 2}
+  healPotion: {fileID: 11400000, guid: 0a8cf3380c3f35e4baa75575ac7593f7, type: 2}
+  staminaPotion: {fileID: 11400000, guid: 935e543113a47a7459bb4b0aad0a5162, type: 2}
   bigInventoryPanel: {fileID: 4762163573841002610}
   combi: {fileID: 3682312640515073675}
   bigInventoryUI: {fileID: 4880448135119066925}
@@ -283,7 +285,7 @@ MonoBehaviour:
   m_Script: {fileID: -1552182283, guid: e725a070cec140c4caffb81624c8c787, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  SortKey: 530344389
+  SortKey: 3622882392
   ObjectInterest: 1
   Flags: 262145
   NestedObjects: []
@@ -625,7 +627,7 @@ MonoBehaviour:
   m_Script: {fileID: -1552182283, guid: e725a070cec140c4caffb81624c8c787, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  SortKey: 3459914192
+  SortKey: 2257484899
   ObjectInterest: 1
   Flags: 262145
   NestedObjects: []
@@ -808,7 +810,7 @@ MonoBehaviour:
   m_Script: {fileID: -1552182283, guid: e725a070cec140c4caffb81624c8c787, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  SortKey: 1225103071
+  SortKey: 22673778
   ObjectInterest: 1
   Flags: 262145
   NestedObjects: []
