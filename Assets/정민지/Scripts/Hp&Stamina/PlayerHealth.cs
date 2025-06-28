@@ -1,5 +1,6 @@
 using System.Collections.Generic;
 using Fusion;
+using Fusion.Addons.SimpleKCC;
 using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
@@ -14,21 +15,38 @@ public class PlayerHealth : NetworkBehaviour
 
 
     [Networked] public int currentHp { get; private set; }
+    [Networked] public bool isDead { get; private set; }
+
     [SerializeField] private int maxHp=100;
     private int lastSentHp = -1;
     private bool canWin=false;
     [SerializeField] private int imReady=0;
     private float readyTimer;
 
+    private bool isSpectator = false;
+
     void Update()
     {
+
+        //테스트용
         if (Object.HasInputAuthority && Input.GetKeyDown(KeyCode.P))
         {
-            // 로컬에서 관전 카메라 생성 (RPC X)
+            // 로컬에서 관전 카메라 생성
             SpectatorManager.EnterSpectatorMode(transform.position, transform.rotation);
 
-            // 자살 요청 RPC
             RPC_RequestSuicide();
+        }
+
+        // 관전모드진입
+        if (Object.HasInputAuthority)
+        {
+            if(currentHp <= 0 && !isSpectator)
+            {
+                isSpectator = true;
+                SpectatorManager.EnterSpectatorMode(transform.position, transform.rotation);
+                RPC_RequestSuicide();
+            }
+
         }
     }
 
@@ -60,15 +78,16 @@ public class PlayerHealth : NetworkBehaviour
 
     //서버에게 HP 0 요청 
     [Rpc(RpcSources.InputAuthority, RpcTargets.StateAuthority)]
-    void RPC_RequestSuicide() => ApplyFatalDamage();
+    public void RPC_RequestSuicide() => ApplyFatalDamage();
 
     //서버 전용 HP 처리, Despawn
     void ApplyFatalDamage()
     {
         if (!HasStateAuthority) return;
 
-        currentHp = 0;
-        Runner.Despawn(Object);           // 캐릭터 제거
+        //Runner.Despawn(Object);           // 캐릭터 제거
+        isDead = true;                           // ① 모든 클라로 복제
+        RPC_DisableCharacter();
     }
 
     public override void Spawned()
@@ -117,7 +136,7 @@ public class PlayerHealth : NetworkBehaviour
         // ������ ������ �� ���
         if (currentHp <= 0)
         {
-            CountAlivePlayers(); 
+            CountAlivePlayers();
         }
     }
     public void Heal(int amount)
@@ -163,4 +182,58 @@ public class PlayerHealth : NetworkBehaviour
 
     [Rpc(RpcSources.InputAuthority, RpcTargets.StateAuthority)]
     public void Rpc_RequestHeal(int heal) => Heal(heal);
+
+
+    [Rpc(RpcSources.StateAuthority, RpcTargets.InputAuthority)]
+    public void RPC_ShowWinUI()
+    {
+        EventBus<SurvivorWin>.Raise(new SurvivorWin());
+    }
+
+    [Rpc(RpcSources.StateAuthority, RpcTargets.InputAuthority)]
+    public void RPC_ShowLoseUI()
+    {
+        EventBus<SurvivorLose>.Raise(new SurvivorLose());
+    }
+
+    [Rpc(RpcSources.StateAuthority, RpcTargets.All)]
+    void RPC_DisableCharacter()
+    {
+        //외형 , 충돌 끄기
+        foreach (var r in GetComponentsInChildren<Renderer>(true)) r.enabled = false;
+        foreach (var c in GetComponentsInChildren<Collider>(true)) c.enabled = false;
+
+        //애니메이터 끄기
+        foreach (var a in GetComponentsInChildren<Animator>(true)) a.enabled = false;
+        var netAnim = GetComponent<NetworkMecanimAnimator>();
+        if (netAnim) netAnim.enabled = false;
+
+        //움직임 무기 스테이트머신 끄기
+        DisableComponentByName("PlayerStateMachine");
+        DisableComponentByName("WeaponManager");
+        DisableComponentByName("SimpleKCC");
+        DisableComponentByName("PlayerWeaponChanged");
+
+        //모든 NetworkBehaviour 끄기 (PlayerHealth 제외)
+        foreach (var nb in GetComponents<NetworkBehaviour>())
+            if (nb != this) nb.enabled = false;
+
+        //리지드바디 정지
+        if (TryGetComponent<Rigidbody>(out var rb))
+        {
+            rb.linearVelocity = Vector3.zero;
+            rb.angularVelocity = Vector3.zero;
+            rb.isKinematic = true;
+        }
+    }
+
+    void DisableComponentByName(string componentTypeName)
+    {
+        var type = System.Type.GetType(componentTypeName);
+        if (type == null) return;
+
+        var comp = GetComponent(type) as UnityEngine.Behaviour;
+        if (comp != null)
+            comp.enabled = false;
+    }
 }

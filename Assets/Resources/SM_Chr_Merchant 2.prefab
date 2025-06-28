@@ -1322,7 +1322,8 @@ MonoBehaviour:
   _RollCount: 0
   _HitCount: 0
   _gatherAttack: 0
-  _WeaponCount: 0
+  _moveX: 0
+  _moveZ: 0
   __canBeHit: 1
   invulnDuration: 0.15
   weapons: {fileID: 11400000, guid: bb10c1def4f7b9d42a86027dc3b35f91, type: 2}
@@ -1420,6 +1421,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   _currentHp: 0
+  _isDead: 0
   maxHp: 100
   imReady: 5
 --- !u!114 &-8932458653960297740
