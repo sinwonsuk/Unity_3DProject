@@ -44,6 +44,7 @@ public class WeaponManager : NetworkBehaviour
     private Queue<NetworkObject> IceMagics = new Queue<NetworkObject>();
     private Queue<NetworkObject> FireMagics = new Queue<NetworkObject>();
     private Queue<NetworkObject> ElectricMagics = new Queue<NetworkObject>();
+    private ItemState currentWeaponState;
 
     public void Init(WeaponsConfig config, Transform rightHandSocket, Transform leftHandSocket, NetworkRunner runner, NetworkBehaviour networkBehaviour)
     {
