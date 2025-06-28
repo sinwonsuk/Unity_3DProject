@@ -33,20 +33,20 @@ public class IdleState : BaseState<PlayerStateMachine.PlayerState>
         if (playerStateMachine.inputHandler.IsAttackPressed() && playerStateMachine.Object.HasInputAuthority &&
             playerStateMachine.IsWeapon == true && playerStateMachine.AnimHandler.WeaponCount != (int)ItemState.Bow && playerStateMachine.AnimHandler.WeaponCount != 4)
         {
-            playerStateMachine.RPC_BroadcastState(PlayerState.Attack);
+            playerStateMachine.BroadcastIdleEvent(PlayerState.Attack);
             return;
         }
         else if (playerStateMachine.inputHandler.IsRightAttackPressed() && playerStateMachine.Object.HasInputAuthority &&
             playerStateMachine.IsWeapon == true && playerStateMachine.AnimHandler.WeaponCount == (int)ItemState.Bow)
         {
-            playerStateMachine.RPC_BroadcastState(PlayerState.BowAttack);
+            playerStateMachine.BroadcastIdleEvent(PlayerState.BowAttack);
             return;
         }
 
         else if (playerStateMachine.inputHandler.IsRightAttackPressed() && playerStateMachine.Object.HasInputAuthority &&
             playerStateMachine.IsWeapon == true && playerStateMachine.AnimHandler.WeaponCount ==4)
         {
-            playerStateMachine.RPC_BroadcastState(PlayerState.Magic);
+            playerStateMachine.BroadcastIdleEvent(PlayerState.Magic);
             return;
         }
 
@@ -58,7 +58,7 @@ public class IdleState : BaseState<PlayerStateMachine.PlayerState>
 
         else if (Input.GetKey(KeyCode.K) && playerStateMachine.Object.HasInputAuthority && playerStateMachine.IsWeapon == false)
         {
-            playerStateMachine.RPC_BroadcastState(PlayerState.Switch);
+            playerStateMachine.BroadcastIdleEvent(PlayerState.Switch);
             return;
         }
 
@@ -66,12 +66,12 @@ public class IdleState : BaseState<PlayerStateMachine.PlayerState>
         else if (playerStateMachine.inputHandler.IsCtrlButtonPress() && playerStateMachine.Object.HasInputAuthority)
         {
            // playerStateMachine.playerController.Move(Vector3.zero,5);
-            playerStateMachine.RPC_BroadcastState(PlayerState.Jump);
+            playerStateMachine.BroadcastIdleEvent(PlayerState.Jump);
             return;
         }
         else if (playerStateMachine.inputHandler.IsMove() && playerStateMachine.Object.HasInputAuthority)
         {
-            playerStateMachine.RPC_BroadcastState(PlayerState.Move);
+            playerStateMachine.BroadcastIdleEvent(PlayerState.Move);
             return;
         } 
     }

@@ -113,14 +113,12 @@ public class PlayerHealth : NetworkBehaviour
         currentHp = Mathf.Clamp(currentHp - dmg, 0, maxHp);
         Debug.Log($"{gameObject.name}: {before} > {currentHp} (-{dmg})");
 
-        //if (Object.InputAuthority == Runner.LocalPlayer)
-        //    EventBus<HealthChanged>.Raise(new HealthChanged(this, currentHp, maxHp));
 
         if (currentHp <= 0)
         {
             SurvivorManager.Instance?.UpdateSurvivorCount();
         }
-           // CountAlivePlayers();
+
     }
     public void TakeDamages(int dmg)
     {

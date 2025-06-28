@@ -216,14 +216,9 @@ public class PlayerStateMachine : StageManager<PlayerStateMachine.PlayerState>
     {
         if (inputHandler.IsMove() == true)
         {
-            if (Object.HasInputAuthority && !Object.HasStateAuthority)
-            {              
-               MoveAndRotate(inputHandler.GetNetworkInputData());
-            }
-            else if (Object.HasStateAuthority)
-            {
-               MoveAndRotate(inputHandler.GetNetworkInputData());
-            }
+     
+               //MoveAndRotate(inputHandler.GetNetworkInputData());
+
         }
     }
 
@@ -432,6 +427,8 @@ public class PlayerStateMachine : StageManager<PlayerStateMachine.PlayerState>
     {
         if (!_isInitialized) return;
 
+        MoveAndRotate(inputHandler.GetNetworkInputData());
+
 
         if (Object.HasStateAuthority)
         {
@@ -496,11 +493,11 @@ public class PlayerStateMachine : StageManager<PlayerStateMachine.PlayerState>
         _canBeHit = true;
     }
 
-    public override void Render()
-    {
-        NetAnim.Animator.SetFloat("MoveLeftRight", moveX);
-        NetAnim.Animator.SetFloat("MoveForWard", moveZ);
-    }
+    //public override void Render()
+    //{
+    //    NetAnim.Animator.SetFloat("MoveLeftRight", moveX);
+    //    NetAnim.Animator.SetFloat("MoveForWard", moveZ);
+    //}
     public void StopRoll() => isRoll = true;
     public void startRoll() => isRoll = false;
     public void SetIsAttackTrue() => isAttack = true;

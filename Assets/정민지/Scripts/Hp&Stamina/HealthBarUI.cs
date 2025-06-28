@@ -22,6 +22,11 @@ public class HealthBarUI : NetworkBehaviour
 
     void OnHealthChanged(HealthChanged evt)
     {
+        if (fillImage == null)
+        {
+            Debug.LogWarning("staminaFill is null on client!");
+            return;
+        }
         if (evt.playerInfo.Object.InputAuthority != Runner.LocalPlayer) return;
 
         fillImage.fillAmount = (float)evt.currentHp / evt.maxHp;
