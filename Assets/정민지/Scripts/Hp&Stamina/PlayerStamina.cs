@@ -16,6 +16,11 @@ public class PlayerStamina : NetworkBehaviour
     public bool IsStamania { get; set; } = false;
     private bool imRunning = false;
     private float timer = 0f;
+    private float skillTimer;
+    private bool canUseSkill=true;
+    private bool isRecovering = false;
+
+    [SerializeField] private int staminaCoolTime;
 
     private void OnEnable()
     {
@@ -44,6 +49,7 @@ public class PlayerStamina : NetworkBehaviour
     public void UseStamina(float amount)
     {
         if (!Object.HasInputAuthority || currentStamina <= 0f) return;
+        if (isRecovering) return;
 
         float before = currentStamina;
         currentStamina = Mathf.Clamp(currentStamina - amount, 0, maxStamina);
@@ -65,7 +71,7 @@ public class PlayerStamina : NetworkBehaviour
         if (!Object.HasInputAuthority) return;
 
 
-        if (imRunning && currentStamina > 0)
+        if (imRunning && currentStamina > 0&&!isRecovering)
         {
             timer += Time.deltaTime;
 
@@ -81,15 +87,14 @@ public class PlayerStamina : NetworkBehaviour
         }
 
 
-        if (IsStamania == true)      
-            return;
 
-        if (currentStamina < maxStamina)
+        if (!IsStamania && !isRecovering && currentStamina < maxStamina)
         {
             recoveryTimer += Time.deltaTime;
 
             if (recoveryTimer >= 1f)
             {
+                recoveryTimer = 0f;
                 float before = currentStamina;
                 currentStamina = Mathf.Clamp(currentStamina + 1, 0, maxStamina);
 
@@ -98,9 +103,35 @@ public class PlayerStamina : NetworkBehaviour
                     EventBus<StaminaChanged>.Raise(new StaminaChanged(this, currentStamina, maxStamina));
                 }
 
-                recoveryTimer = 0f;
+                //  회복이 시작되면 isRecovering 강제로 꺼버림
+                if (currentStamina > 1 && isRecovering)
+                {
+                    isRecovering = false;
+                    Debug.Log("회복 재개됨, 쿨타임 종료");
+                }
             }
         }
+
+        // 회복 쿨타임 트리거
+
+        if (!isRecovering && currentStamina <= 1 && !IsStamania)
+        {
+            isRecovering = true;
+            skillTimer = 0f;
+            Debug.Log("회복 쿨타임 시작");
+        }
+        // 회복 쿨타임
+        if (isRecovering)
+        {
+            skillTimer += Time.deltaTime;
+
+            if (skillTimer >= staminaCoolTime)
+            {
+                currentStamina = 2;
+                isRecovering = false;
+            }
+        }
+
 
     }
 }

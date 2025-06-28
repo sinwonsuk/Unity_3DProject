@@ -20,6 +20,7 @@ public class SurvivorPlayerCountUI : NetworkBehaviour
 
     void UpdateUI(SurvivorPlayerCount evt)
     {
+
         survivorText.text = ($"{evt.pCount}");
     }
 }
