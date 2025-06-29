@@ -4,12 +4,12 @@ public class ModelRotator : MonoBehaviour
 {
 	void Update()
 	{
-		if (Input.GetMouseButtonDown(0))
+		if (Input.GetMouseButtonDown(1))
 		{
 			prevPos = Input.mousePosition;
 		}
 
-		if (Input.GetMouseButton(0))
+		if (Input.GetMouseButton(1))
 		{
 			Vector3 delta = Input.mousePosition - prevPos;
 
