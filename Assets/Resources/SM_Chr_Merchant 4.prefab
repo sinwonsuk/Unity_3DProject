@@ -1457,7 +1457,7 @@ MonoBehaviour:
       serializedVersion: 2
       m_Bits: 3136
     ProxyInterpolationMode: 0
-    MaxPenetrationSteps: 3
+    MaxPenetrationSteps: 2
     CCDRadiusMultiplier: 0.1
     AntiJitterDistance: {x: 0.025, y: 0.01}
     CompressNetworkPosition: 0
@@ -1496,10 +1496,10 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   Animator: {fileID: 7347605875457031395}
   ApplyTiming: 2
-  SyncSettings: 79
+  SyncSettings: 127
   StateHashes: 000000002da0f5ead4390fac8555caeba6e5c94d2afa8626a8b5caa370aef7331b8e14dc1aab361c49175e64089a4d5450130c0704edde5e5536a4f5bebcd7c7ef67ad6c288cd0b07957aa1b8b19b42edac2ce85917b71824bbb133d6b119efa5203dbb5aa12228cb0df68d3236ae627a27f3e78e54d875fdcc41a82958341e296919b8dff03502f10b55e5670dab3676384ee4e0fbf9b57e5a0820db5ee92ce5ff18b9423de95b9c9c18ce3804bf1276a54e87de388358f6043dbf388a8b80b708ef91bd187d0b5312eb78070f5471e013ee56906dcabfd8de6ca8d247de092b8761a0d16c2213e72410774bce8c4f08a18fce46d549c7cc55fd1f93b0fed1a5ff9e986f791eaad0cfd58f1458ab33737ad1fb95407f86b0496c9dc540308c33163d4a8d713ecfb49eed280610228f41d9c598c4e8a67c2763f1ec7177df3ca655913f2858261cc361d29682388d5f844cafa0da068ac4944eb1a9dde81577d6d6111d1ef386a6503185263891ed8ef
   TriggerHashes: 000000001b8274fc2b1228987d3aa7e02500d390bad385b10fa4101e086e87fe8b624a2948b7267cbcdfedb1f353aeeb6d459afe
-  TotalWords: 11
+  TotalWords: 13
 --- !u!1 &2214411710377538837
 GameObject:
   m_ObjectHideFlags: 0

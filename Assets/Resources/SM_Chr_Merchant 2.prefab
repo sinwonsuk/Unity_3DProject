@@ -1457,7 +1457,7 @@ MonoBehaviour:
       serializedVersion: 2
       m_Bits: 3136
     ProxyInterpolationMode: 0
-    MaxPenetrationSteps: 3
+    MaxPenetrationSteps: 2
     CCDRadiusMultiplier: 0.1
     AntiJitterDistance: {x: 0.025, y: 0.01}
     CompressNetworkPosition: 0
