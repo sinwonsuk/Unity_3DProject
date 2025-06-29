@@ -9,6 +9,12 @@ public class InventoryUI : MonoBehaviour
     public Transform slotParent;
 
     public ItemData basicSword;
+    public ItemData basicBow;
+    public ItemData basicAxe;
+    public ItemData basicFire;
+    public ItemData basicIce;
+    public ItemData basicLightning;
+    
 
 
     public GameObject bigInventoryPanel;
@@ -27,24 +33,17 @@ public class InventoryUI : MonoBehaviour
     private bool isActive;
     private bool canSee;
 
-    //public static InventoryUI Instance { get; private set; }
-
-    //private void Awake()
-    //{
-    //    Instance = this;
-    //}
-
-    //public bool IsInventoryOpen()
-    //{
-    //    return bigInventoryPanel.activeSelf;
-    //}
-
 
     private void Start()
     {
         inventory = GetComponent<Inventory>();
         InitSlots();
         inventory.AddItem(basicSword);
+        inventory.AddItem(basicBow);
+        inventory.AddItem(basicAxe);
+        inventory.AddItem(basicFire);
+        inventory.AddItem(basicIce);
+        inventory.AddItem(basicLightning);
 
         UpdateUI();
         isActive = false;

@@ -190,6 +190,11 @@ MonoBehaviour:
   slotPrefab: {fileID: 8747101624993313401, guid: 3c40781db86f59340b03e6a9416a2280, type: 3}
   slotParent: {fileID: 9097936210661982129}
   basicSword: {fileID: 11400000, guid: fc8380ff7e8d0c046a97a4fecd6913fe, type: 2}
+  basicBow: {fileID: 11400000, guid: 1cb29909a0a3bc84d97bad573a9d18b0, type: 2}
+  basicAxe: {fileID: 11400000, guid: 23bac04565c306c4ab02818ab7f0b53b, type: 2}
+  basicFire: {fileID: 11400000, guid: 269a4ddb0a0227a4285ccfb9e4d093eb, type: 2}
+  basicIce: {fileID: 11400000, guid: 85990286ca87e774eafd47889d80e7b6, type: 2}
+  basicLightning: {fileID: 11400000, guid: 3f8acf4686c33174db4b9de6f9f283b6, type: 2}
   bigInventoryPanel: {fileID: 4762163573841002610}
   combi: {fileID: 3682312640515073675}
   bigInventoryUI: {fileID: 4880448135119066925}

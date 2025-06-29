@@ -9,7 +9,7 @@ using UnityEngine.EventSystems;
 using UnityEngine.UI;
 using static UnityEngine.UI.GridLayoutGroup;
 
-public class InventorySlotUI : NetworkBehaviour,  IBeginDragHandler, IDragHandler, IEndDragHandler, IDropHandler
+public class InventorySlotUI : NetworkBehaviour
 {
     public Image iconImage;
     public TMP_Text quantityText;
@@ -80,34 +80,6 @@ public class InventorySlotUI : NetworkBehaviour,  IBeginDragHandler, IDragHandle
         this.canCombi = evt.canCombi;
     }
 
-    public void OnBeginDrag(PointerEventData eventData)
-    {
-        if (!iconImage.enabled) return;
-
-        eventData.pointerDrag = gameObject;
-        draggedIcon.gameObject.SetActive(true);
-        draggedIcon.SetIcon(iconImage.sprite);
-        draggedIcon.StartDrag(iconImage.sprite);
-    }
-    public void OnDrag(PointerEventData eventData)
-    {
-        // 드래그 아이콘이 자동으로 마우스를 따라감 (Update에서 처리됨)
-    }
-
-    public void OnEndDrag(PointerEventData eventData)
-    {
-        SoundManager.GetInstance().SfxPlay(SoundManager.sfx.itemDrop, false);
-        draggedIcon.gameObject.SetActive(false);
-    }
-
-    public void OnDrop(PointerEventData eventData)
-    {
-        InventorySlotUI draggedSlotUI = eventData.pointerDrag?.GetComponent<InventorySlotUI>();
-        if (draggedSlotUI != null && draggedSlotUI != this)
-        {
-            bigInventoryUI.SwapSlots(draggedSlotUI.index, this.index);
-        }
-    }
 
     //[Rpc(RpcSources.InputAuthority, RpcTargets.StateAuthority)]
     //public void RPC_ChangeWeapon(ItemState state, RpcInfo info = default)
