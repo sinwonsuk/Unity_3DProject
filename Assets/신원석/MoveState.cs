@@ -82,6 +82,8 @@ public class MoveState : BaseState<PlayerStateMachine.PlayerState>
 
         playerStateMachine.health.RequestDamage(attack);
 
+        weaponNetObj.GetComponent<WeaponNetworkObject>().GetComponent<MeshCollider>().enabled = false;
+
         playerStateMachine.BroadcastIdleEvent(PlayerState.Hit);
     }
     public override void OnTriggerExit(Collider collider) { }

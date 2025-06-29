@@ -27,9 +27,9 @@ public class AttackState : BaseState<PlayerStateMachine.PlayerState>
     {
         playerStateMachine.Combat.StartAttack();
         playerStateMachine.hitSet.Clear();
-
         if (!playerStateMachine.HasInputAuthority)
             return;
+
 
         SoundManager.GetInstance().SfxPlay(SoundManager.sfx.Sword,false);
     }
@@ -137,6 +137,8 @@ public class AttackState : BaseState<PlayerStateMachine.PlayerState>
         int attack = weaponNetObj.gameObject.GetComponent<WeaponNetworkObject>().weaponInfoConfig.Attack;
 
         playerStateMachine.health.RequestDamage(attack);
+
+        weaponNetObj.GetComponent<WeaponNetworkObject>().GetComponent<MeshCollider>().enabled = false;
 
         playerStateMachine.BroadcastIdleEvent(PlayerState.Hit);
     }
