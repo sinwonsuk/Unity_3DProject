@@ -78,10 +78,9 @@ public class ItemBox : NetworkBehaviour
         isOpened = false;
         Cursor.visible = false;
         Cursor.lockState = CursorLockMode.Locked;
-        RPC_RequestDespawn();
+		EventBus<ItemBoxUIClose>.Raise(new ItemBoxUIClose(gameObject));
 
-        // 2) UI 닫힘 이벤트
-        EventBus<ItemBoxUIClose>.Raise(new ItemBoxUIClose(gameObject));
+		RPC_RequestDespawn();
     }
 
     // 서버(StateAuthority)에서 실행되어 네트워크 오브젝트를 제거
