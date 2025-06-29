@@ -85,7 +85,7 @@ public class HitState : BaseState<PlayerStateMachine.PlayerState>
         int attack = weaponNetObj.gameObject.GetComponent<WeaponNetworkObject>().weaponInfoConfig.Attack;
         playerStateMachine.health.RequestDamage(attack);
 
-
+        weaponNetObj.GetComponent<WeaponNetworkObject>().GetComponent<MeshCollider>().enabled = false;
         playerStateMachine.AnimHandler.SetHitTrigger();
         playerStateMachine.AnimHandler.SetHitBool(true);
     }

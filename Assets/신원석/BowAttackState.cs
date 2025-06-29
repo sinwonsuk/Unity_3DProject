@@ -151,7 +151,7 @@ public class BowState : BaseState<PlayerStateMachine.PlayerState>
         int attack = weaponNetObj.gameObject.GetComponent<WeaponNetworkObject>().weaponInfoConfig.Attack;
 
         playerStateMachine.health.RequestDamage(attack);
-
+        weaponNetObj.GetComponent<WeaponNetworkObject>().GetComponent<MeshCollider>().enabled = false;
         playerStateMachine.BroadcastIdleEvent(PlayerState.Hit);
     }
     public override void OnTriggerExit(Collider collider) { }

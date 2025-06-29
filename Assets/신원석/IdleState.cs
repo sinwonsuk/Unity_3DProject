@@ -1,5 +1,6 @@
 using Fusion;
 using System.Collections;
+using Unity.VisualScripting;
 using Unity.VisualScripting.Antlr3.Runtime;
 using UnityEngine;
 using static PlayerStateMachine;
@@ -111,6 +112,9 @@ public class IdleState : BaseState<PlayerStateMachine.PlayerState>
         int attack = weaponNetObj.gameObject.GetComponent<WeaponNetworkObject>().weaponInfoConfig.Attack;
 
         playerStateMachine.health.RequestDamage(attack);
+
+
+        weaponNetObj.GetComponent<WeaponNetworkObject>().GetComponent<MeshCollider>().enabled = false;
 
         playerStateMachine.BroadcastIdleEvent(PlayerState.Hit);
     }
