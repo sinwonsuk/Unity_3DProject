@@ -30,14 +30,14 @@ public class PlayerHealth : NetworkBehaviour
     void Update()
     {
 
-        //테스트용
-        if (Object.HasInputAuthority && Input.GetKeyDown(KeyCode.P))
-        {
-            // 로컬에서 관전 카메라 생성
-            SpectatorManager.EnterSpectatorMode(transform.position, transform.rotation);
+        ////테스트용
+        //if (Object.HasInputAuthority && Input.GetKeyDown(KeyCode.P))
+        //{
+        //    // 로컬에서 관전 카메라 생성
+        //    SpectatorManager.EnterSpectatorMode(transform.position, transform.rotation);
 
-            RPC_RequestSuicide();
-        }
+        //    RPC_RequestSuicide();
+        //}
 
         // 관전모드진입
         if (Object.HasInputAuthority)
@@ -222,7 +222,7 @@ public class PlayerHealth : NetworkBehaviour
         //if (netAnim) netAnim.enabled = false;
 
         //움직임 무기 스테이트머신 끄기
-        //DisableComponentByName("PlayerStateMachine");
+        DisableComponentByName("PlayerStateMachine");
         DisableComponentByName("WeaponManager");
         DisableComponentByName("SimpleKCC");
         DisableComponentByName("PlayerWeaponChanged");
