@@ -1201,13 +1201,13 @@ GameObject:
   - component: {fileID: 7347605875457031395}
   - component: {fileID: 1964020872223730300}
   - component: {fileID: 4271482361781194061}
-  - component: {fileID: -1013130676285194114}
   - component: {fileID: -3079344771459812112}
   - component: {fileID: -5474727034955590879}
   - component: {fileID: -7638925243709469451}
   - component: {fileID: -1340099304127300196}
   - component: {fileID: -8932458653960297740}
   - component: {fileID: -6705875324128924486}
+  - component: {fileID: -3919694842508161162}
   m_Layer: 6
   m_Name: SM_Chr_Merchant 3
   m_TagString: Player
@@ -1296,12 +1296,12 @@ MonoBehaviour:
   - {fileID: 6763168363039339222}
   NetworkedBehaviours:
   - {fileID: 4271482361781194061}
-  - {fileID: -1013130676285194114}
   - {fileID: -3079344771459812112}
   - {fileID: -7638925243709469451}
   - {fileID: -1340099304127300196}
   - {fileID: -8932458653960297740}
   - {fileID: -6705875324128924486}
+  - {fileID: -3919694842508161162}
   ForceRemoteRenderTimeframe: 0
 --- !u!114 &4271482361781194061
 MonoBehaviour:
@@ -1350,24 +1350,6 @@ MonoBehaviour:
   _IsWeapon: 0
   _itemState: 0
   _ItemClass: 0
---- !u!114 &-1013130676285194114
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 2059063748732853934}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 506319458, guid: e725a070cec140c4caffb81624c8c787, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  Animator: {fileID: 7347605875457031395}
-  ApplyTiming: 2
-  SyncSettings: 127
-  StateHashes: 000000002da0f5ead4390fac8555caeba6e5c94d2afa8626a8b5caa370aef7331b8e14dc1aab361c49175e64089a4d5450130c0704edde5e5536a4f5bebcd7c7ef67ad6c288cd0b07957aa1b8b19b42edac2ce85917b71824bbb133d6b119efa5203dbb5aa12228cb0df68d3236ae627a27f3e78e54d875fdcc41a82958341e296919b8dff03502f10b55e5670dab3676384ee4e0fbf9b57e5a0820db5ee92ce5ff18b9423de95b9c9c18ce3804bf1276a54e87de388358f6043dbf388a8b80b708ef91bd187d0b5312eb78070f5471e013ee56906dcabfd8de6ca8d247de092b8761a0d16c2213e72410774bce8c4f08a18fce46d549c7cc55fd1f93b0fed1a5ff9e986f791eaad0cfd58f1458ab33737ad1fb95407f86b0496c9dc540308c33163d4a8d713ecfb49eed280610228f41d9c598c4e8a67c2763f1ec7177df3ca655913f2858261cc361d29682388d5f844cafa0da068ac4944eb1a9dde81577d6d6111d1ef386a6503185263891ed8ef
-  TriggerHashes: 000000001b8274fc2b1228987d3aa7e02500d390bad385b10fa4101e086e87fe8b624a2948b7267cbcdfedb1f353aeeb6d459afe
-  TotalWords: 13
 --- !u!114 &-3079344771459812112
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -1433,6 +1415,9 @@ MonoBehaviour:
   deadPrefab: {fileID: 5531890120269121868, guid: c8f18673ea4dc504ea93a296d8489e55, type: 3}
   maxHp: 100
   imReady: 5
+  timeBeforeHealing: 10
+  healInterval: 1
+  healAmount: 2
 --- !u!114 &-1340099304127300196
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -1497,6 +1482,24 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: ba215121a1cc9c345bc6613657f08d2d, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+--- !u!114 &-3919694842508161162
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2059063748732853934}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 506319458, guid: e725a070cec140c4caffb81624c8c787, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  Animator: {fileID: 7347605875457031395}
+  ApplyTiming: 2
+  SyncSettings: 79
+  StateHashes: 000000002da0f5ead4390fac8555caeba6e5c94d2afa8626a8b5caa370aef7331b8e14dc1aab361c49175e64089a4d5450130c0704edde5e5536a4f5bebcd7c7ef67ad6c288cd0b07957aa1b8b19b42edac2ce85917b71824bbb133d6b119efa5203dbb5aa12228cb0df68d3236ae627a27f3e78e54d875fdcc41a82958341e296919b8dff03502f10b55e5670dab3676384ee4e0fbf9b57e5a0820db5ee92ce5ff18b9423de95b9c9c18ce3804bf1276a54e87de388358f6043dbf388a8b80b708ef91bd187d0b5312eb78070f5471e013ee56906dcabfd8de6ca8d247de092b8761a0d16c2213e72410774bce8c4f08a18fce46d549c7cc55fd1f93b0fed1a5ff9e986f791eaad0cfd58f1458ab33737ad1fb95407f86b0496c9dc540308c33163d4a8d713ecfb49eed280610228f41d9c598c4e8a67c2763f1ec7177df3ca655913f2858261cc361d29682388d5f844cafa0da068ac4944eb1a9dde81577d6d6111d1ef386a6503185263891ed8ef
+  TriggerHashes: 000000001b8274fc2b1228987d3aa7e02500d390bad385b10fa4101e086e87fe8b624a2948b7267cbcdfedb1f353aeeb6d459afe
+  TotalWords: 11
 --- !u!1 &2214411710377538837
 GameObject:
   m_ObjectHideFlags: 0
