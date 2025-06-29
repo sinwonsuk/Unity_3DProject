@@ -1738,6 +1738,14 @@ PrefabInstance:
     serializedVersion: 3
     m_TransformParent: {fileID: 0}
     m_Modifications:
+    - target: {fileID: 476378593739903082, guid: 893bf5b833239e24db224d1dcdc0f1a5, type: 3}
+      propertyPath: SortKey
+      value: 3622882392
+      objectReference: {fileID: 0}
+    - target: {fileID: 583265583124716347, guid: 893bf5b833239e24db224d1dcdc0f1a5, type: 3}
+      propertyPath: SortKey
+      value: 22673778
+      objectReference: {fileID: 0}
     - target: {fileID: 962095528719476400, guid: 893bf5b833239e24db224d1dcdc0f1a5, type: 3}
       propertyPath: m_text
       value: "\uC804\uCCB4 \uC778\uBCA4\uD1A0\uB9AC & \uD569\uC131\uCC3D : C\n\uC778\uBCA4\uD56B\uBC14
@@ -1831,6 +1839,10 @@ PrefabInstance:
     - target: {fileID: 6801154750796494864, guid: 893bf5b833239e24db224d1dcdc0f1a5, type: 3}
       propertyPath: m_Name
       value: InGameUI
+      objectReference: {fileID: 0}
+    - target: {fileID: 8471751877324363277, guid: 893bf5b833239e24db224d1dcdc0f1a5, type: 3}
+      propertyPath: SortKey
+      value: 2257484899
       objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
@@ -1926,10 +1938,6 @@ PrefabInstance:
     serializedVersion: 3
     m_TransformParent: {fileID: 0}
     m_Modifications:
-    - target: {fileID: 1653881420345276379, guid: c8f18673ea4dc504ea93a296d8489e55, type: 3}
-      propertyPath: m_Name
-      value: line
-      objectReference: {fileID: 0}
     - target: {fileID: 2660663583094638312, guid: c8f18673ea4dc504ea93a296d8489e55, type: 3}
       propertyPath: m_Pivot.x
       value: 0
@@ -2017,26 +2025,6 @@ PrefabInstance:
     - target: {fileID: 5531890120269121868, guid: c8f18673ea4dc504ea93a296d8489e55, type: 3}
       propertyPath: m_IsActive
       value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 6916509204683838266, guid: c8f18673ea4dc504ea93a296d8489e55, type: 3}
-      propertyPath: m_fontColor.b
-      value: 0.24842751
-      objectReference: {fileID: 0}
-    - target: {fileID: 6916509204683838266, guid: c8f18673ea4dc504ea93a296d8489e55, type: 3}
-      propertyPath: m_fontColor.g
-      value: 0.24842751
-      objectReference: {fileID: 0}
-    - target: {fileID: 6916509204683838266, guid: c8f18673ea4dc504ea93a296d8489e55, type: 3}
-      propertyPath: m_fontColor.r
-      value: 1
-      objectReference: {fileID: 0}
-    - target: {fileID: 6916509204683838266, guid: c8f18673ea4dc504ea93a296d8489e55, type: 3}
-      propertyPath: m_fontColor32.rgba
-      value: 4282335231
-      objectReference: {fileID: 0}
-    - target: {fileID: 7509761218907965022, guid: c8f18673ea4dc504ea93a296d8489e55, type: 3}
-      propertyPath: m_Name
-      value: icon
       objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
