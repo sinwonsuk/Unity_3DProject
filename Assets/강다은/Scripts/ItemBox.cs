@@ -43,7 +43,13 @@ public class ItemBox : NetworkBehaviour
     {
         if (player == null) return;
 
-        if (Vector3.Distance(transform.position, player.position) > interactionDistance)
+        float dist = Vector3.Distance(transform.position, player.position);
+        if (isOpened && dist > interactionDistance)
+        {
+            CloseBox();
+            return;
+        }
+        if (!isOpened && dist > interactionDistance)
             return;
 
         if (Input.GetKeyDown(KeyCode.E))
@@ -51,11 +57,7 @@ public class ItemBox : NetworkBehaviour
             if (isOpened) CloseBox();
             else OpenBox();
         }
-        if (Vector3.Distance(transform.position, player.position) < interactionDistance)
-        {
-            EventBus<ItemBoxUIClose>.Raise(new ItemBoxUIClose(gameObject));
 
-        }
     }
 
     private void OnDisable()
