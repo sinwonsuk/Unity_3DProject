@@ -9,7 +9,10 @@ public class WeaponNetworkArrow : NetworkBehaviour
     public Transform RopeTransform { get; set; }
     public override void Spawned()
     {
-        AttachToOwner(Object.InputAuthority);
+        if(Object.HasStateAuthority)
+        {
+            AttachToOwner(Object.InputAuthority);
+        }
     }
 
 
