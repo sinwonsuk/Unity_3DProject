@@ -1738,22 +1738,6 @@ PrefabInstance:
     serializedVersion: 3
     m_TransformParent: {fileID: 0}
     m_Modifications:
-    - target: {fileID: 476378593739903082, guid: 893bf5b833239e24db224d1dcdc0f1a5, type: 3}
-      propertyPath: SortKey
-      value: 3622882392
-      objectReference: {fileID: 0}
-    - target: {fileID: 583265583124716347, guid: 893bf5b833239e24db224d1dcdc0f1a5, type: 3}
-      propertyPath: SortKey
-      value: 22673778
-      objectReference: {fileID: 0}
-    - target: {fileID: 3115187701088361058, guid: 893bf5b833239e24db224d1dcdc0f1a5, type: 3}
-      propertyPath: healPotion
-      value: 
-      objectReference: {fileID: 11400000, guid: 0a8cf3380c3f35e4baa75575ac7593f7, type: 2}
-    - target: {fileID: 3115187701088361058, guid: 893bf5b833239e24db224d1dcdc0f1a5, type: 3}
-      propertyPath: staminaPotion
-      value: 
-      objectReference: {fileID: 11400000, guid: 935e543113a47a7459bb4b0aad0a5162, type: 2}
     - target: {fileID: 4130999450503676816, guid: 893bf5b833239e24db224d1dcdc0f1a5, type: 3}
       propertyPath: m_Pivot.x
       value: 0
@@ -1837,10 +1821,6 @@ PrefabInstance:
     - target: {fileID: 6801154750796494864, guid: 893bf5b833239e24db224d1dcdc0f1a5, type: 3}
       propertyPath: m_Name
       value: InGameUI
-      objectReference: {fileID: 0}
-    - target: {fileID: 8471751877324363277, guid: 893bf5b833239e24db224d1dcdc0f1a5, type: 3}
-      propertyPath: SortKey
-      value: 2257484899
       objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []

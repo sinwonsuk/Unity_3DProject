@@ -222,17 +222,23 @@ public class InventorySlotUI : NetworkBehaviour,  IBeginDragHandler, IDragHandle
     }
     public void HandleRightClick()
     {
+        if (draggedIcon == null || draggedIcon.transform == null)
+            return;
+
         if (Input.GetMouseButtonDown(1))
         {
             if (slot.item != null)
             {
+                bigInventoryUI.OnSlotClicked(index);
+                bigInventoryUI.UpdateSlotUI(index);
                 isRightDragging = true;
                 draggedIcon.gameObject.SetActive(true);
                 draggedIcon.SetIcon(iconImage.sprite);
+                Debug.Log($"canCombi : {canCombi}");
             }
 
             // 조합 처리
-            if (!isRightDragging && slot.item != null && canCombi)
+            if (slot.item != null && canCombi)
             {
                 bigInventoryUI.OnSlotClicked(index);
                 EventBus<SendItem>.Raise(new SendItem(slot.item));

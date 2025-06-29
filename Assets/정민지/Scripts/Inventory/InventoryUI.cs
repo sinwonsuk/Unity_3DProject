@@ -156,13 +156,14 @@ public class InventoryUI : MonoBehaviour
         if (Input.GetKeyDown(KeyCode.C))
         {
             bool wasCombiOpen = combi.activeSelf;
+            
 
             if (!wasCombiOpen)
             {
                 // 조합창이 열리는 경우
                 combi.SetActive(true);
-                EventBus<showCursor>.Raise(new showCursor(true));
                 EventBus<YesCombi>.Raise(new YesCombi(true));
+                EventBus<showCursor>.Raise(new showCursor(true));
 
                 if (!bigInventoryPanel.activeSelf)
                 {
