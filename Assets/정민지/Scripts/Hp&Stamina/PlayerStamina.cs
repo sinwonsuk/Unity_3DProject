@@ -36,7 +36,7 @@ public class PlayerStamina : NetworkBehaviour
     void RPC_Stamina(float amount)
     {
         currentStamina = Mathf.Clamp(currentStamina - amount, 0f, maxStamina);
-        EventBus<StaminaChanged>.Raise(new StaminaChanged((float)currentStamina, (int)maxStamina));
+        //EventBus<StaminaChanged>.Raise(new StaminaChanged((float)currentStamina, (int)maxStamina));
     }
 
 
@@ -101,6 +101,7 @@ public class PlayerStamina : NetworkBehaviour
                 {
                     recoveryTimer = 0f;
                     currentStamina = Mathf.Clamp(currentStamina + 5f, 0f, maxStamina);
+                   
                 }
             }
 
@@ -122,8 +123,14 @@ public class PlayerStamina : NetworkBehaviour
 
             // 디버그
             Debug.Log($"[Player {Object.InputAuthority.PlayerId}] Stamina = {currentStamina:F1}/{maxStamina}");
+          
         }
 
+        if(Object.HasInputAuthority)
+        {
+            // 로컬 클라이언트에서만 UI 업데이트
+             EventBus<StaminaChanged>.Raise(new StaminaChanged((float)currentStamina, (int)maxStamina));
+        }   
 
     }
 }
