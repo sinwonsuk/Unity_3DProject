@@ -127,6 +127,7 @@ public class InventorySlotUI : NetworkBehaviour,  IBeginDragHandler, IDragHandle
             else
             {
                 bigInventoryUI.OnSlotClicked(index);
+                bigInventoryUI.UpdateUI();
             }
         }
     }
