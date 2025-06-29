@@ -25,7 +25,7 @@ public class PlayerHealth : NetworkBehaviour
     [SerializeField] private int imReady=0;
     [Networked] private float readyTimer { get; set; }
 
-    [Networked] private bool isSpectator { get; set; } = false;
+    private bool isSpectator = false;
 
     [SerializeField] private float timeBeforeHealing = 10f; // 10초 대기 시간
     [SerializeField] private float healInterval = 1f;       // 회복 주기 (1초)
