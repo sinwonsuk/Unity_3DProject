@@ -14,8 +14,6 @@ public class InventoryUI : MonoBehaviour
     public ItemData basicFire;
     public ItemData basicIce;
     public ItemData basicLightning;
-    public ItemData healPotion;
-    public ItemData staminaPotion;
 
 
     public GameObject bigInventoryPanel;
@@ -57,8 +55,6 @@ public class InventoryUI : MonoBehaviour
         inventory.AddItem(basicFire);
         inventory.AddItem(basicIce);
         inventory.AddItem(basicLightning);
-        inventory.AddItem(healPotion);
-        inventory.AddItem(staminaPotion);
 
         UpdateUI();
         isActive = false;
