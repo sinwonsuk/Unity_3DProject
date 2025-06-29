@@ -49,7 +49,7 @@ public class InventoryUI : MonoBehaviour
             if (!slot.IsEmpty && slot.item != null)
             {
                 OnSlotClicked(i);
-                Debug.Log($"게임 시작 시 자동으로 무기 슬롯 {i} 선택됨: {slot.item.itemName}");
+                //Debug.Log($"게임 시작 시 자동으로 무기 슬롯 {i} 선택됨: {slot.item.itemName}");
                 break;
             }
         }
@@ -131,7 +131,7 @@ public class InventoryUI : MonoBehaviour
             {
                 OnSlotClicked(newIndex); //  이것만 해주면 자동 선택 + 무기 변경까지 OK
                 bigInventoryUI.SetSelectedIndexInBigUI(newIndex);
-                Debug.Log($"[TAB] {newIndex}번 슬롯 선택됨: {inventory.slots[newIndex].item?.itemName}");
+                //Debug.Log($"[TAB] {newIndex}번 슬롯 선택됨: {inventory.slots[newIndex].item?.itemName}");
             }
         }
 
