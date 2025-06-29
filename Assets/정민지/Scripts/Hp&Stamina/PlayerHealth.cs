@@ -1,3 +1,4 @@
+using System.Collections;
 using System.Collections.Generic;
 using Fusion;
 using Fusion.Addons.SimpleKCC;
@@ -87,9 +88,14 @@ public class PlayerHealth : NetworkBehaviour
     {
         if (!HasStateAuthority || isDead) return;
 
-        //Runner.Despawn(Object);           // 캐릭터 제거
-        isDead = true;                           // ① 모든 클라로 복제
+        isDead = true;                           //모든 클라로 복제
         SurvivorManager.Instance?.UpdateSurvivorCount();
+        StartCoroutine(DelayDisableCharacter());
+    }
+
+    IEnumerator DelayDisableCharacter()
+    {
+        yield return new WaitForSeconds(1.0f);
         RPC_DisableCharacter();
     }
 
@@ -118,7 +124,7 @@ public class PlayerHealth : NetworkBehaviour
             SurvivorManager.Instance?.UpdateSurvivorCount();
 
             // 시각적 처리
-            RPC_DisableCharacter();
+            //RPC_DisableCharacter();
         }
     }
 
@@ -207,16 +213,16 @@ public class PlayerHealth : NetworkBehaviour
     void RPC_DisableCharacter()
     {
         //외형 , 충돌 끄기
-        foreach (var r in GetComponentsInChildren<Renderer>(true)) r.enabled = false;
+        //foreach (var r in GetComponentsInChildren<Renderer>(true)) r.enabled = false;
         foreach (var c in GetComponentsInChildren<Collider>(true)) c.enabled = false;
 
         //애니메이터 끄기
-        foreach (var a in GetComponentsInChildren<Animator>(true)) a.enabled = false;
-        var netAnim = GetComponent<NetworkMecanimAnimator>();
-        if (netAnim) netAnim.enabled = false;
+        //foreach (var a in GetComponentsInChildren<Animator>(true)) a.enabled = false;
+        //var netAnim = GetComponent<NetworkMecanimAnimator>();
+        //if (netAnim) netAnim.enabled = false;
 
         //움직임 무기 스테이트머신 끄기
-        DisableComponentByName("PlayerStateMachine");
+        //DisableComponentByName("PlayerStateMachine");
         DisableComponentByName("WeaponManager");
         DisableComponentByName("SimpleKCC");
         DisableComponentByName("PlayerWeaponChanged");
