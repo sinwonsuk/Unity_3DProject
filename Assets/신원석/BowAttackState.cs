@@ -117,7 +117,7 @@ public class BowState : BaseState<PlayerStateMachine.PlayerState>
         }
         if (gatherAttack == 0)
         {
-            playerStateMachine.Runner.Despawn(playerStateMachine.WeaponManager.Arrow);
+            //playerStateMachine.Runner.Despawn(playerStateMachine.WeaponManager.Arrow);
             playerStateMachine.BroadcastIdleEvent(PlayerState.Idle);
             return;
         }
