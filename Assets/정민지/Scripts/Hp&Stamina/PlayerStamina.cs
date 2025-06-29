@@ -1,134 +1,100 @@
+ï»¿// PlayerStamina.cs
 using Fusion;
 using UnityEngine;
 
 public class PlayerStamina : NetworkBehaviour
 {
+    // 1) ë„¤íŠ¸ì›Œí¬ë“œ í”„ë¡œí¼í‹° â€” í˜¸ìŠ¤íŠ¸ê°€ ê²°ì •í•˜ê³  ì „íŒŒí•©ë‹ˆë‹¤
     [Networked] public float currentStamina { get; set; }
+    [Networked] public float maxStamina { get; set; }
 
-    public float AttackStaminaCost { get; set; } = 10f;
+    // íšŒë³µ/ì¿¨ë‹¤ìš´ ë¡œì§ì€ ë¡œì»¬ í´ë¼ì´ì–¸íŠ¸ì—ì„œë§Œ í•„ìš”í•˜ë‹¤ë©´ Update()ì—ì„œ ì²˜ë¦¬í•˜ì„¸ìš”.
+    private float recoveryTimer;
+    private bool isRecovering;
+    [SerializeField] private int staminaCoolTime = 3;
 
-    public float MagicStaminaCost { get; set; } = 10f;
-
-    public float ArrowStaminaCost { get; set; } = 10f;
-
-    [SerializeField] private int maxStamina = 100;
-    [SerializeField] private float recoveryTimer;
-    public bool IsStamania { get; set; } = false;
-    private bool imRunning = false;
-    private float timer = 0f;
-    private float skillTimer;
-    private bool isRecovering = false;
-
-    [SerializeField] private int staminaCoolTime;
-
-    private void OnEnable()
-    {
-        EventBus<isRunning>.OnEvent += OnOffRunning;
-    }
-
-    private void OnDisable()
-    {
-        EventBus<isRunning>.OnEvent -= OnOffRunning;
-    }
     public override void Spawned()
     {
-        if (Object.HasInputAuthority)
+        if (Object.HasStateAuthority)
         {
+            // í˜¸ìŠ¤íŠ¸ê°€ í•œ ë²ˆë§Œ ì´ˆê¸°í™”
+            maxStamina = 100f;
             currentStamina = maxStamina;
-            EventBus<StaminaChanged>.Raise(new StaminaChanged(this, currentStamina, maxStamina));
         }
     }
 
-    private void OnOffRunning(isRunning evt)
-    {
-        imRunning = evt.imRunning;
-    }
 
+
+    [Rpc(RpcSources.InputAuthority, RpcTargets.StateAuthority)]
+    void RPC_Stamina(float amount)
+    {
+        currentStamina = Mathf.Clamp(currentStamina - amount, 0f, maxStamina);
+    }
 
     public void UseStamina(float amount)
     {
-        if (!Object.HasInputAuthority || currentStamina <= 0f) return;
-        if (isRecovering) return;
-
-        float before = currentStamina;
-        currentStamina = Mathf.Clamp(currentStamina - amount, 0, maxStamina);
-
-        if (before != currentStamina)
-            EventBus<StaminaChanged>.Raise(new StaminaChanged(this, currentStamina, maxStamina));
-    }
-
-    public void HealStamina(int amount)
-    {
-        if (!Object.HasInputAuthority) return;
-
-        currentStamina = Mathf.Clamp(currentStamina + amount, 0, maxStamina);
-        EventBus<StaminaChanged>.Raise(new StaminaChanged(this, currentStamina, maxStamina));
-    }
-
-    private void Update()
-    {
-        if (!Object.HasInputAuthority) return;
-
-
-        if (imRunning && currentStamina > 0&&!isRecovering)
+        if(Object.HasInputAuthority)
         {
-            timer += Time.deltaTime;
+            RPC_Stamina(amount);
+        }
+        else if(Object.HasStateAuthority)
+        {
+            currentStamina = Mathf.Clamp(currentStamina - amount, 0f, maxStamina);
+        }
+    }
 
-            if (timer >= 0.1f)
+
+
+
+    public void ConsumeStaminaOnServer(float amount)
+    {
+        if (Object.HasStateAuthority)
+        {
+            currentStamina = Mathf.Clamp(currentStamina - amount, 0f, maxStamina);
+        }
+        else if(Object.HasInputAuthority)
+        {
+            RPC_Stamina(amount);
+        }
+
+
+
+    }
+
+    // 3) (ì„ íƒ) í´ë¼ì´ì–¸íŠ¸ UI / ë””ë²„ê·¸ìš©
+    public override void FixedUpdateNetwork()
+    {
+        // ë¡œì»¬ í´ë¼ì´ì–¸íŠ¸ë§Œ ìŠ¤íƒœë¯¸ë‚˜ íšŒë³µ ì—°ì‚°ì„ í•˜ê³  ì‹¶ë‹¤ë©´
+        if (Object.HasStateAuthority)
+        {
+            if (!isRecovering && currentStamina < maxStamina)
             {
-                timer = 0f;
-                UseStamina(1f);
+                recoveryTimer += Runner.DeltaTime;
+                if (recoveryTimer >= 1f)
+                {
+                    recoveryTimer = 0f;
+                    currentStamina = Mathf.Clamp(currentStamina + 5f, 0f, maxStamina);
+                }
             }
-        }
-        else
-        {
-            timer = 0f;
-        }
 
-
-
-        if (!IsStamania && !isRecovering && currentStamina < maxStamina)
-        {
-            recoveryTimer += Time.deltaTime;
-
-            if (recoveryTimer >= 1f)
+            if (!isRecovering && currentStamina <= 1f)
             {
+                isRecovering = true;
                 recoveryTimer = 0f;
-                float before = currentStamina;
-                currentStamina = Mathf.Clamp(currentStamina + 10, 0, maxStamina);
-
-                if (before != currentStamina)
-                {
-                    EventBus<StaminaChanged>.Raise(new StaminaChanged(this, currentStamina, maxStamina));
-                }
-
-                //  È¸º¹ÀÌ ½ÃÀÛµÇ¸é isRecovering °­Á¦·Î ²¨¹ö¸²
-                if (currentStamina > 1 && isRecovering)
-                {
-                    isRecovering = false;
-                    Debug.Log("È¸º¹ Àç°³µÊ, ÄğÅ¸ÀÓ Á¾·á");
-                }
             }
-        }
-
-        // È¸º¹ ÄğÅ¸ÀÓ Æ®¸®°Å
-
-        if (!isRecovering && currentStamina <= 1 && !IsStamania)
-        {
-            isRecovering = true;
-            skillTimer = 0f;
-            Debug.Log("È¸º¹ ÄğÅ¸ÀÓ ½ÃÀÛ");
-        }
-        // È¸º¹ ÄğÅ¸ÀÓ
-        if (isRecovering)
-        {
-            skillTimer += Time.deltaTime;
-
-            if (skillTimer >= staminaCoolTime)
+            else if (isRecovering)
             {
-                currentStamina = 2;
-                isRecovering = false;
+                recoveryTimer += Runner.DeltaTime;
+                if (recoveryTimer >= staminaCoolTime)
+                {
+                    currentStamina = 2f;
+                    isRecovering = false;
+                    recoveryTimer = 0f;
+                }
             }
+
+            // ë””ë²„ê·¸
+            Debug.Log($"[Player {Object.InputAuthority.PlayerId}] Stamina = {currentStamina:F1}/{maxStamina}");
         }
 
 

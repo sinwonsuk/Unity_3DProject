@@ -41,7 +41,7 @@ public class SurvivorManager : NetworkBehaviour
     [Rpc(RpcSources.StateAuthority, RpcTargets.All)]
     void RpcBroadcastSurvivorCount(int count)
     {
-        Debug.Log($"[SurvivorManager] Received survivor count: {count}");
+        //Debug.Log($"[SurvivorManager] Received survivor count: {count}");
         EventBus<SurvivorPlayerCount>.Raise(new SurvivorPlayerCount(count));
     }
 }

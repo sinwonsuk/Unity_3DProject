@@ -19524,7 +19524,7 @@ MonoBehaviour:
   - {fileID: 5694408489362420583}
   renderers:
   - {fileID: 6533694454599705840}
-  attackDamage: 2
+  attackDamage: 5
   infoConfig: {fileID: 11400000, guid: ef521a0570aba294eae99212b206a45e, type: 2}
 --- !u!135 &4795728392243858197
 SphereCollider:

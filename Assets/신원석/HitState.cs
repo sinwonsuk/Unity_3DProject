@@ -82,9 +82,12 @@ public class HitState : BaseState<PlayerStateMachine.PlayerState>
         if (weaponNetObj.InputAuthority == playerStateMachine.Object.InputAuthority)
             return;
 
+        int attack = weaponNetObj.gameObject.GetComponent<WeaponNetworkObject>().weaponInfoConfig.Attack;
+        playerStateMachine.health.RequestDamage(attack);
+
+
         playerStateMachine.AnimHandler.SetHitTrigger();
         playerStateMachine.AnimHandler.SetHitBool(true);
-        playerStateMachine.health.RequestDamage(20);
     }
     public override void OnTriggerExit(Collider collider) { }
     public override void OnTriggerStay(Collider collider) { }
