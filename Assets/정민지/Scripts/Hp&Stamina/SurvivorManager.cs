@@ -21,6 +21,9 @@ public class SurvivorManager : NetworkBehaviour
             gameStartTime = Time.time;
             StartCoroutine(EnableResultEvaluationAfterDelay(20f));
         }
+
+        SoundManager.GetInstance().Bgm_Stop();
+        SoundManager.GetInstance().PlayBgm(SoundManager.bgm.InGame);
     }
 
     private IEnumerator EnableResultEvaluationAfterDelay(float delay)

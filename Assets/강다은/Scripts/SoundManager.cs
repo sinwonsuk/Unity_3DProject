@@ -35,16 +35,6 @@ public class SoundManager : MonoBehaviour
 		DontDestroyOnLoad(gameObject);
 		Init();
 	}
-    private void Start()
-    {
-        string sceneName = SceneManager.GetActiveScene().name;
-
-        if (sceneName == "Demo_ExteriorOnly_Optimized")
-        {
-			Bgm_Stop();
-            PlayBgm(bgm.InGame);
-        }
-    }
 
     public void SfxPlay(sfx sfx, bool _loopcheck, float volume = 0.5f)
 	{
