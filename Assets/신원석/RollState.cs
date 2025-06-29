@@ -86,7 +86,7 @@ public class RollState : BaseState<PlayerStateMachine.PlayerState>
     }
     Vector3 rollDirection;
 
-    [SerializeField] float rollSpeed = 10f;
+    [SerializeField] float rollSpeed = 3f;
 
     PlayerStateMachine playerStateMachine;
 }
