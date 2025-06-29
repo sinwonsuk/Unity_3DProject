@@ -9,7 +9,7 @@ using UnityEngine.EventSystems;
 using UnityEngine.UI;
 using static UnityEngine.UI.GridLayoutGroup;
 
-public class InventorySlotUI : NetworkBehaviour, IPointerClickHandler, IBeginDragHandler, IDragHandler, IEndDragHandler, IDropHandler
+public class InventorySlotUI : NetworkBehaviour,  IBeginDragHandler, IDragHandler, IEndDragHandler, IDropHandler
 {
     public Image iconImage;
     public TMP_Text quantityText;
@@ -80,12 +80,10 @@ public class InventorySlotUI : NetworkBehaviour, IPointerClickHandler, IBeginDra
     {
         this.canCombi = evt.canCombi;
     }
-    public void OnPointerClick(PointerEventData eventData)
+    public void RightClick()
     {
-        if (eventData.button != PointerEventData.InputButton.Right) return;
        
-        if (eventData.button == PointerEventData.InputButton.Right && slot.item != null)
-        {
+
             bigInventoryUI.OnSlotClicked(index);
             bigInventoryUI.UpdateSlotUI(index);
 
@@ -95,7 +93,6 @@ public class InventorySlotUI : NetworkBehaviour, IPointerClickHandler, IBeginDra
                 slot.item = null;
                 bigInventoryUI.UpdateSlotUI(index);
             }
-        }
     }
 
     public void OnBeginDrag(PointerEventData eventData)
@@ -220,7 +217,8 @@ public class InventorySlotUI : NetworkBehaviour, IPointerClickHandler, IBeginDra
 
     void Update()
     {
-        if (Input.GetMouseButtonDown(1)) // 우클릭 눌렀을 때
+        // 우클릭 드래그 시작
+        if (Input.GetMouseButtonDown(1))
         {
             if (slot.item != null)
             {
@@ -230,17 +228,19 @@ public class InventorySlotUI : NetworkBehaviour, IPointerClickHandler, IBeginDra
             }
         }
 
+        // 우클릭 드래그 중
         if (isRightDragging && Input.GetMouseButton(1))
         {
-            draggedIcon.transform.position = Input.mousePosition;
+            if (slot.item != null)
+                draggedIcon.transform.position = Input.mousePosition;
         }
 
+        // 우클릭 드래그 끝
         if (Input.GetMouseButtonUp(1) && isRightDragging)
         {
             isRightDragging = false;
             draggedIcon.gameObject.SetActive(false);
 
-            // 마우스 위치 아래에 있는 슬롯 탐색
             PointerEventData pointerData = new PointerEventData(EventSystem.current)
             {
                 position = Input.mousePosition
@@ -257,6 +257,18 @@ public class InventorySlotUI : NetworkBehaviour, IPointerClickHandler, IBeginDra
                     bigInventoryUI.SwapSlots(index, targetSlot.index);
                     break;
                 }
+            }
+        }
+
+        // 우클릭 아이템 사용/조합 처리
+        if (Input.GetMouseButtonUp(1) && !isRightDragging)
+        {
+            if (slot.item != null && canCombi)
+            {
+                bigInventoryUI.OnSlotClicked(index);
+                EventBus<SendItem>.Raise(new SendItem(slot.item));
+                slot.item = null;
+                bigInventoryUI.UpdateSlotUI(index);
             }
         }
     }
