@@ -166,7 +166,7 @@ public class AutoMatchManager : MonoBehaviour, INetworkRunnerCallbacks
             SessionName = roomName,
             Scene = startScene,         // Host 가 나중에 LoadScene
             SceneManager = sceneManager,
-            PlayerCount = 5
+            PlayerCount = 4
 
         };
 
@@ -193,7 +193,7 @@ public class AutoMatchManager : MonoBehaviour, INetworkRunnerCallbacks
     {
         Debug.Log($"플레이어 입장: {player}. 현재 인원: {runner.ActivePlayers.Count()}");
 
-        if (runner.IsServer && runner.ActivePlayers.Count() == 5)
+        if (runner.IsServer && runner.ActivePlayers.Count() == 4)
         {
             Debug.Log("인게임 씬으로 이동 시작");
 
