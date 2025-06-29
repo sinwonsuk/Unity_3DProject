@@ -2,9 +2,7 @@
 using Fusion;
 using Fusion.Addons.SimpleKCC;
 using System;
-using System.Collections;
 using System.Collections.Generic;
-using System.Drawing;
 using UnityEngine;
 
 
@@ -62,7 +60,7 @@ public class PlayerStateMachine : StageManager<PlayerStateMachine.PlayerState>
 
     public float invulnDuration = 0.15f;
 
-    private bool isDeath = false;
+    [Networked] private bool isDeath { get; set; } = false;
 
     public enum PlayerState
     {
@@ -214,7 +212,6 @@ public class PlayerStateMachine : StageManager<PlayerStateMachine.PlayerState>
     {
         EventBus<WeaponChange>.OnEvent += WeaponChange;
 
-        EventBus<SendSlot>.OnEvent += InvenSlotHandle;
     }
     private void OnDisable()
     {
@@ -238,10 +235,6 @@ public class PlayerStateMachine : StageManager<PlayerStateMachine.PlayerState>
         }
     }
 
-    public void InvenSlotHandle(SendSlot sendSlot)
-    {
-
-    }
 
     [Networked] public ItemState itemState { get; set; }
     [Networked] public PlayerRef owner { get; set; }
@@ -269,12 +262,10 @@ public class PlayerStateMachine : StageManager<PlayerStateMachine.PlayerState>
 
     public void MoveAndRotate(NetworkInputData data)
     {
-        if(SyncedState == PlayerState.Death)
+        if (SyncedState == PlayerState.Death || SyncedState == PlayerState.Idle)       
         {
             return;
         }
-
-
         Vector3 moveInput = data.direction.normalized;
         Quaternion planarRot = Quaternion.Euler(0, data.CameraRotateY, 0);
         Vector3 moveDir = planarRot * moveInput;
@@ -474,14 +465,20 @@ public class PlayerStateMachine : StageManager<PlayerStateMachine.PlayerState>
     {
         if (!_isInitialized) return;
 
-        if(health.currentHp <= 0 && isDeath ==false)
+        if(health.currentHp <= 0)
         {
             BroadcastIdleEvent(PlayerState.Death);
-            currentState.ExitState();
-            currentState = states[PlayerState.Death];
-            currentState.EnterState();
-            isDeath = true;
+
+            if (SyncedState != currentState.StateKey)
+            {
+                currentState.ExitState();
+                currentState = states[PlayerState.Death];
+                currentState.EnterState();
+            }
+
+
             return;
+
         }
 
         MoveAndRotate(inputHandler.GetNetworkInputData());

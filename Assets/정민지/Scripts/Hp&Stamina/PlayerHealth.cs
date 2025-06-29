@@ -27,17 +27,24 @@ public class PlayerHealth : NetworkBehaviour
 
     private bool isSpectator = false;
 
+    [SerializeField] private float timeBeforeHealing = 10f; // 10초 대기 시간
+    [SerializeField] private float healInterval = 1f;       // 회복 주기 (1초)
+    [SerializeField] private int healAmount = 2;            // 회복량
+
+    private float noDamageTimer = 0f;
+    private float healTimer = 0f;
+
     void Update()
     {
 
-        //테스트용
-        if (Object.HasInputAuthority && Input.GetKeyDown(KeyCode.P))
-        {
-            // 로컬에서 관전 카메라 생성
-            SpectatorManager.EnterSpectatorMode(transform.position, transform.rotation);
+        ////테스트용
+        //if (Object.HasInputAuthority && Input.GetKeyDown(KeyCode.P))
+        //{
+        //    // 로컬에서 관전 카메라 생성
+        //    SpectatorManager.EnterSpectatorMode(transform.position, transform.rotation);
 
-            RPC_RequestSuicide();
-        }
+        //    RPC_RequestSuicide();
+        //}
 
         // 관전모드진입
         if (Object.HasInputAuthority)
@@ -46,7 +53,7 @@ public class PlayerHealth : NetworkBehaviour
             {
                 isSpectator = true;
                 SpectatorManager.EnterSpectatorMode(transform.position, transform.rotation);
-                RPC_RequestSuicide();
+                //RPC_RequestSuicide();
                 Instantiate(deadPrefab);
             }
 
@@ -65,8 +72,23 @@ public class PlayerHealth : NetworkBehaviour
             }
         }
 
-        if(HasStateAuthority)
+        if (HasStateAuthority && !isDead)
         {
+            // 데미지를 입지 않은 시간 증가
+            if (currentHp < maxHp)
+                noDamageTimer += Runner.DeltaTime;
+
+            // 체력 회복
+            if (noDamageTimer >= timeBeforeHealing)
+            {
+                healTimer += Runner.DeltaTime;
+                if (healTimer >= healInterval)
+                {
+                    Heal(healAmount); // 회복
+                    healTimer = 0f;
+                }
+            }
+
             if (readyTimer < imReady)
             {
                 SurvivorManager.Instance?.UpdateSurvivorCount();
@@ -76,7 +98,7 @@ public class PlayerHealth : NetworkBehaviour
             {
                 canWin = true;
             }
-        }  
+        }
     }
 
     //서버에게 HP 0 요청 
@@ -91,11 +113,12 @@ public class PlayerHealth : NetworkBehaviour
         isDead = true;                           //모든 클라로 복제
         SurvivorManager.Instance?.UpdateSurvivorCount();
         StartCoroutine(DelayDisableCharacter());
+
     }
 
     IEnumerator DelayDisableCharacter()
     {
-        yield return new WaitForSeconds(1.0f);
+        yield return new WaitForSeconds(1f);
         RPC_DisableCharacter();
     }
 
@@ -118,13 +141,14 @@ public class PlayerHealth : NetworkBehaviour
         currentHp = Mathf.Clamp(currentHp - dmg, 0, maxHp);
         Debug.Log($"{gameObject.name} 체력 감소: {currentHp}");
 
+        // 회복 타이머 초기화
+        noDamageTimer = 0f;
+        healTimer = 0f;
+
         if (currentHp <= 0 && !isDead)
         {
-            isDead = true; // 명확히 죽었음을 표시
+            isDead = true;
             SurvivorManager.Instance?.UpdateSurvivorCount();
-
-            // 시각적 처리
-            //RPC_DisableCharacter();
         }
     }
 
@@ -156,12 +180,9 @@ public class PlayerHealth : NetworkBehaviour
     {
         if (!HasStateAuthority) return;
 
-        int before = currentHp;
         currentHp = Mathf.Clamp(currentHp + amount, 0, maxHp);
-        Debug.Log($"{gameObject.name}: {before} > {currentHp} (+{amount})");
+        Debug.Log($"{gameObject.name} 체력 감소: {currentHp}");
 
-        if (Object.HasInputAuthority)
-            EventBus<HealthChanged>.Raise(new HealthChanged(this, currentHp, maxHp));
     }
 
     public void CountAlivePlayers()
@@ -213,16 +234,16 @@ public class PlayerHealth : NetworkBehaviour
     void RPC_DisableCharacter()
     {
         //외형 , 충돌 끄기
-        //foreach (var r in GetComponentsInChildren<Renderer>(true)) r.enabled = false;
+        foreach (var r in GetComponentsInChildren<Renderer>(true)) r.enabled = false;
         foreach (var c in GetComponentsInChildren<Collider>(true)) c.enabled = false;
 
         //애니메이터 끄기
-        //foreach (var a in GetComponentsInChildren<Animator>(true)) a.enabled = false;
-        //var netAnim = GetComponent<NetworkMecanimAnimator>();
-        //if (netAnim) netAnim.enabled = false;
+        foreach (var a in GetComponentsInChildren<Animator>(true)) a.enabled = false;
+        var netAnim = GetComponent<NetworkMecanimAnimator>();
+        if (netAnim) netAnim.enabled = false;
 
         //움직임 무기 스테이트머신 끄기
-        //DisableComponentByName("PlayerStateMachine");
+        DisableComponentByName("PlayerStateMachine");
         DisableComponentByName("WeaponManager");
         DisableComponentByName("SimpleKCC");
         DisableComponentByName("PlayerWeaponChanged");

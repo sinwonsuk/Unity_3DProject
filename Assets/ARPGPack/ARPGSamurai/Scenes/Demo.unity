@@ -449,6 +449,7 @@ GameObject:
   m_Component:
   - component: {fileID: 112114645}
   - component: {fileID: 112114644}
+  - component: {fileID: 112114646}
   m_Layer: 0
   m_Name: Virtual Camera (1)
   m_TagString: VirtualCam2
@@ -511,6 +512,36 @@ Transform:
   - {fileID: 382696989}
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &112114646
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 112114643}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: e501d18bb52cf8c40b1853ca4904654f, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  m_CollideAgainst:
+    serializedVersion: 2
+    m_Bits: 1
+  m_IgnoreTag: 
+  m_TransparentLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_MinimumDistanceFromTarget: 0.1
+  m_AvoidObstacles: 1
+  m_DistanceLimit: 0
+  m_MinimumOcclusionTime: 0
+  m_CameraRadius: 0.1
+  m_Strategy: 1
+  m_MaximumEffort: 4
+  m_SmoothingTime: 0
+  m_Damping: 0
+  m_DampingWhenOccluded: 0
+  m_OptimalTargetDistance: 0
 --- !u!1 &189033693
 GameObject:
   m_ObjectHideFlags: 0
@@ -1735,9 +1766,25 @@ PrefabInstance:
       value: 0.5
       objectReference: {fileID: 0}
     - target: {fileID: 512839860134147877, guid: a152c3df5963f3a41a45bcf7263b16b9, type: 3}
+      propertyPath: bgmClips.Array.size
+      value: 3
+      objectReference: {fileID: 0}
+    - target: {fileID: 512839860134147877, guid: a152c3df5963f3a41a45bcf7263b16b9, type: 3}
       propertyPath: sfxClips.Array.size
       value: 18
       objectReference: {fileID: 0}
+    - target: {fileID: 512839860134147877, guid: a152c3df5963f3a41a45bcf7263b16b9, type: 3}
+      propertyPath: 'bgmClips.Array.data[0]'
+      value: 
+      objectReference: {fileID: 8300000, guid: 1f06fbba3e51d9d41acd44114ba3d4b2, type: 3}
+    - target: {fileID: 512839860134147877, guid: a152c3df5963f3a41a45bcf7263b16b9, type: 3}
+      propertyPath: 'bgmClips.Array.data[1]'
+      value: 
+      objectReference: {fileID: 8300000, guid: 3fa3ea24f7e678a478bd0614641cefeb, type: 3}
+    - target: {fileID: 512839860134147877, guid: a152c3df5963f3a41a45bcf7263b16b9, type: 3}
+      propertyPath: 'bgmClips.Array.data[2]'
+      value: 
+      objectReference: {fileID: 8300000, guid: 7c921ac97f32c814ea53cdcf5cb12f18, type: 3}
     - target: {fileID: 512839860134147877, guid: a152c3df5963f3a41a45bcf7263b16b9, type: 3}
       propertyPath: 'sfxClips.Array.data[0]'
       value: 
@@ -1805,7 +1852,7 @@ PrefabInstance:
     - target: {fileID: 512839860134147877, guid: a152c3df5963f3a41a45bcf7263b16b9, type: 3}
       propertyPath: 'sfxClips.Array.data[16]'
       value: 
-      objectReference: {fileID: 8300000, guid: 9873babc51af98345a714078ab1aaa7d, type: 3}
+      objectReference: {fileID: 8300000, guid: b660b45c524127144a188b3da344cb6a, type: 3}
     - target: {fileID: 512839860134147877, guid: a152c3df5963f3a41a45bcf7263b16b9, type: 3}
       propertyPath: 'sfxClips.Array.data[17]'
       value: 

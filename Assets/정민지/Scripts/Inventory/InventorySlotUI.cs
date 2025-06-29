@@ -1,5 +1,6 @@
 ﻿using Fusion;
 using System.Collections;
+using System.Collections.Generic;
 using TMPro;
 using Unity.VisualScripting;
 using Unity.VisualScripting.Antlr3.Runtime.Misc;
@@ -8,7 +9,7 @@ using UnityEngine.EventSystems;
 using UnityEngine.UI;
 using static UnityEngine.UI.GridLayoutGroup;
 
-public class InventorySlotUI : NetworkBehaviour, IPointerClickHandler, IBeginDragHandler, IDragHandler, IEndDragHandler, IDropHandler
+public class InventorySlotUI : NetworkBehaviour,  IBeginDragHandler, IDragHandler, IEndDragHandler, IDropHandler, IPointerClickHandler
 {
     public Image iconImage;
     public TMP_Text quantityText;
@@ -22,6 +23,7 @@ public class InventorySlotUI : NetworkBehaviour, IPointerClickHandler, IBeginDra
     private InventorySlot slot;
     private bool wasSelected = false; // 이전 선택 상태
     private PlayerWeaponChanged changed;
+    private bool isRightDragging = false;
 
     Coroutine coroutine;
 
@@ -63,18 +65,7 @@ public class InventorySlotUI : NetworkBehaviour, IPointerClickHandler, IBeginDra
         changed =FindLocalPlayerWeaponChanged();
     }
 
-
-
-    public void OnPointerClick(PointerEventData eventData)
-    {
-        bigInventoryUI.OnSlotClicked(index);
-        if (eventData.button == PointerEventData.InputButton.Right && slot.item != null)
-        {
-            EventBus<SendItem>.Raise(new SendItem(slot.item));
-            slot.item = null;
-            bigInventoryUI.UpdateSlotUI(index);
-        }
-    }
+   
 
     public void OnBeginDrag(PointerEventData eventData)
     {
@@ -84,6 +75,36 @@ public class InventorySlotUI : NetworkBehaviour, IPointerClickHandler, IBeginDra
         draggedIcon.gameObject.SetActive(true);
         draggedIcon.SetIcon(iconImage.sprite);
         draggedIcon.StartDrag(iconImage.sprite);
+
+    }
+    public void OnPointerClick(PointerEventData eventData)
+    {
+        if (slot == null || slot.item == null)
+            return;
+
+        //if (eventData.button == PointerEventData.InputButton.Left)
+        //{
+        //    // 좌클릭 → 선택 상태 변경 요청 (bigInventoryUI에게)
+        //    bigInventoryUI.OnSlotClicked(index);
+        //}
+        if (eventData.button == PointerEventData.InputButton.Right)
+        {
+            SoundManager.GetInstance().SfxPlay(SoundManager.sfx.itemDrop, false);
+            // 우클릭 → 조합 이벤트 발송 (조합 가능할 때만)
+            //if (canCombi)
+            //{
+                EventBus<SendItem>.Raise(new SendItem(slot.item));
+                slot.item = null;
+                bigInventoryUI.UpdateSlotUI(index);
+                bigInventoryUI.UpdateUI();
+
+            //  }
+            // else
+            //{
+            // 
+            // bigInventoryUI.UpdateUI();
+            //}
+        }
     }
     public void OnDrag(PointerEventData eventData)
     {
@@ -150,12 +171,12 @@ public class InventorySlotUI : NetworkBehaviour, IPointerClickHandler, IBeginDra
 
         if (isSelected)
         {
-            Debug.Log($"[{index}] 슬롯이 선택됨: {slot.item?.itemName}");
+            //Debug.Log($"[{index}] 슬롯이 선택됨: {slot.item?.itemName}");
 
             if (slot.item == null)
             {
                 //RPC_ChangeWeapon(ItemState.none);
-                Debug.Log("선택된 아이템이 없음");
+               // Debug.Log("선택된 아이템이 없음");
             }
 
             else if (slot.item.weaponType == WeaponType.Sword)
@@ -172,16 +193,6 @@ public class InventorySlotUI : NetworkBehaviour, IPointerClickHandler, IBeginDra
             {
                 changed.ChangeWeapon(ItemState.Harberd, slot.item.itemGrade);
 
-            }
-            else if (slot.item.potionType == PotionType.Heal)
-            {
-                changed.ChangeWeapon(ItemState.HpPotion, slot.item.itemGrade);
-                EventBus<SendSlot>.Raise(new SendSlot(slot));
-            }
-            else if (slot.item.potionType == PotionType.Stamina)
-            {
-                changed.ChangeWeapon(ItemState.StaminaPotion, slot.item.itemGrade);
-                EventBus<SendSlot>.Raise(new SendSlot(slot));
             }
             else if (slot.item.magicType == MagicType.Fire)
             {
@@ -201,10 +212,12 @@ public class InventorySlotUI : NetworkBehaviour, IPointerClickHandler, IBeginDra
 
             else
             {
-                Debug.Log($"[{index}] 슬롯 선택 해제");
+               // Debug.Log($"[{index}] 슬롯 선택 해제");
             }
         }
     }
+
+    
 
     public PlayerWeaponChanged FindLocalPlayerWeaponChanged()
     {

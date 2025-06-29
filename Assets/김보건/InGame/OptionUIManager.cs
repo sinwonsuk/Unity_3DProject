@@ -109,6 +109,5 @@ public class OptionUIManager : MonoBehaviour
 
     public GameObject OptionsPanel;
     private bool isOptionsActive = false;
-    [SerializeField] private GameObject biginventory;
-    [SerializeField] private GameObject combi;
+
 }

@@ -1,6 +1,6 @@
 ﻿using UnityEngine;
 using UnityEngine.Rendering;
-
+using UnityEngine.SceneManagement;
 public class SoundManager : MonoBehaviour
 {
 	public enum sfx
@@ -25,7 +25,9 @@ public class SoundManager : MonoBehaviour
     }
 	public enum bgm
 	{
-
+		Lobby,
+		InGame,
+		Matching,
 	}
 	private void Awake()
 	{
@@ -34,7 +36,7 @@ public class SoundManager : MonoBehaviour
 		Init();
 	}
 
-	public void SfxPlay(sfx sfx, bool _loopcheck, float volume = 0.5f)
+    public void SfxPlay(sfx sfx, bool _loopcheck, float volume = 0.5f)
 	{
 		if (sfxClips[(int)sfx] == null)
 		{

@@ -65,9 +65,13 @@ public class WeaponSwitchState : BaseState<PlayerStateMachine.PlayerState>
         if (weaponNetObj.InputAuthority == playerStateMachine.Object.InputAuthority)
             return;
 
+
+
         int attack = weaponNetObj.gameObject.GetComponent<WeaponNetworkObject>().weaponInfoConfig.Attack;
 
         playerStateMachine.health.RequestDamage(attack);
+
+        weaponNetObj.GetComponent<WeaponNetworkObject>().GetComponent<MeshCollider>().enabled = false;
 
         playerStateMachine.BroadcastIdleEvent(PlayerState.Hit);
     }

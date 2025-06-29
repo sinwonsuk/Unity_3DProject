@@ -55,7 +55,10 @@ public class AutoMatchManager : MonoBehaviour, INetworkRunnerCallbacks
 
     //    StartGameWithRoomName(roomName);
     //}
-
+    public void Start()
+    {
+        SoundManager.GetInstance().PlayBgm(SoundManager.bgm.Lobby);
+    }
     public void OnMatchButtonClick()
     {
         // 아직 매칭이 끝나지 않았거나 Runner가 종료 중이면 클릭 무시
@@ -64,6 +67,7 @@ public class AutoMatchManager : MonoBehaviour, INetworkRunnerCallbacks
         if (matchTimerUI != null)
         {
             matchTimerUI.StartTimer();
+            SoundManager.GetInstance().PlayBgm(SoundManager.bgm.Matching);
         }
 
         StartCoroutine(StartMatchFlow());
@@ -162,7 +166,7 @@ public class AutoMatchManager : MonoBehaviour, INetworkRunnerCallbacks
             SessionName = roomName,
             Scene = startScene,         // Host 가 나중에 LoadScene
             SceneManager = sceneManager,
-            PlayerCount = 2
+            PlayerCount = 5
 
         };
 
@@ -189,7 +193,7 @@ public class AutoMatchManager : MonoBehaviour, INetworkRunnerCallbacks
     {
         Debug.Log($"플레이어 입장: {player}. 현재 인원: {runner.ActivePlayers.Count()}");
 
-        if (runner.IsServer && runner.ActivePlayers.Count() == 2)
+        if (runner.IsServer && runner.ActivePlayers.Count() == 5)
         {
             Debug.Log("인게임 씬으로 이동 시작");
 
@@ -210,6 +214,7 @@ public class AutoMatchManager : MonoBehaviour, INetworkRunnerCallbacks
             Debug.Log("매칭 취소 중");
             // 러너 내부 정리가 끝날 때까지 기다렸다가 리셋
             StartCoroutine(ShutdownAndReset());
+            SoundManager.GetInstance().PlayBgm(SoundManager.bgm.Lobby);
         }
         else
         {

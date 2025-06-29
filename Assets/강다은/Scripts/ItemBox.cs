@@ -43,7 +43,13 @@ public class ItemBox : NetworkBehaviour
     {
         if (player == null) return;
 
-        if (Vector3.Distance(transform.position, player.position) > interactionDistance)
+        float dist = Vector3.Distance(transform.position, player.position);
+        if (isOpened && dist > interactionDistance)
+        {
+            CloseBox();
+            return;
+        }
+        if (!isOpened && dist > interactionDistance)
             return;
 
         if (Input.GetKeyDown(KeyCode.E))
@@ -51,6 +57,7 @@ public class ItemBox : NetworkBehaviour
             if (isOpened) CloseBox();
             else OpenBox();
         }
+
     }
 
     private void OnDisable()
@@ -71,18 +78,18 @@ public class ItemBox : NetworkBehaviour
         isOpened = false;
         Cursor.visible = false;
         Cursor.lockState = CursorLockMode.Locked;
-        RPC_RequestDespawn();
+		EventBus<ItemBoxUIClose>.Raise(new ItemBoxUIClose(gameObject));
 
-        // 2) UI 닫힘 이벤트
-        EventBus<ItemBoxUIClose>.Raise(new ItemBoxUIClose(gameObject));
+		RPC_RequestDespawn();
     }
 
     // 서버(StateAuthority)에서 실행되어 네트워크 오브젝트를 제거
     [Rpc(RpcSources.All, RpcTargets.StateAuthority)]
     private void RPC_RequestDespawn()
     {
-        // 서버(StateAuthority)에서만 실행됩니다
         Runner.Despawn(Object);
+        // 서버(StateAuthority)에서만 실행됩니다
+
     }
 
     private void OnUIClose(ItemBoxUIClose evt)

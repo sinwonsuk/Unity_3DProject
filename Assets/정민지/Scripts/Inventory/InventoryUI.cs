@@ -10,12 +10,11 @@ public class InventoryUI : MonoBehaviour
 
     public ItemData basicSword;
     public ItemData basicBow;
-    public ItemData basicHerberd;
+    public ItemData basicAxe;
     public ItemData basicFire;
     public ItemData basicIce;
     public ItemData basicLightning;
-    public ItemData healPotion;
-    public ItemData staminaPotion;
+    
 
 
     public GameObject bigInventoryPanel;
@@ -34,18 +33,6 @@ public class InventoryUI : MonoBehaviour
     private bool isActive;
     private bool canSee;
 
-    //public static InventoryUI Instance { get; private set; }
-
-    //private void Awake()
-    //{
-    //    Instance = this;
-    //}
-
-    //public bool IsInventoryOpen()
-    //{
-    //    return bigInventoryPanel.activeSelf;
-    //}
-
 
     private void Start()
     {
@@ -53,17 +40,16 @@ public class InventoryUI : MonoBehaviour
         InitSlots();
         inventory.AddItem(basicSword);
         inventory.AddItem(basicBow);
-        inventory.AddItem(basicHerberd);
+        inventory.AddItem(basicAxe);
         inventory.AddItem(basicFire);
         inventory.AddItem(basicIce);
         inventory.AddItem(basicLightning);
-        inventory.AddItem(healPotion);
-        inventory.AddItem(staminaPotion);
 
         UpdateUI();
         isActive = false;
         canSee = false;
         SelectFirstWeaponSlot();
+        EventBus<YesCombi>.Raise(new YesCombi(false));
     }
 
     public void SelectFirstWeaponSlot()
@@ -138,15 +124,9 @@ public class InventoryUI : MonoBehaviour
         {
             isActive = bigInventoryPanel.activeSelf;
             bigInventoryPanel.SetActive(!isActive); // 토글 방식
+            combi.SetActive(!isActive);
 
-            if(bigInventoryPanel.activeSelf)
-            {
-                EventBus<showCursor>.Raise(new showCursor(true));
-            }
-            else
-            {
-                EventBus<showCursor>.Raise(new showCursor(false));
-            }
+
         }
 
         if (Input.GetKeyDown(KeyCode.Tab))
@@ -169,11 +149,13 @@ public class InventoryUI : MonoBehaviour
         if (Input.GetKeyDown(KeyCode.C))
         {
             bool wasCombiOpen = combi.activeSelf;
+            
 
             if (!wasCombiOpen)
             {
                 // 조합창이 열리는 경우
                 combi.SetActive(true);
+                EventBus<YesCombi>.Raise(new YesCombi(true));
                 EventBus<showCursor>.Raise(new showCursor(true));
 
                 if (!bigInventoryPanel.activeSelf)
@@ -187,6 +169,7 @@ public class InventoryUI : MonoBehaviour
                 combi.SetActive(false);
                 bigInventoryPanel.SetActive(false);
                 EventBus<showCursor>.Raise(new showCursor(false));
+                EventBus<YesCombi>.Raise(new YesCombi(false));
             }
         }
             
