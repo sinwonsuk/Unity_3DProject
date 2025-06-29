@@ -90,12 +90,13 @@ public class PlayerHealth : NetworkBehaviour
 
         isDead = true;                           //모든 클라로 복제
         SurvivorManager.Instance?.UpdateSurvivorCount();
-        StartCoroutine(DelayDisableCharacter());
+        //StartCoroutine(DelayDisableCharacter());
+        RPC_DisableCharacter();
     }
 
     IEnumerator DelayDisableCharacter()
     {
-        yield return new WaitForSeconds(2.0f);
+        yield return new WaitForSeconds(0f);
         RPC_DisableCharacter();
     }
 
@@ -214,7 +215,7 @@ public class PlayerHealth : NetworkBehaviour
     {
         //외형 , 충돌 끄기
         //foreach (var r in GetComponentsInChildren<Renderer>(true)) r.enabled = false;
-        foreach (var c in GetComponentsInChildren<Collider>(true)) c.enabled = false;
+        //foreach (var c in GetComponentsInChildren<Collider>(true)) c.enabled = false;
 
         //애니메이터 끄기
         //foreach (var a in GetComponentsInChildren<Animator>(true)) a.enabled = false;
