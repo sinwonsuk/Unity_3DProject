@@ -53,7 +53,7 @@ public class PlayerHealth : NetworkBehaviour
             {
                 isSpectator = true;
                 SpectatorManager.EnterSpectatorMode(transform.position, transform.rotation);
-                RPC_RequestSuicide();
+                //RPC_RequestSuicide();
                 Instantiate(deadPrefab);
             }
 
@@ -149,7 +149,6 @@ public class PlayerHealth : NetworkBehaviour
         {
             isDead = true;
             SurvivorManager.Instance?.UpdateSurvivorCount();
-            RPC_RequestSuicide();
         }
     }
 
