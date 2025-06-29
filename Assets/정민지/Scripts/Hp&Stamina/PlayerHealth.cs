@@ -149,6 +149,7 @@ public class PlayerHealth : NetworkBehaviour
         {
             isDead = true;
             SurvivorManager.Instance?.UpdateSurvivorCount();
+            RPC_RequestSuicide();
         }
     }
 
