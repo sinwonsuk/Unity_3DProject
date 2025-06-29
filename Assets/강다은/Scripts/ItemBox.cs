@@ -81,8 +81,14 @@ public class ItemBox : NetworkBehaviour
     [Rpc(RpcSources.All, RpcTargets.StateAuthority)]
     private void RPC_RequestDespawn()
     {
-        // 서버(StateAuthority)에서만 실행됩니다
+        if(Vector3.Distance(transform.position, player.position) < interactionDistance)
+        {
+            EventBus<ItemBoxUIClose>.Raise(new ItemBoxUIClose(gameObject));
+            
+        }
         Runner.Despawn(Object);
+        // 서버(StateAuthority)에서만 실행됩니다
+
     }
 
     private void OnUIClose(ItemBoxUIClose evt)
