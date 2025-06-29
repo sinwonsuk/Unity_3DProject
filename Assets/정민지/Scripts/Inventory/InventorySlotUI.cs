@@ -24,7 +24,6 @@ public class InventorySlotUI : NetworkBehaviour,  IBeginDragHandler, IDragHandle
     private bool wasSelected = false; // 이전 선택 상태
     private PlayerWeaponChanged changed;
     private bool isRightDragging = false;
-    private bool canCombi=false;
 
     Coroutine coroutine;
 
@@ -66,34 +65,7 @@ public class InventorySlotUI : NetworkBehaviour,  IBeginDragHandler, IDragHandle
         changed =FindLocalPlayerWeaponChanged();
     }
 
-    private void OnEnable()
-    {
-        EventBus<YesCombi>.OnEvent += UpdateCanCombi;
-    }
-
-    private void OnDisable()
-    {
-        EventBus<YesCombi>.OnEvent -= UpdateCanCombi;
-    }
-
-    private void UpdateCanCombi(YesCombi evt)
-    {
-        this.canCombi = evt.canCombi;
-    }
-    public void RightClick()
-    {
-       
-
-            bigInventoryUI.OnSlotClicked(index);
-            bigInventoryUI.UpdateSlotUI(index);
-
-            if(canCombi)
-            {
-                EventBus<SendItem>.Raise(new SendItem(slot.item));
-                slot.item = null;
-                bigInventoryUI.UpdateSlotUI(index);
-            }
-    }
+   
 
     public void OnBeginDrag(PointerEventData eventData)
     {

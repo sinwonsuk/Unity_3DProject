@@ -124,15 +124,9 @@ public class InventoryUI : MonoBehaviour
         {
             isActive = bigInventoryPanel.activeSelf;
             bigInventoryPanel.SetActive(!isActive); // 토글 방식
+            combi.SetActive(!isActive);
 
-            if(bigInventoryPanel.activeSelf)
-            {
-                EventBus<showCursor>.Raise(new showCursor(true));
-            }
-            else
-            {
-                EventBus<showCursor>.Raise(new showCursor(false));
-            }
+
         }
 
         if (Input.GetKeyDown(KeyCode.Tab))
