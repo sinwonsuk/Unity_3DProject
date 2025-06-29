@@ -39,8 +39,9 @@ public class SoundManager : MonoBehaviour
     {
         string sceneName = SceneManager.GetActiveScene().name;
 
-        if (sceneName == "TitleScene")
+        if (sceneName == "Demo_ExteriorOnly_Optimized")
         {
+			Bgm_Stop();
             PlayBgm(bgm.InGame);
         }
     }
