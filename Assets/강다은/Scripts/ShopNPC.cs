@@ -6,7 +6,7 @@ public class ShopNPC : NetworkBehaviour
 {
     [Header("NPC 설정")]
     [SerializeField] private string npcId;
-
+    private static GameObject _cachedUI;
     // UI 참조
     private ShopUI shopUI;
     private BigInventoryUI bigInventoryUI;
@@ -15,18 +15,17 @@ public class ShopNPC : NetworkBehaviour
     public override void Spawned()
     {
         base.Spawned();
-        var uiGO = GameObject.Find("ShopUICanvas");
-        if (uiGO == null)
+
+        if (_cachedUI == null)
         {
-            Debug.LogError("[ShopNPC] ShopUICanvas를 찾지 못했습니다!");
+            _cachedUI = GameObject.Find("ShopUICanvas");
+            if (_cachedUI == null)
+                Debug.LogError("UI 못 찾음!");
+            else
+                _cachedUI.SetActive(false);
         }
-        else
-        {
-            Debug.Log("[ShopNPC] ShopUICanvas를 찾았다잉~");
-            shopUI = uiGO.GetComponent<ShopUI>();
-            // 초기에는 숨겨 두기
-            uiGO.SetActive(false);
-        }
+
+        shopUI = _cachedUI.GetComponent<ShopUI>();
 
         // 씬에 배치된 InGameUI 에서 BigInventoryUI, Resell 버튼 찾기
         var ig = GameObject.Find("InGameUI");
@@ -124,4 +123,5 @@ public class ShopNPC : NetworkBehaviour
         if (resellButton != null)
             resellButton.OpenOrCloseResellButton(false);
     }
+
 }
