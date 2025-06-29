@@ -27,6 +27,13 @@ public class PlayerHealth : NetworkBehaviour
 
     private bool isSpectator = false;
 
+    [SerializeField] private float timeBeforeHealing = 10f; // 10초 대기 시간
+    [SerializeField] private float healInterval = 1f;       // 회복 주기 (1초)
+    [SerializeField] private int healAmount = 2;            // 회복량
+
+    private float noDamageTimer = 0f;
+    private float healTimer = 0f;
+
     void Update()
     {
 
@@ -65,8 +72,23 @@ public class PlayerHealth : NetworkBehaviour
             }
         }
 
-        if(HasStateAuthority)
+        if (HasStateAuthority && !isDead)
         {
+            // 데미지를 입지 않은 시간 증가
+            if (currentHp < maxHp)
+                noDamageTimer += Runner.DeltaTime;
+
+            // 체력 회복
+            if (noDamageTimer >= timeBeforeHealing)
+            {
+                healTimer += Runner.DeltaTime;
+                if (healTimer >= healInterval)
+                {
+                    Heal(healAmount); // 회복
+                    healTimer = 0f;
+                }
+            }
+
             if (readyTimer < imReady)
             {
                 SurvivorManager.Instance?.UpdateSurvivorCount();
@@ -76,7 +98,7 @@ public class PlayerHealth : NetworkBehaviour
             {
                 canWin = true;
             }
-        }  
+        }
     }
 
     //서버에게 HP 0 요청 
@@ -119,13 +141,14 @@ public class PlayerHealth : NetworkBehaviour
         currentHp = Mathf.Clamp(currentHp - dmg, 0, maxHp);
         Debug.Log($"{gameObject.name} 체력 감소: {currentHp}");
 
+        // 회복 타이머 초기화
+        noDamageTimer = 0f;
+        healTimer = 0f;
+
         if (currentHp <= 0 && !isDead)
         {
-            isDead = true; // 명확히 죽었음을 표시
+            isDead = true;
             SurvivorManager.Instance?.UpdateSurvivorCount();
-
-            // 시각적 처리
-            //RPC_DisableCharacter();
         }
     }
 
@@ -157,12 +180,9 @@ public class PlayerHealth : NetworkBehaviour
     {
         if (!HasStateAuthority) return;
 
-        int before = currentHp;
         currentHp = Mathf.Clamp(currentHp + amount, 0, maxHp);
-        Debug.Log($"{gameObject.name}: {before} > {currentHp} (+{amount})");
+        Debug.Log($"{gameObject.name} 체력 감소: {currentHp}");
 
-        if (Object.HasInputAuthority)
-            EventBus<HealthChanged>.Raise(new HealthChanged(this, currentHp, maxHp));
     }
 
     public void CountAlivePlayers()
