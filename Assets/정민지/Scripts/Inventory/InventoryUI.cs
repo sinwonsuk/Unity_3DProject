@@ -9,13 +9,6 @@ public class InventoryUI : MonoBehaviour
     public Transform slotParent;
 
     public ItemData basicSword;
-    public ItemData basicBow;
-    public ItemData basicHerberd;
-    public ItemData basicFire;
-    public ItemData basicIce;
-    public ItemData basicLightning;
-    public ItemData healPotion;
-    public ItemData staminaPotion;
 
 
     public GameObject bigInventoryPanel;
@@ -52,13 +45,6 @@ public class InventoryUI : MonoBehaviour
         inventory = GetComponent<Inventory>();
         InitSlots();
         inventory.AddItem(basicSword);
-        inventory.AddItem(basicBow);
-        inventory.AddItem(basicHerberd);
-        inventory.AddItem(basicFire);
-        inventory.AddItem(basicIce);
-        inventory.AddItem(basicLightning);
-        inventory.AddItem(healPotion);
-        inventory.AddItem(staminaPotion);
 
         UpdateUI();
         isActive = false;
