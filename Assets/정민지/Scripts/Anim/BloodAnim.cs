@@ -2,8 +2,9 @@ using UnityEngine;
 
 public class BloodAnim : MonoBehaviour
 {
-    public void Start()
+    [SerializeField] private GameObject fda;
+    public void dagadff()
     {
-        Destroy(gameObject, 6);
+        Destroy(fda);
     }
 }
