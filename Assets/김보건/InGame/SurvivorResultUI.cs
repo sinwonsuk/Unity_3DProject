@@ -1,4 +1,5 @@
 using UnityEngine;
+using UnityEngine.SceneManagement;
 
 public class SurvivorResultUI : MonoBehaviour
 {
@@ -20,6 +21,16 @@ public class SurvivorResultUI : MonoBehaviour
         EventBus<SurvivorLose>.OnEvent -= ShowLose;
     }
 
+    void Update()
+    {
+        if (!alreadyShown) return;
+
+        if (Input.GetKeyDown(KeyCode.Return))
+        {
+            StartCoroutine(ReturnToTitle());
+        }
+    }
+
     void ShowWin(SurvivorWin e)
     {
         if (alreadyShown) return;
@@ -38,5 +49,29 @@ public class SurvivorResultUI : MonoBehaviour
         panelObject.SetActive(true);
         winUI.SetActive(false);
         loseUI.SetActive(true);
+    }
+
+    private System.Collections.IEnumerator ReturnToTitle()
+    {
+        Cursor.visible = true;
+        Cursor.lockState = CursorLockMode.None;
+
+        var runner = RunnerSingleton.Instance;
+
+        if (runner != null && runner.IsRunning)
+        {
+            if (BasicSpawner2.Instance != null)
+            {
+                BasicSpawner2.Instance.DespawnSelf();
+            }
+
+            var shutdownTask = runner.Shutdown();
+            while (!shutdownTask.IsCompleted)
+                yield return null;
+
+            RunnerSingleton.ClearRunner();
+        }
+
+        SceneManager.LoadScene("TitleScene");
     }
 }
