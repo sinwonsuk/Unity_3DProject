@@ -111,6 +111,10 @@ public class AnimationHandler
     {
         animator.Animator.SetTrigger("DeathTrigger");
     }
+    public void ChangeDeathBool(bool val)
+    {
+        animator.Animator.SetBool("Death",val);
+    }
     public void ChangeMagicAttackState(float val)
     {
         animator.Animator.SetFloat("MagicAttack", val);

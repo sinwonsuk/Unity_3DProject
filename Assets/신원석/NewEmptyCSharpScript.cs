@@ -13,11 +13,11 @@ public class DeathState : BaseState<PlayerStateMachine.PlayerState>
 
     public override void EnterState()
     {
-        if (!playerStateMachine.Object.HasStateAuthority)
-           return;
+        //if (!playerStateMachine.Object.HasStateAuthority)
+         //   return;
 
         playerStateMachine.AnimHandler.ChangeDeathState();
-
+        playerStateMachine.AnimHandler.ChangeDeathBool(true);
     }
     public override void ExitState()
     {

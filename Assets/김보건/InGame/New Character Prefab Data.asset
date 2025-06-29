@@ -15,16 +15,16 @@ MonoBehaviour:
   characterPrefabs:
   - characterName: King_Mccully
     prefab:
-      RawGuidValue: a53abe2a90a77ac419dd1387dbb7a9d0
+      RawGuidValue: 7dce397188bc05445b1d1a3151df1764
   - characterName: Mage_Evan
     prefab:
-      RawGuidValue: f5d35a18c1e83c3428cf2f405b33a998
+      RawGuidValue: 7dce397188bc05445b1d1a3151df1764
   - characterName: Joker
     prefab:
-      RawGuidValue: 2d8ba02fe8eebe549876b9c1c2ceeaf7
+      RawGuidValue: 7dce397188bc05445b1d1a3151df1764
   - characterName: Queen_Emily
     prefab:
-      RawGuidValue: 96df7803e02d6a24996bd712a4b8b1f7
+      RawGuidValue: 7dce397188bc05445b1d1a3151df1764
   - characterName: Soldier_James
     prefab:
-      RawGuidValue: b42a2b65ba64f8746ba763645a3a72b9
+      RawGuidValue: 7dce397188bc05445b1d1a3151df1764

@@ -20,19 +20,19 @@ public class PlayerHealth : NetworkBehaviour
 
     [SerializeField] private GameObject deadPrefab;
     [SerializeField] private int maxHp=100;
-    private int lastSentHp = -1;
-    private bool canWin=false;
+    [Networked] private int lastSentHp { get; set; } = -1;
+    [Networked] private bool canWin { get; set; } = false;
     [SerializeField] private int imReady=0;
-    private float readyTimer;
+    [Networked] private float readyTimer { get; set; }
 
-    private bool isSpectator = false;
+    [Networked] private bool isSpectator { get; set; } = false;
 
     [SerializeField] private float timeBeforeHealing = 10f; // 10초 대기 시간
     [SerializeField] private float healInterval = 1f;       // 회복 주기 (1초)
     [SerializeField] private int healAmount = 2;            // 회복량
 
-    private float noDamageTimer = 0f;
-    private float healTimer = 0f;
+    [Networked] private float noDamageTimer { get; set; } = 0f;
+    [Networked] private float healTimer { get; set; } = 0f;
 
     void Update()
     {

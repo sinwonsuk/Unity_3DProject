@@ -60,7 +60,7 @@ public class PlayerStateMachine : StageManager<PlayerStateMachine.PlayerState>
 
     public float invulnDuration = 0.15f;
 
-    [Networked] private bool isDeath { get; set; } = false;
+    [Networked] public bool isDeath { get; set; } = false;
 
     public enum PlayerState
     {
@@ -465,21 +465,26 @@ public class PlayerStateMachine : StageManager<PlayerStateMachine.PlayerState>
     {
         if (!_isInitialized) return;
 
-        if(health.currentHp <= 0)
+        if (health.currentHp <= 0 && isDeath == false)
         {
+            isDeath = true;
+
+
             BroadcastIdleEvent(PlayerState.Death);
 
             if (SyncedState != currentState.StateKey)
             {
+                playerController.Collider.enabled = false;
                 currentState.ExitState();
                 currentState = states[PlayerState.Death];
                 currentState.EnterState();
             }
+            return;
+        }
 
-
+        if (SyncedState == PlayerState.Death)
             return;
 
-        }
 
         MoveAndRotate(inputHandler.GetNetworkInputData());
 
