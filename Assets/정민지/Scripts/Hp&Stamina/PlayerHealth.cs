@@ -235,7 +235,7 @@ public class PlayerHealth : NetworkBehaviour
     {
         //외형 , 충돌 끄기
         //foreach (var r in GetComponentsInChildren<Renderer>(true)) r.enabled = false;
-        foreach (var c in GetComponentsInChildren<Collider>(true)) c.enabled = false;
+        //foreach (var c in GetComponentsInChildren<Collider>(true)) c.enabled = false;
 
         //애니메이터 끄기
         //foreach (var a in GetComponentsInChildren<Animator>(true)) a.enabled = false;
