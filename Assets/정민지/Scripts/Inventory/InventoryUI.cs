@@ -161,6 +161,7 @@ public class InventoryUI : MonoBehaviour
                 // 조합창이 열리는 경우
                 combi.SetActive(true);
                 EventBus<showCursor>.Raise(new showCursor(true));
+                EventBus<YesCombi>.Raise(new YesCombi(true));
 
                 if (!bigInventoryPanel.activeSelf)
                 {
@@ -173,6 +174,7 @@ public class InventoryUI : MonoBehaviour
                 combi.SetActive(false);
                 bigInventoryPanel.SetActive(false);
                 EventBus<showCursor>.Raise(new showCursor(false));
+                EventBus<YesCombi>.Raise(new YesCombi(false));
             }
         }
             

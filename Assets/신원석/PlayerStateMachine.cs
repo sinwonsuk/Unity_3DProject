@@ -214,7 +214,6 @@ public class PlayerStateMachine : StageManager<PlayerStateMachine.PlayerState>
     {
         EventBus<WeaponChange>.OnEvent += WeaponChange;
 
-        EventBus<SendSlot>.OnEvent += InvenSlotHandle;
     }
     private void OnDisable()
     {
@@ -238,10 +237,6 @@ public class PlayerStateMachine : StageManager<PlayerStateMachine.PlayerState>
         }
     }
 
-    public void InvenSlotHandle(SendSlot sendSlot)
-    {
-
-    }
 
     [Networked] public ItemState itemState { get; set; }
     [Networked] public PlayerRef owner { get; set; }

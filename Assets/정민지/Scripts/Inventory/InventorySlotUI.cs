@@ -1,5 +1,6 @@
 ﻿using Fusion;
 using System.Collections;
+using System.Collections.Generic;
 using TMPro;
 using Unity.VisualScripting;
 using Unity.VisualScripting.Antlr3.Runtime.Misc;
@@ -22,6 +23,8 @@ public class InventorySlotUI : NetworkBehaviour, IPointerClickHandler, IBeginDra
     private InventorySlot slot;
     private bool wasSelected = false; // 이전 선택 상태
     private PlayerWeaponChanged changed;
+    private bool isRightDragging = false;
+    private bool canCombi=false;
 
     Coroutine coroutine;
 
@@ -63,16 +66,35 @@ public class InventorySlotUI : NetworkBehaviour, IPointerClickHandler, IBeginDra
         changed =FindLocalPlayerWeaponChanged();
     }
 
+    private void OnEnable()
+    {
+        EventBus<YesCombi>.OnEvent += UpdateCanCombi;
+    }
 
+    private void OnDisable()
+    {
+        EventBus<YesCombi>.OnEvent -= UpdateCanCombi;
+    }
 
+    private void UpdateCanCombi(YesCombi evt)
+    {
+        this.canCombi = evt.canCombi;
+    }
     public void OnPointerClick(PointerEventData eventData)
     {
-        bigInventoryUI.OnSlotClicked(index);
+        if (eventData.button != PointerEventData.InputButton.Right) return;
+       
         if (eventData.button == PointerEventData.InputButton.Right && slot.item != null)
         {
-            EventBus<SendItem>.Raise(new SendItem(slot.item));
-            slot.item = null;
+            bigInventoryUI.OnSlotClicked(index);
             bigInventoryUI.UpdateSlotUI(index);
+
+            if(canCombi)
+            {
+                EventBus<SendItem>.Raise(new SendItem(slot.item));
+                slot.item = null;
+                bigInventoryUI.UpdateSlotUI(index);
+            }
         }
     }
 
@@ -150,12 +172,12 @@ public class InventorySlotUI : NetworkBehaviour, IPointerClickHandler, IBeginDra
 
         if (isSelected)
         {
-            Debug.Log($"[{index}] 슬롯이 선택됨: {slot.item?.itemName}");
+            //Debug.Log($"[{index}] 슬롯이 선택됨: {slot.item?.itemName}");
 
             if (slot.item == null)
             {
                 //RPC_ChangeWeapon(ItemState.none);
-                Debug.Log("선택된 아이템이 없음");
+               // Debug.Log("선택된 아이템이 없음");
             }
 
             else if (slot.item.weaponType == WeaponType.Sword)
@@ -172,16 +194,6 @@ public class InventorySlotUI : NetworkBehaviour, IPointerClickHandler, IBeginDra
             {
                 changed.ChangeWeapon(ItemState.Harberd, slot.item.itemGrade);
 
-            }
-            else if (slot.item.potionType == PotionType.Heal)
-            {
-                changed.ChangeWeapon(ItemState.HpPotion, slot.item.itemGrade);
-                EventBus<SendSlot>.Raise(new SendSlot(slot));
-            }
-            else if (slot.item.potionType == PotionType.Stamina)
-            {
-                changed.ChangeWeapon(ItemState.StaminaPotion, slot.item.itemGrade);
-                EventBus<SendSlot>.Raise(new SendSlot(slot));
             }
             else if (slot.item.magicType == MagicType.Fire)
             {
@@ -201,7 +213,50 @@ public class InventorySlotUI : NetworkBehaviour, IPointerClickHandler, IBeginDra
 
             else
             {
-                Debug.Log($"[{index}] 슬롯 선택 해제");
+               // Debug.Log($"[{index}] 슬롯 선택 해제");
+            }
+        }
+    }
+
+    void Update()
+    {
+        if (Input.GetMouseButtonDown(1)) // 우클릭 눌렀을 때
+        {
+            if (slot.item != null)
+            {
+                isRightDragging = true;
+                draggedIcon.gameObject.SetActive(true);
+                draggedIcon.SetIcon(iconImage.sprite);
+            }
+        }
+
+        if (isRightDragging && Input.GetMouseButton(1))
+        {
+            draggedIcon.transform.position = Input.mousePosition;
+        }
+
+        if (Input.GetMouseButtonUp(1) && isRightDragging)
+        {
+            isRightDragging = false;
+            draggedIcon.gameObject.SetActive(false);
+
+            // 마우스 위치 아래에 있는 슬롯 탐색
+            PointerEventData pointerData = new PointerEventData(EventSystem.current)
+            {
+                position = Input.mousePosition
+            };
+
+            List<RaycastResult> rayResults = new List<RaycastResult>();
+            EventSystem.current.RaycastAll(pointerData, rayResults);
+
+            foreach (RaycastResult result in rayResults)
+            {
+                InventorySlotUI targetSlot = result.gameObject.GetComponent<InventorySlotUI>();
+                if (targetSlot != null && targetSlot != this)
+                {
+                    bigInventoryUI.SwapSlots(index, targetSlot.index);
+                    break;
+                }
             }
         }
     }
