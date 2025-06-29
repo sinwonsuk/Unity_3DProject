@@ -16,11 +16,14 @@ public class JumpState : BaseState<PlayerStateMachine.PlayerState>
 
     public JumpState(PlayerStateMachine.PlayerState key,PlayerStateMachine playerStateMachine) : base(key)
     {
-        SoundManager.GetInstance().SfxPlay(SoundManager.sfx.Jump, false);
+       
 
         this.playerStateMachine = playerStateMachine;
         groundMask = playerStateMachine.groundMask;
         groundCheck = playerStateMachine.groundCheck;
+
+ 
+
 
     }
 
@@ -29,15 +32,20 @@ public class JumpState : BaseState<PlayerStateMachine.PlayerState>
 
     public override void EnterState()
     {
-        if (!playerStateMachine.Object.HasStateAuthority)
-            return;
+        if (playerStateMachine.Object.HasStateAuthority)
+        {
+            float currentStamina = playerStateMachine.Stamina.currentStamina;
+            float jumpCcost = playerStateMachine.JumpStaminaCost;
 
-        float currentStamina = playerStateMachine.Stamina.currentStamina;
-        float jumpCcost = playerStateMachine.JumpStaminaCost;
-
-        playerStateMachine.Stamina.ConsumeStaminaOnServer(jumpCcost);
-        playerStateMachine.NetAnim.Animator.SetBool("Jump", true);
-        playerStateMachine.playerController.Move(default,gravity);
+            playerStateMachine.Stamina.ConsumeStaminaOnServer(jumpCcost);
+            playerStateMachine.NetAnim.Animator.SetBool("Jump", true);
+            playerStateMachine.playerController.Move(default, gravity);
+        }
+ 
+        if (playerStateMachine.Object.HasInputAuthority)
+        {
+            SoundManager.GetInstance().SfxPlay(SoundManager.sfx.Jump, false);
+        }
 
     }
     public override void ExitState()
