@@ -1330,6 +1330,7 @@ MonoBehaviour:
   _moveZ: 0
   _AttackStaminaCost: 0
   _AttackCost: 0
+  _SoundCheck: 0
   invulnDuration: 0.15
   weapons: {fileID: 11400000, guid: bb10c1def4f7b9d42a86027dc3b35f91, type: 2}
   moveSpeed: 5
@@ -1439,8 +1440,8 @@ MonoBehaviour:
       serializedVersion: 2
       m_Bits: 3136
     ProxyInterpolationMode: 0
-    MaxPenetrationSteps: 8
-    CCDRadiusMultiplier: 0.75
+    MaxPenetrationSteps: 1
+    CCDRadiusMultiplier: 0.1
     AntiJitterDistance: {x: 0.025, y: 0.01}
     CompressNetworkPosition: 0
     ForcePredictedLookRotation: 0
@@ -1477,8 +1478,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   _currentStamina: 0
-  maxStamina: 100
-  recoveryTimer: 0
+  _maxStamina: 0
   staminaCoolTime: 1
 --- !u!114 &7058144935205930080
 MonoBehaviour:
