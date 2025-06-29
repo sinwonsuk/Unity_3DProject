@@ -92,8 +92,7 @@ public class BowState : BaseState<PlayerStateMachine.PlayerState>
             {
                 float fallbackDist = 50f;
                 targetPos = ray.origin + ray.direction * fallbackDist;
-            }
-
+            }           
             playerStateMachine.Stamina.ConsumeStaminaOnServer(attackStamina);
 
             playerStateMachine.SetShootArrowObject(targetPos,ItemState.Arrow);

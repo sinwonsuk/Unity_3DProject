@@ -18,7 +18,10 @@ public class MoveState : BaseState<PlayerStateMachine.PlayerState>
 
     public override void EnterState()
     {
-
+        if (playerStateMachine.Object.HasInputAuthority)
+        {
+            SoundManager.GetInstance().SfxPlay(SoundManager.sfx.Walk, true);
+        }
     }
 
     public override void ExitState()
@@ -27,6 +30,8 @@ public class MoveState : BaseState<PlayerStateMachine.PlayerState>
         animator.SetFloat("MoveLeftRight", 0);
         animator.SetFloat("MoveForWard", 0);
         playerStateMachine.MoveSpeed = playerStateMachine.CurrentSpeed;
+        SoundManager.GetInstance().Sfx_Stop(SoundManager.sfx.Walk);
+
     }
     public void Move()
     {
@@ -84,8 +89,13 @@ public class MoveState : BaseState<PlayerStateMachine.PlayerState>
 
     private void TryHandleRollInput()
     {
-         if (playerStateMachine.IsWeapon == false && playerStateMachine.Stamina.currentStamina < playerStateMachine.RollStaminaCost)
+         if (playerStateMachine.IsWeapon == false)
             return;
+
+        if(playerStateMachine.Stamina.currentStamina < playerStateMachine.RollStaminaCost)
+        {
+            return;
+        }
 
         if (playerStateMachine.inputHandler.RollInput(out ERollState dir))
             Roll(dir);
@@ -98,6 +108,7 @@ public class MoveState : BaseState<PlayerStateMachine.PlayerState>
         if (playerStateMachine.Stamina.currentStamina < playerStateMachine.RollStaminaCost)
             return;
 
+       
 
         if (playerStateMachine.Object.HasStateAuthority)
         {

@@ -26,8 +26,11 @@ public class AttackState : BaseState<PlayerStateMachine.PlayerState>
     {
         playerStateMachine.Combat.StartAttack();
         playerStateMachine.hitSet.Clear();
-        //playerStateMachine.Stamina.IsStamania = true;
 
+        if (!playerStateMachine.HasInputAuthority)
+            return;
+
+        SoundManager.GetInstance().SfxPlay(SoundManager.sfx.Sword,false);
     }
     public override void ExitState()
     {
@@ -45,6 +48,14 @@ public class AttackState : BaseState<PlayerStateMachine.PlayerState>
     public override void FixedUpdateState() 
     {
         playerStateMachine.action.Invoke();
+
+        if(playerStateMachine.SoundCheck ==true)
+        {
+            //SoundManager.GetInstance().SfxPlay(SoundManager.sfx.Sword, false);
+            playerStateMachine.SoundCheck = false;
+        }
+
+
 
         if (!playerStateMachine.Object.HasStateAuthority && !playerStateMachine.Runner.IsForward)
             return;
@@ -68,7 +79,7 @@ public class AttackState : BaseState<PlayerStateMachine.PlayerState>
 
             if (playerStateMachine.inputHandler.IsAttackPressed() && playerStateMachine.Stamina.currentStamina >= 0.0f)
             {
-                playerStateMachine.Stamina.ConsumeStaminaOnServer(playerStateMachine.Combat.stamina);
+                //playerStateMachine.Stamina.ConsumeStaminaOnServer(playerStateMachine.Combat.stamina);
 
                 playerStateMachine.Combat.TryQueueNextCombo();
                 time = 0.0f;

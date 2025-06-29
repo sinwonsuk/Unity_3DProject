@@ -51,6 +51,8 @@ public class PlayerStateMachine : StageManager<PlayerStateMachine.PlayerState>
     public float JumpStaminaCost { get; set; } = 10.0f;
     [Networked] public float AttackStaminaCost { get; set; }
     [Networked] public int AttackCost { get; set; }
+
+    [Networked] public bool SoundCheck { get; set; }
     public float MaxSpeed { get; set; } = 10.0f;
     public float CurrentSpeed { get; set; } = 5.0f;
 
@@ -362,6 +364,25 @@ public class PlayerStateMachine : StageManager<PlayerStateMachine.PlayerState>
     // 3) 클라 → 호스트: 이제 발사할 때
     public void SetShootMagicObject(Vector3 targetPos, ItemState state)
     {
+
+
+        if (Object.HasInputAuthority)
+        {
+            switch (state)
+            {
+                case ItemState.FireMagic:
+                    SoundManager.GetInstance().SfxPlay(SoundManager.sfx.FireBall, false);
+                    break;
+                case ItemState.IceMagic:
+                    SoundManager.GetInstance().SfxPlay(SoundManager.sfx.IceBall, false);
+                    break;
+                case ItemState.ElectricMagic:
+                    SoundManager.GetInstance().SfxPlay(SoundManager.sfx.LightingBall, false);
+                    break;
+                default:
+                    return; // 잘못된 상태
+            }
+        }
         if (Object.HasInputAuthority)
         {
             // magicId 는 WeaponManager.CurrentMagicId 에 저장돼 있다고 가정
@@ -372,6 +393,7 @@ public class PlayerStateMachine : StageManager<PlayerStateMachine.PlayerState>
     {
         if (Object.HasInputAuthority)
         {
+            SoundManager.GetInstance().SfxPlay(SoundManager.sfx.ArrowShoot, false, 0.2f);
             RPC_RequestShoot(targetPos, state, WeaponManager.Arrow.Id);
         }
     }
@@ -395,8 +417,6 @@ public class PlayerStateMachine : StageManager<PlayerStateMachine.PlayerState>
             shot.ArrowShoot(targetPos,ItemClass);
         }
     }
-
-
 
     [Rpc(RpcSources.InputAuthority, RpcTargets.StateAuthority)]
     public void RPC_ClearHitSet()

@@ -16,8 +16,8 @@ public class JumpState : BaseState<PlayerStateMachine.PlayerState>
 
     public JumpState(PlayerStateMachine.PlayerState key,PlayerStateMachine playerStateMachine) : base(key)
     {
+        SoundManager.GetInstance().SfxPlay(SoundManager.sfx.Jump, false);
 
-      
         this.playerStateMachine = playerStateMachine;
         groundMask = playerStateMachine.groundMask;
         groundCheck = playerStateMachine.groundCheck;

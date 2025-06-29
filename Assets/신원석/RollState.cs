@@ -23,12 +23,16 @@ public class RollState : BaseState<PlayerStateMachine.PlayerState>
     {
         playerStateMachine.isRoll = false;
 
-        playerStateMachine.Stamina.UseStamina(playerStateMachine.RollStaminaCost);
+        playerStateMachine.Stamina.ConsumeStaminaOnServer(playerStateMachine.RollStaminaCost);
 
         playerStateMachine.NetAnim.Animator.SetTrigger("RollTrigger");
 
         rollDirection = GetDirectionFromCount(playerStateMachine.AnimHandler.RollCount);
 
+        if(!playerStateMachine.Object.HasInputAuthority)
+            return;
+
+        SoundManager.GetInstance().SfxPlay(SoundManager.sfx.RollSound, false,1.5f);
     }
     public override void ExitState()
     {

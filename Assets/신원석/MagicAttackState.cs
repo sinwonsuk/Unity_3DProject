@@ -98,6 +98,8 @@ public class MagicAttackState : BaseState<PlayerStateMachine.PlayerState>
 
         if(isAttackTrigger == true && attackCooldown <=0)
         {
+            SoundManager.GetInstance().SfxPlay(SoundManager.sfx.IceBall, false);
+
             playerStateMachine.SetShootMagicObject(targetPos, playerStateMachine.WeaponManager.magicState);
             attackCooldown = 0.2f;
             isAttackTrigger = false;

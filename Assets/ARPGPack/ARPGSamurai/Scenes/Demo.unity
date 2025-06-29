@@ -1732,11 +1732,11 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 512839860134147877, guid: a152c3df5963f3a41a45bcf7263b16b9, type: 3}
       propertyPath: sfxVolume
-      value: 0.97
+      value: 0.5
       objectReference: {fileID: 0}
     - target: {fileID: 512839860134147877, guid: a152c3df5963f3a41a45bcf7263b16b9, type: 3}
       propertyPath: sfxClips.Array.size
-      value: 13
+      value: 18
       objectReference: {fileID: 0}
     - target: {fileID: 512839860134147877, guid: a152c3df5963f3a41a45bcf7263b16b9, type: 3}
       propertyPath: 'sfxClips.Array.data[0]'
@@ -1788,6 +1788,26 @@ PrefabInstance:
       objectReference: {fileID: 8300000, guid: 97151a2adbf33444e96a204400727225, type: 3}
     - target: {fileID: 512839860134147877, guid: a152c3df5963f3a41a45bcf7263b16b9, type: 3}
       propertyPath: 'sfxClips.Array.data[12]'
+      value: 
+      objectReference: {fileID: 8300000, guid: c10f0c2315a701f4d9147f8b9629d41a, type: 3}
+    - target: {fileID: 512839860134147877, guid: a152c3df5963f3a41a45bcf7263b16b9, type: 3}
+      propertyPath: 'sfxClips.Array.data[13]'
+      value: 
+      objectReference: {fileID: 8300000, guid: 5dd4be0b335d8bc4c825db4244c2ae25, type: 3}
+    - target: {fileID: 512839860134147877, guid: a152c3df5963f3a41a45bcf7263b16b9, type: 3}
+      propertyPath: 'sfxClips.Array.data[14]'
+      value: 
+      objectReference: {fileID: 8300000, guid: b36bdb7f7e02f2343b2cca9a6089032a, type: 3}
+    - target: {fileID: 512839860134147877, guid: a152c3df5963f3a41a45bcf7263b16b9, type: 3}
+      propertyPath: 'sfxClips.Array.data[15]'
+      value: 
+      objectReference: {fileID: 8300000, guid: 9873babc51af98345a714078ab1aaa7d, type: 3}
+    - target: {fileID: 512839860134147877, guid: a152c3df5963f3a41a45bcf7263b16b9, type: 3}
+      propertyPath: 'sfxClips.Array.data[16]'
+      value: 
+      objectReference: {fileID: 8300000, guid: 9873babc51af98345a714078ab1aaa7d, type: 3}
+    - target: {fileID: 512839860134147877, guid: a152c3df5963f3a41a45bcf7263b16b9, type: 3}
+      propertyPath: 'sfxClips.Array.data[17]'
       value: 
       objectReference: {fileID: 8300000, guid: 97151a2adbf33444e96a204400727225, type: 3}
     - target: {fileID: 4632407439459655981, guid: a152c3df5963f3a41a45bcf7263b16b9, type: 3}

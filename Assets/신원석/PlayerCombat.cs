@@ -34,7 +34,7 @@ public class PlayerCombat
     public void StartAttack()
     {
         stamina = player.WeaponManager.currentWeapon.GetComponent<WeaponNetworkObject>().weaponInfoConfig.Stamina;
-        player.Stamina.ConsumeStaminaOnServer(1);
+        player.Stamina.AttackStaminaOnServer(stamina);
         AttackCount = 1;
         nextHitQueued = false;
         player.AnimHandler.SetAttackCount(AttackCount);
@@ -68,13 +68,12 @@ public class PlayerCombat
 
         if (nextComboQueued && AttackCount < 4 )
         {
-            player.Stamina.ConsumeStaminaOnServer(1);
-
+            player.Stamina.AttackStaminaOnServer(stamina);
+            player.SoundCheck = true;
             AttackCount++;
             nextComboQueued = false;
             player.SetIsAttackTrue();
-            player.ClearHitSet();       
-            
+            player.ClearHitSet();                  
         }
         else
         {   

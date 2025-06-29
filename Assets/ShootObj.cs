@@ -33,10 +33,7 @@ public class ShootObj : NetworkBehaviour
     public WeaponInfoConfig infoConfig;
     public override void Spawned()
     {
- 
         isVisible = false;
-
-
         //foreach (var r in renderers)
         //    if (r != null) r.enabled = isVisible;
 
@@ -53,8 +50,6 @@ public class ShootObj : NetworkBehaviour
         //        p.Clear(true);
         //    }
         //}
-
-
         AttachToOwner(Object.InputAuthority);
     }
 

@@ -26,25 +26,40 @@ public class PlayerStamina : NetworkBehaviour
 
 
     [Rpc(RpcSources.InputAuthority, RpcTargets.StateAuthority)]
+    void RPC_AttackStamina(float amount)
+    {
+        currentStamina = Mathf.Clamp(currentStamina - amount, 0f, maxStamina);
+        RPC_Sound();
+    }
+
+    [Rpc(RpcSources.InputAuthority, RpcTargets.StateAuthority)]
     void RPC_Stamina(float amount)
     {
         currentStamina = Mathf.Clamp(currentStamina - amount, 0f, maxStamina);
     }
 
+
+    [Rpc(RpcSources.StateAuthority, RpcTargets.InputAuthority)]
+    void RPC_Sound()
+    {
+        if(!Object.HasInputAuthority)
+            return;
+
+        SoundManager.GetInstance().SfxPlay(SoundManager.sfx.Sword,false);
+    }
+
+    // 2) 스태미나 사용 메소드
     public void UseStamina(float amount)
     {
         if(Object.HasInputAuthority)
         {
-            RPC_Stamina(amount);
+            RPC_AttackStamina(amount);
         }
         else if(Object.HasStateAuthority)
         {
             currentStamina = Mathf.Clamp(currentStamina - amount, 0f, maxStamina);
         }
     }
-
-
-
 
     public void ConsumeStaminaOnServer(float amount)
     {
@@ -56,10 +71,21 @@ public class PlayerStamina : NetworkBehaviour
         {
             RPC_Stamina(amount);
         }
-
-
-
     }
+
+    public void AttackStaminaOnServer(float amount)
+    {
+        if (Object.HasStateAuthority)
+        {
+            currentStamina = Mathf.Clamp(currentStamina - amount, 0f, maxStamina);
+            RPC_Sound();
+        }
+        else if (Object.HasInputAuthority)
+        {
+            RPC_AttackStamina(amount);
+        }
+    }
+
 
     // 3) (선택) 클라이언트 UI / 디버그용
     public override void FixedUpdateNetwork()

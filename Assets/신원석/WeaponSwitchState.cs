@@ -19,8 +19,6 @@ public class WeaponSwitchState : BaseState<PlayerStateMachine.PlayerState>
             ItemClass itemClass = playerStateMachine.ItemClass;
             ItemState itemState = playerStateMachine.itemState;
 
-
-
             playerStateMachine.SetWeapon(true);
             playerStateMachine.WeaponManager.RequestEquip(itemState, HandSide.Right, itemClass, playerStateMachine.owner);
             playerStateMachine.WeaponManager.ChangeWeaponClass();
@@ -28,11 +26,14 @@ public class WeaponSwitchState : BaseState<PlayerStateMachine.PlayerState>
 
             playerStateMachine.AnimHandler.ChangeWeapon(itemState);
 
-
             playerStateMachine.AttackStaminaCost = playerStateMachine.WeaponManager.currentWeapon.GetComponent<WeaponNetworkObject>().weaponInfoConfig.Stamina;
             playerStateMachine.AttackCost = playerStateMachine.WeaponManager.currentWeapon.GetComponent<WeaponNetworkObject>().weaponInfoConfig.Attack;
         }
-            
+
+        if (!playerStateMachine.Object.HasInputAuthority)
+            return;
+        SoundManager.GetInstance().SfxPlay(SoundManager.sfx.ChangeWeapon, false);
+
         playerStateMachine.AnimHandler.ChangeWeapon(playerStateMachine.itemState);
     }
     public override void ExitState()

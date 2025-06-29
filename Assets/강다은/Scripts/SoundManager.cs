@@ -9,6 +9,19 @@ public class SoundManager : MonoBehaviour
 		itemDrop,
 		buyItem,
         subtractGold,
+		Death,
+		FireBall,
+		IceBall,
+		LightingBall,
+		Sword,
+		GetHit,
+		Walk,
+		Winner,
+		BowPull,
+		ArrowShoot,
+		ChangeWeapon,
+		RollSound,
+        Jump
     }
 	public enum bgm
 	{
