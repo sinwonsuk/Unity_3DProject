@@ -52,8 +52,8 @@ public class PlayerHealth : NetworkBehaviour
             if(currentHp <= 0 && !isSpectator)
             {
                 isSpectator = true;
-                //SpectatorManager.EnterSpectatorMode(transform.position, transform.rotation);
-                //RPC_RequestSuicide();
+                SpectatorManager.EnterSpectatorMode(transform.position, transform.rotation);
+                RPC_RequestSuicide();
                 Instantiate(deadPrefab);
             }
 
