@@ -122,7 +122,7 @@ public class PlayerStamina : NetworkBehaviour
             }
 
             // 디버그
-            Debug.Log($"[Player {Object.InputAuthority.PlayerId}] Stamina = {currentStamina:F1}/{maxStamina}");
+           // Debug.Log($"[Player {Object.InputAuthority.PlayerId}] Stamina = {currentStamina:F1}/{maxStamina}");
           
         }
 

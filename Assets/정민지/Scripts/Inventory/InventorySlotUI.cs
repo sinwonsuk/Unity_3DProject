@@ -31,7 +31,7 @@ public class InventorySlotUI : NetworkBehaviour,  IBeginDragHandler, IDragHandle
     {
         this.slot = slot;
 
-        Debug.Log($"[SetSlot] {index}번 슬롯 - 선택됨: {isSelected}, 이전 상태: {wasSelected}");
+       // Debug.Log($"[SetSlot] {index}번 슬롯 - 선택됨: {isSelected}, 이전 상태: {wasSelected}");
 
         if (slot.IsEmpty)
         {

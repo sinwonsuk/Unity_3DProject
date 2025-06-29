@@ -82,7 +82,7 @@ public class Inventory : MonoBehaviour
                 {
                     slot.quantity++;
                     UpdateAllInventoryUI();
-                    Debug.Log($"아이템 추가: {item.itemName}, 아이템 추가 개수: {slot.quantity}");
+                    //Debug.Log($"아이템 추가: {item.itemName}, 아이템 추가 개수: {slot.quantity}");
                     return;
                 }
             }
@@ -98,7 +98,7 @@ public class Inventory : MonoBehaviour
                     slot.item = item;
                     slot.quantity = 1;
                     UpdateAllInventoryUI();
-                    Debug.Log($"아이템 추가: {item.itemName}");
+                    //Debug.Log($"아이템 추가: {item.itemName}");
                     return;
                 }
             }
@@ -116,13 +116,13 @@ public class Inventory : MonoBehaviour
                     slot.item = item;
                     slot.quantity = 1;
                     UpdateAllInventoryUI();
-                    Debug.Log($"아이템 추가: {item.itemName}");
+                    //Debug.Log($"아이템 추가: {item.itemName}");
                     return;
                 }
             }
         }
 
-        Debug.Log("아이템 추가 실패");
+        //Debug.Log("아이템 추가 실패");
     }
 
     

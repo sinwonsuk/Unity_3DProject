@@ -32,7 +32,7 @@ public class CombinationSlotUI : MonoBehaviour,IPointerClickHandler
 
         //SoundManager.GetInstance().SfxPlay(SoundManager.sfx.itemDrop, false);
         inventory.AddItem(cItem); // 인벤토리에 추가
-        Debug.Log($"[슬롯] {cItem.itemName} 인벤토리에 반환됨");
+       // Debug.Log($"[슬롯] {cItem.itemName} 인벤토리에 반환됨");
 
         CSlotClear();
     }
