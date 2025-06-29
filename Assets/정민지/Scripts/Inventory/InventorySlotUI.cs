@@ -162,7 +162,7 @@ public class InventorySlotUI : NetworkBehaviour,  IBeginDragHandler, IDragHandle
     private void OnSelectionChanged(bool isSelected)
     {
 
-        if (coroutine == null)
+        if (coroutine == null && gameObject.activeInHierarchy)
             StartCoroutine(Cor());
 
 

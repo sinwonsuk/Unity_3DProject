@@ -2,9 +2,8 @@ using UnityEngine;
 
 public class BloodAnim : MonoBehaviour
 {
-    public GameObject bloodCanvas;
-    public void DestroyBloodObject()
+    public void Start()
     {
-        Destroy(bloodCanvas);
+        Destroy(gameObject, 6);
     }
 }

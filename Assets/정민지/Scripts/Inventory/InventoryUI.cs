@@ -74,6 +74,7 @@ public class InventoryUI : MonoBehaviour
         for (int i = 0; i < rowSize; i++)
         {
             var slotGO = Instantiate(slotPrefab, slotParent);
+            slotGO.SetActive(true);
             var slotUI = slotGO.GetComponent<InventorySlotUI>();
             slotUIs.Add(slotUI); //½½·Ô ¹èÄ¡
         }
