@@ -520,13 +520,13 @@ public class PlayerStateMachine : StageManager<PlayerStateMachine.PlayerState>
     public void OnAttackStartEvent()
     {
         if (!Object.HasStateAuthority) return;    
-        //RPC_ToggleWeaponCollider(true);
+        RPC_ToggleWeaponCollider(true);
     }
 
     public void OnAttackEndEvent()
     {
         if (!Object.HasStateAuthority) return;   
-       // RPC_ToggleWeaponCollider(false);
+        RPC_ToggleWeaponCollider(false);
 
     }
 

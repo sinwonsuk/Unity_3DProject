@@ -59649,6 +59649,13 @@ AnimationClip:
     floatParameter: 0
     intParameter: 0
     messageOptions: 0
+  - time: 0.41666666
+    functionName: OnAttackEndEvent
+    data: 
+    objectReferenceParameter: {fileID: 0}
+    floatParameter: 0
+    intParameter: 0
+    messageOptions: 0
   - time: 0.45
     functionName: SetIsAttackFalse
     data: 
@@ -59658,13 +59665,6 @@ AnimationClip:
     messageOptions: 0
   - time: 0.5
     functionName: OnAnimationEnd
-    data: 
-    objectReferenceParameter: {fileID: 0}
-    floatParameter: 0
-    intParameter: 0
-    messageOptions: 0
-  - time: 0.6166667
-    functionName: OnAttackEndEvent
     data: 
     objectReferenceParameter: {fileID: 0}
     floatParameter: 0

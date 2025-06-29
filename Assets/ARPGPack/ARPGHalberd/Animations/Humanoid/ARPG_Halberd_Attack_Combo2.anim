@@ -63298,7 +63298,7 @@ AnimationClip:
     floatParameter: 0
     intParameter: 0
     messageOptions: 0
-  - time: 0.71666664
+  - time: 0.6666667
     functionName: OnAttackStartEvent
     data: 
     objectReferenceParameter: {fileID: 0}
@@ -63312,7 +63312,7 @@ AnimationClip:
     floatParameter: 0
     intParameter: 0
     messageOptions: 0
-  - time: 0.78333336
+  - time: 0.75
     functionName: OnAttackEndEvent
     data: 
     objectReferenceParameter: {fileID: 0}

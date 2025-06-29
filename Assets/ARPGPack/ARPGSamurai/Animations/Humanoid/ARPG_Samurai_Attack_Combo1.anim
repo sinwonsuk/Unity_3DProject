@@ -45871,14 +45871,14 @@ AnimationClip:
     intParameter: 0
     messageOptions: 0
   - time: 0.31666666
-    functionName: OnAnimationEnd
+    functionName: OnAttackEndEvent
     data: 
     objectReferenceParameter: {fileID: 0}
     floatParameter: 0
     intParameter: 0
     messageOptions: 0
-  - time: 0.43333334
-    functionName: OnAttackEndEvent
+  - time: 0.31666666
+    functionName: OnAnimationEnd
     data: 
     objectReferenceParameter: {fileID: 0}
     floatParameter: 0
