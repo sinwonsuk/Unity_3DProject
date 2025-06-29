@@ -44,7 +44,6 @@ public class IdleState : BaseState<PlayerStateMachine.PlayerState>
         if (input.IsAttackPressed() &&
             weaponCount != (int)ItemState.Bow &&
             weaponCount != (int)ItemState.FireMagic &&
-            poition == PotionState.none && 
             currentStamina > cost &&
             hasWeapon == true)
         {
@@ -103,16 +102,23 @@ public class IdleState : BaseState<PlayerStateMachine.PlayerState>
         if (weaponNetObj == null || !collider.CompareTag("Weapon"))
             return;
 
+        if(collider.CompareTag("Weapon") && collider.CompareTag("Arrow") && collider.CompareTag("Magic"))
+        {
+            int a = 0;
+        }
 
         // 3) Weapon의 입력 권한자가 이 플레이어와 같다면 스킵
         if (weaponNetObj.InputAuthority == playerStateMachine.Object.InputAuthority)
             return;
 
-        int attack = weaponNetObj.gameObject.GetComponent<WeaponNetworkObject>().weaponInfoConfig.Attack;
 
-        playerStateMachine.health.RequestDamage(attack);
+
+
+        // 4) 진짜 타격 처리
+        Debug.Log("충돌 감지!2");
 
         playerStateMachine.BroadcastIdleEvent(PlayerState.Hit);
+
     }
 
     public override void OnTriggerExit(Collider collider) { }

@@ -1,6 +1,5 @@
-using Fusion;
 using UnityEngine;
-using static Unity.Collections.Unicode;
+using Fusion;
 
 public class PortionState : BaseState<PlayerStateMachine.PlayerState>
 {
@@ -9,40 +8,42 @@ public class PortionState : BaseState<PlayerStateMachine.PlayerState>
 
     public PortionState(PlayerStateMachine.PlayerState key, PlayerStateMachine stateMachine) : base(key)
     {
-        this.playerStateMachine = stateMachine;
+
+       
+
     }
 
     public override void EnterState()
     {
 
+        if (!playerStateMachine.Object.HasStateAuthority)
+            return;
 
-
-        if(playerStateMachine.HasInputAuthority)
+        if (playerStateMachine.WeaponManager.potionState == PotionState.HpPotion)
         {
-            playerStateMachine.slot.quantity -= 1;
-            playerStateMachine.AnimHandler.SetPoitionBool(true);
+            playerStateMachine.health.Heal(30);
         }
+        if (playerStateMachine.WeaponManager.potionState == PotionState.StaminaPotion)
+        {
+            playerStateMachine.Stamina.HealStamina(50);
+        }
+        playerStateMachine.slot.quantity -= 1;
+        playerStateMachine.AnimHandler.SetPoitionBool(true);
     }
     public override void ExitState()
     {
         playerStateMachine.WeaponManager.potionState = PotionState.none;
         playerStateMachine.AnimHandler.SetPoitionBool(false);
-
-        if (playerStateMachine.slot.quantity == 0 && playerStateMachine.HasStateAuthority)
-        {
-            playerStateMachine.Runner.Despawn(playerStateMachine.WeaponManager.currentWeapon);
-            playerStateMachine.WeaponManager.currentWeapon = null;
-        }
     }
 
     public override void FixedUpdateState()
     {
-     
+
     }
 
     public override PlayerStateMachine.PlayerState GetNextState()
     {
-        return PlayerStateMachine.PlayerState.Portion;
+        return PlayerStateMachine.PlayerState.Death;
     }
 
     public override void OnTriggerEnter(Collider collider)

@@ -8,8 +8,8 @@ public class PlayerCombat
     private PlayerStateMachine player;
     private bool nextComboQueued = false;
     private bool nextHitQueued = false;
-    public float stamina { get; set; }
-    public bool hasConsumedStamina { get; set; } = false;
+    float stamina;
+
     public Action<int,RpcInfo> Rpc_AttackAction;
     public Action<RpcInfo> Rpc_EndAttack;
 
@@ -34,12 +34,11 @@ public class PlayerCombat
     public void StartAttack()
     {
         stamina = player.WeaponManager.currentWeapon.GetComponent<WeaponNetworkObject>().weaponInfoConfig.Stamina;
-        player.Stamina.ConsumeStaminaOnServer(1);
+        player.Stamina.UseStamina(stamina);
         AttackCount = 1;
         nextHitQueued = false;
         player.AnimHandler.SetAttackCount(AttackCount);
         player.AnimHandler.SetAttackBool(true);
-        hasConsumedStamina = false;
     }
     public void StartHit()
     {
@@ -64,17 +63,16 @@ public class PlayerCombat
 
     public void OnAttackAnimationEnd()
     {
+        if (player.HasStateAuthority)
+            player.hitMap.Clear();
 
-
-        if (nextComboQueued && AttackCount < 4 )
+        if (nextComboQueued && AttackCount < 4 && player.Stamina.currentStamina > player.AttackStaminaCost)
         {
-            player.Stamina.ConsumeStaminaOnServer(1);
-
+            player.Stamina.UseStamina(stamina);
             AttackCount++;
             nextComboQueued = false;
             player.SetIsAttackTrue();
-            player.ClearHitSet();       
-            
+            player.ClearHitSet();           
         }
         else
         {   

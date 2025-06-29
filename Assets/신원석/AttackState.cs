@@ -14,19 +14,16 @@ public class AttackState : BaseState<PlayerStateMachine.PlayerState>
 
     float time;
     float stamina;
-
-
     public AttackState(PlayerStateMachine.PlayerState key, PlayerStateMachine stateMachine ) : base(key)
     {
         this.playerStateMachine = stateMachine;
-
     }
 
     public override void EnterState()
     {
         playerStateMachine.Combat.StartAttack();
         playerStateMachine.hitSet.Clear();
-        //playerStateMachine.Stamina.IsStamania = true;
+        playerStateMachine.Stamina.IsStamania = true;
 
     }
     public override void ExitState()
@@ -37,14 +34,12 @@ public class AttackState : BaseState<PlayerStateMachine.PlayerState>
             playerStateMachine.NetAnim.Animator.SetBool("RunAttack", false);
             playerStateMachine.NetAnim.Animator.SetBool("Attack", false);
         }
-        //playerStateMachine.Stamina.IsStamania = false;
-        playerStateMachine.Combat.hasConsumedStamina = false;
+        playerStateMachine.Stamina.IsStamania = false;
         time = 0.0f;
     }
 
     public override void FixedUpdateState() 
     {
-        playerStateMachine.action.Invoke();
 
         if (!playerStateMachine.Object.HasStateAuthority && !playerStateMachine.Runner.IsForward)
             return;
@@ -59,7 +54,7 @@ public class AttackState : BaseState<PlayerStateMachine.PlayerState>
 
         playerStateMachine.Rotation(data);
 
-        if(playerStateMachine.isAttack == true && playerStateMachine.Combat.hasConsumedStamina == false)
+        if(playerStateMachine.isAttack == true)
         {
             time += playerStateMachine.Runner.DeltaTime;
 
@@ -67,16 +62,13 @@ public class AttackState : BaseState<PlayerStateMachine.PlayerState>
                 return;
 
             if (playerStateMachine.inputHandler.IsAttackPressed() && playerStateMachine.Stamina.currentStamina >= 0.0f)
-            {
-                playerStateMachine.Stamina.ConsumeStaminaOnServer(playerStateMachine.Combat.stamina);
-
+            {                
                 playerStateMachine.Combat.TryQueueNextCombo();
                 time = 0.0f;
-                playerStateMachine.Combat.hasConsumedStamina = true;
             }
 
         }
-       
+        playerStateMachine.action.Invoke();      
         AttackMove();
     }
 
@@ -113,16 +105,13 @@ public class AttackState : BaseState<PlayerStateMachine.PlayerState>
         if (weaponNetObj == null || !collider.CompareTag("Weapon"))
             return;
 
-
-        // 3) Weapon의 입력 권한자가 이 플레이어와 같다면 스킵
+        // 3) Weapon의 입력 권한자가 이 플레이어와 같다면(self-hit) 스킵
         if (weaponNetObj.InputAuthority == playerStateMachine.Object.InputAuthority)
             return;
 
-        int attack = weaponNetObj.gameObject.GetComponent<WeaponNetworkObject>().weaponInfoConfig.Attack;
+        // 4) 진짜 타격 처리
+        Debug.Log("충돌 감지!");
 
-        playerStateMachine.health.RequestDamage(attack);
-
-        playerStateMachine.BroadcastIdleEvent(PlayerState.Hit);
     }
     public override void OnTriggerExit(Collider collider) { }
     public override void OnTriggerStay(Collider collider) { }
