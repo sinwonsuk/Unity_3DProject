@@ -133,12 +133,20 @@ public class InventoryUI : MonoBehaviour
 
     void Update()
     {
-        //IsOpenInven();
 
         if(!combi.activeSelf && Input.GetKeyDown(KeyCode.I))
         {
             isActive = bigInventoryPanel.activeSelf;
             bigInventoryPanel.SetActive(!isActive); // 토글 방식
+
+            if(bigInventoryPanel.activeSelf)
+            {
+                EventBus<showCursor>.Raise(new showCursor(true));
+            }
+            else
+            {
+                EventBus<showCursor>.Raise(new showCursor(false));
+            }
         }
 
         if (Input.GetKeyDown(KeyCode.Tab))
@@ -166,6 +174,7 @@ public class InventoryUI : MonoBehaviour
             {
                 // 조합창이 열리는 경우
                 combi.SetActive(true);
+                EventBus<showCursor>.Raise(new showCursor(true));
 
                 if (!bigInventoryPanel.activeSelf)
                 {
@@ -177,6 +186,7 @@ public class InventoryUI : MonoBehaviour
                 // 조합창이 닫히는 경우, 인벤토리도 같이 닫음
                 combi.SetActive(false);
                 bigInventoryPanel.SetActive(false);
+                EventBus<showCursor>.Raise(new showCursor(false));
             }
         }
             
