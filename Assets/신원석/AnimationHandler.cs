@@ -109,7 +109,7 @@ public class AnimationHandler
     }
     public void ChangeDeathState()
     {
-        animator.SetTrigger("DeathTrigger");
+        animator.Animator.SetTrigger("DeathTrigger");
     }
     public void ChangeMagicAttackState(float val)
     {

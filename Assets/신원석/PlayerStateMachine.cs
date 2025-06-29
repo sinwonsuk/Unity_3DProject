@@ -465,10 +465,20 @@ public class PlayerStateMachine : StageManager<PlayerStateMachine.PlayerState>
     {
         if (!_isInitialized) return;
 
-        if(health.currentHp <= 0 && isDeath ==false)
+        if(health.currentHp <= 0)
         {
             BroadcastIdleEvent(PlayerState.Death);
-            isDeath = true;
+
+            if (SyncedState != currentState.StateKey)
+            {
+                currentState.ExitState();
+                currentState = states[PlayerState.Death];
+                currentState.EnterState();
+            }
+
+
+            return;
+
         }
 
         MoveAndRotate(inputHandler.GetNetworkInputData());
