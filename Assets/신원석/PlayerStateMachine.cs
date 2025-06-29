@@ -264,22 +264,17 @@ public class PlayerStateMachine : StageManager<PlayerStateMachine.PlayerState>
 
     public void MoveAndRotate(NetworkInputData data)
     {
+        if (SyncedState == PlayerState.Death)       
+        {
+            return;
+        }
         Vector3 moveInput = data.direction.normalized;
         Quaternion planarRot = Quaternion.Euler(0, data.CameraRotateY, 0);
         Vector3 moveDir = planarRot * moveInput;
 
-        Rotation(data);
-
-        if (SyncedState == PlayerState.Death || 
-            SyncedState == PlayerState.Attack ||
-            SyncedState == PlayerState.Switch ||
-            SyncedState == PlayerState.BowAttack ||
-            SyncedState == PlayerState.Magic )
-        {
-            return;
-        }
-
         playerController.Move(moveDir * moveSpeed);
+
+        Rotation(data);
     }
 
     public void Rotation(NetworkInputData data)

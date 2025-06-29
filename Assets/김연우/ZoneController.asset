@@ -15,21 +15,26 @@ MonoBehaviour:
   phases:
   - center: {x: -63, y: 0, z: -29}
     radius: 225
-    waitDuration: 150
+    waitDuration: 100
     shrinkDuration: 10
     damagePerSecond: 1
   - center: {x: -63, y: 0, z: -29}
     radius: 160
-    waitDuration: 200
+    waitDuration: 150
     shrinkDuration: 10
     damagePerSecond: 3
   - center: {x: -63, y: 0, z: -29}
     radius: 110
-    waitDuration: 250
+    waitDuration: 200
     shrinkDuration: 10
     damagePerSecond: 7
   - center: {x: -63, y: 0, z: -29}
     radius: 38
+    waitDuration: 250
+    shrinkDuration: 13
+    damagePerSecond: 10
+  - center: {x: -63, y: 0, z: -29}
+    radius: 0
     waitDuration: 300
     shrinkDuration: 13
     damagePerSecond: 10
