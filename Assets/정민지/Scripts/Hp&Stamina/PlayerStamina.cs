@@ -36,6 +36,7 @@ public class PlayerStamina : NetworkBehaviour
     void RPC_Stamina(float amount)
     {
         currentStamina = Mathf.Clamp(currentStamina - amount, 0f, maxStamina);
+        EventBus<StaminaChanged>.Raise(new StaminaChanged((float)currentStamina, (int)maxStamina));
     }
 
 
