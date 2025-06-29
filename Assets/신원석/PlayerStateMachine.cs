@@ -50,7 +50,7 @@ public class PlayerStateMachine : StageManager<PlayerStateMachine.PlayerState>
     public float RollStaminaCost { get; set; } = 25f;
     public float JumpStaminaCost { get; set; } = 10.0f;
     [Networked] public float AttackStaminaCost { get; set; }
-    [Networked] public float AttackCost { get; set; }
+    [Networked] public int AttackCost { get; set; }
     public float MaxSpeed { get; set; } = 10.0f;
     public float CurrentSpeed { get; set; } = 5.0f;
 
@@ -172,7 +172,7 @@ public class PlayerStateMachine : StageManager<PlayerStateMachine.PlayerState>
         states[PlayerState.Magic] = new MagicAttackState(PlayerState.Magic, animator, this);
         states[PlayerState.Hit] = new HitState(PlayerState.Hit, this);
         states[PlayerState.Death] = new DeathState(PlayerState.Death, this);
-        states[PlayerState.Portion] = new PortionState(PlayerState.Portion, this);
+
 
         if (Object.HasStateAuthority)
             SyncedState = PlayerState.Idle;
@@ -238,7 +238,7 @@ public class PlayerStateMachine : StageManager<PlayerStateMachine.PlayerState>
 
     public void InvenSlotHandle(SendSlot sendSlot)
     {
-        slot = sendSlot.potion;
+
     }
 
     [Networked] public ItemState itemState { get; set; }
@@ -491,6 +491,7 @@ public class PlayerStateMachine : StageManager<PlayerStateMachine.PlayerState>
     {
         if (currentState is BaseState<PlayerState> attackState && comboAnimEnded == true)
         {
+            Combat.hasConsumedStamina = false;
             attackState.OnAnimationEvent();
             comboAnimEnded = false;
         }

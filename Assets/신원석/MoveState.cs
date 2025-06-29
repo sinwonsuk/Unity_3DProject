@@ -68,15 +68,16 @@ public class MoveState : BaseState<PlayerStateMachine.PlayerState>
         if (weaponNetObj == null || !collider.CompareTag("Weapon"))
             return;
 
+
         // 3) Weapon의 입력 권한자가 이 플레이어와 같다면 스킵
         if (weaponNetObj.InputAuthority == playerStateMachine.Object.InputAuthority)
             return;
 
-        // 4) 진짜 타격 처리
-        Debug.Log("충돌 감지!2");
+        int attack = weaponNetObj.gameObject.GetComponent<WeaponNetworkObject>().weaponInfoConfig.Attack;
+
+        playerStateMachine.health.RequestDamage(attack);
 
         playerStateMachine.BroadcastIdleEvent(PlayerState.Hit);
-
     }
     public override void OnTriggerExit(Collider collider) { }
     public override void OnTriggerStay(Collider collider) { }
@@ -206,20 +207,21 @@ public class MoveState : BaseState<PlayerStateMachine.PlayerState>
                          && stamina.currentStamina > 0f;
 
         // 6) 달리기일 때 속도 및 스태미나 처리
-        if (isRunning)
+        if (isRunning && stamina.currentStamina > 0.0f)
         {
             state.moveZ = Mathf.Lerp(0f, 2f, state.moveZ);
             state.MoveSpeed = state.MaxSpeed;
-            stamina.IsStamania = true;
+            stamina.ConsumeStaminaOnServer(deltaTime * 10.0f);
         }
         else
         {
             state.MoveSpeed = state.CurrentSpeed;
-            stamina.IsStamania = false;
+
         }
 
-        // 7) 달리기 상태 이벤트 발행
-        EventBus<isRunning>.Raise(new isRunning(isRunning));
+
+
+            
 
         // 8) 애니메이터에 파라미터 전달
         var animator = state.NetAnim.Animator;

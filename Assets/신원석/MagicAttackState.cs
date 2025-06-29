@@ -3,6 +3,7 @@ using System.Collections;
 using System.Collections.Generic;
 using Unity.Mathematics;
 using UnityEngine;
+using static PlayerStateMachine;
 
 
 
@@ -75,7 +76,7 @@ public class MagicAttackState : BaseState<PlayerStateMachine.PlayerState>
             // 발사 위치 계산
             CalculateHitPosition();
 
-            playerStateMachine.Stamina.UseStamina(attackStamina);
+            playerStateMachine.Stamina.ConsumeStaminaOnServer(attackStamina);
             // RPC로 서버 발사 요청
             playerStateMachine.RPC_RequestMagic(playerStateMachine.WeaponManager.magicState, HandSide.Right);
 
@@ -129,7 +130,28 @@ public class MagicAttackState : BaseState<PlayerStateMachine.PlayerState>
             targetPos = ray.origin + ray.direction * fallbackDist;
         }
     }
-    public override void OnTriggerEnter(Collider collider) { }
+    public override void OnTriggerEnter(Collider collider)
+    {
+        // 1) 호스트에서만 충돌 처리
+        if (!playerStateMachine.Object.HasStateAuthority)
+            return;
+
+        // 2) Weapon 네트워크 오브젝트 가져오기
+        var weaponNetObj = collider.GetComponent<NetworkObject>();
+        if (weaponNetObj == null || !collider.CompareTag("Weapon"))
+            return;
+
+
+        // 3) Weapon의 입력 권한자가 이 플레이어와 같다면 스킵
+        if (weaponNetObj.InputAuthority == playerStateMachine.Object.InputAuthority)
+            return;
+
+        int attack = weaponNetObj.gameObject.GetComponent<WeaponNetworkObject>().weaponInfoConfig.Attack;
+
+        playerStateMachine.health.RequestDamage(attack);
+
+        playerStateMachine.BroadcastIdleEvent(PlayerState.Hit);
+    }
     public override void OnTriggerExit(Collider collider) { }
     public override void OnTriggerStay(Collider collider) { }
     public override void OnAnimationEvent()
