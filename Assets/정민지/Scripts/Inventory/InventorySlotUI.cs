@@ -80,20 +80,20 @@ public class InventorySlotUI : NetworkBehaviour,  IBeginDragHandler, IDragHandle
     {
         this.canCombi = evt.canCombi;
     }
-    public void RightClick()
-    {
+    //public void RightClick()
+    //{
        
 
-            bigInventoryUI.OnSlotClicked(index);
-            bigInventoryUI.UpdateSlotUI(index);
+    //        bigInventoryUI.OnSlotClicked(index);
+    //        bigInventoryUI.UpdateSlotUI(index);
 
-            if(canCombi)
-            {
-                EventBus<SendItem>.Raise(new SendItem(slot.item));
-                slot.item = null;
-                bigInventoryUI.UpdateSlotUI(index);
-            }
-    }
+    //        //if(canCombi)
+    //        //{
+    //        //    EventBus<SendItem>.Raise(new SendItem(slot.item));
+    //        //    slot.item = null;
+    //        //    bigInventoryUI.UpdateSlotUI(index);
+    //        //}
+    //}
 
     public void OnBeginDrag(PointerEventData eventData)
     {
@@ -217,7 +217,11 @@ public class InventorySlotUI : NetworkBehaviour,  IBeginDragHandler, IDragHandle
 
     void Update()
     {
-        // 우클릭 드래그 시작
+        HandleRightClick();
+        
+    }
+    public void HandleRightClick()
+    {
         if (Input.GetMouseButtonDown(1))
         {
             if (slot.item != null)
@@ -226,16 +230,22 @@ public class InventorySlotUI : NetworkBehaviour,  IBeginDragHandler, IDragHandle
                 draggedIcon.gameObject.SetActive(true);
                 draggedIcon.SetIcon(iconImage.sprite);
             }
+
+            // 조합 처리
+            if (!isRightDragging && slot.item != null && canCombi)
+            {
+                bigInventoryUI.OnSlotClicked(index);
+                EventBus<SendItem>.Raise(new SendItem(slot.item));
+                slot.item = null;
+                bigInventoryUI.UpdateSlotUI(index);
+            }
         }
 
-        // 우클릭 드래그 중
-        if (isRightDragging && Input.GetMouseButton(1))
+        if (isRightDragging && Input.GetMouseButton(1) && slot.item != null)
         {
-            if (slot.item != null)
-                draggedIcon.transform.position = Input.mousePosition;
+            draggedIcon.transform.position = Input.mousePosition;
         }
 
-        // 우클릭 드래그 끝
         if (Input.GetMouseButtonUp(1) && isRightDragging)
         {
             isRightDragging = false;
@@ -257,18 +267,6 @@ public class InventorySlotUI : NetworkBehaviour,  IBeginDragHandler, IDragHandle
                     bigInventoryUI.SwapSlots(index, targetSlot.index);
                     break;
                 }
-            }
-        }
-
-        // 우클릭 아이템 사용/조합 처리
-        if (Input.GetMouseButtonUp(1) && !isRightDragging)
-        {
-            if (slot.item != null && canCombi)
-            {
-                bigInventoryUI.OnSlotClicked(index);
-                EventBus<SendItem>.Raise(new SendItem(slot.item));
-                slot.item = null;
-                bigInventoryUI.UpdateSlotUI(index);
             }
         }
     }

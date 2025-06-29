@@ -50,6 +50,7 @@ public class InventoryUI : MonoBehaviour
         isActive = false;
         canSee = false;
         SelectFirstWeaponSlot();
+        EventBus<YesCombi>.Raise(new YesCombi(false));
     }
 
     public void SelectFirstWeaponSlot()
