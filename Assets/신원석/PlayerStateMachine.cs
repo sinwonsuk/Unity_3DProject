@@ -62,7 +62,7 @@ public class PlayerStateMachine : StageManager<PlayerStateMachine.PlayerState>
 
     public float invulnDuration = 0.15f;
 
-    private bool isDeath = false;
+    [Networked] private bool isDeath { get; set; } = false;
 
     public enum PlayerState
     {
@@ -470,11 +470,7 @@ public class PlayerStateMachine : StageManager<PlayerStateMachine.PlayerState>
         if(health.currentHp <= 0 && isDeath ==false)
         {
             BroadcastIdleEvent(PlayerState.Death);
-            currentState.ExitState();
-            currentState = states[PlayerState.Death];
-            currentState.EnterState();
             isDeath = true;
-            return;
         }
 
         MoveAndRotate(inputHandler.GetNetworkInputData());
