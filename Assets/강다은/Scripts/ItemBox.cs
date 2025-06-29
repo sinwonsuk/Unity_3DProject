@@ -51,6 +51,11 @@ public class ItemBox : NetworkBehaviour
             if (isOpened) CloseBox();
             else OpenBox();
         }
+        if (Vector3.Distance(transform.position, player.position) < interactionDistance)
+        {
+            EventBus<ItemBoxUIClose>.Raise(new ItemBoxUIClose(gameObject));
+
+        }
     }
 
     private void OnDisable()
@@ -81,11 +86,6 @@ public class ItemBox : NetworkBehaviour
     [Rpc(RpcSources.All, RpcTargets.StateAuthority)]
     private void RPC_RequestDespawn()
     {
-        if(Vector3.Distance(transform.position, player.position) < interactionDistance)
-        {
-            EventBus<ItemBoxUIClose>.Raise(new ItemBoxUIClose(gameObject));
-            
-        }
         Runner.Despawn(Object);
         // 서버(StateAuthority)에서만 실행됩니다
 

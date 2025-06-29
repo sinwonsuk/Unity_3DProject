@@ -1,31 +1,30 @@
 using UnityEngine;
-using UnityEngine.UI;
+using UnityEngine.EventSystems;
 using System;
-using Unity.VisualScripting;
-using TMPro;
 
-public class ShopSlot : MonoBehaviour
+public class ShopSlot : MonoBehaviour, IPointerClickHandler
 {
-	public void Set(ItemData data, int itemPrice)
-	{
-		itemData = data;
-		price = itemPrice;
+    public Action OnRightClick;
 
-		iconImage.sprite = itemData.itemIcon;
+    // 기존 Set 메서드는 그대로
+    public void Set(ItemData data, int itemPrice)
+    {
+        itemData = data;
+        price = itemPrice;
+        iconImage.sprite = itemData.itemIcon;
+        // 더 이상 slotButton.onClick 에는 아무것도 연결하지 않습니다.
+    }
 
-		slotButton.onClick.RemoveAllListeners();
-		slotButton.onClick.AddListener(() => OnClicked?.Invoke());
-	}
+    // 우클릭만 체크
+    public void OnPointerClick(PointerEventData eventData)
+    {
+        if (eventData.button == PointerEventData.InputButton.Right)
+        {
+            OnRightClick?.Invoke();
+        }
+    }
 
-	public ItemData GetItemData() => itemData;
-	public int GetPrice() => price;
-	public Action OnClicked;
-
-	[SerializeField] private Image iconImage;
-	[SerializeField] private Button slotButton;
-
-	private ItemData itemData;
-	private int price;
-
-	
+    [SerializeField] private UnityEngine.UI.Image iconImage;
+    private ItemData itemData;
+    private int price;
 }
