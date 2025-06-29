@@ -55,6 +55,8 @@ public class WeaponSwitchState : BaseState<PlayerStateMachine.PlayerState>
         if (!playerStateMachine.Object.HasStateAuthority)
             return;
 
+        if (playerStateMachine.isDeath == true)
+            return;
         // 2) Weapon 네트워크 오브젝트 가져오기
         var weaponNetObj = collider.GetComponent<NetworkObject>();
         if (weaponNetObj == null || !collider.CompareTag("Weapon"))

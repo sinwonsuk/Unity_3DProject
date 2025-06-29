@@ -73,6 +73,8 @@ public class HitState : BaseState<PlayerStateMachine.PlayerState>
         if (!playerStateMachine.Object.HasStateAuthority)
             return;
 
+        if (playerStateMachine.isDeath == true)
+            return;
 
         var weaponNetObj = collider.GetComponent<NetworkObject>();
         if (weaponNetObj == null || !collider.CompareTag("Weapon"))
