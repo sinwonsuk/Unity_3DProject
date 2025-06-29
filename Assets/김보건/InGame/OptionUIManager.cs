@@ -5,12 +5,35 @@ using UnityEngine.SceneManagement;
 
 public class OptionUIManager : MonoBehaviour
 {
-    // Start is called once before the first execution of Update after the MonoBehaviour is created
+    private void OnEnable()
+    {
+        EventBus<showCursor>.OnEvent += UpdateCursor;
+    }
+
+    private void OnDisable()
+    {
+        EventBus<showCursor>.OnEvent -= UpdateCursor;
+    }
+
     void Start()
     {
         OptionsPanel.SetActive(false);
         Cursor.lockState = CursorLockMode.Locked;
         Cursor.visible = false;
+    }
+
+    private void UpdateCursor(showCursor evt)
+    {
+        if(evt.canSeeInventory)
+        {
+            Cursor.lockState = CursorLockMode.None;
+            Cursor.visible = true;
+        }
+        else
+        {
+            Cursor.lockState = CursorLockMode.Locked;
+            Cursor.visible = false;
+        }
     }
 
     void Update()
@@ -24,16 +47,6 @@ public class OptionUIManager : MonoBehaviour
             CloseOptions();
         }
 
-        if(combi.activeSelf||biginventory.activeSelf)
-        {
-            Cursor.lockState = CursorLockMode.None;
-            Cursor.visible = true;
-        }
-        else if(!combi.activeSelf&&!biginventory.activeSelf&&!isOptionsActive)
-        {
-            Cursor.lockState = CursorLockMode.Locked;
-            Cursor.visible = false;
-        }
     }
 
     public void BackToGame()
