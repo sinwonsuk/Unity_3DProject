@@ -9,7 +9,7 @@ using UnityEngine.EventSystems;
 using UnityEngine.UI;
 using static UnityEngine.UI.GridLayoutGroup;
 
-public class InventorySlotUI : NetworkBehaviour
+public class InventorySlotUI : NetworkBehaviour,  IBeginDragHandler, IDragHandler, IEndDragHandler, IDropHandler, IPointerClickHandler
 {
     public Image iconImage;
     public TMP_Text quantityText;
@@ -32,6 +32,7 @@ public class InventorySlotUI : NetworkBehaviour
     {
         this.slot = slot;
 
+        Debug.Log($"[SetSlot] {index}번 슬롯 - 선택됨: {isSelected}, 이전 상태: {wasSelected}");
 
         if (slot.IsEmpty)
         {
@@ -79,7 +80,75 @@ public class InventorySlotUI : NetworkBehaviour
     {
         this.canCombi = evt.canCombi;
     }
+    public void RightClick()
+    {
+       
 
+            bigInventoryUI.OnSlotClicked(index);
+            bigInventoryUI.UpdateSlotUI(index);
+
+            if(canCombi)
+            {
+                EventBus<SendItem>.Raise(new SendItem(slot.item));
+                slot.item = null;
+                bigInventoryUI.UpdateSlotUI(index);
+            }
+    }
+
+    public void OnBeginDrag(PointerEventData eventData)
+    {
+        if (!iconImage.enabled) return;
+
+        eventData.pointerDrag = gameObject;
+        draggedIcon.gameObject.SetActive(true);
+        draggedIcon.SetIcon(iconImage.sprite);
+        draggedIcon.StartDrag(iconImage.sprite);
+
+    }
+    public void OnPointerClick(PointerEventData eventData)
+    {
+        if (slot == null || slot.item == null)
+            return;
+
+        //if (eventData.button == PointerEventData.InputButton.Left)
+        //{
+        //    // 좌클릭 → 선택 상태 변경 요청 (bigInventoryUI에게)
+        //    bigInventoryUI.OnSlotClicked(index);
+        //}
+        else if (eventData.button == PointerEventData.InputButton.Right)
+        {
+            // 우클릭 → 조합 이벤트 발송 (조합 가능할 때만)
+            if (canCombi)
+            {
+                EventBus<SendItem>.Raise(new SendItem(slot.item));
+                slot.item = null;
+                bigInventoryUI.UpdateSlotUI(index);
+            }
+            else
+            {
+                bigInventoryUI.OnSlotClicked(index);
+            }
+        }
+    }
+    public void OnDrag(PointerEventData eventData)
+    {
+        // 드래그 아이콘이 자동으로 마우스를 따라감 (Update에서 처리됨)
+    }
+
+    public void OnEndDrag(PointerEventData eventData)
+    {
+        SoundManager.GetInstance().SfxPlay(SoundManager.sfx.itemDrop, false);
+        draggedIcon.gameObject.SetActive(false);
+    }
+
+    public void OnDrop(PointerEventData eventData)
+    {
+        InventorySlotUI draggedSlotUI = eventData.pointerDrag?.GetComponent<InventorySlotUI>();
+        if (draggedSlotUI != null && draggedSlotUI != this)
+        {
+            bigInventoryUI.SwapSlots(draggedSlotUI.index, this.index);
+        }
+    }
 
     //[Rpc(RpcSources.InputAuthority, RpcTargets.StateAuthority)]
     //public void RPC_ChangeWeapon(ItemState state, RpcInfo info = default)
@@ -172,67 +241,7 @@ public class InventorySlotUI : NetworkBehaviour
         }
     }
 
-    void Update()
-    {
-        HandleRightClick();
-        
-    }
-    public void HandleRightClick()
-    {
-        if (draggedIcon == null || draggedIcon.transform == null)
-            return;
-
-        if (Input.GetMouseButtonDown(1))
-        {
-            if (slot.item != null)
-            {
-                bigInventoryUI.OnSlotClicked(index);
-                bigInventoryUI.UpdateSlotUI(index);
-                isRightDragging = true;
-                draggedIcon.gameObject.SetActive(true);
-                draggedIcon.SetIcon(iconImage.sprite);
-                Debug.Log($"canCombi : {canCombi}");
-            }
-
-            // 조합 처리
-            if (slot.item != null && canCombi)
-            {
-                bigInventoryUI.OnSlotClicked(index);
-                EventBus<SendItem>.Raise(new SendItem(slot.item));
-                slot.item = null;
-                bigInventoryUI.UpdateSlotUI(index);
-            }
-        }
-
-        if (isRightDragging && Input.GetMouseButton(1) && slot.item != null)
-        {
-            draggedIcon.transform.position = Input.mousePosition;
-        }
-
-        if (Input.GetMouseButtonUp(1) && isRightDragging)
-        {
-            isRightDragging = false;
-            draggedIcon.gameObject.SetActive(false);
-
-            PointerEventData pointerData = new PointerEventData(EventSystem.current)
-            {
-                position = Input.mousePosition
-            };
-
-            List<RaycastResult> rayResults = new List<RaycastResult>();
-            EventSystem.current.RaycastAll(pointerData, rayResults);
-
-            foreach (RaycastResult result in rayResults)
-            {
-                InventorySlotUI targetSlot = result.gameObject.GetComponent<InventorySlotUI>();
-                if (targetSlot != null && targetSlot != this)
-                {
-                    bigInventoryUI.SwapSlots(index, targetSlot.index);
-                    break;
-                }
-            }
-        }
-    }
+    
 
     public PlayerWeaponChanged FindLocalPlayerWeaponChanged()
     {
