@@ -19,6 +19,7 @@ public class AttackState : BaseState<PlayerStateMachine.PlayerState>
     public AttackState(PlayerStateMachine.PlayerState key, PlayerStateMachine stateMachine ) : base(key)
     {
         this.playerStateMachine = stateMachine;
+       
 
     }
 
@@ -26,7 +27,7 @@ public class AttackState : BaseState<PlayerStateMachine.PlayerState>
     {
         playerStateMachine.Combat.StartAttack();
         playerStateMachine.hitSet.Clear();
-
+        playerStateMachine.WeaponManager.currentWeapon.GetComponent<MeshCollider>().enabled = true;
         if (!playerStateMachine.HasInputAuthority)
             return;
 
@@ -43,6 +44,7 @@ public class AttackState : BaseState<PlayerStateMachine.PlayerState>
         //playerStateMachine.Stamina.IsStamania = false;
         playerStateMachine.Combat.hasConsumedStamina = false;
         time = 0.0f;
+        playerStateMachine.WeaponManager.currentWeapon.GetComponent<MeshCollider>().enabled = false;
     }
 
     public override void FixedUpdateState() 
