@@ -1416,6 +1416,9 @@ MonoBehaviour:
   deadPrefab: {fileID: 0}
   maxHp: 100
   imReady: 5
+  timeBeforeHealing: 5
+  healInterval: 1
+  healAmount: 2
 --- !u!114 &-8932458653960297740
 MonoBehaviour:
   m_ObjectHideFlags: 0
