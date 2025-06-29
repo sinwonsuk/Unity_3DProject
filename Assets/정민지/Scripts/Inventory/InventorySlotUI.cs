@@ -119,17 +119,19 @@ public class InventorySlotUI : NetworkBehaviour,  IBeginDragHandler, IDragHandle
         {
             SoundManager.GetInstance().SfxPlay(SoundManager.sfx.itemDrop, false);
             // 우클릭 → 조합 이벤트 발송 (조합 가능할 때만)
-            if (canCombi)
-            {
+            //if (canCombi)
+            //{
                 EventBus<SendItem>.Raise(new SendItem(slot.item));
                 slot.item = null;
                 bigInventoryUI.UpdateSlotUI(index);
-            }
-            else
-            {
-                bigInventoryUI.OnSlotClicked(index);
                 bigInventoryUI.UpdateUI();
-            }
+
+            //  }
+            // else
+            //{
+            // 
+            // bigInventoryUI.UpdateUI();
+            //}
         }
     }
     public void OnDrag(PointerEventData eventData)
