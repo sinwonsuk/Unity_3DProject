@@ -118,7 +118,7 @@ public class PlayerHealth : NetworkBehaviour
 
     IEnumerator DelayDisableCharacter()
     {
-        yield return new WaitForSeconds(0f);
+        yield return new WaitForSeconds(1f);
         RPC_DisableCharacter();
     }
 
