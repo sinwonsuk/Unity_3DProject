@@ -7,7 +7,7 @@ public class StaminaUI : MonoBehaviour
     private float lastStaminaValue = -1f;
 
     [SerializeField] private Image staminaFill;
-    [SerializeField] private TMP_Text staminaText;
+    //[SerializeField] private TMP_Text staminaText;
 
 
     private void OnEnable()
@@ -28,7 +28,7 @@ public class StaminaUI : MonoBehaviour
             lastStaminaValue = normalized;
 
             // 스태미나 수치 텍스트 표시
-            staminaText.text = $"{e.currentStamina:0}/{e.maxStamina}";
+           // staminaText.text = $"{e.currentStamina:0}/{e.maxStamina}";
         }
     }
 
