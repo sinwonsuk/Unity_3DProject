@@ -160,41 +160,41 @@ public class InventorySlotUI : NetworkBehaviour, IPointerClickHandler, IBeginDra
 
             else if (slot.item.weaponType == WeaponType.Sword)
             {
-                changed.ChangeWeapon(ItemState.Sword, slot.item.itemGrade);
+                changed.ChangeWeapon(ItemState.Sword, 3);
 
             }
             else if (slot.item.weaponType == WeaponType.Bow)
             {
-                changed.ChangeWeapon(ItemState.Bow, slot.item.itemGrade);
+                changed.ChangeWeapon(ItemState.Bow, 3);
 
             }
             else if (slot.item.weaponType == WeaponType.Axe)
             {
-                changed.ChangeWeapon(ItemState.Harberd, slot.item.itemGrade);
+                changed.ChangeWeapon(ItemState.Harberd, 1);
 
             }
             else if (slot.item.potionType == PotionType.Heal)
             {
-                changed.ChangeWeapon(ItemState.HpPotion, slot.item.itemGrade);
+                changed.ChangeWeapon(ItemState.HpPotion, 1);
                 EventBus<SendSlot>.Raise(new SendSlot(slot));
             }
             else if (slot.item.potionType == PotionType.Stamina)
             {
-                changed.ChangeWeapon(ItemState.StaminaPotion, slot.item.itemGrade);
+                changed.ChangeWeapon(ItemState.StaminaPotion, 1);
                 EventBus<SendSlot>.Raise(new SendSlot(slot));
             }
             else if (slot.item.magicType == MagicType.Fire)
             {
-                changed.ChangeWeapon(ItemState.FireBall, slot.item.itemGrade);
+                changed.ChangeWeapon(ItemState.FireBall, 1);
             }
             else if (slot.item.magicType == MagicType.Ice)
             {
-                changed.ChangeWeapon(ItemState.IceBall, slot.item.itemGrade);
+                changed.ChangeWeapon(ItemState.IceBall, 2);
 
             }
             else if (slot.item.magicType == MagicType.Lightning)
             {
-                changed.ChangeWeapon(ItemState.ElectricBall, slot.item.itemGrade);
+                changed.ChangeWeapon(ItemState.ElectricBall, 3);
 
             }
 
