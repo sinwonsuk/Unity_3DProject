@@ -1329,6 +1329,7 @@ MonoBehaviour:
   _moveZ: 0
   _AttackStaminaCost: 0
   _AttackCost: 0
+  _SoundCheck: 0
   invulnDuration: 0.15
   weapons: {fileID: 11400000, guid: bb10c1def4f7b9d42a86027dc3b35f91, type: 2}
   moveSpeed: 5
@@ -1444,9 +1445,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 640c10a6b7f7d88449ba5375240b3946, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  maxStamina: 100
-  recoveryTimer: 0
-  staminaCoolTime: 0
+  _currentStamina: 0
+  _maxStamina: 100
+  staminaCoolTime: 1
 --- !u!114 &-8932458653960297740
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -1466,13 +1467,13 @@ MonoBehaviour:
     Radius: 0.35
     Height: 1.8
     Extent: 0.035
-    ColliderLayer: 0
+    ColliderLayer: 6
     CollisionLayerMask:
       serializedVersion: 2
-      m_Bits: 1
+      m_Bits: 3136
     ProxyInterpolationMode: 0
-    MaxPenetrationSteps: 8
-    CCDRadiusMultiplier: 0.75
+    MaxPenetrationSteps: 1
+    CCDRadiusMultiplier: 0.1
     AntiJitterDistance: {x: 0.025, y: 0.01}
     CompressNetworkPosition: 0
     ForcePredictedLookRotation: 0
