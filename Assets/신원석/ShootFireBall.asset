@@ -12,7 +12,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 4350d3b2446535d45993f65089bc1fcc, type: 3}
   m_Name: ShootFireBall
   m_EditorClassIdentifier: 
-  attack: 5
+  attack: 0
   stamina: 0
   scaleOne: {x: 1, y: 1, z: 1}
   scaleTwo: {x: 2, y: 2, z: 2}

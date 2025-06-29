@@ -1,7 +1,5 @@
 
-using Fusion;
 using UnityEngine;
-using static PlayerStateMachine;
 
 
 public class JumpState : BaseState<PlayerStateMachine.PlayerState>
@@ -35,7 +33,7 @@ public class JumpState : BaseState<PlayerStateMachine.PlayerState>
         float currentStamina = playerStateMachine.Stamina.currentStamina;
         float jumpCcost = playerStateMachine.JumpStaminaCost;
 
-        playerStateMachine.Stamina.ConsumeStaminaOnServer(jumpCcost);
+        playerStateMachine.Stamina.UseStamina(jumpCcost);
         playerStateMachine.NetAnim.Animator.SetBool("Jump", true);
         playerStateMachine.playerController.Move(default,gravity);
 
@@ -82,30 +80,7 @@ public class JumpState : BaseState<PlayerStateMachine.PlayerState>
 
 
 
-    public override void OnTriggerEnter(Collider collider)
-    {
-        // 1) 호스트에서만 충돌 처리
-        if (!playerStateMachine.Object.HasStateAuthority)
-            return;
-
-        // 2) Weapon 네트워크 오브젝트 가져오기
-        var weaponNetObj = collider.GetComponent<NetworkObject>();
-        if (weaponNetObj == null || !collider.CompareTag("Weapon"))
-            return;
-
-
-        // 3) Weapon의 입력 권한자가 이 플레이어와 같다면 스킵
-        if (weaponNetObj.InputAuthority == playerStateMachine.Object.InputAuthority)
-            return;
-
-        // 4) 진짜 타격 처리
-        Debug.Log("충돌 감지!2");
-
-
-        playerStateMachine.health.TakeDamage(playerStateMachine.AttackCost);
-
-        playerStateMachine.BroadcastIdleEvent(PlayerState.Hit);
-    }
+    public override void OnTriggerEnter(Collider collider) { }
     public override void OnTriggerExit(Collider collider) { }
     public override void OnTriggerStay(Collider collider) { }
 

@@ -58,7 +58,7 @@ public class BowState : BaseState<PlayerStateMachine.PlayerState>
 
             zoomRoutine = playerStateMachine.StartCoroutine(playerStateMachine.cameraManager.ZoomDistance(2f));
         }
-        rope.localPosition = new Vector3(0.19f, rope.localPosition.y, rope.localPosition.z);
+
         playerStateMachine.AnimHandler.SetAttackBool(false);
         shoot = false;
         arrow = null;
@@ -94,7 +94,7 @@ public class BowState : BaseState<PlayerStateMachine.PlayerState>
                 targetPos = ray.origin + ray.direction * fallbackDist;
             }
 
-            playerStateMachine.Stamina.ConsumeStaminaOnServer(attackStamina);
+            playerStateMachine.Stamina.UseStamina(attackStamina);
 
             playerStateMachine.SetShootArrowObject(targetPos,ItemState.Arrow);
 
@@ -118,7 +118,7 @@ public class BowState : BaseState<PlayerStateMachine.PlayerState>
         }
         if (gatherAttack == 0)
         {
-            playerStateMachine.Runner.Despawn(playerStateMachine.WeaponManager.Arrow);
+            playerStateMachine.Runner.Despawn(arrow);
             playerStateMachine.BroadcastIdleEvent(PlayerState.Idle);
             return;
         }
@@ -133,28 +133,7 @@ public class BowState : BaseState<PlayerStateMachine.PlayerState>
     {
 
     }
-    public override void OnTriggerEnter(Collider collider)
-    {
-        // 1) 호스트에서만 충돌 처리
-        if (!playerStateMachine.Object.HasStateAuthority)
-            return;
-
-        // 2) Weapon 네트워크 오브젝트 가져오기
-        var weaponNetObj = collider.GetComponent<NetworkObject>();
-        if (weaponNetObj == null || !collider.CompareTag("Weapon"))
-            return;
-
-
-        // 3) Weapon의 입력 권한자가 이 플레이어와 같다면 스킵
-        if (weaponNetObj.InputAuthority == playerStateMachine.Object.InputAuthority)
-            return;
-
-        int attack = weaponNetObj.gameObject.GetComponent<WeaponNetworkObject>().weaponInfoConfig.Attack;
-
-        playerStateMachine.health.RequestDamage(attack);
-
-        playerStateMachine.BroadcastIdleEvent(PlayerState.Hit);
-    }
+    public override void OnTriggerEnter(Collider collider) { }
     public override void OnTriggerExit(Collider collider) { }
     public override void OnTriggerStay(Collider collider) { }
 
