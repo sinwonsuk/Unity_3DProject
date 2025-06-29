@@ -48,6 +48,10 @@ public class AttackState : BaseState<PlayerStateMachine.PlayerState>
 
     public override void FixedUpdateState() 
     {
+        if (playerStateMachine.AttackCount >= 5)
+            playerStateMachine.BroadcastIdleEvent(PlayerState.Idle);
+
+
         playerStateMachine.action.Invoke();
 
         if(playerStateMachine.SoundCheck ==true)

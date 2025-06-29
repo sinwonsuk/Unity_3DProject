@@ -264,7 +264,7 @@ public class PlayerStateMachine : StageManager<PlayerStateMachine.PlayerState>
 
     public void MoveAndRotate(NetworkInputData data)
     {
-        if (SyncedState == PlayerState.Death)       
+        if (SyncedState == PlayerState.Death || SyncedState == PlayerState.Idle)       
         {
             return;
         }
