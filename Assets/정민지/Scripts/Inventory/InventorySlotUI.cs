@@ -82,12 +82,12 @@ public class InventorySlotUI : NetworkBehaviour,  IBeginDragHandler, IDragHandle
         if (slot == null || slot.item == null)
             return;
 
-        //if (eventData.button == PointerEventData.InputButton.Left)
-        //{
-        //    // 좌클릭 → 선택 상태 변경 요청 (bigInventoryUI에게)
-        //    bigInventoryUI.OnSlotClicked(index);
-        //}
-        if (eventData.button == PointerEventData.InputButton.Right)
+        if (eventData.button == PointerEventData.InputButton.Left)
+        {
+            // 좌클릭 → 선택 상태 변경 요청 (bigInventoryUI에게)
+            bigInventoryUI.OnSlotClicked(index);
+        }
+        else if (eventData.button == PointerEventData.InputButton.Right)
         {
             SoundManager.GetInstance().SfxPlay(SoundManager.sfx.itemDrop, false);
             // 우클릭 → 조합 이벤트 발송 (조합 가능할 때만)
